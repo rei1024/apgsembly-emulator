@@ -1,6 +1,7 @@
 {
     "compilerOptions": {
         "isolatedModules": true,
+        "outDir": "dist",
         "baseUrl": ".",
         "strict": true,
         "noImplicitReturns": true,
@@ -16,13 +17,13 @@
         "noUnusedParameters": true,
         "noFallthroughCasesInSwitch": true,
         "noImplicitOverride": true,
-        "strictOptionalProperties": true,
+        // "strictOptionalProperties": true,
         "noPropertyAccessFromIndexSignature": true,
         "noUncheckedIndexedAccess": true,
         "noUnusedLocals": true,
         "paths": {}
     },
     "include": [
-        "**/*.js"
+        "src/**/*.js"
     ]
 }
