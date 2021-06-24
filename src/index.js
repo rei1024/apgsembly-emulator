@@ -1,5 +1,6 @@
 // @ts-check
 
-alert('Emulator for APGsembly')
+import { BReg } from "./components/BReg.js";
+import { UReg } from "./components/UReg.js";
 
 export {}
