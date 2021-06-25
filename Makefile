@@ -1,2 +1,6 @@
 up:
-	file_server . -p 3333
+	file_server . -p 1123
+test:
+	deno test
+watch:
+	deno test --watch

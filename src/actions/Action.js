@@ -4,5 +4,10 @@
  * @abstract
  */
 export class Action {
-
+    /**
+     * @returns {string}
+     */
+    pretty() {
+        return "unimplemented";
+    }
 }
