@@ -1,0 +1,76 @@
+// @ts-check
+
+import { AddAction } from "../actions/AddAction.js";
+
+export const addLookupA1 = [5, 4, 7, 6, 1, 0, 3, 2, 13, 12, 15, 14, 9, 8, 11, 10];
+export const addLookupB0 = [0, 0, 0, 0, 0, 0, 9, 9, 0, 0, 9, 9, 9, 9, 9, 9];
+export const addLookupB1 = [0, 0, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 9, 9];
+
+export class ADD {
+    constructor() {
+        /**
+         * 0 ~ 15
+         * @type {number}
+         * @private
+         */
+        this.value = 0;
+    }
+
+    /**
+     * 
+     * @param {AddAction} act 
+     */
+    action(act) {
+        switch (act.regName) {
+            case "A1": return this.a1();
+            case "B0": return this.b0();
+            case "B1": return this.b1();
+            default: throw Error('ADD action: internal');
+        }
+    }
+
+    /**
+     * 
+     * @returns {number}
+     */
+    getValue() {
+        return this.value;
+    }
+
+    /**
+     * @returns {void}
+     */
+    a1() {
+        this.value = addLookupA1[this.value] ?? this.error();
+        return undefined;
+    }
+
+    /**
+     * 
+     * @returns {0 | 1}
+     */
+    b0() {
+        const t = this.value % 2;
+        this.value = addLookupB0[this.value] ?? this.error();
+        // @ts-ignore
+        return t;
+    }
+
+    /**
+     * 
+     * @returns {0 | 1}
+     */
+    b1() {
+        const t = 1 - this.value % 2;
+        this.value = addLookupB1[this.value] ?? this.error();
+        // @ts-ignore
+        return t;
+    }
+
+    /**
+     * @returns {never}
+     */
+    error() {
+        throw Error('ADD: internal');
+    }
+}
