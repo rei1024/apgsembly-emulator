@@ -8,6 +8,18 @@ Deno.test('ADD a1', () => {
     assertEquals(x.getValue(), 5);
 });
 
+Deno.test('ADD a1 toString', () => {
+    const x = new ADD();
+    assertEquals(x.a1(), undefined);
+    assertEquals(x.toString(), "0101");
+});
+
+Deno.test('ADD a1 toStringDetail', () => {
+    const x = new ADD();
+    assertEquals(x.a1(), undefined);
+    assertEquals(x.toStringDetail(), "010 bit1");
+});
+
 Deno.test('ADD a1 twice', () => {
     const x = new ADD();
     x.a1();

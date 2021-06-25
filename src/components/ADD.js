@@ -73,4 +73,21 @@ export class ADD {
     error() {
         throw Error('ADD: internal');
     }
+
+    /**
+     * 
+     * @returns {string}
+     */
+    toString() {
+        return this.value.toString(2).padStart(4, '0');
+    }
+
+    /**
+     * 
+     * @returns {string}
+     */
+    toStringDetail() {
+        const str = this.toString();
+        return str.slice(0, 3) + " bit" + str.slice(3);
+    }
 }
