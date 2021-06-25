@@ -1,5 +1,7 @@
 // @ts-check
 
+import { URegAction } from "../actions/URegAction.js";
+
 /**
  * Un: Sliding Block Register
  */
@@ -9,6 +11,18 @@ export class UReg {
          * @private
          */
         this.value = 0;
+    }
+
+    /**
+     * 
+     * @param {URegAction} act 
+     * @returns {0 | 1 | void}
+     */
+    action(act) {
+        switch (act.op) {
+            case "INC": return this.inc();
+            case "TDEC": return this.tdec();
+        }
     }
 
     /**

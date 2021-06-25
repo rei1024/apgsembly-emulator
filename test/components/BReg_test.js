@@ -1,5 +1,6 @@
+import { BRegAction } from "../../src/actions/BRegAction.js";
 import { BReg } from "../../src/components/BReg.js"
-import { assertEquals } from "../deps.js";
+import { assertEquals, assertThrows } from "../deps.js";
 
 Deno.test("BReg read initial", () => {
     const x = new BReg();
@@ -37,14 +38,12 @@ Deno.test("BReg inc twice and set", () => {
     assertEquals(x.getBits(), [0, 0, 1]);
 });
 
-
 Deno.test("BReg tdec", () => {
     const x = new BReg();
     assertEquals(x.tdec(), 0);
     x.inc();
     assertEquals(x.tdec(), 1);
 });
-
 
 Deno.test("BReg getBinaryString", () => {
     const x = new BReg();
@@ -72,4 +71,24 @@ Deno.test('BReg toObject', () => {
         head: 1,
         suffix: [0]
     });
+});
+
+Deno.test('BReg error', () => {
+    const x = new BReg();
+    x.set();
+    assertThrows(() => {
+        x.set();
+    });
+});
+
+Deno.test('BReg action', () => {
+    const x = new BReg();
+    assertEquals(x.action(new BRegAction("INC", 0)), undefined);
+    assertEquals(x.pointer, 1);
+    assertEquals(x.action(new BRegAction("TDEC", 0)), 1);
+
+    assertEquals(x.action(new BRegAction("SET", 0)), undefined);
+
+    assertEquals(x.action(new BRegAction("READ", 0)), 1);
+    assertEquals(x.action(new BRegAction("READ", 0)), 0);
 });

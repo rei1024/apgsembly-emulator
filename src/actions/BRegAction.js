@@ -2,11 +2,11 @@
 
 import { Action } from "./Action.js";
 
-export class URegAction extends Action {
+export class BRegAction extends Action {
     /**
      * 
-     * @param {"INC" | "TDEC"} op 
-     * @param {number} regNumber
+     * @param {"INC" | "TDEC" | "READ" | "SET"} op 
+     * @param {number} regNumber 
      */
     constructor(op, regNumber) {
         super();
@@ -18,13 +18,12 @@ export class URegAction extends Action {
      * @override
      */
     pretty() {
-        return `${this.op} U${this.regNumber}`;
+        return `${this.op} B${this.regNumber}`;
     }
 
     /**
-     * 
      * @param {string} str
-     * @returns {URegAction | undefined}
+     * @returns {BRegAction | undefined}
      */
     static parse(str) {
         const array = str.trim().split(/\s+/);
@@ -33,11 +32,11 @@ export class URegAction extends Action {
         }
         const [ op, reg ] = array;
         if (op === undefined || reg === undefined) { return undefined; }
-        if (op === "INC" || op === "TDEC") {
-            if (reg.startsWith("U")) {
+        if (op === "INC" || op === "TDEC" || op === "READ" || op === "SET") {
+            if (reg.startsWith("B")) {
                 const str = reg.slice(1);
                 if (/^[0-9]+$/.test(str)) {
-                    return new URegAction(op, parseInt(str, 10));
+                    return new BRegAction(op, parseInt(str, 10));
                 }
             }
         }
