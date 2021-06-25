@@ -45,22 +45,22 @@ Deno.test("BReg tdec", () => {
     assertEquals(x.tdec(), 1);
 });
 
-Deno.test("BReg getBinaryString", () => {
+Deno.test("BReg toBinaryString", () => {
     const x = new BReg();
-    assertEquals(x.getBinaryString(), "0");
+    assertEquals(x.toBinaryString(), "0");
     x.inc();
     x.set();
     assertEquals(x.getBits(), [0, 1]);
-    assertEquals(x.getBinaryString(), "10");
+    assertEquals(x.toBinaryString(), "10");
     assertEquals(x.getBits(), [0, 1]);
     x.inc();
     assertEquals(x.getBits(), [0, 1, 0]);
-    assertEquals(x.getBinaryString(), "010");
+    assertEquals(x.toBinaryString(), "010");
 });
 
 Deno.test('BReg toObject', () => {
     const x = new BReg();
-    assertEquals(x.getBinaryString(), "0");
+    assertEquals(x.toBinaryString(), "0");
     x.inc();
     x.set();
     x.inc();

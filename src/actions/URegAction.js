@@ -16,6 +16,14 @@ export class URegAction extends Action {
 
     /**
      * @override
+     * @returns {number[]}
+     */
+    extractUnaryRegisterNumbers() {
+        return [this.regNumber];
+    }
+
+    /**
+     * @override
      */
     pretty() {
         return `${this.op} U${this.regNumber}`;

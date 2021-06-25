@@ -26,9 +26,9 @@ export function parseAction(str) {
         B2DAction.parse,
         AddAction.parse,
         MulAction.parse,
+        SubAction.parse,
         NopAction.parse,
         OutputAction.parse,
-        SubAction.parse,
         HaltOutAction.parse,
     ];
     for (const parser of parsers) {

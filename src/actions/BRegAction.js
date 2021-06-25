@@ -16,6 +16,14 @@ export class BRegAction extends Action {
 
     /**
      * @override
+     * @returns {number[]}
+     */
+    extractBinaryRegisterNumbers() {
+        return [this.regNumber]
+    }
+
+    /**
+     * @override
      */
     pretty() {
         return `${this.op} B${this.regNumber}`;

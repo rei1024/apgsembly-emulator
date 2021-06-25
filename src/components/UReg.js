@@ -33,6 +33,14 @@ export class UReg {
     }
 
     /**
+     * 
+     * @param {number} v 
+     */
+    setValue(v) {
+        this.value = v;
+    }
+
+    /**
      * @returns {void}
      */
     inc() {

@@ -38,6 +38,14 @@ export class BReg {
     }
 
     /**
+     * 
+     * @param {(0 | 1)[]} bits 
+     */
+    setBits(bits) {
+        this.bits = bits
+    }
+
+    /**
      * @returns {void}
      */
     inc() {
@@ -78,7 +86,7 @@ export class BReg {
         if (this.pointer < this.bits.length) {
             const value = this.bits[this.pointer];
             if (value === 1) {
-                throw Error('BReg error');
+                throw Error('BReg already 1: bits = ' + this.bits.join('') + " pointer = " + this.pointer);
             }
             this.bits[this.pointer] = 1;
         } else {
@@ -104,7 +112,7 @@ export class BReg {
      * 
      * @returns {string}
      */
-    getBinaryString() {
+    toBinaryString() {
         return this.getBits().slice().reverse().join("");
     }
 
