@@ -38,7 +38,7 @@ function parseBits(str) {
         } else if (c === '1') {
             return 1;
         } else {
-            throw Error('#REGISTERS: error ' + str);
+            throw Error('Invalid #REGISTERS: ' + str);
         }
     });
 }
@@ -81,13 +81,14 @@ export class ActionExecutor {
      */
     setByRegistersInit(regInit) {
         for (const [key, value] of Object.entries(regInit)) {
+            const debugStr = `"${key}": ${JSON.stringify(value)}`
             if (key.startsWith('U')) {
                 const n = parseInt(key.slice(1), 10);
                 if (isNaN(n)) {
-                    throw Error('invalid #REGISTERS ' + key);
+                    throw Error('Invalid #REGISTERS ' + debugStr);
                 }
                 if (typeof value !== "number") {
-                    throw Error('invalid #REGISTERS ' + key + ": " + value);
+                    throw Error('Invalid #REGISTERS ' + debugStr);
                 }
                 const reg = this.uRegMap.get(n);
                 if (reg === undefined) {
@@ -97,7 +98,7 @@ export class ActionExecutor {
             } else if (key.startsWith('B')) {
                const n = parseInt(key.slice(1), 10);
                 if (isNaN(n)) {
-                    throw Error('invalid #REGISTERS ' + key);
+                    throw Error('Invalid #REGISTERS ' + debugStr);
                 }
                 const reg = this.bRegMap.get(n);
                 if (reg === undefined) {
@@ -110,15 +111,15 @@ export class ActionExecutor {
                     continue;
                 }
                 if (!Array.isArray(value)) {
-                    throw Error('invalid #REGISTERS ' + key + ": " + value);
+                    throw Error('Invalid #REGISTERS ' + debugStr);
                 }
                 if (value.length !== 2) {
-                    throw Error('invalid #REGISTERS ' + key + ": " + value);
+                    throw Error('Invalid #REGISTERS ' + debugStr);
                 }
                 reg.pointer = value[0];
                 reg.setBits(parseBits(value[1]));
             } else {
-                throw Error('invalid #REGISTERS ' + key + ": " + value);
+                throw Error('Invalid #REGISTERS ' + debugStr);
             }
         }
     }

@@ -51,7 +51,19 @@ export class Machine {
         if (regHeader !== undefined) {
             /** @type {string} */
             const str = regHeader.content
-            this.actionExecutor.setByRegistersInit(JSON.parse(str));
+
+            /** @type {import("./ActionExecutor.js").RegistersInit} */
+            let parsed = {};
+            try {
+                parsed = JSON.parse(str);
+            } catch (e) {
+                throw Error('Invalid #REGISTERS');
+            }
+            try {
+                this.actionExecutor.setByRegistersInit(parsed);
+            } catch (e) {
+               throw e;
+            }
         }
     }
 

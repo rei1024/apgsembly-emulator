@@ -490,7 +490,6 @@ $fileImport.addEventListener('input', (e) => {
     reader.readAsText(e.target.files[0]);
 });
 
-
 try {
     app.render();
 } catch (e) {
