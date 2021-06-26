@@ -6,7 +6,8 @@ import { assertEquals, assertThrows } from "./deps.js";
 
 Deno.test('Machine no return value', () => {
     const str = `
-INITIAL; ZZ; INITIAL; OUTPUT 3
+INITIAL; ZZ; ID0; OUTPUT 3
+ID0; ZZ; ID0; NOP
     `;
     const program = Program.parse(str);
     if (!(program instanceof Program)) {
@@ -21,7 +22,25 @@ INITIAL; ZZ; INITIAL; OUTPUT 3
 
 Deno.test('Machine return value twice', () => {
     const str = `
-INITIAL; ZZ; INITIAL; NOP, NOP
+INITIAL; ZZ; ID0; NOP, NOP
+ID0; ZZ; ID0; NOP
+    `;
+    const program = Program.parse(str);
+    if (!(program instanceof Program)) {
+        throw Error('parse error '  + str);
+    }
+    const machine = new Machine(program);
+
+    assertThrows(() => {
+        machine.execCommand();
+    });
+});
+
+// > Also, the INITIAL state should never be returned to later in a program’s execution.
+// > It should be the first state, and only the first state.
+Deno.test('Machine INITIAL twice', () => {
+    const str = `
+INITIAL; ZZ; INITIAL; NOP
     `;
     const program = Program.parse(str);
     if (!(program instanceof Program)) {

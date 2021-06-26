@@ -129,12 +129,17 @@ export class Machine {
                 if (result === undefined) {
                     result = res;
                 } else {
-                    throw Error('Return value twice: command =  ' + command.pretty());
+                    throw Error('Return value twice: command = ' + command.pretty());
                 }
             }
         }
         if (result === undefined) {
             throw Error('No return value');
+        }
+
+        // INITIALに返ってくることは禁止
+        if (command.nextState === "INITIAL") {
+            throw Error('INITIAL is return in execution: command = ' + command.pretty());
         }
         this.currentState = command.nextState;
         this.prevOutput = result;
