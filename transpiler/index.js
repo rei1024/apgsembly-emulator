@@ -19,6 +19,11 @@ if (!($transpile instanceof HTMLElement)) {
     throw Error('input is not a HTMLTextAreaElement');
 }
 
+const $copy = document.querySelector('#copy');
+if (!($copy instanceof HTMLElement)) {
+    throw Error('input is not a HTMLTextAreaElement');
+}
+
 $transpile.addEventListener('click', () => {
     const program = Program.parse($input.value);
     if (program instanceof Program) {
@@ -26,4 +31,8 @@ $transpile.addEventListener('click', () => {
     } else {
         $output.value = program;
     }
+});
+
+$copy.addEventListener('click', () => {
+    navigator.clipboard.writeText($output.value.trim());
 });

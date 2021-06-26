@@ -33,6 +33,7 @@ const $stop = $type('#stop', HTMLButtonElement);
 // Reset machine state and program
 const $reset = $type('#reset', HTMLButtonElement);
 
+// Step Button
 const $step = $type('#step', HTMLButtonElement);
 
 const $currentState = $type('#current_state', HTMLElement);
@@ -63,8 +64,10 @@ const $b2dy = $type('#b2dy', HTMLElement);
 
 const $b2dDetail = $type('#b2d_detail', HTMLDetailsElement);
 
+// スライディングレジスタ
 const $unaryRegister = $type('#unary_register', HTMLElement);
 
+// バイナリレジスタ
 const $binaryRegister = $type('#binary_register', HTMLElement);
 
 const $binaryRegisterDetail = $type('#binary_register_detail', HTMLDetailsElement);
@@ -409,6 +412,11 @@ export class App {
                     return;
                 }
             }
+        }
+
+        if (steps === 0) {
+            // no render
+            return;
         }
 
         for (let i = 0; i < steps; i++) {
