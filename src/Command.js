@@ -71,6 +71,15 @@ export class Comment {
 }
 
 /**
+ * 空行
+ */
+export class EmptyLine {
+    constructor() {
+
+    }
+}
+
+/**
  * A line of program
  */
 export class Command {
@@ -93,7 +102,7 @@ export class Command {
     /**
      * CommandまたはCommentまたは空行またはエラーメッセージ
      * @param {string} str 
-     * @returns {Command | RegistersHeader | ComponentsHeader | Comment | undefined | string}
+     * @returns {Command | RegistersHeader | ComponentsHeader | Comment | EmptyLine | string}
      */
     static parse(str) {
         if (typeof str !== 'string') {
@@ -101,7 +110,7 @@ export class Command {
         }
         const trimmedStr = str.trim();
         if (trimmedStr === "") {
-            return undefined;
+            return new EmptyLine();
         }
         if (trimmedStr.startsWith("#")) {
             // ヘッダーをパースする

@@ -1,6 +1,6 @@
 // @ts-check
 
-import { Command, Comment, ComponentsHeader, RegistersHeader } from "./Command.js";
+import { Command, Comment, ComponentsHeader, EmptyLine, RegistersHeader } from "./Command.js";
 
 /**
  * APGsembly program
@@ -40,6 +40,7 @@ export class Program {
         for (const line of lines) {
             const res = Command.parse(line);
             if (typeof res === 'string') {
+                // エラーメッセージ
                 return res;
             } else if (res instanceof Command) {
                 commands.push(res);
@@ -55,6 +56,10 @@ export class Program {
                     return 'Multiple #COMPONENTS';
                 }
                 componentsHeader = res;
+            } else if (res instanceof EmptyLine) {
+
+            } else {
+                throw Error('Program.parse: internal error ' + line);
             }
         }
 
@@ -73,7 +78,8 @@ export class Program {
      * @returns {number[]}
      */
     extractUnaryRegisterNumbers() {
-        const array = this.commands.flatMap(command => command.actions).flatMap(action => action.extractUnaryRegisterNumbers());
+        const array = this.commands.flatMap(command => command.actions)
+            .flatMap(action => action.extractUnaryRegisterNumbers());
         return sortNub(array);
     }
 
@@ -81,7 +87,8 @@ export class Program {
      * @returns {number[]}
      */
     extractBinaryRegisterNumbers() {
-        const array = this.commands.flatMap(command => command.actions).flatMap(action => action.extractBinaryRegisterNumbers());
+        const array = this.commands.flatMap(command => command.actions)
+            .flatMap(action => action.extractBinaryRegisterNumbers());
         return sortNub(array);
     }
 

@@ -29,7 +29,7 @@ export class Machine {
     /**
      * 
      * @param {Program} program 
-     * @throws
+     * @throws {Error} #REGISTERSでの初期化に失敗
      */
     constructor(program) {
         if (!(program instanceof Program)) {
@@ -60,7 +60,7 @@ export class Machine {
             try {
                 parsed = JSON.parse(str);
             } catch (e) {
-                throw Error('Invalid #REGISTERS');
+                throw Error('Invalid #REGISTERS: ' + str);
             }
             try {
                 this.actionExecutor.setByRegistersInit(parsed);
@@ -97,17 +97,17 @@ export class Machine {
         if (this.prevOutput === 0) {
             if (childMap.has('Z')) {
                 return childMap.get('Z') ?? this.error();
-            } else if (childMap.has('ZZ')) {
-                return childMap.get('ZZ') ?? this.error();
             } else if (childMap.has('*')) {
                 return childMap.get('*') ?? this.error();
+            } else if (childMap.has('ZZ')) {
+                return childMap.get('ZZ') ?? this.error();
             }
         } else {
             if (childMap.has('NZ')) {
                 return childMap.get('NZ') ?? this.error();
             }
         }
-        throw Error('Next Command not found');
+        throw Error('Next Command not found: Current state = ' + this.currentState + ', output = ' + this.getPreviousOutput());
     }
 
     /**
