@@ -13,7 +13,7 @@ export class NOP {
      * @returns {0}
      */
     action(_act) {
-        return this.nop();
+        return 0;
     }
 
     /**
