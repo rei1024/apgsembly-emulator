@@ -26,6 +26,7 @@ export class Program {
 
     /**
      * プログラムまたはエラーメッセージ
+     * Program or error message
      * @param {string} str
      * @returns {Program | string}
      */

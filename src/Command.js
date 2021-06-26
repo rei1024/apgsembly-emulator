@@ -45,6 +45,9 @@ export class Comment {
 
 }
 
+/**
+ * A line of program
+ */
 export class Command {
     /**
      * 
@@ -133,6 +136,7 @@ export class Command {
     }
 
     /**
+     * 文字列化する
      * @returns {string}
      */
     pretty() {

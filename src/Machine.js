@@ -79,6 +79,7 @@ export class Machine {
     }
 
     /**
+     * @throws
      * @returns {Command}
      */
     getNextCommand() {
@@ -125,7 +126,7 @@ export class Machine {
                 if (result === undefined) {
                     result = res;
                 } else {
-                    throw Error('return value twice');
+                    throw Error('Return value twice: command =  ' + command.pretty());
                 }
             }
         }

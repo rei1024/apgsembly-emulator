@@ -132,6 +132,10 @@ export class App {
         }
     }
 
+    /**
+     * 停止する
+     * Stop execution
+     */
     stop() {
         this.appState = "Stop";
         this.render();
@@ -381,14 +385,14 @@ export class App {
         this.renderBinary();
         this.renderAddSubMul();
         this.renderFrequencyOutput();
+        // output
+        this.renderOutput();
+
         $steps.textContent = this.steps.toString();
 
         // current state
         $currentState.textContent = this.machine?.currentState;
         $previousOutput.textContent = this.machine?.getPreviousOutput();
-
-        // output
-        this.renderOutput();
     }
 
     /**
@@ -490,8 +494,13 @@ for (let i = 0; i < 6; i++) {
         frequencyArray.push(base * j);
     }
 }
+
 frequencyArray.push(10 ** 6);
 frequencyArray.push(2 * 10 ** 6);
+frequencyArray.push(3 * 10 ** 6);
+frequencyArray.push(4 * 10 ** 6);
+frequencyArray.push(5 * 10 ** 6);
+
 $frequencyInput.min = "0";
 $frequencyInput.max = (frequencyArray.length - 1).toString();
 
