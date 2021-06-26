@@ -22,7 +22,7 @@ if (!($transpile instanceof HTMLElement)) {
 $transpile.addEventListener('click', () => {
     const program = Program.parse($input.value);
     if (program instanceof Program) {
-        $output.value = $output.value;
+        $output.value = program.pretty();
     } else {
         $output.value = program;
     }
