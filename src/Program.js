@@ -99,7 +99,7 @@ export class Program {
         }
         str += this.commands.map(command => command.pretty()).join('\n');
 
-        return str;
+        return str.trim();
     }
 }
 
