@@ -117,6 +117,18 @@ export class BReg {
     }
 
     /**
+     * 十進数
+     * @returns {string}
+     */
+    toDecimalString() {
+        if (typeof BigInt !== "undefined") {
+            return BigInt("0b" + this.toBinaryString()).toString();
+        } else {
+            return Number("0b" + this.toBinaryString()).toString();
+        }
+    }
+
+    /**
      * 
      * @returns {{
         prefix: (0 | 1)[];

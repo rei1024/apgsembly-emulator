@@ -1,6 +1,6 @@
-import { B2DAction } from "../actions/B2DAction.js";
-
 // @ts-check
+
+import { B2DAction } from "../actions/B2DAction.js";
 
 export class B2D {
     /**
@@ -32,6 +32,29 @@ export class B2D {
         this.array = Array(this.maxY + 1).fill(0).map(_ => {
             return Array(this.maxX + 1).fill(0);
         });
+    }
+
+    /**
+     * @returns {(0 | 1)[][]}
+     */
+    getArray() {
+        return this.array;
+    }
+
+    /**
+     * 
+     * @returns {number}
+     */
+    getMaxX() {
+        return this.maxX;
+    }
+
+    /**
+     * 
+     * @returns {number}
+     */
+    getMaxY() {
+        return this.maxY;
     }
 
     /**
@@ -91,7 +114,7 @@ export class B2D {
         this.y += 1;
         if (this.maxY < this.y) {
             this.array.push(Array(this.maxX + 1).fill(0));
-            this.maxSQY = this.y;
+            this.maxY = this.y;
         }
     }
 

@@ -56,12 +56,24 @@ export class Machine {
     }
 
     /**
+     * @returns {"Z" | "NZ"}
+     */
+    getPreviousOutput() {
+        if (this.prevOutput === 0) {
+            return "Z";
+        } else {
+            return "NZ";
+        }
+    }
+
+    /**
      * @returns {Command}
      */
     getNextCommand() {
         const childMap = this.tableMap.get(this.currentState);
+        // console.log(this.tableMap);
         if (childMap === undefined) {
-            throw Error('childMap is undefined');
+            throw Error('Next state not found: current state: ' + this.currentState);
         }
         if (childMap.has('*')) {
             return childMap.get('*') ?? this.error();
