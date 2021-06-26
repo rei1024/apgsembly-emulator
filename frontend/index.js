@@ -478,10 +478,11 @@ document.querySelectorAll('.js_sample').forEach(e => {
         throw Error('is not HTMLElement');
     }
     e.addEventListener('click', () => {
-        e.dataset.src
         fetch(DATA_DIR + e.dataset.src).then(res => res.text()).then(text => {
             $input.value = text;
             app.reset();
+        }).catch(() => {
+            console.log('Fetch Error: ' + e.dataset.src);
         });
     });
 });
