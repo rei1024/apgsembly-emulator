@@ -11,6 +11,14 @@ export class ComponentsHeader {
     constructor(content) {
         this.content = content;
     }
+
+    /**
+     * 
+     * @returns {string}
+     */
+    pretty() {
+        return "#COMPONENTS " + this.content;
+    }
 }
 
 export class RegistersHeader {
@@ -20,6 +28,14 @@ export class RegistersHeader {
      */
     constructor(content) {
         this.content = content;
+    }
+
+    /**
+     * 
+     * @returns {string}
+     */
+    pretty() {
+        return "#REGISTERS " + this.content;
     }
 }
 

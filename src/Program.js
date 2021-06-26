@@ -84,6 +84,23 @@ export class Program {
         const array = this.commands.flatMap(command => command.actions).flatMap(action => action.extractBinaryRegisterNumbers());
         return sortNub(array);
     }
+
+    /**
+     * 文字列化する
+     * @returns {string}
+     */
+    pretty() {
+        let str = "";
+        if (this.componentsHeader !== undefined) {
+            str += this.componentsHeader.pretty() + "\n";
+        }
+        if (this.registersHeader !== undefined) {
+            str += this.registersHeader.pretty() + "\n";
+        }
+        str += this.commands.map(command => command.pretty()).join('\n');
+
+        return str;
+    }
 }
 
 /**
