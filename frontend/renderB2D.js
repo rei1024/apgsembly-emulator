@@ -28,9 +28,7 @@ export function renderB2D(context, b2d) {
         }
     }
     context.fill();
-    const x = b2d.x;
-    const y = b2d.y;
     context.strokeStyle = "#03A9F4";
     context.lineWidth = 4;
-    context.strokeRect(x * cellSize, y * cellSize, cellSize, cellSize);
+    context.strokeRect(b2d.x * cellSize, b2d.y * cellSize, cellSize, cellSize);
 }

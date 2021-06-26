@@ -535,6 +535,38 @@ $fileImport.addEventListener('input', (e) => {
     reader.readAsText(e.target.files[0]);
 });
 
+// キーボード入力
+// Enter: toggle Start and Stop
+// Space: Step
+document.addEventListener('keydown', e => {
+    // 入力中は無し
+    if (document.activeElement.tagName === "TEXTAREA" ||
+        document.activeElement.tagName === "INPUT" ||
+        document.activeElement.tagName === "DETAILS"
+        ) {
+        return;
+    }
+
+    if (e.code === "Enter") {
+        if (app.appState === "Running") {
+            app.stop();
+        } else if (app.appState === "Stop") {
+            app.start();
+        }
+    } else if (e.code === "Space") {
+        // ステップが無効化されていないときだけ
+        if (!$step.disabled) {
+            // スペースで下に移動することを防ぐ
+            e.preventDefault();
+            // 実行中の場合は停止する
+            if (app.appState === "Running") {
+                app.stop();
+            }
+            app.run(app.stepConfig);
+        }
+    }
+});
+
 // 初回描画
 try {
     app.render();
