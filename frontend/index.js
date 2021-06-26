@@ -10,21 +10,27 @@ import { $type } from "./selector.js";
 const DATA_DIR = "../data/";
 
 // エラーメッセージ
+// Error messsage
 const $error = $type('#error', HTMLElement);
 
 // 入力
+// APGsembly code
 const $input = $type('#input', HTMLTextAreaElement);
 
 // 出力
+// OUTPUT component
 const $output = $type('#output', HTMLTextAreaElement);
 
 // ステップ数表示
 const $steps = $type('#steps', HTMLElement);
 
+// Start execution
 const $start = $type('#start', HTMLButtonElement);
 
+// Stop execution
 const $stop = $type('#stop', HTMLButtonElement);
 
+// Reset machine state and program
 const $reset = $type('#reset', HTMLButtonElement);
 
 const $step = $type('#step', HTMLButtonElement);
@@ -41,6 +47,7 @@ const $frequencyInput = $type('#frequency_input', HTMLInputElement);
 const $freqencyOutput = $type('#frequency_output', HTMLElement);
 
 // 次のコマンド
+// Next command
 const $command = $type('#command', HTMLElement);
 
 const $canvas = $type('#canvas', HTMLCanvasElement);
@@ -75,6 +82,8 @@ export class App {
     constructor() {
         /** @type {Machine | undefined} */
         this.machine = undefined;
+
+        /** ステップ数 */
         this.steps = 0;
 
         /**
@@ -83,17 +92,23 @@ export class App {
         this.appState = "Initial";
 
         /**
+         * frequency of update
          * 周波数[Hz]
          */
         this.frequency = 30; // index.htmlと同期する
 
         this.errorMessage = "";
 
+        /** ステップ数設定 */
         this.stepConfig = 1;
 
         this.frequencyManager = new Frequency(() => this.appState === "Running", () => this.frequency, n => this.run(n));
     }
 
+    /**
+     * 実行を開始する
+     * Start execution
+     */
     start() {
         switch (this.appState) {
             case "Initial": {
@@ -122,6 +137,9 @@ export class App {
         this.render();
     }
 
+    /**
+     * スライディングレジスタ表示の初期化
+     */
     setUpUnary() {
         if (this.machine === undefined) {
             $unaryRegister.innerHTML = "";
@@ -152,6 +170,9 @@ export class App {
         $unaryRegister.appendChild(unaryTable);
     }
 
+    /**
+     * バイナリレジスタの表示の初期化
+     */
     setUpBinary() {
         if (this.machine === undefined) {
             $binaryRegister.innerHTML = "";
@@ -188,11 +209,17 @@ export class App {
         $binaryRegister.append(table);
     }
 
+    /**
+     * machineがセットされた時のコールバック
+     */
     onMachineSet() {
         this.setUpUnary();
         this.setUpBinary();
     }
 
+    /**
+     * 状態をリセットし、パースする
+     */
     reset() {
         this.steps = 0;
         this.errorMessage = "";
@@ -217,9 +244,14 @@ export class App {
     }
 
     renderFrequencyOutput() {
-        $freqencyOutput.textContent = app.frequency + "Hz"
+        if (typeof app.frequency.toLocaleString === "function") {
+            // with ","
+            $freqencyOutput.textContent = app.frequency.toLocaleString() + "Hz";
+        } else {
+            $freqencyOutput.textContent = app.frequency.toString() + "Hz";
+        }
     }
-    
+
     // エラーメッセージ
     renderErrorMessage() {
         if (this.appState === "RuntimeError" || this.appState === "ParseError") {
@@ -305,6 +337,15 @@ export class App {
         `;
     }
 
+    renderOutput() {
+        const output = this.machine?.actionExecutor.output.getString();
+        if (output !== undefined) {
+            $output.value = output;
+        } else {
+            $output.value = "";
+        }
+    }
+
     render() {
         // ボタンの有効無効
         switch (this.appState) {
@@ -347,16 +388,11 @@ export class App {
         $previousOutput.textContent = this.machine?.getPreviousOutput();
 
         // output
-        const output = this.machine?.actionExecutor.output.getString();
-        if (output !== undefined) {
-            $output.value = output;
-        } else {
-            $output.value = "";
-        }
+        this.renderOutput();
     }
 
     /**
-     * 
+     * `steps`ステップ走らせる
      * @param {number} steps 
      */
     run(steps) {
@@ -490,6 +526,7 @@ $fileImport.addEventListener('input', (e) => {
     reader.readAsText(e.target.files[0]);
 });
 
+// 初回描画
 try {
     app.render();
 } catch (e) {

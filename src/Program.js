@@ -2,6 +2,9 @@
 
 import { Command, Comment, ComponentsHeader, RegistersHeader } from "./Command.js";
 
+/**
+ * APGsembly program
+ */
 export class Program {
     /**
      * 
@@ -83,7 +86,7 @@ export class Program {
 }
 
 /**
- * 
+ * 要素を一意にしてソートする
  * @param {number[]} array 
  * @returns {number[]}
  */

@@ -3,7 +3,7 @@
 import { B2D } from "../src/components/B2D.js";
 
 /**
- * 
+ * B2Dをcanvasに描画する
  * @param {CanvasRenderingContext2D} context 
  * @param {B2D} b2d 
  */

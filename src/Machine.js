@@ -130,7 +130,7 @@ export class Machine {
             }
         }
         if (result === undefined) {
-            throw Error('no return value');
+            throw Error('No return value');
         }
         this.currentState = command.nextState;
         this.prevOutput = result;

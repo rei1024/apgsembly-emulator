@@ -104,13 +104,13 @@ export class Command {
         for (const actionsStr of actionStrs) {
             const result = parseAction(actionsStr);
             if (result === undefined) {
-                return `unkown action "${actionsStr}" at "${str}"`;
+                return `Unkown action "${actionsStr}" at "${str}"`;
             }
             actions.push(result);
         }
 
         if (!["Z", "NZ", "ZZ", "*"].includes(inputStr)) {
-            return `unkown input "${inputStr}" at "${str}"`;
+            return `Unkown input "${inputStr}" at "${str}"`;
         }
 
         /** @type {"Z" | "NZ" | "ZZ" | "*"} */
