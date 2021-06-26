@@ -3,6 +3,9 @@
 import { Action } from "./actions/Action.js";
 import { parseAction } from "./actions/parse.js";
 
+/**
+ * `#COMPONENTS`
+ */
 export class ComponentsHeader {
     /**
      * 
@@ -21,6 +24,9 @@ export class ComponentsHeader {
     }
 }
 
+/**
+ * `#REGISTERS`
+ */
 export class RegistersHeader {
     /**
      * 
@@ -39,6 +45,9 @@ export class RegistersHeader {
     }
 }
 
+/**
+ * コメント
+ */
 export class Comment {
     /**
      * 
@@ -52,7 +61,7 @@ export class Comment {
     }
 
     /**
-     * 
+     * シャープを含む
      * @returns {string}
      */
     getString() {
@@ -95,6 +104,7 @@ export class Command {
             return undefined;
         }
         if (trimmedStr.startsWith("#")) {
+            // ヘッダーをパースする
             if (trimmedStr.startsWith('#COMPONENTS')) {
                 return new ComponentsHeader(trimmedStr.slice('#COMPONENTS'.length).trim());
             } else if (trimmedStr.startsWith('#REGISTERS')) {
@@ -104,13 +114,13 @@ export class Command {
         }
         const array = trimmedStr.split(/\s*;\s*/);
         if (array.length < 4) {
-            return "invalid command";
+            return "Invalid command " + str;
         }
         if (array.length > 4) {
             if (array[4] === "") {
-                return "extraneous semicolon";
+                return "Extraneous semicolon " + str;
             }
-            return "invalid command";
+            return "Invalid command " + str;
         }
         const state = array[0] ?? this.error();
         const inputStr = array[1] ?? this.error();

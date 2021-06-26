@@ -32,6 +32,9 @@ export class Machine {
      * @throws
      */
     constructor(program) {
+        if (!(program instanceof Program)) {
+            throw TypeError('program is not a Program');
+        }
         this.actionExecutor = new ActionExecutor({
             binaryRegisterNumbers: program.extractBinaryRegisterNumbers(),
             unaryRegisterNumbers: program.extractUnaryRegisterNumbers()
