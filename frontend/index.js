@@ -36,7 +36,7 @@ const $previousOutput = $type('#previous_output', HTMLElement);
 const $stepConfig = $type('#step_config', HTMLButtonElement);
 
 // スピード
-const $freqencyInput = $type('#frequency_input', HTMLInputElement);
+const $frequencyInput = $type('#frequency_input', HTMLInputElement);
 
 const $freqencyOutput = $type('#frequency_output', HTMLElement);
 
@@ -63,6 +63,9 @@ const $binaryRegister = $type('#binary_register', HTMLElement);
 const $binaryRegisterDetail = $type('#binary_register_detail', HTMLDetailsElement);
 
 const $addSubMul = $type('#add_sub_mul', HTMLElement);
+
+// ファイルインポート
+const $fileImport = $type('#import_file', HTMLInputElement);
 
 /**
  * @typedef {"Initial" | "Running" | "Stop" | "ParseError" | "RuntimeError" | "Halted"} AppState
@@ -141,6 +144,10 @@ export class App {
         unaryTable.appendChild(unaryHeader);
         unaryTable.appendChild(unaryData);
         unaryTable.classList.add('table')
+
+        // 幅を均等にする
+        unaryTable.style.tableLayout = "fixed"
+
         $unaryRegister.innerHTML = "";
         $unaryRegister.appendChild(unaryTable);
     }
@@ -171,6 +178,8 @@ export class App {
             const decimal = document.createElement('td');
             decimal.classList.add('decimal');
 
+            // 長い場合は改行を入れる
+            decimal.style.wordBreak = "break-all";
             td.append(code);
             tr.append(th, td, decimal);
             table.append(tr);
@@ -437,18 +446,48 @@ document.querySelectorAll('.js_sample').forEach(e => {
     });
 });
 
-$freqencyInput.addEventListener('input', () => {
-    app.frequency = parseFloat($freqencyInput.value);
+// rangeの設定
+const frequencyArray = [];
+for (let i = 0; i < 6; i++) {
+    const base = 10 ** i;
+    for (let j = 1; j <= 9; j++) {
+        frequencyArray.push(base * j);
+    }
+}
+frequencyArray.push(10 ** 6);
+frequencyArray.push(2 * 10 ** 6);
+$frequencyInput.min = "0";
+$frequencyInput.max = (frequencyArray.length - 1).toString();
+
+$frequencyInput.addEventListener('input', () => {
+    const value = parseInt($frequencyInput.value);
+    app.frequency = frequencyArray[value]
     app.renderFrequencyOutput();
     // app.render();
 });
 
+// 開閉で描画
 $b2dDetail.addEventListener('toggle', () => {
     app.renderB2D();
 });
 
 $binaryRegisterDetail.addEventListener('toggle', () => {
     app.renderBinary();
+});
+
+// ファイルインポート
+$fileImport.addEventListener('input', (e) => {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        const result = e.target.result;
+        if (typeof result !== "string") {
+            throw Error('import: internal error');
+        }
+        $input.value = result;
+        app.reset();
+    };
+    // @ts-ignore
+    reader.readAsText(e.target.files[0]);
 });
 
 

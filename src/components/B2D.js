@@ -76,7 +76,7 @@ export class B2D {
                     case "B2DX": return this.tdecB2DX();
                     case "B2DY": return this.tdecB2DY();
                     case "B2D": throw Error('B2D: internal');
-                } 
+                }
             }
             case "READ": {
                 switch (act.axis) {

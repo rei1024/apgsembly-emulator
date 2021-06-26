@@ -86,7 +86,7 @@ export class BReg {
         if (this.pointer < this.bits.length) {
             const value = this.bits[this.pointer];
             if (value === 1) {
-                throw Error('BReg already 1: bits = ' + this.bits.join('') + " pointer = " + this.pointer);
+                throw Error('Binary register value is already 1: bits = ' + this.bits.join('') + " pointer = " + this.pointer);
             }
             this.bits[this.pointer] = 1;
         } else {

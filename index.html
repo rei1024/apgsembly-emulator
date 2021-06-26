@@ -15,7 +15,7 @@
         <h1>APGsembly 2.0 Emulator</h1>
     </header>
     <main class="container">
-        <div id="error" class="alert alert-danger" role="alert">
+        <div id="error" style="display: none;" class="alert alert-danger" role="alert">
         </div>
         <div class="mb-3">
             <label for="input" class="form-label">Input</label>
@@ -27,17 +27,20 @@
             <button id="stop" type="button" class="btn btn-primary">Stop</button>
             <button id="step" type="button" class="btn btn-primary">Step</button>
             <button id="step_config" type="button" class="btn btn-primary">Step Config</button>
-            <button type="button" class="btn btn-primary dropdown-toggle" id="samples" data-bs-toggle="dropdown" aria-expanded="false">Samples</button>
+            <button type="button" class="btn btn-primary dropdown-toggle" id="samples" data-bs-toggle="dropdown" aria-expanded="false">Sample</button>
             <ul class="dropdown-menu" aria-labelledby="samples">
                 <li>
                     <button class="dropdown-item js_sample" data-src="pi_calc.txt">Pi Calculator</button>
                     <button class="dropdown-item js_sample" data-src="koch.txt">Koch snowfrake</button>
                 </li>
-              </ul>
+            </ul>
+            <input id="import_file" type="file" style="display: none;">
+            <label for="import_file" type="button" class="btn btn-primary">Import</button>
         </div>
         <div class="mt-1 mb-3">
             <label for="output" class="form-label">Speed <span id="frequency_output"></span></label>
-            <input id="frequency_input" class="form-control" value="30" type="range" min="1" max="500">
+            <!-- index.jsでminとmaxは設定 -->
+            <input id="frequency_input" class="form-control" value="11" type="range">
         </div>
         <div>
             State
@@ -124,8 +127,8 @@
             </details>
         </div>
     </main>
-    <footer>
-
+    <footer class="mt-3">
+        
     </footer>
 </body>
 </html>

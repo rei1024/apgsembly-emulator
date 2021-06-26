@@ -43,15 +43,19 @@ export class Program {
                 // nothing
             } else if (res instanceof RegistersHeader) {
                 if (registersHeader !== undefined) {
-                    return 'multiple #REGISTER';
+                    return 'Multiple #REGISTER';
                 }
                 registersHeader = res;
             } else if (res instanceof ComponentsHeader) {
                 if (componentsHeader !== undefined) {
-                    return 'multiple #COMPONENTS';
+                    return 'Multiple #COMPONENTS';
                 }
                 componentsHeader = res;
             }
+        }
+
+        if (commands.length === 0) {
+            return 'Program is empty';
         }
 
         return new Program({
