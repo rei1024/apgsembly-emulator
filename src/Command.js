@@ -4,14 +4,27 @@ import { Action } from "./actions/Action.js";
 import { parseAction } from "./actions/parse.js";
 
 /**
+ * @abstract
+ */
+export class ProgramLine {
+    /**
+     * @returns {string}
+     */
+    pretty() {
+        return `unimplemented`;
+    }
+}
+
+/**
  * `#COMPONENTS`
  */
-export class ComponentsHeader {
+export class ComponentsHeader extends ProgramLine {
     /**
      * 
      * @param {string} content
      */
     constructor(content) {
+        super();
         this.content = content;
     }
 
@@ -25,6 +38,7 @@ export class ComponentsHeader {
     /**
      * 
      * @returns {string}
+     * @override
      */
     pretty() {
         return ComponentsHeader.key + " " + this.content;
@@ -34,12 +48,13 @@ export class ComponentsHeader {
 /**
  * `#REGISTERS`
  */
-export class RegistersHeader {
+export class RegistersHeader extends ProgramLine {
     /**
      * 
      * @param {string} content 
      */
     constructor(content) {
+        super();
         this.content = content;
     }
 
@@ -51,7 +66,7 @@ export class RegistersHeader {
     }
 
     /**
-     * 
+     * @override
      * @returns {string}
      */
     pretty() {
@@ -62,12 +77,13 @@ export class RegistersHeader {
 /**
  * コメント
  */
-export class Comment {
+export class Comment extends ProgramLine {
     /**
      * 
      * @param {string} str 
      */
     constructor(str) {
+        super();
         /**
          * @private
          */
@@ -82,21 +98,35 @@ export class Comment {
         return this.str;
     }
 
+    /**
+     * @override
+     */
+    pretty() {
+        return this.getString();
+    }
+
 }
 
 /**
  * 空行
  */
-export class EmptyLine {
+export class EmptyLine extends ProgramLine {
     constructor() {
+        super();
+    }
 
+    /**
+     * @override
+     */
+    pretty() {
+        return "";
     }
 }
 
 /**
  * A line of program
  */
-export class Command {
+export class Command extends ProgramLine {
     /**
      * 
      * @param {{
@@ -107,6 +137,7 @@ export class Command {
      * }} param0 
      */
     constructor({ state, input, nextState, actions }) {
+        super();
         this.state = state;
         this.input = input;
         this.nextState = nextState;
@@ -186,6 +217,7 @@ export class Command {
 
     /**
      * 文字列化する
+     * @override
      * @returns {string}
      */
     pretty() {
