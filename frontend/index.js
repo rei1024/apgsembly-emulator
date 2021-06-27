@@ -7,7 +7,8 @@ import { renderB2D } from "./renderB2D.js";
 import { $type } from "./selector.js";
 
 // データ
-const DATA_DIR = "../data/";
+// GitHub Pagesは1階層上になる
+const DATA_DIR = location.origin.includes('rei') ? "../apgsembly-emulator-2/data/" : "../data/";
 
 // エラーメッセージ
 // Error messsage
