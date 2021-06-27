@@ -91,20 +91,23 @@ export class Machine {
         if (childMap === undefined) {
             throw Error('Next state not found: current state: ' + this.currentState);
         }
-        if (childMap.has('*')) {
-            return childMap.get('*') ?? this.error();
+        const wildcard = childMap.get('*');
+        if (wildcard !== undefined) {
+            return wildcard;
         }
         if (this.prevOutput === 0) {
-            if (childMap.has('Z')) {
-                return childMap.get('Z') ?? this.error();
-            } else if (childMap.has('*')) {
-                return childMap.get('*') ?? this.error();
-            } else if (childMap.has('ZZ')) {
-                return childMap.get('ZZ') ?? this.error();
+            const z = childMap.get('Z');
+            if (z !== undefined) {
+                return z;
+            }
+            const zz = childMap.get('ZZ');
+            if (zz !== undefined) {
+                return zz;
             }
         } else {
-            if (childMap.has('NZ')) {
-                return childMap.get('NZ') ?? this.error();
+            const nz = childMap.get('NZ');
+            if (nz !== undefined) {
+                return nz;
             }
         }
         throw Error('Next Command not found: Current state = ' + this.currentState + ', output = ' + this.getPreviousOutput());
