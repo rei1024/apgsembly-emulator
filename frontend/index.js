@@ -8,7 +8,7 @@ import { $type } from "./selector.js";
 
 // データ
 // GitHub Pagesは1階層上になる
-const DATA_DIR = location.origin.includes('rei') ? "../apgsembly-emulator-2/data/" : "../data/";
+const DATA_DIR = location.origin.includes('github') ? "../apgsembly-emulator-2/data/" : "../data/";
 
 // エラーメッセージ
 // Error messsage
