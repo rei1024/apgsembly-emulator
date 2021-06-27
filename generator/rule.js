@@ -1,3 +1,5 @@
+// Elementary cellular automata
+
 // @ts-check
 
 /**
