@@ -77,7 +77,7 @@ export function makeDelta(rule) {
 }
 
 /**
- * 
+ * Generate APGsembly
  * @param {number} rule
  * @returns {string}
  */
@@ -87,60 +87,61 @@ export function generate(rule) {
 
     /** @type {Array<string>} */
     const array = [];
-    array.push(`# Rule${rule}`);
+    array.push(`# Rule ${rule}`);
     // Set ON cell at (0, 0)
-    array.push(`INITIAL; *; next.s${boundary}${boundary}.read.1; SET SQ, NOP`);
+    array.push(`INITIAL; *; NEXT_S${boundary}${boundary}_READ_1; SET SQ, NOP`);
     // Current cursor is on the cell that will be read
     bit2((i, j) => {
-        array.push(`next.s${i}${j}.read.1; *; next.s${i}${j}.read.2; READ SQ`);
-        array.push(`next.s${i}${j}.read.2; Z; next.s${i}${j}0.write.1; NOP`);
-        array.push(`next.s${i}${j}.read.2; NZ; next.s${i}${j}1.write.1; SET SQ, NOP`);
+        array.push(`NEXT_S${i}${j}_READ_1; *; NEXT_S${i}${j}_READ_2; READ SQ`);
+        array.push(`NEXT_S${i}${j}_READ_2; Z; NEXT_S${i}${j}0_WRITE_1; NOP`);
+        array.push(`NEXT_S${i}${j}_READ_2; NZ; NEXT_S${i}${j}1_WRITE_1; SET SQ, NOP`);
     });
     // If the next cell is empty, skip writing
     bit3((i, j, k) => {
         if (delta(i, j, k) == "0") {
-            array.push(`next.s${i}${j}${k}.write.1; *; next.s${j}${k}.check0.1; INC SQX, NOP`);
+            array.push(`NEXT_S${i}${j}${k}_WRITE_1; *; NEXT_S${j}${k}_CHECK0_1; INC SQX, NOP`);
         } else {
-            array.push(`next.s${i}${j}${k}.write.1; *; next.s${i}${j}${k}.write.2; INC SQY, NOP`);
-            array.push(`next.s${i}${j}${k}.write.2; *; next.s${i}${j}${k}.write.3; INC SQY, NOP`);
-            array.push(`next.s${i}${j}${k}.write.3; *; next.s${j}${k}.check.1; SET SQ, NOP`);
+            array.push(`NEXT_S${i}${j}${k}_WRITE_1; *; NEXT_S${i}${j}${k}_WRITE_2; INC SQY, NOP`);
+            array.push(`NEXT_S${i}${j}${k}_WRITE_2; *; NEXT_S${i}${j}${k}_WRITE_3; INC SQY, NOP`);
+            array.push(`NEXT_S${i}${j}${k}_WRITE_3; *; NEXT_S${j}${k}_CHECK_1; SET SQ, NOP`);
         }
     });
     // skip writing
     bit2((i, j) => {
-        array.push(`next.s${i}${j}.check0.1; *; next.s${i}${j}.check0.2; DEC SQY`);
-        array.push(`next.s${i}${j}.check0.2; Z; finish.s${i}${j}.write.1; NOP`);
-        array.push(`next.s${i}${j}.check0.2; NZ; next.s${i}${j}.read.1; NOP`);
+        array.push(`NEXT_S${i}${j}_CHECK0_1; *; NEXT_S${i}${j}_CHECK0_2; DEC SQY`);
+        array.push(`NEXT_S${i}${j}_CHECK0_2; Z; FINISH_S${i}${j}_WRITE_1; NOP`);
+        array.push(`NEXT_S${i}${j}_CHECK0_2; NZ; NEXT_S${i}${j}_READ_1; NOP`);
     });
 
     bit2((i, j) => {
-        array.push(`next.s${i}${j}.check.1; *; next.s${i}${j}.check.2; INC SQX, NOP`);
+        array.push(`NEXT_S${i}${j}_CHECK_1; *; NEXT_S${i}${j}_CHECK_2; INC SQX, NOP`);
+        const n = 4;
         for (let k = 2; k <= 4; k++) {
-            array.push(`next.s${i}${j}.check.${k}; *; next.s${i}${j}.check.${k + 1}; DEC SQY`);
+            array.push(`NEXT_S${i}${j}_CHECK_${k}; *; NEXT_S${i}${j}_CHECK_${k + 1}; DEC SQY`);
         }
-        array.push(`next.s${i}${j}.check.5; Z; finish.s${i}${j}.write.1; NOP`);
-        array.push(`next.s${i}${j}.check.5; NZ; next.s${i}${j}.read.1; NOP`);
+        array.push(`NEXT_S${i}${j}_CHECK_${n + 1}; Z; FINISH_S${i}${j}_WRITE_1; NOP`);
+        array.push(`NEXT_S${i}${j}_CHECK_${n + 1}; NZ; NEXT_S${i}${j}_READ_1; NOP`);
 
-        array.push(`finish.s${i}${j}.write.1; *; finish.s${i}${j}.write.2; INC SQY, NOP`);
+        array.push(`FINISH_S${i}${j}_WRITE_1; *; FINISH_S${i}${j}_WRITE_2; INC SQY, NOP`);
         if (delta(i, j, boundary) === "0") {
-            array.push(`finish.s${i}${j}.write.2; *; finish2.s${j}.write.1; NOP`)
+            array.push(`FINISH_S${i}${j}_WRITE_2; *; FINISH2_S${j}_WRITE_1; NOP`)
         } else {
-            array.push(`finish.s${i}${j}.write.2; *; finish2.s${j}.write.1; SET SQ, NOP`);
+            array.push(`FINISH_S${i}${j}_WRITE_2; *; FINISH2_S${j}_WRITE_1; SET SQ, NOP`);
         }
     });
     bit1(i => {
-        array.push(`finish2.s${i}.write.1; *; finish2.s${i}.write.2; INC SQX, NOP`);
-        array.push(`finish2.s${i}.write.2; *; finish2.s${i}.write.3; DEC SQY`);
+        array.push(`FINISH2_S${i}_WRITE_1; *; FINISH2_S${i}_WRITE_2; INC SQX, NOP`);
+        array.push(`FINISH2_S${i}_WRITE_2; *; FINISH2_S${i}_WRITE_3; DEC SQY`);
         if (delta(i, boundary, boundary) === "0") {
-            array.push(`finish2.s${i}.write.3; *; return.1; NOP`);
+            array.push(`FINISH2_S${i}_WRITE_3; *; RETURN_1; NOP`);
         } else {
-            array.push(`finish2.s${i}.write.3; *; return.1; SET SQ, NOP`);
+            array.push(`FINISH2_S${i}_WRITE_3; *; RETURN_1; SET SQ, NOP`);
         }
     });
     // return to the (0, N)
-    array.push(`return.1; *; return.2; INC SQY, NOP`);
-    array.push(`return.2; *; return.3; DEC SQX`);
-    array.push(`return.3; Z; next.s${boundary}${boundary}.read.1; DEC SQY`);
-    array.push(`return.3; NZ; return.1; NOP`);
+    array.push(`RETURN_1; *; RETURN_2; INC SQY, NOP`);
+    array.push(`RETURN_2; *; RETURN_3; DEC SQX`);
+    array.push(`RETURN_3; Z; NEXT_S${boundary}${boundary}_READ_1; DEC SQY`);
+    array.push(`RETURN_3; NZ; RETURN_1; NOP`);
     return array.join("\n");
 }
