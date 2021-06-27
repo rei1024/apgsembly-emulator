@@ -16,11 +16,18 @@ export class ComponentsHeader {
     }
 
     /**
+     * @returns {string}
+     */
+    static get key() {
+        return "#COMPONENTS";
+    }
+
+    /**
      * 
      * @returns {string}
      */
     pretty() {
-        return "#COMPONENTS " + this.content;
+        return ComponentsHeader.key + " " + this.content;
     }
 }
 
@@ -37,11 +44,18 @@ export class RegistersHeader {
     }
 
     /**
+     * @returns {string}
+     */
+    static get key() {
+        return "#REGISTERS";
+    }
+
+    /**
      * 
      * @returns {string}
      */
     pretty() {
-        return "#REGISTERS " + this.content;
+        return RegistersHeader.key + " " + this.content;
     }
 }
 
@@ -114,22 +128,22 @@ export class Command {
         }
         if (trimmedStr.startsWith("#")) {
             // ヘッダーをパースする
-            if (trimmedStr.startsWith('#COMPONENTS')) {
-                return new ComponentsHeader(trimmedStr.slice('#COMPONENTS'.length).trim());
-            } else if (trimmedStr.startsWith('#REGISTERS')) {
-                return new RegistersHeader(trimmedStr.slice('#REGISTERS'.length).trim());
+            if (trimmedStr.startsWith(ComponentsHeader.key)) {
+                return new ComponentsHeader(trimmedStr.slice(ComponentsHeader.key.length).trim());
+            } else if (trimmedStr.startsWith(RegistersHeader.key)) {
+                return new RegistersHeader(trimmedStr.slice(RegistersHeader.key.length).trim());
             }
             return new Comment(str);
         }
         const array = trimmedStr.split(/\s*;\s*/);
         if (array.length < 4) {
-            return "Invalid command " + str;
+            return `Invalid command "${str}"`;
         }
         if (array.length > 4) {
             if (array[4] === "") {
-                return "Extraneous semicolon " + str;
+                return `Extraneous semicolon "${str}"`;
             }
-            return "Invalid command " + str;
+            return `Invalid command "${str}"`;
         }
         const state = array[0] ?? this.error();
         const inputStr = array[1] ?? this.error();
