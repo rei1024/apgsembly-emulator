@@ -198,6 +198,8 @@ export class App {
             $prefix.classList.add('prefix');
             const $head = document.createElement('span');
             $head.style.color = "#0D47A1";
+            // 下線
+            $head.style.borderBottom = "3px solid #0D47A1";
             $head.classList.add('head');
             const $suffix = document.createElement('span');
             $suffix.classList.add('suffix');
