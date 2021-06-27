@@ -171,8 +171,9 @@ export class App {
         unaryTable.classList.add('table')
 
         // 幅を均等にする
-        unaryTable.style.tableLayout = "fixed"
-
+        unaryTable.style.tableLayout = "fixed";
+        // 16pxから変更
+        unaryTable.style.marginBottom = "0px";
         $unaryRegister.innerHTML = "";
         $unaryRegister.appendChild(unaryTable);
     }
