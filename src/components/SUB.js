@@ -97,6 +97,6 @@ export class SUB {
      * @returns {never}
      */
     error() {
-        throw Error('internal error');
+        throw Error('SUB: internal error');
     }
 }

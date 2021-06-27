@@ -78,6 +78,9 @@ const $addSubMul = $type('#add_sub_mul', HTMLElement);
 // ファイルインポート
 const $fileImport = $type('#import_file', HTMLInputElement);
 
+// サンプルコード
+const $sampleCodes = document.querySelectorAll('.js_sample');
+
 /**
  * @typedef {"Initial" | "Running" | "Stop" | "ParseError" | "RuntimeError" | "Halted"} AppState
  */
@@ -117,7 +120,7 @@ export class App {
         switch (this.appState) {
             case "Initial": {
                 this.reset();
-                // 成功していれば走らせる
+                // 初期化に成功していれば走らせる
                 // @ts-ignore
                 if (this.appState === "Stop") {
                     this.appState = "Running";
@@ -513,7 +516,7 @@ $stepConfig.addEventListener('click', () => {
 });
 
 // サンプル
-document.querySelectorAll('.js_sample').forEach(e => {
+$sampleCodes.forEach(e => {
     if (!(e instanceof HTMLElement)) {
         throw Error('is not HTMLElement');
     }
