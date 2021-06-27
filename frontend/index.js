@@ -439,22 +439,25 @@ export class App {
             return;
         }
 
+        const machine = this.machine;
         for (let i = 0; i < steps; i++) {
             try {
-                const res = this.machine.execCommand();
+                const res = machine.execCommand();
                 if (res === "HALT_OUT") {
                     this.appState = "Halted";
+                    this.steps += i + 1; 
                     this.render();
                     return;
                 }
             } catch (e) {
                 this.appState = "RuntimeError";
                 this.errorMessage = e.message;
+                this.steps += i + 1; // 1回目でエラーが発生したら1ステップとする
                 this.render();
                 return;
             }
-            this.steps += 1;
         }
+        this.steps += steps;
         this.render();
     }
 }
@@ -544,6 +547,8 @@ frequencyArray.push(2 * 10 ** 6);
 frequencyArray.push(3 * 10 ** 6);
 frequencyArray.push(4 * 10 ** 6);
 frequencyArray.push(5 * 10 ** 6);
+
+// frequencyArray.push(10 * 10 ** 6);
 
 $frequencyInput.min = "0";
 $frequencyInput.max = (frequencyArray.length - 1).toString();

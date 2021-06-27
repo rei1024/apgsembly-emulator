@@ -95,14 +95,14 @@ export class Machine {
         if (childMap === undefined) {
             throw Error('Next state not found: current state: ' + this.currentState);
         }
-        const wildcard = childMap.get('*');
-        if (wildcard !== undefined) {
-            return wildcard;
-        }
         if (this.prevOutput === 0) {
             const z = childMap.get('Z');
             if (z !== undefined) {
                 return z;
+            }
+            const wildcard = childMap.get('*');
+            if (wildcard !== undefined) {
+                return wildcard;
             }
             const zz = childMap.get('ZZ');
             if (zz !== undefined) {
@@ -112,6 +112,10 @@ export class Machine {
             const nz = childMap.get('NZ');
             if (nz !== undefined) {
                 return nz;
+            }
+            const wildcard = childMap.get('*');
+            if (wildcard !== undefined) {
+                return wildcard;
             }
         }
         throw Error('Next Command not found: Current state = ' + this.currentState + ', output = ' + this.getPreviousOutput());
@@ -127,12 +131,13 @@ export class Machine {
         /** @type {0 | 1 | undefined} */
         let result = undefined;
 
+        const actionExecutor = this.actionExecutor;
         for (const action of command.actions) {
-            const res = this.actionExecutor.execAction(action);
+            const res = actionExecutor.execAction(action);
             if (res === -1) {
                 return "HALT_OUT";
             }
-            if (res === 0 || res === 1) {
+            if (res !== undefined) { // res === 1 || res ==== 0
                 if (result === undefined) {
                     result = res;
                 } else {
