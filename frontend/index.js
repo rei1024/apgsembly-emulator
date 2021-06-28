@@ -291,7 +291,7 @@ export class App {
 
     renderCommand() {
         try {
-            $command.textContent = this.machine?.getNextCommand().pretty();
+            $command.textContent = this.machine?.getNextCommand().command.pretty();
         } catch (e) {
             $command.textContent = "";
         }
@@ -548,7 +548,9 @@ frequencyArray.push(3 * 10 ** 6);
 frequencyArray.push(4 * 10 ** 6);
 frequencyArray.push(5 * 10 ** 6);
 
-// frequencyArray.push(10 * 10 ** 6);
+frequencyArray.push(10 * 10 ** 6);
+frequencyArray.push(2 * 10 * 10 ** 6);
+frequencyArray.push(3 * 10 * 10 ** 6);
 
 $frequencyInput.min = "0";
 $frequencyInput.max = (frequencyArray.length - 1).toString();

@@ -91,11 +91,8 @@ INITIAL; ZZ; NON_EXIST; NOP
     if (!(program instanceof Program)) {
         throw Error('parse error '  + str);
     }
-    const machine = new Machine(program);
-
-    machine.execCommand(); // Execute first line
     assertThrows(() => {
-        machine.execCommand();
+        const machine = new Machine(program);
     });
 });
 
