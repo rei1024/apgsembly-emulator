@@ -1,7 +1,6 @@
 // @ts-check
 
 import { ActionExecutor } from "./ActionExecutor.js";
-import { Command } from "./Command.js";
 import { commandsToLookupTable, CompiledCommandWithNextState } from "./compile.js";
 import { Program } from "./Program.js";
 
