@@ -73,7 +73,7 @@ export function commandsToLookupTable(commands) {
         const nextState = stateMap.get(command.nextState);
         // 次の状態が見つからない場合はエラー
         if (nextState === undefined) {
-            throw Error(`Unkown state: "${command.nextState}" at "${command.pretty()}"`);
+            throw Error(`Unknown state: "${command.nextState}" at "${command.pretty()}"`);
         }
         switch (command.input) {
             case "Z": {
@@ -81,7 +81,7 @@ export function commandsToLookupTable(commands) {
                     // 新しく作成する
                     compiledCommand.z = new CompiledCommandWithNextState(command, nextState);
                 } else {
-                    throw Error(`Duplicate command: "${compiledCommand.z.command.pretty()}" and "${command.pretty()}"`);
+                    throw Error(`Duplicated command: "${compiledCommand.z.command.pretty()}" and "${command.pretty()}"`);
                 }
                 break;
             }
@@ -90,7 +90,7 @@ export function commandsToLookupTable(commands) {
                     // 新しく作成する
                     compiledCommand.nz = new CompiledCommandWithNextState(command, nextState);
                 } else {
-                    throw Error(`Duplicate command: "${compiledCommand.nz.command.pretty()}" and "${command.pretty()}"`);
+                    throw Error(`Duplicated command: "${compiledCommand.nz.command.pretty()}" and "${command.pretty()}"`);
                 }
                 break;
             }
