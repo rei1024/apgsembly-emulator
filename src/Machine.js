@@ -28,13 +28,28 @@ export class Machine {
     
         /** @type {0 | 1} */
         this.prevOutput = 0;
+
+        /**
+         * @readonly
+         */
         this.program = program;
     
         const obj = commandsToLookupTable(program.commands);
         this.states = obj.states;
+        /**
+         * @readonly
+         * @private
+         */
         this.stateMap = obj.stateMap;
+        /**
+         * @readonly
+         * @private
+         */
         this.lookup = obj.lookup;
 
+        /**
+         * @private
+         */
         this.currentStateIndex = this.stateMap.get(INITIAL_STATE) ?? (() => {
             throw Error('INITIAL state is not present');
         })() ;
