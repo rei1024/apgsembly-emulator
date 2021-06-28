@@ -354,12 +354,12 @@ export class App {
         const hideBinary = $hideBinary.checked;
         for (const reg of this.machine.actionExecutor.bRegMap.values()) {
             const row = rows[i];
-            const obj = reg.toObject();
             if (hideBinary) {
                 row.querySelector('.prefix').textContent = '';
                 row.querySelector('.head').textContent = '';
                 row.querySelector('.suffix').textContent = '';
             } else {
+                const obj = reg.toObject();
                 row.querySelector('.prefix').textContent = obj.prefix.join('');
                 row.querySelector('.head').textContent = obj.head.toString();
                 row.querySelector('.suffix').textContent = obj.suffix.join('');
