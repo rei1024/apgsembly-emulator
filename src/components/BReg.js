@@ -108,6 +108,7 @@ export class BReg {
     }
 
     /**
+     * @private
      * @returns {never}
      */
     error() {

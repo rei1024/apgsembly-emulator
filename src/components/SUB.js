@@ -94,6 +94,7 @@ export class SUB {
     }
 
     /**
+     * @private
      * @returns {never}
      */
     error() {

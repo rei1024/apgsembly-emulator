@@ -161,11 +161,4 @@ export class Machine {
         this.prevOutput = result;
         return undefined;
     }
-
-    /**
-     * @returns {never}
-     */
-    error() {
-        throw Error('internal error');
-    }
 }

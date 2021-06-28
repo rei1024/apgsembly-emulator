@@ -212,6 +212,7 @@ export class Command extends ProgramLine {
     }
 
     /**
+     * @private
      * @returns {never}
      */
     static error() {
