@@ -26,8 +26,6 @@ export class Machine {
             unaryRegisterNumbers: program.extractUnaryRegisterNumbers()
         });
     
-
-
         /** @type {0 | 1} */
         this.prevOutput = 0;
         this.program = program;
