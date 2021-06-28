@@ -19,6 +19,94 @@ ID0; ZZ; ID0; NOP
     });
 });
 
+Deno.test('Machine duplicated command NZ NZ', () => {
+    const str = `
+INITIAL; NZ; ID0; OUTPUT 3, NOP
+INITIAL; NZ; ID0; OUTPUT 3, NOP
+ID0; ZZ; ID0; NOP
+    `;
+    const program = Program.parse(str);
+    if (!(program instanceof Program)) {
+        throw Error('parse error '  + str);
+    }
+    assertThrows(() => {
+        new Machine(program);
+    });
+});
+
+Deno.test('Machine duplicated command * *', () => {
+    const str = `
+INITIAL; NZ; ID0; OUTPUT 3, NOP
+INITIAL; NZ; ID0; OUTPUT 3, NOP
+ID0; ZZ; ID0; NOP
+    `;
+    const program = Program.parse(str);
+    if (!(program instanceof Program)) {
+        throw Error('parse error '  + str);
+    }
+    assertThrows(() => {
+        new Machine(program);
+    });
+});
+
+Deno.test('Machine duplicated command * NZ', () => {
+    const str = `
+INITIAL; *; ID0; OUTPUT 3, NOP
+INITIAL; NZ; ID0; OUTPUT 3, NOP
+ID0; ZZ; ID0; NOP
+    `;
+    const program = Program.parse(str);
+    if (!(program instanceof Program)) {
+        throw Error('parse error '  + str);
+    }
+    assertThrows(() => {
+        new Machine(program);
+    });
+});
+
+Deno.test('Machine duplicated command * Z', () => {
+    const str = `
+INITIAL; *; ID0; OUTPUT 3, NOP
+INITIAL; Z; ID0; OUTPUT 3, NOP
+ID0; ZZ; ID0; NOP
+    `;
+    const program = Program.parse(str);
+    if (!(program instanceof Program)) {
+        throw Error('parse error '  + str);
+    }
+    assertThrows(() => {
+        new Machine(program);
+    });
+});
+
+Deno.test('Machine duplicated command ZZ Z', () => {
+    const str = `
+INITIAL; ZZ; ID0; OUTPUT 3, NOP
+INITIAL; Z; ID0; OUTPUT 3, NOP
+ID0; ZZ; ID0; NOP
+    `;
+    const program = Program.parse(str);
+    if (!(program instanceof Program)) {
+        throw Error('parse error '  + str);
+    }
+    assertThrows(() => {
+        new Machine(program);
+    });
+});
+
+Deno.test('Machine INITIAL NOT EXIST', () => {
+    const str = `
+ID0; ZZ; ID0; NOP
+    `;
+    const program = Program.parse(str);
+    if (!(program instanceof Program)) {
+        throw Error('parse error '  + str);
+    }
+    assertThrows(() => {
+        new Machine(program);
+    });
+});
+
 Deno.test('Machine no return value', () => {
     const str = `
 INITIAL; ZZ; ID0; OUTPUT 3
@@ -91,11 +179,8 @@ INITIAL; ZZ; NON_EXIST; NOP
     if (!(program instanceof Program)) {
         throw Error('parse error '  + str);
     }
-    const machine = new Machine(program);
-
-    machine.execCommand(); // Execute first line
     assertThrows(() => {
-        machine.execCommand();
+        const machine = new Machine(program);
     });
 });
 
