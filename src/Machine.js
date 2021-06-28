@@ -103,7 +103,7 @@ export class Machine {
         const compiledCommand = this.lookup[this.currentStateIndex];
 
         if (compiledCommand === undefined) {
-            throw Error('Next state not found: current state: ' + this.currentState);
+            throw Error('Internal Error: Next command is not found: Current state: ' + this.currentState);
         }
 
         if (this.prevOutput === 0) {
@@ -117,7 +117,7 @@ export class Machine {
                 return nz;
             }
         }
-        throw Error('Next Command not found: Current state = ' + this.currentState + ', output = ' + this.getPreviousOutput());
+        throw Error('Next command is not found: Current state = ' + this.currentState + ', output = ' + this.getPreviousOutput());
     }
 
     /**
