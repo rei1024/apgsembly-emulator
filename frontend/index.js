@@ -477,12 +477,17 @@ $reset.addEventListener('click', () => {
 });
 
 $step.addEventListener('click', () => {
+    if ($step.disabled) {
+        return;
+    }
     // 時間がかかる時はスピナーを表示する
     if (app.stepConfig >= 5000000) {
         const span = document.createElement('span');
         span.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>`;
         $step.append(span);
+        $step.disabled = true;
         setTimeout(() => {
+            // $step.disabled = false; // app.runで更新されるため必要ない
             app.run(app.stepConfig);
             $step.removeChild(span);
         }, 33);
