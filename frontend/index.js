@@ -291,7 +291,7 @@ export class App {
 
     renderCommand() {
         try {
-            $command.textContent = this.machine?.getNextCompiledCommandWithnextState().command.pretty();
+            $command.textContent = this.machine?.getNextCompiledCommandWithNextState().command.pretty();
         } catch (e) {
             $command.textContent = "";
         }
@@ -478,7 +478,7 @@ $reset.addEventListener('click', () => {
 
 $step.addEventListener('click', () => {
     // 時間がかかる時はスピナーを表示する
-    if (app.stepConfig >= 3000000) {
+    if (app.stepConfig >= 5000000) {
         const span = document.createElement('span');
         span.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>`;
         $step.append(span);
