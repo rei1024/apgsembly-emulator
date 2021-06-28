@@ -150,7 +150,7 @@ export class Machine {
         }
 
         // INITIALに返ってくることは禁止
-        if (command.nextState === "INITIAL") {
+        if (command.nextState === INITIAL_STATE) {
             throw Error('INITIAL is return in execution: command = ' + command.pretty());
         }
         this.currentState = command.nextState;

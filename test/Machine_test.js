@@ -68,7 +68,7 @@ INITIAL; ZZ; INITIAL; NOP
     });
 });
 
-Deno.test('Machine register header error', () => {
+Deno.test('Machine register header error: register not exist', () => {
     const str = `
 #REGISTERS: {"U3": 2}
 INITIAL; ZZ; INITIAL; NOP
@@ -83,12 +83,28 @@ INITIAL; ZZ; INITIAL; NOP
     });
 });
 
+Deno.test('Machine next state is not found', () => {
+    const str = `
+INITIAL; ZZ; NON_EXIST; NOP
+    `;
+    const program = Program.parse(str);
+    if (!(program instanceof Program)) {
+        throw Error('parse error '  + str);
+    }
+    const machine = new Machine(program);
+
+    machine.execCommand(); // Execute first line
+    assertThrows(() => {
+        machine.execCommand();
+    });
+});
+
 Deno.test('Machine program9_2', () => {
     const program = Program.parse(program9_2);
     const machine = new Machine(program);
     assertEquals(machine.actionExecutor.uRegMap.get(0).getValue(), 7);
     assertEquals(machine.actionExecutor.uRegMap.get(1).getValue(), 5);
-    
+
     machine.execCommand();
 
     assertEquals(machine.actionExecutor.uRegMap.get(0).getValue(), 6);
@@ -147,7 +163,7 @@ Deno.test('Machine PI Calculator', () => {
     // machine.actionExecutor.bRegMap.get(2)?.setBits([1]);
     // console.log(machine);
     // console.log(machine.actionExecutor);
-    for (let i = 0; i < 400000; i++) {
+    for (let i = 0; i < 250000; i++) {
         try {
             const res = machine.execCommand();
             if (res === 'HALT_OUT') {
