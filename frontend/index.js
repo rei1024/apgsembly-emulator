@@ -532,7 +532,7 @@ function escapeNum(str) {
 $stepInput.addEventListener('input', () => {
     const n = Number($stepInput.value)
     if (isNaN(n) || n <= 0 || !Number.isInteger(n)) {
-        $stepInput.setCustomValidity('Enter positive integer');
+        $stepInput.setCustomValidity('Enter a positive integer');
         $stepInput.reportValidity();
         $stepInput.classList.add('is-invalid');
         app.stepConfig = 1;
