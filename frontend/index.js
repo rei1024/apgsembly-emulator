@@ -37,11 +37,13 @@ const $reset = $type('#reset', HTMLButtonElement);
 // Step Button
 const $step = $type('#step', HTMLButtonElement);
 
+// 現在の状態
 const $currentState = $type('#current_state', HTMLElement);
 
+// 前回の出力
 const $previousOutput = $type('#previous_output', HTMLElement);
 
-// スピード
+// スピード入力
 const $frequencyInput = $type('#frequency_input', HTMLInputElement);
 
 // スピード表示
