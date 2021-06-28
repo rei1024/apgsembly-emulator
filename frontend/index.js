@@ -291,7 +291,7 @@ export class App {
 
     renderCommand() {
         try {
-            $command.textContent = this.machine?.getNextCommand().command.pretty();
+            $command.textContent = this.machine?.getNextCompiledCommandWithnextState().command.pretty();
         } catch (e) {
             $command.textContent = "";
         }
@@ -549,6 +549,7 @@ frequencyArray.push(4 * 10 ** 6);
 frequencyArray.push(5 * 10 ** 6);
 
 frequencyArray.push(10 * 10 ** 6);
+frequencyArray.push(1.5 * 10 * 10 ** 6);
 frequencyArray.push(2 * 10 * 10 ** 6);
 frequencyArray.push(3 * 10 * 10 ** 6);
 

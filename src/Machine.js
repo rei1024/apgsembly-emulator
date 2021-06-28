@@ -87,7 +87,7 @@ export class Machine {
      * @throws
      * @returns {CompiledCommandWithNextState}
      */
-    getNextCommand() {
+    getNextCompiledCommandWithnextState() {
         const compiledCommand = this.lookup[this.currentStateIndex];
 
         if (compiledCommand === undefined) {
@@ -113,7 +113,7 @@ export class Machine {
      * @throws
      */
     execCommand() {
-        const compiledCommand = this.getNextCommand();
+        const compiledCommand = this.getNextCompiledCommandWithnextState();
 
         const command = compiledCommand.command;
 
