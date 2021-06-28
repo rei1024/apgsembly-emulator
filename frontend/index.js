@@ -37,32 +37,32 @@ const $reset = $type('#reset', HTMLButtonElement);
 // Step Button
 const $step = $type('#step', HTMLButtonElement);
 
+// 現在の状態
 const $currentState = $type('#current_state', HTMLElement);
 
+// 前回の出力
 const $previousOutput = $type('#previous_output', HTMLElement);
 
-const $stepConfig = $type('#step_config', HTMLButtonElement);
-
-// スピード
+// スピード入力
 const $frequencyInput = $type('#frequency_input', HTMLInputElement);
 
+// スピード表示
 const $freqencyOutput = $type('#frequency_output', HTMLElement);
 
 // 次のコマンド
 // Next command
 const $command = $type('#command', HTMLElement);
 
+// B2D
 const $canvas = $type('#canvas', HTMLCanvasElement);
-
 const context = $canvas.getContext('2d');
 if (context == null) {
     throw Error('context is null');
 }
-
-// B2D
 const $b2dx = $type('#b2dx', HTMLElement);
 const $b2dy = $type('#b2dy', HTMLElement);
 
+// B2Dの開閉
 const $b2dDetail = $type('#b2d_detail', HTMLDetailsElement);
 
 // スライディングレジスタ
@@ -71,8 +71,10 @@ const $unaryRegister = $type('#unary_register', HTMLElement);
 // バイナリレジスタ
 const $binaryRegister = $type('#binary_register', HTMLElement);
 
+// バイナリレジスタの開閉
 const $binaryRegisterDetail = $type('#binary_register_detail', HTMLDetailsElement);
 
+// ADD SUB MULの表示
 const $addSubMul = $type('#add_sub_mul', HTMLElement);
 
 // ファイルインポート
@@ -80,6 +82,15 @@ const $fileImport = $type('#import_file', HTMLInputElement);
 
 // サンプルコード
 const $sampleCodes = document.querySelectorAll('.js_sample');
+
+// --------- Modal --------- //
+
+// ステップ数入力 
+const $stepInput = $type('#step_input', HTMLInputElement);
+
+// Hide Binary
+// 二進数を非表示にする
+const $hideBinary = $type('#hide_binary', HTMLInputElement);
 
 /**
  * @typedef {"Initial" | "Running" | "Stop" | "ParseError" | "RuntimeError" | "Halted"} AppState
@@ -340,12 +351,19 @@ export class App {
         }
         const rows = $binaryRegister.querySelectorAll('tr');
         let i = 0;
+        const hideBinary = $hideBinary.checked;
         for (const reg of this.machine.actionExecutor.bRegMap.values()) {
             const row = rows[i];
-            const obj = reg.toObject();
-            row.querySelector('.prefix').textContent = obj.prefix.join('');
-            row.querySelector('.head').textContent = obj.head.toString();
-            row.querySelector('.suffix').textContent = obj.suffix.join('');
+            if (hideBinary) {
+                row.querySelector('.prefix').textContent = '';
+                row.querySelector('.head').textContent = '';
+                row.querySelector('.suffix').textContent = '';
+            } else {
+                const obj = reg.toObject();
+                row.querySelector('.prefix').textContent = obj.prefix.join('');
+                row.querySelector('.head').textContent = obj.head.toString();
+                row.querySelector('.suffix').textContent = obj.suffix.join('');
+            }
             row.querySelector('.decimal').textContent = "value = " + reg.toDecimalString();
             row.querySelector('.pointer').textContent = ", pointer = " + reg.pointer.toString();
             i++;
@@ -511,16 +529,23 @@ function escapeNum(str) {
     }
 }
 
-$stepConfig.addEventListener('click', () => {
-    const str = prompt('Set steps', app.stepConfig.toString());
-    if (typeof str === 'string') {
-        const n = parseInt(escapeNum(str), 10);
-        if (isNaN(n) || n <= 0) {
-            alert('error');
-        } else {
-            app.stepConfig = n;
-        }
+$stepInput.addEventListener('input', () => {
+    const n = Number($stepInput.value)
+    if (isNaN(n) || n <= 0 || !Number.isInteger(n)) {
+        $stepInput.setCustomValidity('Enter a positive integer');
+        $stepInput.reportValidity();
+        $stepInput.classList.add('is-invalid');
+        app.stepConfig = 1;
+    } else {
+        $stepInput.setCustomValidity('');
+        $stepInput.reportValidity();
+        $stepInput.classList.remove('is-invalid');
+        app.stepConfig = n;
     }
+});
+
+$hideBinary.addEventListener('change', () => {
+    app.renderBinary();
 });
 
 // サンプル
