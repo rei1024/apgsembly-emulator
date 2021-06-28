@@ -14,6 +14,7 @@ export class CompiledCommandWithNextState {
          */
         this.command = command;
         /**
+         * 次の状態の添字
          * @readonly
          */
         this.nextState = nextState;
@@ -27,7 +28,13 @@ export class CompiledCommand {
      * @param {CompiledCommandWithNextState | undefined} nz
      */
     constructor(z, nz) {
+        /**
+         * Zの場合
+         */
         this.z = z;
+        /**
+         * NZの場合
+         */
         this.nz = nz;
     }
 }

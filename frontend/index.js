@@ -535,23 +535,14 @@ $sampleCodes.forEach(e => {
 
 // rangeの設定
 const frequencyArray = [];
-for (let i = 0; i < 6; i++) {
+for (let i = 0; i < 7; i++) {
     const base = 10 ** i;
     for (let j = 1; j <= 9; j++) {
         frequencyArray.push(base * j);
     }
 }
 
-frequencyArray.push(10 ** 6);
-frequencyArray.push(2 * 10 ** 6);
-frequencyArray.push(3 * 10 ** 6);
-frequencyArray.push(4 * 10 ** 6);
-frequencyArray.push(5 * 10 ** 6);
-
-frequencyArray.push(10 * 10 ** 6);
-frequencyArray.push(1.5 * 10 * 10 ** 6);
-frequencyArray.push(2 * 10 * 10 ** 6);
-frequencyArray.push(3 * 10 * 10 ** 6);
+frequencyArray.push(10 ** 7);
 
 $frequencyInput.min = "0";
 $frequencyInput.max = (frequencyArray.length - 1).toString();
