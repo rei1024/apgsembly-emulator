@@ -147,7 +147,7 @@ export class Machine {
             }
         }
         if (result === undefined) {
-            throw Error('No return value');
+            throw Error(`No return value: command = ${compiledCommand.command.pretty()}`);
         }
 
         // INITIALに返ってくることは禁止
