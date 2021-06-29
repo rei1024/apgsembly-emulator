@@ -4,93 +4,39 @@ import { Machine } from "../src/Machine.js";
 import { Program } from "../src/Program.js";
 import { Frequency } from "./frequency.js";
 import { renderB2D } from "./renderB2D.js";
-import { $type } from "./selector.js";
+
+import {
+    $error,
+    $input,
+    $output,
+    $steps,
+    $start,
+    $stop,
+    $reset,
+    $step,
+    $currentState,
+    $previousOutput,
+    $freqencyOutput,
+    $frequencyInput,
+    $command,
+    $canvas,
+    context,
+    $b2dx,
+    $b2dy,
+    $b2dDetail,
+    $unaryRegister,
+    $binaryRegister,
+    $binaryRegisterDetail,
+    $addSubMul,
+    $fileImport,
+    $sampleCodes,
+    $stepInput,
+    $hideBinary,
+} from "./bind.js";
 
 // データ
 // GitHub Pagesは1階層上になる
 const DATA_DIR = location.origin.includes('github') ? "../apgsembly-emulator-2/data/" : "../data/";
-
-// エラーメッセージ
-// Error messsage
-const $error = $type('#error', HTMLElement);
-
-// 入力
-// APGsembly code
-const $input = $type('#input', HTMLTextAreaElement);
-
-// 出力
-// OUTPUT component
-const $output = $type('#output', HTMLTextAreaElement);
-
-// ステップ数表示
-const $steps = $type('#steps', HTMLElement);
-
-// Start execution
-const $start = $type('#start', HTMLButtonElement);
-
-// Stop execution
-const $stop = $type('#stop', HTMLButtonElement);
-
-// Reset machine state and program
-const $reset = $type('#reset', HTMLButtonElement);
-
-// Step Button
-const $step = $type('#step', HTMLButtonElement);
-
-// 現在の状態
-const $currentState = $type('#current_state', HTMLElement);
-
-// 前回の出力
-const $previousOutput = $type('#previous_output', HTMLElement);
-
-// スピード入力
-const $frequencyInput = $type('#frequency_input', HTMLInputElement);
-
-// スピード表示
-const $freqencyOutput = $type('#frequency_output', HTMLElement);
-
-// 次のコマンド
-// Next command
-const $command = $type('#command', HTMLElement);
-
-// B2D
-const $canvas = $type('#canvas', HTMLCanvasElement);
-const context = $canvas.getContext('2d');
-if (context == null) {
-    throw Error('context is null');
-}
-const $b2dx = $type('#b2dx', HTMLElement);
-const $b2dy = $type('#b2dy', HTMLElement);
-
-// B2Dの開閉
-const $b2dDetail = $type('#b2d_detail', HTMLDetailsElement);
-
-// スライディングレジスタ
-const $unaryRegister = $type('#unary_register', HTMLElement);
-
-// バイナリレジスタ
-const $binaryRegister = $type('#binary_register', HTMLElement);
-
-// バイナリレジスタの開閉
-const $binaryRegisterDetail = $type('#binary_register_detail', HTMLDetailsElement);
-
-// ADD SUB MULの表示
-const $addSubMul = $type('#add_sub_mul', HTMLElement);
-
-// ファイルインポート
-const $fileImport = $type('#import_file', HTMLInputElement);
-
-// サンプルコード
-const $sampleCodes = document.querySelectorAll('.js_sample');
-
-// --------- Modal --------- //
-
-// ステップ数入力 
-const $stepInput = $type('#step_input', HTMLInputElement);
-
-// Hide Binary
-// 二進数を非表示にする
-const $hideBinary = $type('#hide_binary', HTMLInputElement);
 
 /**
  * @typedef {"Initial" | "Running" | "Stop" | "ParseError" | "RuntimeError" | "Halted"} AppState
@@ -514,21 +460,6 @@ $step.addEventListener('click', () => {
     }
 });
 
-/**
- * 
- * @param {string} str 
- * @returns {string}
- */
-function escapeNum(str) {
-    // @ts-ignore
-    if (typeof str.replaceAll === "function") {
-        // @ts-ignore
-        return str.replaceAll("_", "");
-    } else {
-        return str;
-    }
-}
-
 $stepInput.addEventListener('input', () => {
     const n = Number($stepInput.value)
     if (isNaN(n) || n <= 0 || !Number.isInteger(n)) {
@@ -581,7 +512,6 @@ $frequencyInput.addEventListener('input', () => {
     const value = parseInt($frequencyInput.value);
     app.frequency = frequencyArray[value]
     app.renderFrequencyOutput();
-    // app.render();
 });
 
 // 開閉で描画
