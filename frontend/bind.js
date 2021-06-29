@@ -1,6 +1,6 @@
 // @ts-check
 
-import { $type } from "./selector.js";
+import { $type } from "./util/selector.js";
 
 // エラーメッセージ
 // Error messsage

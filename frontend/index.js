@@ -2,9 +2,10 @@
 
 import { Machine } from "../src/Machine.js";
 import { Program } from "../src/Program.js";
-import { Frequency } from "./frequency.js";
+import { Frequency } from "./util/frequency.js";
+import { setCustomError, removeCustomError } from "./util/validation_ui.js";
+
 import { renderB2D } from "./renderB2D.js";
-import { setCustomError, removeCustomError } from "./validation_ui.js";
 import {
     $error,
     $input,
