@@ -14,6 +14,8 @@ export const $input = $type('#input', HTMLTextAreaElement);
 // OUTPUT component
 export const $output = $type('#output', HTMLTextAreaElement);
 
+export const $outputDetail = $type('#output_detail', HTMLDetailsElement);
+
 // ステップ数表示
 export const $steps = $type('#steps', HTMLElement);
 

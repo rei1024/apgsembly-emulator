@@ -9,6 +9,7 @@ import {
     $error,
     $input,
     $output,
+    $outputDetail,
     $steps,
     $start,
     $stop,
@@ -348,6 +349,9 @@ export class App {
     }
 
     renderOutput() {
+        if (!$outputDetail.open) {
+            return;
+        }
         const output = this.machine?.actionExecutor.output.getString();
         if (output !== undefined) {
             $output.value = output;
@@ -495,6 +499,10 @@ $stepInput.addEventListener('input', () => {
         $stepInput.classList.remove('is-invalid');
         app.stepConfig = n;
     }
+});
+
+$outputDetail.addEventListener('toggle', () => {
+    app.renderOutput();
 });
 
 $hideBinary.addEventListener('change', () => {
