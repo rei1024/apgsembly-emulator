@@ -32,6 +32,7 @@ import {
     $sampleCodes,
     $stepInput,
     $hideBinary,
+    $breakpointSelect,
 } from "./bind.js";
 
 // データ
@@ -196,12 +197,29 @@ export class App {
         $binaryRegister.append(table);
     }
 
+    setUpBreakpointSelect() {
+        $breakpointSelect.innerHTML = "";
+        const none = document.createElement('option');
+        none.textContent = "None";
+        none.value = "-1";
+        none.selected = true;
+        $breakpointSelect.append(none);
+        const stateMap =  this.machine.getStateMap();
+        for (const state of this.machine.states) {
+            const option = document.createElement('option');
+            option.textContent = state;
+            option.value = stateMap.get(state)?.toString();
+            $breakpointSelect.append(option);
+        }
+    }
+
     /**
      * machineがセットされた時のコールバック
      */
     onMachineSet() {
         this.setUpUnary();
         this.setUpBinary();
+        this.setUpBreakpointSelect();
     }
 
     /**
@@ -425,6 +443,13 @@ export class App {
             return;
         }
 
+        // ブレークポイントの処理
+        let breakpointIndex = -1;
+        const n = parseInt($breakpointSelect.value, 10);
+        if (!isNaN(n)) {
+            breakpointIndex = n;
+        }
+
         const machine = this.machine;
         for (let i = 0; i < steps; i++) {
             try {
@@ -432,6 +457,13 @@ export class App {
                 if (res === "HALT_OUT") {
                     this.appState = "Halted";
                     this.steps += i + 1; 
+                    this.render();
+                    return;
+                }
+                // ブレークポイントの状態の場合、停止する
+                if (machine.getCurrentStateIndex() === breakpointIndex) {
+                    this.appState = "Stop";
+                    this.steps += i + 1;
                     this.render();
                     return;
                 }

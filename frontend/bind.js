@@ -83,3 +83,6 @@ export const $stepInput = $type('#step_input', HTMLInputElement);
 // Hide Binary
 // 二進数を非表示にする
 export const $hideBinary = $type('#hide_binary', HTMLInputElement);
+
+// ブレークポイント
+export const $breakpointSelect = $type('#breakpoint_select', HTMLSelectElement);
