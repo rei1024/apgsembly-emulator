@@ -37,6 +37,9 @@ export class Machine {
         this.program = program;
     
         const obj = commandsToLookupTable(program.commands);
+        /**
+         * @readonly
+         */
         this.states = obj.states;
         /**
          * @readonly
@@ -85,6 +88,22 @@ export class Machine {
             throw Error('State name is not found');
         }
         return name;
+    }
+
+    /**
+     * 
+     * @returns {number}
+     */
+    getCurrentStateIndex() {
+        return this.currentStateIndex;
+    }
+
+    /**
+     * 
+     * @returns {Map<string, number>}
+     */
+    getStateMap() {
+        return this.stateMap
     }
 
     /**
