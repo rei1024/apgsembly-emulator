@@ -59,6 +59,10 @@
                 #state td, #state th {
                     padding: 4px;
                 }
+                #state {
+                    /* 幅が変化しないようにする */
+                    table-layout: fixed;
+                }
             </style>
             <table class="table" id="state">
                 <tbody>
@@ -78,7 +82,7 @@
                 Command: <code id="command"></code>
             </p>
         </div>
-        <div class="mb-3">
+        <div class="mb-2">
             <details open>
                 <summary>
                     Output
@@ -86,7 +90,7 @@
                 <textarea class="form-control" name="" id="output" cols="50" rows="3"></textarea>
             </details>
         </div>
-        <div class="mb-3">
+        <div class="mb-2">
             <details open>
                 <summary>
                     Unary Registers
@@ -94,7 +98,7 @@
                 <div id="unary_register"></div>
             </details>
         </div>    
-        <div class="mb-3">
+        <div class="mb-2">
             <details id="binary_register_detail" open>
                 <summary>
                     Binary Registers
@@ -116,7 +120,7 @@
                 </table> -->
             </details>
         </div>     
-        <div class="mb-3">
+        <div class="mb-2">
             <details id="add_sub_mul_detail" open>
                 <summary>
                     ADD SUB MUL
@@ -124,7 +128,7 @@
                 <code id="add_sub_mul"></code>
             </details>
         </div>    
-        <div class="mb-3">
+        <div class="mb-2">
             <details id="b2d_detail" open>
                 <summary>
                     B2D
