@@ -51,6 +51,7 @@ export class App {
         this.steps = 0;
 
         /**
+         * アプリ状態
          * @type {AppState}
          */
         this.appState = "Initial";
@@ -61,6 +62,9 @@ export class App {
          */
         this.frequency = 30; // index.htmlと同期する
 
+        /**
+         * エラーメッセージ
+         */
         this.errorMessage = "";
 
         /** ステップ数設定 */
@@ -226,6 +230,9 @@ export class App {
         }
     }
 
+    /**
+     * 周波数の表示
+     */
     renderFrequencyOutput() {
         if (typeof app.frequency.toLocaleString === "function") {
             // with ","
@@ -246,6 +253,9 @@ export class App {
         }
     }
 
+    /**
+     * 次のコマンドの表示
+     */
     renderCommand() {
         try {
             $command.textContent = this.machine?.getNextCompiledCommandWithNextState().command.pretty();
@@ -254,6 +264,9 @@ export class App {
         }
     }
 
+    /**
+     * B2Dの表示
+     */
     renderB2D() {
         if (!$b2dDetail.open) {
             return;
@@ -271,6 +284,9 @@ export class App {
         }
     }
 
+    /**
+     * スライディングレジスタの表示
+     */
     renderUnary() {
         if (this.machine === undefined) {
             return;
@@ -288,6 +304,9 @@ export class App {
         }
     }
 
+    /**
+     * バイナリレジスタの表示
+     */
     renderBinary() {
         if (this.machine === undefined) {
             return;
@@ -337,6 +356,9 @@ export class App {
         }
     }
 
+    /**
+     * 全体を描画する
+     */
     render() {
         // ボタンの有効無効
         switch (this.appState) {
