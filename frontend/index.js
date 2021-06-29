@@ -4,7 +4,7 @@ import { Machine } from "../src/Machine.js";
 import { Program } from "../src/Program.js";
 import { Frequency } from "./frequency.js";
 import { renderB2D } from "./renderB2D.js";
-
+import { setCustomError, removeCustomError } from "./validation_ui.js";
 import {
     $error,
     $input,
@@ -508,7 +508,7 @@ $step.addEventListener('click', () => {
             // $step.disabled = false; // app.runで更新されるため必要ない
             app.run(app.stepConfig);
             $step.removeChild(span);
-        }, 33);
+        }, 33); // 走らせるタミングを遅らせることでスピナーの表示を確定させる
     } else {
         app.run(app.stepConfig);
     }
@@ -517,14 +517,10 @@ $step.addEventListener('click', () => {
 $stepInput.addEventListener('input', () => {
     const n = Number($stepInput.value)
     if (isNaN(n) || n <= 0 || !Number.isInteger(n)) {
-        $stepInput.setCustomValidity('Enter a positive integer');
-        $stepInput.reportValidity();
-        $stepInput.classList.add('is-invalid');
+        setCustomError($stepInput, 'Enter a positive integer');
         app.stepConfig = 1;
     } else {
-        $stepInput.setCustomValidity('');
-        $stepInput.reportValidity();
-        $stepInput.classList.remove('is-invalid');
+        removeCustomError($stepInput);
         app.stepConfig = n;
     }
 });
