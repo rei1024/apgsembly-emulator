@@ -86,3 +86,6 @@ export const $hideBinary = $type('#hide_binary', HTMLInputElement);
 
 // ブレークポイント
 export const $breakpointSelect = $type('#breakpoint_select', HTMLSelectElement);
+
+// ダークモード
+export const $darkMode = $type('#dark_mode', HTMLInputElement);

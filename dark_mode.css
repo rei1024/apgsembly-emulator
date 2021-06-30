@@ -1,0 +1,43 @@
+body[apge_dark_mode=on] {
+    background-color: black;
+    color: white
+}
+body[apge_dark_mode=on] td, body[apge_dark_mode=on] th {
+    color: white;
+}
+body[apge_dark_mode=on] .btn-primary {
+    background-color: black;
+    color: white
+}
+body[apge_dark_mode=on] #canvas {
+    filter: invert();
+}
+body[apge_dark_mode=on] textarea.form-control, body[apge_dark_mode=on] textarea.form-control:focus {
+    background-color: black;
+    color: white;
+}
+body[apge_dark_mode=on] span.decimal, body[apge_dark_mode=on] span.pointer {
+    background-color: black;
+    color: white;
+}
+/* Modal */
+body[apge_dark_mode=on] .modal-content {
+    background-color: black;
+}
+/* Modal内のinput */
+body[apge_dark_mode=on] input[type=number], body[apge_dark_mode=on] input[type=number]:focus {
+    background-color: black;
+    color: white;
+}
+body[apge_dark_mode=on] .form-select, body[apge_dark_mode=on] .form-select:focus {
+    background-color: black;
+    color: white;
+}
+body[apge_dark_mode=on] .dropdown-item, body[apge_dark_mode=on] .dropdown-menu {
+    background-color: black;
+    color: white;
+}
+/* 閉じるボタンを白くする */
+body[apge_dark_mode=on] .btn-close {
+    background-color: white;
+}
