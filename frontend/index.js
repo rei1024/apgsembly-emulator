@@ -34,6 +34,7 @@ import {
     $stepInput,
     $hideBinary,
     $breakpointSelect,
+    $darkMode,
 } from "./bind.js";
 
 // データ
@@ -588,6 +589,21 @@ $fileImport.addEventListener('input', (e) => {
     // @ts-ignore
     reader.readAsText(e.target.files[0]);
 });
+
+// ダークモード
+$darkMode.addEventListener('change', () => {
+    const onOrOff = $darkMode.checked ? "on" : "off"; 
+    localStorage.setItem('dark_mode', onOrOff);
+    document.body.setAttribute('apge_dark_mode', onOrOff);
+
+    $darkMode.parentElement.querySelector('label').textContent = $darkMode.checked ? "On" : "Off";
+});
+
+if (localStorage.getItem('dark_mode') === "on") {
+    document.body.setAttribute('apge_dark_mode', "on");
+    $darkMode.checked = true;
+    $darkMode.parentElement.querySelector('label').textContent = "On";
+}
 
 // キーボード入力
 // Enter: toggle Start and Stop
