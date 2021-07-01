@@ -1,24 +1,29 @@
+:root {
+    --dark-mode-color: #dddddd;
+}
+
 body[apge_dark_mode=on] {
     background-color: black;
-    color: white
+    color: var(--dark-mode-color)
 }
+
 body[apge_dark_mode=on] td, body[apge_dark_mode=on] th {
-    color: white;
+    color: var(--dark-mode-color);
 }
 body[apge_dark_mode=on] .btn-primary {
     background-color: black;
-    color: white
+    color: var(--dark-mode-color)
 }
 body[apge_dark_mode=on] #canvas {
     filter: invert();
 }
 body[apge_dark_mode=on] textarea.form-control, body[apge_dark_mode=on] textarea.form-control:focus {
     background-color: black;
-    color: white;
+    color: var(--dark-mode-color);
 }
 body[apge_dark_mode=on] span.decimal, body[apge_dark_mode=on] span.pointer {
     background-color: black;
-    color: white;
+    color: var(--dark-mode-color);
 }
 /* Modal */
 body[apge_dark_mode=on] .modal-content {
@@ -27,17 +32,17 @@ body[apge_dark_mode=on] .modal-content {
 /* Modal内のinput */
 body[apge_dark_mode=on] input[type=number], body[apge_dark_mode=on] input[type=number]:focus {
     background-color: black;
-    color: white;
+    color: var(--dark-mode-color);
 }
 body[apge_dark_mode=on] .form-select, body[apge_dark_mode=on] .form-select:focus {
     background-color: black;
-    color: white;
+    color: var(--dark-mode-color);
 }
 body[apge_dark_mode=on] .dropdown-item, body[apge_dark_mode=on] .dropdown-menu {
     background-color: black;
-    color: white;
+    color: var(--dark-mode-color);
 }
 /* 閉じるボタンを白くする */
 body[apge_dark_mode=on] .btn-close {
-    background-color: white;
+    background-color: var(--dark-mode-color);
 }
