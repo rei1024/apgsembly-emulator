@@ -65,6 +65,12 @@
                     /* 幅が変化しないようにする */
                     table-layout: fixed;
                 }
+                #steps {
+                    color: black;
+                }
+                body[apge_dark_mode=on] #steps {
+                    color: var(--dark-mode-color);
+                }
             </style>
             <table class="table" id="state">
                 <tbody>
@@ -76,7 +82,7 @@
                     <tr class="pb-0">
                         <td id="current_state">INITIAL</td>
                         <td id="previous_output">Z</td>
-                        <td><code style="color: black;" id="steps"></code></td>
+                        <td><code id="steps"></code></td>
                     </tr>
                 </tbody>
             </table>
