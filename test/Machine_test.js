@@ -125,7 +125,7 @@ ID0; ZZ; ID0; NOP
 
 Deno.test('Machine return value twice', () => {
     const str = `
-INITIAL; ZZ; ID0; NOP, NOP
+INITIAL; ZZ; ID0; NOP, TDEC U0
 ID0; ZZ; ID0; NOP
     `;
     const program = Program.parse(str);

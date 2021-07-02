@@ -2,6 +2,7 @@
 
 import { Command, ComponentsHeader, RegistersHeader } from "./Command.js";
 import { ProgramLines } from "./ProgramLines.js";
+import { validateNoDuplicatedAction } from "./validate.js";
 
 /**
  * APGsembly program
@@ -62,8 +63,13 @@ export class Program {
             }
         }
 
+        // validation
         if (commands.length === 0) {
             return 'Program is empty';
+        }
+        const err = validateNoDuplicatedAction(commands);
+        if (typeof err === 'string') {
+            return err;
         }
 
         return new Program({
