@@ -96,7 +96,7 @@ ID0; ZZ; ID0; NOP
 
 Deno.test('Machine INITIAL is not exist', () => {
     const str = `
-ID0; ZZ; ID0; NOP
+    ID0; ZZ; ID0; NOP
     `;
     const program = Program.parse(str);
     if (!(program instanceof Program)) {
