@@ -28,10 +28,11 @@
             <textarea class="form-control" name="" id="input" cols="50" rows="8"></textarea>
         </div>
         <div class="btn-group" role="group" aria-label="Basic example">
-            <button id="reset" type="button" class="btn btn-primary">Reset</button>
-            <button id="start" type="button" class="btn btn-primary">Start</button>
-            <button id="stop" type="button" class="btn btn-primary">Stop</button>
-            <button id="step" type="button" class="btn btn-primary">Step</button>
+            <!-- 読み込まれるまではdisabled -->
+            <button id="reset" type="button" class="btn btn-primary" disabled>Reset</button>
+            <button id="start" type="button" class="btn btn-primary" disabled>Start</button>
+            <button id="stop" type="button" class="btn btn-primary" disabled>Stop</button>
+            <button id="step" type="button" class="btn btn-primary" disabled>Step</button>
             <button type="button" class="btn btn-primary"
                 data-bs-toggle="modal" data-bs-target="#config_modal">
                 Config
