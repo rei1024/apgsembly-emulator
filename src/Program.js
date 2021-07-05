@@ -23,9 +23,19 @@ export class Program {
         registersHeader,
         programLines,
     }) {
+        /**
+         * @readonly
+         */
         this.commands = commands;
+        /**
+         * @readonly
+         */
         this.componentsHeader = componentsHeader;
+
+        /** @readonly */
         this.registersHeader = registersHeader;
+
+        /** @readonly */
         this.programLines = programLines;
     }
 

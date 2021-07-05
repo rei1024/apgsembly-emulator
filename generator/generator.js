@@ -13,6 +13,7 @@ const code = document.querySelector("#output");
 if (!(code instanceof HTMLTextAreaElement)) {
     throw Error('code is not a HTMLTextAreaElement');
 }
+
 const copy = document.querySelector('#copy');
 
 if (!(copy instanceof HTMLButtonElement)) {
