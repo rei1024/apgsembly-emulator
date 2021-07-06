@@ -75,7 +75,10 @@ export class Machine {
             try {
                 parsed = JSON.parse(str);
             } catch (e) {
-                throw Error('Invalid #REGISTERS: ' + str);
+                throw Error('Invalid #REGISTERS: is not a valid JSON: ' + str);
+            }
+            if (parsed === null || typeof parsed !== 'object') {
+                throw Error(`Invalid #REGISTERS: "${str}" is not an object`);
             }
             try {
                 this.actionExecutor.setByRegistersInit(parsed);

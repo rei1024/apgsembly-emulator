@@ -171,6 +171,36 @@ INITIAL; ZZ; INITIAL; NOP
     });
 });
 
+Deno.test('Machine register header error: is not an object: number', () => {
+    const str = `
+#REGISTERS: 2
+INITIAL; ZZ; INITIAL; NOP
+    `;
+    const program = Program.parse(str);
+    if (!(program instanceof Program)) {
+        throw Error('parse error '  + str);
+    }
+
+    assertThrows(() => {
+        new Machine(program);
+    });
+});
+
+Deno.test('Machine register header error: is not an object: null', () => {
+    const str = `
+#REGISTERS: null
+INITIAL; ZZ; INITIAL; NOP
+    `;
+    const program = Program.parse(str);
+    if (!(program instanceof Program)) {
+        throw Error('parse error '  + str);
+    }
+
+    assertThrows(() => {
+        new Machine(program);
+    });
+});
+
 Deno.test('Machine next state is not found', () => {
     const str = `
 INITIAL; ZZ; NON_EXIST; NOP

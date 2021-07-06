@@ -14,6 +14,7 @@ if (!(code instanceof HTMLTextAreaElement)) {
     throw Error('code is not a HTMLTextAreaElement');
 }
 
+// 出力をコピーする
 const copy = document.querySelector('#copy');
 
 if (!(copy instanceof HTMLButtonElement)) {
