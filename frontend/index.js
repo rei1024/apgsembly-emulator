@@ -36,6 +36,7 @@ import {
     $breakpointSelect,
     $darkMode,
 } from "./bind.js";
+import { makeSpinner } from "./util/spinner.js";
 
 // データ
 // GitHub Pagesは1階層上になる
@@ -505,6 +506,8 @@ $stop.addEventListener('click', () => {
     app.stop();
 });
 
+const spinner = makeSpinner();
+
 // Step button
 $step.addEventListener('click', () => {
     if ($step.disabled) {
@@ -513,14 +516,12 @@ $step.addEventListener('click', () => {
     // 時間がかかる時はスピナーを表示する
     // show a spinner
     if (app.stepConfig >= 5000000) {
-        const span = document.createElement('span');
-        span.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>`;
-        $step.append(span);
+        $step.append(spinner);
         $step.disabled = true;
         setTimeout(() => {
             // $step.disabled = false; // app.runで更新されるため必要ない
             app.run(app.stepConfig);
-            $step.removeChild(span);
+            $step.removeChild(spinner);
         }, 33); // 走らせるタミングを遅らせることでスピナーの表示を確定させる
     } else {
         app.run(app.stepConfig);
