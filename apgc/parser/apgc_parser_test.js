@@ -1,4 +1,4 @@
-import { APGCProgram, APGCStatements, FunctionCallStatement, NumberExpression, StringExpression } from "../types/apgc_types.js";
+import { APGCProgram, APGCStatements, FunctionCallStatement, IfZeroTDECUStatement, NumberExpression, StringExpression } from "../types/apgc_types.js";
 import { apgcProgramParser, functionCallStatementParser, identifierParser, numberExpressionParser, stringExpressionParser } from "./apgc_parser.js";
 
 import { assertEquals } from "../../test/deps.js";
@@ -94,6 +94,58 @@ output(2, 3);
                         new NumberExpression(2),
                         new NumberExpression(3),
                     ]
+                )
+            ]
+        )
+    ))
+});
+
+test('apgcProgramParser if_zero_tdec_u', () => {
+    const str = `
+if_zero_tdec_u(0) {
+    output(1);
+} else {
+    output(2);  
+}
+`
+    assertEquals(apgcProgramParser().parseValue(str), new APGCProgram(
+        new APGCStatements(
+            [
+                new IfZeroTDECUStatement(
+                    new NumberExpression(0),
+                    new APGCStatements(
+                        [
+                            new FunctionCallStatement('output', [new NumberExpression(1)])
+                        ]
+                    ),
+                    new APGCStatements(
+                        [
+                            new FunctionCallStatement('output', [new NumberExpression(2)])
+                        ]
+                    )
+                )
+            ]
+        )
+    ))
+});
+
+test('apgcProgramParser if_zero_tdec_u else empty', () => {
+    const str = `
+if_zero_tdec_u(0) {
+    output(1);
+}
+`
+    assertEquals(apgcProgramParser().parseValue(str), new APGCProgram(
+        new APGCStatements(
+            [
+                new IfZeroTDECUStatement(
+                    new NumberExpression(0),
+                    new APGCStatements(
+                        [
+                            new FunctionCallStatement('output', [new NumberExpression(1)])
+                        ]
+                    ),
+                    new APGCStatements([])
                 )
             ]
         )

@@ -59,6 +59,21 @@ export class FunctionCallStatement extends APGCStatement {
     }
 }
 
+export class IfZeroTDECUStatement extends APGCStatement {
+    /**
+     * 
+     * @param {NumberExpression} reg
+     * @param {APGCStatements} z 
+     * @param {APGCStatements} nz 
+     */
+    constructor(reg, z, nz) {
+        super();
+        this.reg = reg;
+        this.z = z;
+        this.nz = nz;
+    }
+}
+
 export class APGCProgram {
     /**
      * 

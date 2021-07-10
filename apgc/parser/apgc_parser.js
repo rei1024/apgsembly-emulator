@@ -6,6 +6,7 @@ import {
     APGCStatement,
     APGCStatements,
     FunctionCallStatement,
+    IfZeroTDECUStatement,
     NumberExpression,
     StringExpression
 } from "../types/apgc_types.js";
@@ -87,17 +88,30 @@ const semicolonWithWhitespace = whitespaceParser.andSecond(Parser.char(';')).and
  * @returns {Parser<APGCStatements>}
  */
 function apgcStatementsParser() {
-    return apgcStatementParser().andFirst(semicolonWithWhitespace).many().map(array => new APGCStatements(array));
+    return apgcStatementParser().many().map(array => new APGCStatements(array));
 }
 
 /**
  * @returns {Parser<APGCStatement>}
  */
 function apgcStatementParser() {
-    return functionCallStatementParser();
+    return functionCallStatementParser().andFirst(semicolonWithWhitespace).or(
+        ifZeroTDECUStatementParser()
+    );
 }
 
 const commaAndWhitespace = whitespaceParser.andSecond(Parser.char(',')).andFirst(whitespaceParser);
+
+/**
+ * @template A
+ * @param {Parser<A>} parser 
+ * @param {string} openChar
+ * @param {string} closeChar
+ * @returns {Parser<A>}
+ */
+function paren(parser, openChar, closeChar) {
+    return whitespaceParser.andSecond(Parser.char(openChar)).andSecond(whitespaceParser.andSecond(parser)).andFirst(Parser.char(closeChar)).andFirst(whitespaceParser);
+}
 
 /**
  * ;は消費しない
@@ -115,4 +129,27 @@ export function functionCallStatementParser() {
             ));
         })
     );
+}
+
+/**
+ * if_zero_tdec_u (0) { statemtns } else { statements }
+ * if_zero_tdec_u (0) { statemtns }
+ * @returns {Parser<IfZeroTDECUStatement>}
+ */
+export function ifZeroTDECUStatementParser() {
+    return whitespaceParser.andSecond(
+        Parser.string('if_zero_tdec_u').andSecond(
+            paren(numberExpressionParser, "(", ")").andThen(reg => {
+                return paren(apgcStatementsParser(), "{", "}").andThen(statements => {
+                    return Parser.string('else').andSecond(
+                        paren(apgcStatementsParser(), "{", "}").map(nonZeroStatements => {
+                            return new IfZeroTDECUStatement(reg, statements, nonZeroStatements);
+                        })
+                    ).or(Parser.pure(
+                        new IfZeroTDECUStatement(reg, statements, new APGCStatements([]))
+                    ))
+                });
+            })
+        )
+    )
 }
