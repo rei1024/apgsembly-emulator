@@ -1,10 +1,13 @@
 // @ts-check
 
+import { Command } from "../src/Command.js";
+import { ProgramLines } from "../src/ProgramLines.js";
 import { Program } from "../src/Program.js";
+import { APGCCompiler } from "./compiler/apgc_compiler.js";
+import { apgcProgramParser } from "./parser/apgc_parser.js";
+import { APGCProgram } from "./types/apgc_types.js";
 
 // string (APGC)
-// ↓ lexer
-// Token[]
 // ↓ parser
 // APGCProgram
 // ↓ compiler
@@ -12,38 +15,17 @@ import { Program } from "../src/Program.js";
 // ↓ pretty
 // string (APGsembly)
 
-export class Token {
-
-}
-
-export class APGCProgram {
-
-}
-
-/**
- * @param {string} str
- * @returns {Token[]}
- */
-export function lexer(str) {
-    let index = 0;
-    function consumeWhitespace() {
-        const char = str[index];
-        while (/\s/.test(char)) {
-            index++;
-        }
-    }
-    consumeWhitespace();
-
-    return [];
-}
-
 /**
  * 
- * @param {Token[]} tokens 
+ * @param {string} string 
  * @returns {APGCProgram}
  */
-export function parser(tokens) {
-    return new APGCProgram();
+export function parser(string) {
+    const result = apgcProgramParser().parseValue(string);
+    if (result === undefined) {
+        throw Error('Parse error ' + string);
+    }
+    return result;
 }
 
 /**
@@ -52,7 +34,14 @@ export function parser(tokens) {
  * @returns {Program}
  */
 export function compiler(program) {
-    return new Program({})
+    /** @type {Command[]} */
+    const commands = new APGCCompiler(program).compile();
+    return new Program({
+        commands: commands,
+        componentsHeader: undefined,
+        registersHeader: undefined,
+        programLines: new ProgramLines([])
+    }).reconstructProgramLines();
 }
 
 /**
@@ -62,5 +51,5 @@ export function compiler(program) {
  * @throws
  */
 export function main(str) {
-    return compiler(parser(lexer(str))).pretty()
+    return compiler(parser(str)).pretty()
 }
