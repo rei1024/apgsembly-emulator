@@ -1,6 +1,6 @@
 // @ts-check
 
-import { main } from "../apgc/apgc.js";
+import { mainWithComment } from "../apgc/apgc.js";
 
 const $input = document.querySelector('#input');
 
@@ -35,7 +35,7 @@ $compile.addEventListener('click', () => {
         if ($input.value.trim() === "") {
             throw Error('Input is empty');
         }
-        const result = main($input.value);
+        const result = mainWithComment($input.value);
         $copy.disabled = false;
         $error.style.display = "none";
         $output.value = result;

@@ -1,13 +1,15 @@
 // @ts-check
+import {
+    URegAction,
+    U_TDEC,
+    HaltOutAction,
+    NopAction,
+    Command
+} from "../apgc_deps.js";
 
-import { URegAction } from "../../src/actions/URegAction.js";
-import { HaltOutAction } from "../../src/actions/HaltOutAction.js";
-
-import { Command } from "../../src/Command.js";
 import { APGCProgram, APGCStatement, APGCStatements, FunctionCallStatement, IfZeroTDECUStatement } from "../types/apgc_types.js";
 import { compileINCU } from "./functions/inc_u.js";
 import { compileOutput } from "./functions/output.js";
-import { NopAction } from "../../src/actions/NopAction.js";
 
 export class APGCCompiler {
     /**
@@ -26,6 +28,14 @@ export class APGCCompiler {
         this.commands = [];
 
         this.id = 0;
+    }
+
+    /**
+     * 
+     * @param {Command} command 
+     */
+    addCommand(command) {
+        this.commands.push(command);
     }
 
     /**
@@ -95,9 +105,9 @@ function compileIfZeroTDECUStatement(ctx, inputState, statement) {
         state: inputState,
         input: "*",
         nextState: ifState,
-        actions: [new URegAction("TDEC", statement.reg.value)]
+        actions: [new URegAction(U_TDEC, statement.reg.value)]
     });
-    ctx.commands.push(command);
+    ctx.addCommand(command);
     const ifZeroState = ctx.generateState();
     const ifNonZeroState = ctx.generateState();
     const ifCommandZero = new Command({
@@ -106,14 +116,14 @@ function compileIfZeroTDECUStatement(ctx, inputState, statement) {
         nextState: ifZeroState,
         actions: [new NopAction()]
     });
-    ctx.commands.push(ifCommandZero);
+    ctx.addCommand(ifCommandZero)
     const ifCommandNonZero = new Command({
         state: ifState,
         input: "NZ",
         nextState: ifNonZeroState,
         actions: [new NopAction()]
     });
-    ctx.commands.push(ifCommandNonZero);
+    ctx.addCommand(ifCommandNonZero);
 
     const zeroCommandOutputState = ctx.compileStatements(ifZeroState, statement.z);
    
@@ -127,13 +137,13 @@ function compileIfZeroTDECUStatement(ctx, inputState, statement) {
         nextState: finalState,
         actions: [new NopAction()]
     });
-    ctx.commands.push(finalCommandZero);
+    ctx.addCommand(finalCommandZero);
     const finalCommandNonZero = new Command({
         state: nonZeroCommandOutputState,
         input: "*",
         nextState: finalState,
         actions: [new NopAction()]
     });
-    ctx.commands.push(finalCommandNonZero);
+    ctx.addCommand(finalCommandNonZero);
     return finalState;
 }

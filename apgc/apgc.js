@@ -1,8 +1,7 @@
 // @ts-check
 
-import { Command } from "../src/Command.js";
-import { ProgramLines } from "../src/ProgramLines.js";
-import { Program } from "../src/Program.js";
+import { Command, ProgramLines, Program } from "./apgc_deps.js";
+
 import { APGCCompiler } from "./compiler/apgc_compiler.js";
 import { apgcProgramParser } from "./parser/apgc_parser.js";
 import { APGCProgram } from "./types/apgc_types.js";
@@ -51,5 +50,15 @@ export function compiler(program) {
  * @throws
  */
 export function main(str) {
-    return compiler(parser(str)).pretty()
+    return compiler(parser(str)).pretty();
+}
+
+/**
+ * 
+ * @param {string} str APGC
+ * @returns {string} APGsembly
+ */
+export function mainWithComment(str) {
+    const header = `\n# State    Input    Next state    Actions\n# ---------------------------------------\n`;
+    return "# Generated from APGC \n" + str.trim().split('\n').map(x => "# " + x).join('\n') + "\n" + header + main(str);
 }

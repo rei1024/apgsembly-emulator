@@ -74,6 +74,19 @@ export class IfZeroTDECUStatement extends APGCStatement {
     }
 }
 
+export class WhileNonZeroTDECUStatement extends APGCStatement {
+    /**
+     * 
+     * @param {NumberExpression} reg 
+     * @param {APGCStatements} statements 
+     */
+    constructor(reg, statements) {
+        super();
+        this.reg = reg;
+        this.statements = statements;
+    }
+}
+
 export class APGCProgram {
     /**
      * 

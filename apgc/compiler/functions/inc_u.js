@@ -1,12 +1,10 @@
 // @ts-check
-import { Command } from "../../../src/Command.js";
+import { Command, URegAction, U_INC, NopAction } from "../../apgc_deps.js";
 import { FunctionCallStatement, NumberExpression } from "../../types/apgc_types.js";
 import { APGCCompiler } from "../apgc_compiler.js";
-import { URegAction } from "../../../src/actions/URegAction.js";
-import { NopAction } from "../../../src/actions/NopAction.js";
 
 /**
- * 
+ * inc_u(3)
  * @param {APGCCompiler} ctx 
  * @param {string} inputState
  * @param {FunctionCallStatement} statement 
@@ -28,8 +26,8 @@ export function compileINCU(ctx, inputState, statement) {
         state: inputState,
         input: "*",
         nextState: nextState,
-        actions: [new URegAction("INC", arg.value), new NopAction()]
+        actions: [new URegAction(U_INC, arg.value), new NopAction()]
     });
-    ctx.commands.push(command);
+    ctx.addCommand(command);
     return nextState;
 }
