@@ -10,6 +10,7 @@ import {
 import { APGCProgram, APGCStatement, APGCStatements, FunctionCallStatement, IfZeroTDECUStatement } from "../types/apgc_types.js";
 import { compileINCU } from "./functions/inc_u.js";
 import { compileOutput } from "./functions/output.js";
+import { compileTDECU } from "./functions/tdec_u.js";
 
 export class APGCCompiler {
     /**
@@ -81,6 +82,8 @@ export class APGCCompiler {
                 return compileOutput(this, inputState, statement);
             } else if (statement.funcName === 'inc_u') {
                 return compileINCU(this, inputState, statement);
+            } else if (statement.funcName === 'tdec_u') {
+                return compileTDECU(this, inputState, statement);
             } else {
                 throw Error(`unkown function "${statement.funcName}"`);
             }

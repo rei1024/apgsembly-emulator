@@ -201,6 +201,15 @@ export class Parser {
     }
 
     /**
+     * 
+     * @param {Parser<A>[]} array 
+     * @returns {Parser<A>}
+     */
+    orArray(array) {
+        return array.reduce((acc, x) => acc.or(x), this);
+    }
+
+    /**
      * @returns {Parser<A[]>}
      */
     many() {
@@ -240,7 +249,7 @@ export class Parser {
                     return {
                         rest: str.slice(i),
                         value: str.slice(0, i)
-                    }
+                    };
                 }
             }
             return {

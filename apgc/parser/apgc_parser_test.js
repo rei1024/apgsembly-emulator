@@ -56,7 +56,8 @@ test('functionCallStatement output(1, "a", "bb", 3, 4 , 5 )', () => {
             new NumberExpression(3),
             new NumberExpression(4),
             new NumberExpression(5)
-        ]));
+        ])
+    );
 });
 
 test('stringExpression', () => {

@@ -132,24 +132,36 @@ export function functionCallStatementParser() {
 }
 
 /**
- * if_zero_tdec_u (0) { statemtns } else { statements }
- * if_zero_tdec_u (0) { statemtns }
- * @returns {Parser<IfZeroTDECUStatement>}
+ * @template A
+ * @param {string} keyword 
+ * @param {(reg: NumberExpression, stmts1: APGCStatements, stmts2: APGCStatements) => A} makeStatement 
+ * @returns {Parser<A>}
  */
-export function ifZeroTDECUStatementParser() {
+function makeIfParser(keyword, makeStatement) {
     return whitespaceParser.andSecond(
-        Parser.string('if_zero_tdec_u').andSecond(
+        Parser.string(keyword).andSecond(
             paren(numberExpressionParser, "(", ")").andThen(reg => {
                 return paren(apgcStatementsParser(), "{", "}").andThen(statements => {
                     return Parser.string('else').andSecond(
                         paren(apgcStatementsParser(), "{", "}").map(nonZeroStatements => {
-                            return new IfZeroTDECUStatement(reg, statements, nonZeroStatements);
+                            return makeStatement(reg, statements, nonZeroStatements);
                         })
                     ).or(Parser.pure(
-                        new IfZeroTDECUStatement(reg, statements, new APGCStatements([]))
+                        makeStatement(reg, statements, new APGCStatements([]))
                     ))
                 });
             })
         )
     )
+}
+
+/**
+ * if_zero_tdec_u (0) { statemtns } else { statements }
+ * if_zero_tdec_u (0) { statemtns }
+ * @returns {Parser<IfZeroTDECUStatement>}
+ */
+export function ifZeroTDECUStatementParser() {
+    return makeIfParser('if_zero_tdec_u', (reg, zeroStatements, nonZeroStatements) => {
+        return new IfZeroTDECUStatement(reg, zeroStatements, nonZeroStatements);
+    });
 }
