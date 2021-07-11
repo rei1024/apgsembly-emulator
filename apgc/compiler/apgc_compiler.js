@@ -1,10 +1,41 @@
 // @ts-check
 import {
+    Action,
     HaltOutAction,
     NopAction,
+    // U
     URegAction,
     U_INC,
     U_TDEC,
+    // B
+    BRegAction,
+    B_INC,
+    B_TDEC,
+    B_READ,
+    B_SET,
+    // B2D
+    B2DAction,
+    B2D_INC,
+    B2D_TDEC,
+    B2D_READ,
+    B2D_SET,
+    B2D_B2DX,
+    B2D_B2DY,
+    B2D_B2D,
+    // ADD
+    AddAction,
+    ADD_A1,
+    ADD_B0,
+    ADD_B1,
+    // SUB
+    SubAction,
+    SUB_A1,
+    SUB_B0,
+    SUB_B1,
+    // MUL
+    MulAction,
+    MUL_0,
+    MUL_1,
     Command,
 } from "../apgc_deps.js";
 
@@ -18,6 +49,7 @@ import {
     WhileNonZeroStatement
 } from "../types/apgc_types.js";
 import { compileOutput } from "./functions/output.js";
+import { compileEmptyArgmentFunction } from "./functions/empty_argment_function.js";
 import { compileSingleNumberArgmentFunction } from "./functions/single_number_argment_function.js";
 
 export class APGCCompiler {
@@ -89,14 +121,56 @@ export class APGCCompiler {
      * @returns {string} outputState
      */
     compileFunctionCallExpression(inputState, expr) {
+        const __this__ = this;
+        /**
+         * 
+         * @param {(_: number) => Action[]} actions 
+         * @returns {string}
+         */
+        function single(actions) {
+            return compileSingleNumberArgmentFunction(__this__, inputState, expr, actions);
+        }
+
+        /**
+         * 
+         * @param {Action[]} actions 
+         */
+        function empty(actions) {
+            return compileEmptyArgmentFunction(__this__, inputState, expr, actions);
+        }
+
         switch (expr.name) {
             case "output": return compileOutput(this, inputState, expr);
-            case "inc_u": return compileSingleNumberArgmentFunction(
-                this, inputState, expr, n => [new URegAction(U_INC, n), new NopAction()]
-            );
-            case "tdec_u": return compileSingleNumberArgmentFunction(
-                this, inputState, expr, n => [new URegAction(U_TDEC, n)]
-            );
+            // U
+            case "inc_u": return single(n => [new URegAction(U_INC, n), new NopAction()]);
+            case "tdec_u": return single(n => [new URegAction(U_TDEC, n)]);
+            // B
+            case "inc_b": return single(n => [new BRegAction(B_INC, n), new NopAction()]);
+            case "tdec_b": return single(n => [new BRegAction(B_TDEC, n)]);
+            case "read_b": return single(n => [new BRegAction(B_READ, n)]);
+            case "set_b": return single(n => [new BRegAction(B_SET, n), new NopAction()]);
+            // B2D
+            case "inc_b2dx": return empty([new B2DAction(B2D_INC, B2D_B2DX), new NopAction()]);
+            case "inc_b2dy": return empty([new B2DAction(B2D_INC, B2D_B2DY), new NopAction()]);
+            case "tdec_b2dx": return empty([new B2DAction(B2D_TDEC, B2D_B2DX)]);
+            case "tdec_b2dy": return empty([new B2DAction(B2D_TDEC, B2D_B2DY)]);
+            case "read_b2d": return empty([new B2DAction(B2D_READ, B2D_B2D)]);
+            case "set_b2d": return empty([new B2DAction(B2D_SET, B2D_B2D), new NopAction()]);
+            // ADD
+            case "add_a1": return empty([new AddAction(ADD_A1), new NopAction()]);
+            case "add_b0": return empty([new AddAction(ADD_B0)]);
+            case "add_b1": return empty([new AddAction(ADD_B1)]);
+            // SUB
+            case "sub_a1": return empty([new SubAction(SUB_A1), new NopAction()]);
+            case "sub_b0": return empty([new SubAction(SUB_B0)]);
+            case "sub_b1": return empty([new SubAction(SUB_B1)]);
+            // MUL
+            case "mul_0": return empty([new MulAction(MUL_0)]);
+            case "mul_1": return empty([new MulAction(MUL_1)]);
+            // NOP
+            case "nop": return empty([new NopAction()]);
+            // HALT_OUT
+            case "halt_out": return empty([new HaltOutAction()]);
         }
         throw Error(`unkown function "${expr.name}"`);
     }
