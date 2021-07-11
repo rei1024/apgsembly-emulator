@@ -32,9 +32,6 @@ if (!($error instanceof HTMLElement)) {
 
 $compile.addEventListener('click', () => {
     try {
-        if ($input.value.trim() === "") {
-            throw Error('Input is empty');
-        }
         const result = mainWithComment($input.value);
         $copy.disabled = false;
         $error.style.display = "none";

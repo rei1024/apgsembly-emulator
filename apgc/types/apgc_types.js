@@ -158,13 +158,18 @@ export class WhileNonZeroStatement extends APGCStatement {
 
 export class APGCProgram {
     /**
-     * 
      * @param {APGCStatements} apgcStatements 
+     * @param {string[]} headers
      */
-    constructor(apgcStatements) {
+    constructor(apgcStatements, headers = []) {
         /**
          * @readonly
          */
         this.apgcStatements = apgcStatements;
+
+        /**
+         * @readonly
+         */
+        this.headers = headers;
     }
 }

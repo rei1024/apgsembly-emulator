@@ -79,10 +79,30 @@ const stringExpressionParserInternal = new Parser(str => {
 export const stringExpressionParser = stringExpressionParserInternal.map(x => new StringExpression(x));
 
 /**
- * @returns {Parser<APGCProgram>}
+ * @type {(_: string) => APGCProgram | undefined}
  */
-export function apgcProgramParser() {
-    return apgcStatementsParser().map(s => new APGCProgram(s)).andFirst(whitespaceParser).andFirst(Parser.eof());
+export function apgcProgramParser(str) {
+    const lines = str.split(/\r\n|\n|\r/);
+    /** @type {string[]} */
+    const outputLines = [];
+    /**
+     * @type {string[]}
+     */
+    const headers = [];
+    for (const line of lines) {
+        if (line.startsWith('#REGISTERS') || line.startsWith('#COMPONENTS')) {
+            headers.push(line);
+        } else {
+            outputLines.push(line);
+        }
+    }
+
+    const allParser = apgcStatementsParser().andFirst(whitespaceParser).andFirst(Parser.eof());
+    const statements = allParser.parseValue(outputLines.join('\n'));
+    if (statements === undefined) {
+        return undefined;
+    }
+    return new APGCProgram(statements, headers);
 }
 
 const semicolonWithWhitespace = whitespaceParser.andSecond(Parser.char(';')).andSecond(whitespaceParser);

@@ -86,7 +86,14 @@ export class APGCCompiler {
      * @returns {Command[]}
      */
     compile() {
-        const apgcInitialState = "INITIAL";
+        const initialState = "INITIAL"
+        const apgcInitialState = "APGC_INITIAL";
+        this.addCommand(new Command({
+            state: initialState,
+            nextState: apgcInitialState,
+            input: "*",
+            actions: [new NopAction()]
+        }));        
         const outputState = this.compileStatements(apgcInitialState, this.program.apgcStatements);
         this.addCommand(new Command({
             state: outputState,

@@ -22,7 +22,7 @@ import { validateUniqueLabel } from "./validator/unique_label/unique_label_valid
  * @returns {APGCProgram}
  */
 export function parser(string) {
-    const result = apgcProgramParser().parseValue(string);
+    const result = apgcProgramParser(string);
     if (result === undefined) {
         throw Error('Parse error ' + string);
     }
@@ -69,7 +69,8 @@ export function validate(apgcProgram) {
 export function main(str) {
     const apgcProgram = parser(str);
     validate(apgcProgram);
-    return compiler(apgcProgram).pretty();
+
+    return apgcProgram.headers.map(x => x + "\n").join("") + compiler(apgcProgram).pretty();
 }
 
 /**

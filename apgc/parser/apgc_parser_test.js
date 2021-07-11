@@ -100,7 +100,7 @@ test('apgcProgramParser', () => {
 output(1);
 output(2, 3);    
 `
-    assertEquals(apgcProgramParser().parseValue(str), new APGCProgram(
+    assertEquals(apgcProgramParser(str), new APGCProgram(
         new APGCStatements(
             [
                 new APGCExpressionStatement(
@@ -130,7 +130,7 @@ test('apgcProgramParser comment', () => {
 // abc // abc
 output(1); // abc
 // abc`;
-    assertEquals(apgcProgramParser().parseValue(str), new APGCProgram(
+    assertEquals(apgcProgramParser(str), new APGCProgram(
         new APGCStatements(
             [
                 new APGCExpressionStatement(
@@ -154,7 +154,7 @@ if_zero(tdec_u(0) ) {
     output(2);  
 }
 `
-    assertEquals(apgcProgramParser().parseValue(str), new APGCProgram(
+    assertEquals(apgcProgramParser(str), new APGCProgram(
         new APGCStatements(
             [
                 new IfZeroStatement(
@@ -185,7 +185,7 @@ if_zero(tdec_u(0)) {
     output(1);
 }
 `
-    assertEquals(apgcProgramParser().parseValue(str), new APGCProgram(
+    assertEquals(apgcProgramParser(str), new APGCProgram(
         new APGCStatements(
             [
                 new IfZeroStatement(
@@ -212,7 +212,7 @@ while_non_zero(tdec_u(0)) {
     output(1);
 }
 `
-    assertEquals(apgcProgramParser().parseValue(str), new APGCProgram(
+    assertEquals(apgcProgramParser(str), new APGCProgram(
         new APGCStatements(
             [
                 new WhileNonZeroStatement(
