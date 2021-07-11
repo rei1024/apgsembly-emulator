@@ -47,7 +47,9 @@ import {
     FunctionCallExpression,
     IfZeroStatement,
     StringExpression,
-    WhileNonZeroStatement
+    WhileNonZeroStatement,
+    LABEL_FUNCTION_NAME,
+    GOTO_FUNCTION_NAME,
 } from "../types/apgc_types.js";
 import { compileOutput } from "./functions/output.js";
 import { compileEmptyArgmentFunction } from "./functions/empty_argment_function.js";
@@ -141,8 +143,8 @@ export class APGCCompiler {
         }
 
         switch (expr.name) {
-            case "label": return compileLabel(this, inputState, expr);
-            case "goto": return compileGoto(this, inputState, expr);
+            case LABEL_FUNCTION_NAME: return compileLabel(this, inputState, expr);
+            case GOTO_FUNCTION_NAME: return compileGoto(this, inputState, expr);
 
             case "output": return compileOutput(this, inputState, expr);
             // U

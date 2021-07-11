@@ -62,6 +62,10 @@ export class FunctionCallExpression extends APGCExpression {
     }
 }
 
+export const LABEL_FUNCTION_NAME = "label";
+
+export const GOTO_FUNCTION_NAME = "goto";
+
 // expression with ;
 export class APGCExpressionStatement extends APGCStatement {
     /**
