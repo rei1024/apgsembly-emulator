@@ -2,7 +2,10 @@
 import {
     HaltOutAction,
     NopAction,
-    Command
+    URegAction,
+    U_INC,
+    U_TDEC,
+    Command,
 } from "../apgc_deps.js";
 
 import {
@@ -14,9 +17,8 @@ import {
     IfZeroStatement,
     WhileNonZeroStatement
 } from "../types/apgc_types.js";
-import { compileINCU } from "./functions/inc_u.js";
 import { compileOutput } from "./functions/output.js";
-import { compileTDECU } from "./functions/tdec_u.js";
+import { compileSingleNumberArgmentFunction } from "./functions/single_number_argment_function.js";
 
 export class APGCCompiler {
     /**
@@ -87,15 +89,16 @@ export class APGCCompiler {
      * @returns {string} outputState
      */
     compileFunctionCallExpression(inputState, expr) {
-        if (expr.name === 'output') {
-            return compileOutput(this, inputState, expr);
-        } else if (expr.name === 'inc_u') {
-            return compileINCU(this, inputState, expr);
-        } else if (expr.name=== 'tdec_u') {
-            return compileTDECU(this, inputState, expr);
-        } else {
-            throw Error(`unkown function "${expr.name}"`);
+        switch (expr.name) {
+            case "output": return compileOutput(this, inputState, expr);
+            case "inc_u": return compileSingleNumberArgmentFunction(
+                this, inputState, expr, n => [new URegAction(U_INC, n), new NopAction()]
+            );
+            case "tdec_u": return compileSingleNumberArgmentFunction(
+                this, inputState, expr, n => [new URegAction(U_TDEC, n)]
+            );
         }
+        throw Error(`unkown function "${expr.name}"`);
     }
 
     /**

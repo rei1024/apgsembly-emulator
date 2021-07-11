@@ -1,3 +1,4 @@
+export { Action } from "../src/actions/Action.js";
 export { Program } from "../src/Program.js";
 export { ProgramLines } from "../src/ProgramLines.js";
 export { Command } from "../src/Command.js";

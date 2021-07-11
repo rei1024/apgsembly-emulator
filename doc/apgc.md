@@ -18,7 +18,12 @@
 * `read_b2d()`
 * `set_b2d()`
 
-...
+### ADD
+* `add_b1()`
+
+### MUL
+* `mul_0()`
+* `mul_1()`
 
 ### OUTPUT
 * `output("1")`
