@@ -8,7 +8,7 @@ import {
     APGCStatements,
     FunctionCallExpression,
     IfZeroStatement,
-    // WhileNonZeroStatement,
+    WhileNonZeroStatement,
     NumberExpression,
     StringExpression
 } from "../types/apgc_types.js";
@@ -97,9 +97,10 @@ function apgcStatementsParser() {
  * @returns {Parser<APGCStatement>}
  */
 function apgcStatementParser() {
-    return apgcExpressionStatementParser().or(
-        ifZeroStatementParser()
-    );
+    return apgcExpressionStatementParser().orArray([
+        ifZeroStatementParser(),
+        whileNonZeroStatementParser()
+    ]);
 }
 
 /**
@@ -176,12 +177,29 @@ export function ifZeroStatementParser() {
     });
 }
 
-// /**
-//  * @template A
-//  * @param {string} keyword 
-//  * @param {(reg: NumberExpression, statemtns: APGCStatements) => A} makeWhileStatement 
-//  * @returns {Parser<A>}
-//  */
-// export function makeWhileParser(keyword, makeWhileStatement) {
-    
-// }
+/**
+ * @template A
+ * @param {string} keyword 
+ * @param {(expr: APGCExpression, statemtns: APGCStatements) => A} makeWhileStatement 
+ * @returns {Parser<A>}
+ */
+function makeWhileParser(keyword, makeWhileStatement) {
+    return whitespaceParser.andSecond(
+        Parser.string(keyword).andSecond(
+            paren(apgcExpressionParser(), "(", ")").andThen(expr => {
+                return paren(apgcStatementsParser(), "{", "}").andThen(statements => {
+                    return (Parser.pure(
+                        makeWhileStatement(expr, statements)
+                    ))
+                });
+            })
+        )
+    )
+}
+
+/**
+ * @returns {Parser<WhileNonZeroStatement>}
+ */
+export function whileNonZeroStatementParser() {
+    return makeWhileParser('while_non_zero', (expr, stmts) => new WhileNonZeroStatement(expr, stmts));
+}

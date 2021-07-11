@@ -5,7 +5,15 @@ import {
     Command
 } from "../apgc_deps.js";
 
-import { APGCExpressionStatement, APGCProgram, APGCStatement, APGCStatements, FunctionCallExpression, IfZeroStatement } from "../types/apgc_types.js";
+import {
+    APGCExpressionStatement,
+    APGCProgram,
+    APGCStatement,
+    APGCStatements,
+    FunctionCallExpression,
+    IfZeroStatement,
+    WhileNonZeroStatement
+} from "../types/apgc_types.js";
 import { compileINCU } from "./functions/inc_u.js";
 import { compileOutput } from "./functions/output.js";
 import { compileTDECU } from "./functions/tdec_u.js";
@@ -43,7 +51,7 @@ export class APGCCompiler {
     compile() {
         const inputState = "INITIAL";
         const outputState = this.compileStatements(inputState, this.program.apgcStatements);
-        this.commands.push(new Command({
+        this.addCommand(new Command({
             state: outputState,
             nextState: outputState,
             input: "*",
@@ -64,6 +72,10 @@ export class APGCCompiler {
         return inputState;
     }
 
+    /**
+     * 
+     * @returns {string}
+     */
     generateState() {
         this.id++;
         return "STATE_" + this.id;
@@ -101,6 +113,8 @@ export class APGCCompiler {
             }
         } else if (statement instanceof IfZeroStatement) {
             return compileIfZeroStatement(this, inputState, statement);
+        } else if (statement instanceof WhileNonZeroStatement) {
+            return compileWhileNonZeroStatement(this, inputState, statement);
         } else {
             throw Error('unkown statement ' + statement);
         }
@@ -158,5 +172,49 @@ function compileIfZeroStatement(ctx, inputState, statement) {
         actions: [new NopAction()]
     });
     ctx.addCommand(finalCommandNonZero);
+    return finalState;
+}
+
+/**
+ * 
+ * @param {APGCCompiler} ctx 
+ * @param {string} inputState 
+ * @param {WhileNonZeroStatement} statement 
+ * @returns {string} outputState
+ */
+function compileWhileNonZeroStatement(ctx, inputState, statement) {
+    const expr = statement.expr;
+    if (!(expr instanceof FunctionCallExpression)) {
+        throw Error('while_non_zero only accept function call');
+    }
+    const whileState = ctx.compileFunctionCallExpression(inputState, expr);
+
+    const ifNonZeroState = ctx.generateState();
+    const finalState = ctx.generateState();
+
+    const ifCommandZero = new Command({
+        state: whileState,
+        input: "Z",
+        nextState: finalState,
+        actions: [new NopAction()]
+    });
+    ctx.addCommand(ifCommandZero)
+    const ifCommandNonZero = new Command({
+        state: whileState,
+        input: "NZ",
+        nextState: ifNonZeroState,
+        actions: [new NopAction()]
+    });
+    ctx.addCommand(ifCommandNonZero);
+
+    const statementsOutputState = ctx.compileStatements(ifNonZeroState, statement.statements);
+
+    const continueCommand = new Command({
+        state: statementsOutputState,
+        input: "*",
+        nextState: inputState,
+        actions: [new NopAction()]
+    });
+    ctx.addCommand(continueCommand);
     return finalState;
 }

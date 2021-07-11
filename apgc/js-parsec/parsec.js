@@ -53,13 +53,13 @@ export class Parser {
             if (result === null) {
                 return undefined;
             }
-            const first = result[index];
-            if (first === undefined) {
+            const match = result[index];
+            if (match === undefined) {
                 return undefined;
             }
             return {
-                rest: str.slice(first.length),
-                value: first
+                rest: str.slice(match.length),
+                value: match
             };
         });
     }

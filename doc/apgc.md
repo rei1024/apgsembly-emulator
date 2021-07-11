@@ -50,4 +50,8 @@ while_non_zero(read_b(3)) {
 
 }
 
+loop {
+
+}
+
 ```

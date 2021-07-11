@@ -1,5 +1,5 @@
 
-import { APGCExpressionStatement, APGCProgram, APGCStatements, FunctionCallExpression, IfZeroStatement, NumberExpression, StringExpression } from "../types/apgc_types.js";
+import { APGCExpressionStatement, APGCProgram, APGCStatements, FunctionCallExpression, IfZeroStatement, NumberExpression, StringExpression, WhileNonZeroStatement } from "../types/apgc_types.js";
 import { apgcProgramParser, functionCallExpressionParser, identifierParser, numberExpressionParser, stringExpressionParser } from "./apgc_parser.js";
 
 import { assertEquals } from "../../test/deps.js";
@@ -158,7 +158,6 @@ if_zero(tdec_u(0) ) {
     ))
 });
 
-
 test('apgcProgramParser if_zero empty else', () => {
     const str = `
 if_zero(tdec_u(0)) {
@@ -179,6 +178,30 @@ if_zero(tdec_u(0)) {
                     ),
                     new APGCStatements(
                         []
+                    )
+                )
+            ]
+        )
+    ))
+});
+
+test('apgcProgramParser while_non_zero', () => {
+    const str = `
+while_non_zero(tdec_u(0)) {
+    output(1);
+}
+`
+    assertEquals(apgcProgramParser().parseValue(str), new APGCProgram(
+        new APGCStatements(
+            [
+                new WhileNonZeroStatement(
+                    new FunctionCallExpression('tdec_u', [new NumberExpression(0)]),
+                    new APGCStatements(
+                        [
+                            new APGCExpressionStatement(
+                                new FunctionCallExpression('output', [new NumberExpression(1)])
+                            )  
+                        ]
                     )
                 )
             ]

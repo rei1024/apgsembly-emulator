@@ -89,6 +89,9 @@ export class IfZeroStatement extends APGCStatement {
     }
 }
 
+/**
+ * while_non_zero (expr) { statements } 
+ */
 export class WhileNonZeroStatement extends APGCStatement {
     /**
      * 
