@@ -60,3 +60,8 @@ loop {
 }
 
 ```
+
+```
+label("START"); # APGC_LABEL_STATEでNOP
+goto("START");
+```

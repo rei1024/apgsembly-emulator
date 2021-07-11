@@ -125,6 +125,28 @@ output(2, 3);
     ))
 });
 
+test('apgcProgramParser comment', () => {
+    const str = `
+// abc // abc
+output(1); // abc
+// abc`;
+    assertEquals(apgcProgramParser().parseValue(str), new APGCProgram(
+        new APGCStatements(
+            [
+                new APGCExpressionStatement(
+                    new FunctionCallExpression(
+                        'output',
+                        [
+                            new NumberExpression(1)
+                        ]
+                    )
+                )
+            ]
+        )
+    ))
+});
+
+
 test('apgcProgramParser if_zero', () => {
     const str = `
 if_zero(tdec_u(0) ) {

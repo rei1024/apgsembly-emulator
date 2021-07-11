@@ -21,9 +21,10 @@ import { Parser } from "../js-parsec/parsec.js";
 export const identifierParser = Parser.regexp(/^[a-zA-Z_][a-zA-Z_0-9]*/);
 
 /**
- * 0文字以上の空白
+ * 0文字以上の空白か行コメント
+ * コメントが最終行の場合も考慮する
  */
-const whitespaceParser = Parser.regexp(/^\s*/m);
+const whitespaceParser = Parser.regexp(/^(\s*\/\/.*(\n|$))*\s*/m); // .は通常は改行文字と一致しない
 
 const leftParen = Parser.char('(');
 const rightParen = Parser.char(')');
