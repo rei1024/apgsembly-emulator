@@ -15,18 +15,32 @@ import {
 import { Parser } from "../js-parsec/parsec.js";
 
 /**
+ * 識別子の正規表現
+ */
+const identifierRexExp = /^[a-zA-Z_][a-zA-Z_0-9]*/;
+
+/**
  * 識別子
  * @type {Parser<string>} 
  */
-export const identifierParser = Parser.regexp(/^[a-zA-Z_][a-zA-Z_0-9]*/);
+export const identifierParser = Parser.regexp(identifierRexExp);
+
+// .は通常は改行文字と一致しない
+const whitespaceRegExp = /^(\s*\/\/.*(\r\n|\n|\r|$))*\s*/m;
 
 /**
  * 0文字以上の空白か行コメント
  * コメントが最終行の場合も考慮する
  */
-const whitespaceParser = Parser.regexp(/^(\s*\/\/.*(\n|$))*\s*/m); // .は通常は改行文字と一致しない
+const whitespaceParser = Parser.regexp(whitespaceRegExp); 
 
+/**
+ * "("
+ */
 const leftParen = Parser.char('(');
+/**
+ * ")"
+ */
 const rightParen = Parser.char(')');
 
 /**

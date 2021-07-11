@@ -52,8 +52,8 @@ import {
     GOTO_FUNCTION_NAME,
 } from "../types/apgc_types.js";
 import { compileOutput } from "./functions/output.js";
-import { compileEmptyArgmentFunction } from "./functions/empty_argment_function.js";
-import { compileSingleNumberArgmentFunction } from "./functions/single_number_argment_function.js";
+import { compileEmptyArgumentFunction } from "./functions/empty_argument_function.js";
+import { compileSingleNumberArgumentFunction } from "./functions/single_number_argument_function.js";
 
 const UNREACHABLE_PREFIX =  "APGC_UNREACHABLE_";
 
@@ -143,7 +143,7 @@ export class APGCCompiler {
          * @returns {string}
          */
         function single(actions) {
-            return compileSingleNumberArgmentFunction(__this__, inputState, expr, actions);
+            return compileSingleNumberArgumentFunction(__this__, inputState, expr, actions);
         }
 
         /**
@@ -151,7 +151,7 @@ export class APGCCompiler {
          * @param {Action[]} actions 
          */
         function empty(actions) {
-            return compileEmptyArgmentFunction(__this__, inputState, expr, actions);
+            return compileEmptyArgumentFunction(__this__, inputState, expr, actions);
         }
 
         switch (expr.name) {
@@ -324,11 +324,17 @@ const LABEL_PREFIX = "APGC_LABEL_";
  */
 function compileLabel(ctx, inputState, expr) {
     if (expr.args.length !== 1) {
-        throw Error('label argments length is not 1');
+        throw Error('label arguments length is not 1');
     }
     const arg = expr.args[0];
     if (!(arg instanceof StringExpression)) {
-        throw Error('label argments accepts only strings');
+        throw Error('label arguments accepts only strings');
+    }
+    if (arg.string.includes(';')) {
+        throw Error(`label arguments should not contain semicolon: label("${arg.string}")`);
+    }
+    if (arg.string.includes(' ')) {
+        throw Error(`label arguments should not contain whitespace: label("${arg.string}")`);
     }
     const labelState = LABEL_PREFIX + arg.string;
     const nextState = ctx.generateState();
@@ -355,11 +361,11 @@ function compileLabel(ctx, inputState, expr) {
  */
 function compileGoto(ctx, inputState, expr) {
     if (expr.args.length !== 1) {
-        throw Error('goto argments length is not 1');
+        throw Error('goto arguments length is not 1');
     }
     const arg = expr.args[0];
     if (!(arg instanceof StringExpression)) {
-        throw Error('goto argments accepts only strings');
+        throw Error('goto arguments accepts only strings');
     }
     const nextState = LABEL_PREFIX + arg.string;
     ctx.addCommand(new Command({

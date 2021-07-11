@@ -65,7 +65,7 @@ export function extractLabelFromAPGCProgram(program) {
             if (expr.name === LABEL_FUNCTION_NAME) {
                 const arg = expr.args[0];
                 if (!(arg instanceof StringExpression)) {
-                    throw Error('label argment is not a string');
+                    throw Error('label argument is not a string');
                 }
                 return [arg.string];
             }
@@ -87,7 +87,7 @@ export function extractLabelFromAPGCProgram(program) {
             if (expr.name === GOTO_FUNCTION_NAME) {
                 const arg = expr.args[0];
                 if (!(arg instanceof StringExpression)) {
-                    throw Error('label argment is not a string');
+                    throw Error('label argument is not a string');
                 }
                 return [arg.string];
             }

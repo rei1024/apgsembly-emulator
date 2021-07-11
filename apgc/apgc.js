@@ -5,8 +5,7 @@ import { Command, ProgramLines, Program } from "./apgc_deps.js";
 import { APGCCompiler } from "./compiler/apgc_compiler.js";
 import { apgcProgramParser } from "./parser/apgc_parser.js";
 import { APGCProgram } from "./types/apgc_types.js";
-import { validateGotoLabel } from "./validator/goto_label/goto_label_validator.js";
-import { validateUniqueLabel } from "./validator/unique_label/unique_label_validator.js";
+import { validate } from "./validator/apgc_validator.js";
 
 // string (APGC)
 // ↓ parser
@@ -17,7 +16,7 @@ import { validateUniqueLabel } from "./validator/unique_label/unique_label_valid
 // string (APGsembly)
 
 /**
- * 
+ * 構文解析
  * @param {string} string 
  * @returns {APGCProgram}
  */
@@ -30,7 +29,7 @@ export function parser(string) {
 }
 
 /**
- * 
+ * コンパイル
  * @param {APGCProgram} program 
  * @returns {Program}
  */
@@ -43,21 +42,6 @@ export function compiler(program) {
         registersHeader: undefined,
         programLines: new ProgramLines([])
     }).reconstructProgramLines();
-}
-
-/**
- * 
- * @param {APGCProgram} apgcProgram 
- */
-export function validate(apgcProgram) {
-    const uniquelabelMsg = validateUniqueLabel(apgcProgram);
-    if (uniquelabelMsg !== 'OK') {
-        throw Error(uniquelabelMsg.error);
-    }
-    const gotoLabelMsg = validateGotoLabel(apgcProgram);
-    if (gotoLabelMsg !== 'OK') {
-        throw Error(gotoLabelMsg.error);
-    }
 }
 
 /**

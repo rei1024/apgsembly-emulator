@@ -8,6 +8,9 @@
 
 }
 
+/**
+ * 文の列
+ */
 export class APGCStatements {
     /**
      * 

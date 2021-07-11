@@ -13,7 +13,7 @@ import { APGCCompiler } from "../apgc_compiler.js";
  */
 export function compileOutput(ctx, inputState, callExpr) {
     if (callExpr.args.length !== 1) {
-        throw Error('output argments length is not 1');
+        throw Error('output arguments length is not 1');
     }
     const arg = callExpr.args[0];
     if (arg instanceof StringExpression) {

@@ -11,9 +11,9 @@ import { APGCCompiler } from "../apgc_compiler.js";
  * @param {Action[]} actions
  * @returns {string} outputState
  */
-export function compileEmptyArgmentFunction(ctx, inputState, callExpr, actions) {
+export function compileEmptyArgumentFunction(ctx, inputState, callExpr, actions) {
     if (callExpr.args.length !== 0) {
-        throw Error(`${callExpr.name} argments is not empty`);
+        throw Error(`${callExpr.name} arguments is not empty`);
     }
     const nextState = ctx.generateState();
     const command = new Command({

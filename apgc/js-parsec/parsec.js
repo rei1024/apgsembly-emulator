@@ -267,7 +267,7 @@ export class Parser {
         return new Parser(str => {
             let rest = str;
             /** @type {A[]} */
-            const array = []
+            const array = [];
             while (true) {
                 const result = this.parse(rest);
                 if (result === undefined) {
