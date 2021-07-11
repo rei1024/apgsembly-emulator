@@ -165,6 +165,34 @@ APGC_INITIAL; *; STATE_1; SUB A1, NOP
 STATE_1; *; STATE_1; HALT_OUT`);
 });
 
+test('apgc main mul_0()', () => {
+    assertEquals(main(`mul_0();`),
+`INITIAL; *; APGC_INITIAL; NOP
+APGC_INITIAL; *; STATE_1; MUL 0
+STATE_1; *; STATE_1; HALT_OUT`);
+});
+
+test('apgc main mul_1()', () => {
+    assertEquals(main(`mul_1();`),
+`INITIAL; *; APGC_INITIAL; NOP
+APGC_INITIAL; *; STATE_1; MUL 1
+STATE_1; *; STATE_1; HALT_OUT`);
+});
+
+test('apgc main nop()', () => {
+    assertEquals(main(`nop();`),
+`INITIAL; *; APGC_INITIAL; NOP
+APGC_INITIAL; *; STATE_1; NOP
+STATE_1; *; STATE_1; HALT_OUT`);
+});
+
+test('apgc main halt_out()', () => {
+    assertEquals(main(`halt_out();`),
+`INITIAL; *; APGC_INITIAL; NOP
+APGC_INITIAL; *; STATE_1; HALT_OUT
+STATE_1; *; STATE_1; HALT_OUT`);
+});
+
 test('apgc main if_zero tdec_u', () => {
     const input = `
     if_zero(tdec_u(0)) {
@@ -192,7 +220,6 @@ goto("a");
     const output = `INITIAL; *; APGC_INITIAL; NOP
 APGC_INITIAL; *; STATE_1; NOP
 APGC_LABEL_a; *; STATE_1; NOP
-STATE_1; *; APGC_LABEL_a; NOP
-APGC_UNREACHABLE_STATE_2; *; APGC_UNREACHABLE_STATE_2; HALT_OUT`
+STATE_1; *; APGC_LABEL_a; NOP`
     assertEquals(main(input), output);
 });

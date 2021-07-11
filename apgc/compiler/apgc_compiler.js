@@ -55,6 +55,8 @@ import { compileOutput } from "./functions/output.js";
 import { compileEmptyArgmentFunction } from "./functions/empty_argment_function.js";
 import { compileSingleNumberArgmentFunction } from "./functions/single_number_argment_function.js";
 
+const UNREACHABLE_PREFIX =  "APGC_UNREACHABLE_";
+
 export class APGCCompiler {
     /**
      * 
@@ -68,6 +70,7 @@ export class APGCCompiler {
 
         /**
          * @type {Command[]}
+         * @private
          */
         this.commands = [];
 
@@ -101,6 +104,8 @@ export class APGCCompiler {
             input: "*",
             actions: [new HaltOutAction()]
         }));
+        // 到達不可能な状態を削除
+        this.commands = this.commands.filter(x => !x.state.startsWith(UNREACHABLE_PREFIX));
         return this.commands;
     }
 
@@ -341,8 +346,6 @@ function compileLabel(ctx, inputState, expr) {
     }));
     return nextState;
 }
-
-const UNREACHABLE_PREFIX =  "APGC_UNREACHABLE_";
 
 /**
  * @param {APGCCompiler} ctx 
