@@ -7,7 +7,7 @@ import {
 import { extractLabelFromAPGCProgram } from "../extract_label.js";
 
 /**
- * 
+ * labelがユニークであることを検証する
  * @param {APGCProgram} program 
  * @returns {"OK" | { error: string }}
  */

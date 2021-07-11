@@ -7,7 +7,7 @@ import {
 import { extractLabelFromAPGCProgram, extractGotoLabelFromAPGCProgram } from "../extract_label.js";
 
 /**
- * 
+ * gotoの行き先が存在することを検証する
  * @param {APGCProgram} program 
  * @returns {"OK" | { error: string }}
  */

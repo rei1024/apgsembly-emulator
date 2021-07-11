@@ -1,6 +1,7 @@
 // @ts-check
 
 /**
+ * 文
  * @abstract
  */
  export class APGCStatement {
@@ -13,18 +14,25 @@ export class APGCStatements {
      * @param {APGCStatement[]} statements 
      */
     constructor(statements) {
+        /**
+         * @readonly
+         */
         this.statements = statements;
     }
 }
 
 /**
+ * 式
  * @abstract
  */
 export class APGCExpression {
 
 }
-
-/// 42
+ 
+/**
+ * 数字
+ * 42
+ */
 export class NumberExpression extends APGCExpression {
     /**
      * 
@@ -32,11 +40,18 @@ export class NumberExpression extends APGCExpression {
      */
     constructor(value) {
         super();
+        /**
+         * @readonly
+         */
         this.value = value;
     }
 }
 
-/// "abc"
+/**
+ * 文字列
+ * "abc"
+ * ダブルクォーテーションのみエスケープする
+ */
 export class StringExpression extends APGCExpression {
     /**
      * 
@@ -44,20 +59,34 @@ export class StringExpression extends APGCExpression {
      */
     constructor(str) {
         super();
+        /**
+         * @readonly
+         */
         this.string = str;
     }
 }
 
-/// f(1, 2, 3)
+/**
+ * 関数呼び出し
+ * f(1, 2, 3)
+ */
 export class FunctionCallExpression extends APGCExpression {
     /**
      * 
-     * @param {string} name 
-     * @param {APGCExpression[]} args 
+     * @param {string} name 関数名
+     * @param {APGCExpression[]} args 引数
      */
     constructor(name, args) {
         super();
+        /**
+         * 関数名
+         * @readonly
+         */
         this.name = name;
+        /**
+         * 引数
+         * @readonly
+         */
         this.args = args;
     }
 }
@@ -74,6 +103,9 @@ export class APGCExpressionStatement extends APGCStatement {
      */
     constructor(expr) {
         super();
+        /**
+         * @readonly
+         */
         this.expr = expr;
     }
 }
@@ -87,8 +119,17 @@ export class IfZeroStatement extends APGCStatement {
      */
     constructor(expr, zeroStatements, nonZeroStatements) {
         super();
+        /**
+         * @readonly
+         */
         this.expr = expr;
+        /**
+         * @readonly
+         */
         this.zeroStatements = zeroStatements;
+        /**
+         * @readonly
+         */
         this.nonZeroStataments = nonZeroStatements;
     }
 }
@@ -104,7 +145,13 @@ export class WhileNonZeroStatement extends APGCStatement {
      */
     constructor(expr, statements) {
         super();
+        /**
+         * @readonly
+         */
         this.expr = expr;
+        /**
+         * @readonly
+         */
         this.statements = statements;
     }
 }
@@ -115,6 +162,9 @@ export class APGCProgram {
      * @param {APGCStatements} apgcStatements 
      */
     constructor(apgcStatements) {
+        /**
+         * @readonly
+         */
         this.apgcStatements = apgcStatements;
     }
 }

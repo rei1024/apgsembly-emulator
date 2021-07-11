@@ -1,6 +1,8 @@
 // @ts-check
 
 /**
+ * パーサーコンビネーター
+ * Parser combinator
  * @template A
  */
 export class Parser {
@@ -9,6 +11,9 @@ export class Parser {
      * @param {(_: string) => ({ rest: string, value: A } | undefined)} parse 
      */
     constructor(parse) {
+        /**
+         * @readonly
+         */
         this.parse = parse
     }
 
