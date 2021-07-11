@@ -143,3 +143,15 @@ STATE_5; *; STATE_6; NOP
 STATE_6; *; STATE_6; HALT_OUT`
     assertEquals(main(input), output);
 });
+
+test('apgc main goto label', () => {
+    const input = `
+label("a");
+goto("a");
+    `
+    const output = `INITIAL; *; STATE_1; NOP
+APGC_LABEL_a; *; STATE_1; NOP
+STATE_1; *; APGC_LABEL_a; NOP
+APGC_UNREACHABLE_STATE_2; *; APGC_UNREACHABLE_STATE_2; HALT_OUT`
+    assertEquals(main(input), output);
+});

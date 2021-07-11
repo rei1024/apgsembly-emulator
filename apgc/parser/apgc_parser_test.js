@@ -146,7 +146,6 @@ output(1); // abc
     ))
 });
 
-
 test('apgcProgramParser if_zero', () => {
     const str = `
 if_zero(tdec_u(0) ) {

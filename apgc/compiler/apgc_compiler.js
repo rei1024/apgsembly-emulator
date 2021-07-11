@@ -46,6 +46,7 @@ import {
     APGCStatements,
     FunctionCallExpression,
     IfZeroStatement,
+    StringExpression,
     WhileNonZeroStatement
 } from "../types/apgc_types.js";
 import { compileOutput } from "./functions/output.js";
@@ -83,8 +84,8 @@ export class APGCCompiler {
      * @returns {Command[]}
      */
     compile() {
-        const inputState = "INITIAL";
-        const outputState = this.compileStatements(inputState, this.program.apgcStatements);
+        const apgcInitialState = "INITIAL";
+        const outputState = this.compileStatements(apgcInitialState, this.program.apgcStatements);
         this.addCommand(new Command({
             state: outputState,
             nextState: outputState,
@@ -140,6 +141,9 @@ export class APGCCompiler {
         }
 
         switch (expr.name) {
+            case "label": return compileLabel(this, inputState, expr);
+            case "goto": return compileGoto(this, inputState, expr);
+
             case "output": return compileOutput(this, inputState, expr);
             // U
             case "inc_u": return single(n => [new URegAction(U_INC, n), new NopAction()]);
@@ -294,4 +298,63 @@ function compileWhileNonZeroStatement(ctx, inputState, statement) {
     });
     ctx.addCommand(continueCommand);
     return finalState;
+}
+
+const LABEL_PREFIX = "APGC_LABEL_";
+
+/**
+ * @param {APGCCompiler} ctx 
+ * @param {string} inputState 
+ * @param {FunctionCallExpression} expr 
+ * @returns {string} outputState
+ */
+function compileLabel(ctx, inputState, expr) {
+    if (expr.args.length !== 1) {
+        throw Error('label argments length is not 1');
+    }
+    const arg = expr.args[0];
+    if (!(arg instanceof StringExpression)) {
+        throw Error('label argments accepts only strings');
+    }
+    const labelState = LABEL_PREFIX + arg.string;
+    const nextState = ctx.generateState();
+    ctx.addCommand(new Command({
+        state: inputState,
+        input: "*",
+        nextState: nextState,
+        actions: [new NopAction()]
+    }));
+    ctx.addCommand(new Command({
+        state: labelState,
+        input: "*",
+        nextState: nextState,
+        actions: [new NopAction()]
+    }));
+    return nextState;
+}
+
+const UNREACHABLE_PREFIX =  "APGC_UNREACHABLE_";
+
+/**
+ * @param {APGCCompiler} ctx 
+ * @param {string} inputState 
+ * @param {FunctionCallExpression} expr 
+ * @returns {string} unreachable state
+ */
+function compileGoto(ctx, inputState, expr) {
+    if (expr.args.length !== 1) {
+        throw Error('goto argments length is not 1');
+    }
+    const arg = expr.args[0];
+    if (!(arg instanceof StringExpression)) {
+        throw Error('goto argments accepts only strings');
+    }
+    const nextState = LABEL_PREFIX + arg.string;
+    ctx.addCommand(new Command({
+        state: inputState,
+        input: "*",
+        nextState: nextState,
+        actions: [new NopAction()]
+    }));
+    return UNREACHABLE_PREFIX + ctx.generateState();
 }
