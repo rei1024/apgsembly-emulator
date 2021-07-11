@@ -24,6 +24,7 @@ export class APGCExpression {
 
 }
 
+/// 42
 export class NumberExpression extends APGCExpression {
     /**
      * 
@@ -35,6 +36,7 @@ export class NumberExpression extends APGCExpression {
     }
 }
 
+/// "abc"
 export class StringExpression extends APGCExpression {
     /**
      * 
@@ -46,43 +48,56 @@ export class StringExpression extends APGCExpression {
     }
 }
 
-export class FunctionCallStatement extends APGCStatement {
+/// f(1, 2, 3)
+export class FunctionCallExpression extends APGCExpression {
     /**
      * 
-     * @param {string} funcName 
+     * @param {string} name 
      * @param {APGCExpression[]} args 
      */
-    constructor(funcName, args) {
+    constructor(name, args) {
         super();
-        this.funcName = funcName;
+        this.name = name;
         this.args = args;
     }
 }
 
-export class IfZeroTDECUStatement extends APGCStatement {
+// expression with ;
+export class APGCExpressionStatement extends APGCStatement {
     /**
      * 
-     * @param {NumberExpression} reg
-     * @param {APGCStatements} z 
-     * @param {APGCStatements} nz 
+     * @param {APGCExpression} expr 
      */
-    constructor(reg, z, nz) {
+    constructor(expr) {
         super();
-        this.reg = reg;
-        this.z = z;
-        this.nz = nz;
+        this.expr = expr;
     }
 }
 
-export class WhileNonZeroTDECUStatement extends APGCStatement {
+export class IfZeroStatement extends APGCStatement {
     /**
      * 
-     * @param {NumberExpression} reg 
+     * @param {APGCExpression} expr 
+     * @param {APGCStatements} zeroStatements 
+     * @param {APGCStatements} nonZeroStatements 
+     */
+    constructor(expr, zeroStatements, nonZeroStatements) {
+        super();
+        this.expr = expr;
+        this.zeroStatements = zeroStatements;
+        this.nonZeroStataments = nonZeroStatements;
+    }
+}
+
+export class WhileNonZeroStatement extends APGCStatement {
+    /**
+     * 
+     * @param {APGCExpression} expr 
      * @param {APGCStatements} statements 
      */
-    constructor(reg, statements) {
+    constructor(expr, statements) {
         super();
-        this.reg = reg;
+        this.expr = expr;
         this.statements = statements;
     }
 }

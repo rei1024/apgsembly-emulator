@@ -34,9 +34,9 @@ test('apgc main inc_u(0)', () => {
 STATE_1; *; STATE_1; HALT_OUT`);
 });
 
-test('apgc main if_zero_tdec_u', () => {
+test('apgc main if_zero tdec_u', () => {
     const input = `
-    if_zero_tdec_u(0) {
+    if_zero(tdec_u(0)) {
         output("1");
     } else {
         output("2");

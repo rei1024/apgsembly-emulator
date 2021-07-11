@@ -13,7 +13,7 @@ export class Parser {
     }
 
     /**
-     * 
+     * Parse a string
      * @param {string} str 
      * @returns {A | undefined}
      */
@@ -44,15 +44,16 @@ export class Parser {
     /**
      * ^を先頭に付けること。$は付けないこと。
      * @param {RegExp} regexp
+     * @param {number} [index=0] 正規表現の結果の添字
      * @returns {Parser<string>}
      */
-    static regexp(regexp) {
+    static regexp(regexp, index = 0) {
         return new Parser(str => {
             const result = regexp.exec(str);
             if (result === null) {
                 return undefined;
             }
-            const first = result[0];
+            const first = result[index];
             if (first === undefined) {
                 return undefined;
             }
@@ -86,7 +87,7 @@ export class Parser {
     }
 
     /**
-     * 
+     * single character
      * @param {string} char 
      * @returns {Parser<string>}
      */
@@ -115,6 +116,7 @@ export class Parser {
     }
 
     /**
+     * Enf of file
      * @returns {Parser<undefined>}
      */
     static eof() {
@@ -130,6 +132,7 @@ export class Parser {
     }
 
     /**
+     * >>=
      * @template B
      * @param {(_: A) => Parser<B>} parser 
      * @returns {Parser<B>}
@@ -166,16 +169,7 @@ export class Parser {
      * @param {(_: A) => B} f 
      */
     map(f) {
-        return new Parser(str => {
-            const result = this.parse(str);
-            if (result === undefined) {
-                return undefined;
-            }
-            return {
-                rest: result.rest,
-                value: f(result.value)
-            };
-        });
+        return this.andThen(x => Parser.pure(f(x)))
     }
 
     /**

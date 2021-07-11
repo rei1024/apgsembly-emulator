@@ -1,5 +1,6 @@
-import { APGCProgram, APGCStatements, FunctionCallStatement, IfZeroTDECUStatement, NumberExpression, StringExpression } from "../types/apgc_types.js";
-import { apgcProgramParser, functionCallStatementParser, identifierParser, numberExpressionParser, stringExpressionParser } from "./apgc_parser.js";
+
+import { APGCExpressionStatement, APGCProgram, APGCStatements, FunctionCallExpression, IfZeroStatement, NumberExpression, StringExpression } from "../types/apgc_types.js";
+import { apgcProgramParser, functionCallExpressionParser, identifierParser, numberExpressionParser, stringExpressionParser } from "./apgc_parser.js";
 
 import { assertEquals } from "../../test/deps.js";
 
@@ -25,31 +26,50 @@ test('identifierParser', () => {
     assertEquals(identifierParser.parseValue('Abc0'), "Abc0");
 });
 
+test('identifierParser _', () => {
+    assertEquals(identifierParser.parseValue('a_0'), "a_0");
+    assertEquals(identifierParser.parseValue('a_3_'), "a_3_");
+    assertEquals(identifierParser.parseValue('a_0_2'), "a_0_2");
+
+    assertEquals(identifierParser.parseValue('_a_0_2'), "_a_0_2");
+    assertEquals(identifierParser.parseValue('_'), "_");
+});
+
 test('functionCallStatement output(1)', () => {
     const str = "output(1)";
-    assertEquals(functionCallStatementParser().parseValue(str), new FunctionCallStatement('output', [new NumberExpression(1)]));
+    assertEquals(functionCallExpressionParser().parseValue(str), new FunctionCallExpression('output', [new NumberExpression(1)]));
+});
+
+test('functionCallStatement output( 1)', () => {
+    const str = "output( 1)";
+    assertEquals(functionCallExpressionParser().parseValue(str), new FunctionCallExpression('output', [new NumberExpression(1)]));
+});
+
+test('functionCallStatement output(1 )', () => {
+    const str = "output(1 )";
+    assertEquals(functionCallExpressionParser().parseValue(str), new FunctionCallExpression('output', [new NumberExpression(1)]));
 });
 
 test('functionCallStatement output(1,2)', () => {
     const str = "output(1,2)";
-    assertEquals(functionCallStatementParser().parseValue(str), new FunctionCallStatement('output', [new NumberExpression(1), new NumberExpression(2)]));
+    assertEquals(functionCallExpressionParser().parseValue(str), new FunctionCallExpression('output', [new NumberExpression(1), new NumberExpression(2)]));
 });
 
 test('functionCallStatement output()', () => {
     const str = 'output()';
-    assertEquals(functionCallStatementParser().parseValue(str), new FunctionCallStatement('output', []));
+    assertEquals(functionCallExpressionParser().parseValue(str), new FunctionCallExpression('output', []));
 });
 
 test('functionCallStatement output("1")', () => {
     const str = 'output("1")';
-    assertEquals(functionCallStatementParser().parseValue(str), new FunctionCallStatement('output', [new StringExpression("1")]));
+    assertEquals(functionCallExpressionParser().parseValue(str), new FunctionCallExpression('output', [new StringExpression("1")]));
 });
 
 test('functionCallStatement output(1, "a", "bb", 3, 4 , 5 )', () => {
     const str = 'output(1, "a", "bb", 3, 4 , 5 )';
     assertEquals(
-        functionCallStatementParser().parseValue(str),
-        new FunctionCallStatement('output', [
+        functionCallExpressionParser().parseValue(str),
+        new FunctionCallExpression('output', [
             new NumberExpression(1),
             new StringExpression('a'),
             new StringExpression('bb'),
@@ -83,45 +103,20 @@ output(2, 3);
     assertEquals(apgcProgramParser().parseValue(str), new APGCProgram(
         new APGCStatements(
             [
-                new FunctionCallStatement(
-                    'output',
-                    [
-                        new NumberExpression(1)
-                    ]
-                ),
-                new FunctionCallStatement(
-                    'output',
-                    [
-                        new NumberExpression(2),
-                        new NumberExpression(3),
-                    ]
-                )
-            ]
-        )
-    ))
-});
-
-test('apgcProgramParser if_zero_tdec_u', () => {
-    const str = `
-if_zero_tdec_u(0) {
-    output(1);
-} else {
-    output(2);  
-}
-`
-    assertEquals(apgcProgramParser().parseValue(str), new APGCProgram(
-        new APGCStatements(
-            [
-                new IfZeroTDECUStatement(
-                    new NumberExpression(0),
-                    new APGCStatements(
+                new APGCExpressionStatement(
+                    new FunctionCallExpression(
+                        'output',
                         [
-                            new FunctionCallStatement('output', [new NumberExpression(1)])
+                            new NumberExpression(1)
                         ]
-                    ),
-                    new APGCStatements(
+                    )
+                ),
+                new APGCExpressionStatement(
+                    new FunctionCallExpression(
+                        'output',
                         [
-                            new FunctionCallStatement('output', [new NumberExpression(2)])
+                            new NumberExpression(2),
+                            new NumberExpression(3),
                         ]
                     )
                 )
@@ -130,23 +125,61 @@ if_zero_tdec_u(0) {
     ))
 });
 
-test('apgcProgramParser if_zero_tdec_u else empty', () => {
+test('apgcProgramParser if_zero', () => {
     const str = `
-if_zero_tdec_u(0) {
+if_zero(tdec_u(0) ) {
+    output(1);
+} else {
+    output(2);  
+}
+`
+    assertEquals(apgcProgramParser().parseValue(str), new APGCProgram(
+        new APGCStatements(
+            [
+                new IfZeroStatement(
+                    new FunctionCallExpression('tdec_u', [new NumberExpression(0)]),
+                    new APGCStatements(
+                        [
+                            new APGCExpressionStatement(
+                                new FunctionCallExpression('output', [new NumberExpression(1)])
+                            )  
+                        ]
+                    ),
+                    new APGCStatements(
+                        [
+                            new APGCExpressionStatement(
+                                new FunctionCallExpression('output', [new NumberExpression(2)])
+                            )
+                        ]
+                    )
+                )
+            ]
+        )
+    ))
+});
+
+
+test('apgcProgramParser if_zero empty else', () => {
+    const str = `
+if_zero(tdec_u(0)) {
     output(1);
 }
 `
     assertEquals(apgcProgramParser().parseValue(str), new APGCProgram(
         new APGCStatements(
             [
-                new IfZeroTDECUStatement(
-                    new NumberExpression(0),
+                new IfZeroStatement(
+                    new FunctionCallExpression('tdec_u', [new NumberExpression(0)]),
                     new APGCStatements(
                         [
-                            new FunctionCallStatement('output', [new NumberExpression(1)])
+                            new APGCExpressionStatement(
+                                new FunctionCallExpression('output', [new NumberExpression(1)])
+                            )  
                         ]
                     ),
-                    new APGCStatements([])
+                    new APGCStatements(
+                        []
+                    )
                 )
             ]
         )
