@@ -84,3 +84,15 @@ test('Parser sepBy', () => {
 
     assertEquals(parser.parseValue(str), ["1", "2", "3"]);
 });
+
+test('Parser string', () => {
+    const str = "123abc";
+    const parser = Parser.string('abc');
+    assertEquals(parser.parseValue(str), undefined);
+});
+
+test('Parser string', () => {
+    const str = "123abc";
+    const parser = Parser.string('123');
+    assertEquals(parser.parseValue(str), '123');
+});

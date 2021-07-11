@@ -109,7 +109,7 @@ export class Parser {
      */
     static string(string) {
         return new Parser(str => {
-            if (str.startsWith(str)) {
+            if (str.startsWith(string)) {
                 return {
                     rest: str.slice(string.length),
                     value: string
@@ -215,7 +215,7 @@ export class Parser {
         return new Parser(str => {
             let rest = str;
             /** @type {A[]} */
-            const array = []
+            const array = [];
             while (true) {
                 const result = this.parse(rest);
                 if (result === undefined) {
