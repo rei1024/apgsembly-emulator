@@ -19,13 +19,10 @@ import { validate } from "./validator/apgc_validator.js";
  * 構文解析
  * @param {string} string 
  * @returns {APGCProgram}
+ * @throws
  */
 export function parser(string) {
-    const result = apgcProgramParser(string);
-    if (result === undefined) {
-        throw Error('Parse error ' + string);
-    }
-    return result;
+    return apgcProgramParser(string);
 }
 
 /**

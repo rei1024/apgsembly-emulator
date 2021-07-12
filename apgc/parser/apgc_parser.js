@@ -12,7 +12,7 @@ import {
     NumberExpression,
     StringExpression
 } from "../types/apgc_types.js";
-import { Parser } from "../js-parsec/parsec.js";
+import { Parser, parseWithErrorLine, stringLiteralParser } from "../js-parsec-v3/parsec-v3.js";
 
 /**
  * 識別子の正規表現
@@ -21,79 +21,57 @@ const identifierRexExp = /^[a-zA-Z_][a-zA-Z_0-9]*/;
 
 /**
  * 識別子
- * @type {Parser<string>} 
+ * @type {Parser<string, string>} 
  */
-export const identifierParser = Parser.regexp(identifierRexExp);
+export const identifierParser = Parser.regexp(identifierRexExp).withError('expect identifier');
 
 // .は通常は改行文字と一致しない
 const whitespaceRegExp = /^(\s*\/\/.*(\r\n|\n|\r|$))*\s*/m;
+
+class Whitespace {
+
+}
 
 /**
  * 0文字以上の空白か行コメント
  * コメントが最終行の場合も考慮する
  */
-const whitespaceParser = Parser.regexp(whitespaceRegExp); 
+const whitespaceParser = Parser.regexp(whitespaceRegExp).map(_ => new Whitespace());
 
 /**
  * "("
  */
-const leftParen = Parser.char('(');
+const leftParen = Parser.string('(');
 /**
  * ")"
  */
-const rightParen = Parser.char(')');
+const rightParen = Parser.string(')');
 
 /**
- * @returns {Parser<APGCExpression>}
+ * @returns {Parser<APGCExpression, string>}
  */
  function apgcExpressionParser() {
     return numberExpressionParser.or(stringExpressionParser).or(functionCallExpressionParser());
 }
 
 /**
- * @type {Parser<NumberExpression>}
+ * @type {Parser<NumberExpression, string>}
  */
-export const numberExpressionParser = Parser.regexp(/^[0-9]+/).andThen(str => {
+export const numberExpressionParser = Parser.regexp(/^[0-9]+/).then(str => {
     const n = parseInt(str, 10);
     if (Number.isInteger(n)) {
         return Parser.pure(new NumberExpression(n));
     } else {
-        return Parser.fail();
+        return Parser.fail('expect a number');
     }
 });
 
-/**
- * @type {Parser<string>}
- */
-const stringExpressionParserInternal = new Parser(str => {
-    const first = str[0];
-    if (first !== `"`) {
-        return undefined;
-    }
-    let i = 1;
-    const len = str.length;
-    while (i < len) {
-        const char = str[i];
-        if (char === undefined) { throw Error('stringExpressionParser: internal error'); }
-        if (char === `"`) {
-            if (str[i - 1] !== '\\') {
-                return {
-                    rest: str.slice(i + 1),
-                    // @ts-ignore
-                    value: str.slice(1, i).replaceAll("\\\"", "\"")
-                };
-            }
-        }
-        i++;
-    }
-    return undefined;
-});
-
-/** @type {Parser<StringExpression>} */
-export const stringExpressionParser = stringExpressionParserInternal.map(x => new StringExpression(x));
+/** @type {Parser<StringExpression, string>} */
+export const stringExpressionParser = stringLiteralParser.map(x => new StringExpression(x));
 
 /**
- * @type {(_: string) => APGCProgram | undefined}
+ * @type {(_: string) => APGCProgram}
+ * @throws
  */
 export function apgcProgramParser(str) {
     const lines = str.split(/\r\n|\n|\r/);
@@ -111,64 +89,68 @@ export function apgcProgramParser(str) {
         }
     }
 
-    const allParser = apgcStatementsParser().andFirst(whitespaceParser).andFirst(Parser.eof());
-    const statements = allParser.parseValue(outputLines.join('\n'));
-    if (statements === undefined) {
-        return undefined;
-    }
-    return new APGCProgram(statements, headers);
+    const allParser = apgcStatementsParser().skip(whitespaceParser).skip(Parser.eof());
+    const result = parseWithErrorLine(allParser, outputLines.join('\n'));
+    return result.fold(statements => {
+        return new APGCProgram(statements, headers);
+    }, err => {
+        throw Error(`Parse Error: ${err.error} at line "${err.line}"`);
+    });
 }
 
-const semicolonWithWhitespace = whitespaceParser.andSecond(Parser.char(';')).andSecond(whitespaceParser);
+class SemicolonWithWhitespace {}
+
+const semicolonWithWhitespace = whitespaceParser.skip(Parser.string(';')).skip(whitespaceParser).map(_ => new Whitespace()).map(_ => new SemicolonWithWhitespace());
 
 /**
- * @returns {Parser<APGCStatements>}
+ * @returns {Parser<APGCStatements, string>}
  */
 function apgcStatementsParser() {
     return apgcStatementParser().many().map(array => new APGCStatements(array));
 }
 
 /**
- * @returns {Parser<APGCStatement>}
+ * @returns {Parser<APGCStatement, string>}
  */
 function apgcStatementParser() {
-    return apgcExpressionStatementParser().orArray([
+    return Parser.or(
+        apgcExpressionStatementParser(),
         ifZeroStatementParser(),
         whileNonZeroStatementParser()
-    ]);
+    );
 }
 
 /**
- * @returns {Parser<APGCExpressionStatement>}
+ * @returns {Parser<APGCExpressionStatement, string>}
  */
 function apgcExpressionStatementParser() {
-    return functionCallExpressionParser().andFirst(semicolonWithWhitespace).map(expr => new APGCExpressionStatement(expr))
+    return functionCallExpressionParser().skip(semicolonWithWhitespace).map(expr => new APGCExpressionStatement(expr));
 }
 
-const commaAndWhitespace = whitespaceParser.andSecond(Parser.char(',')).andFirst(whitespaceParser);
+const commaAndWhitespace = whitespaceParser.skip(Parser.string(',')).skip(whitespaceParser);
 
 /**
- * @template A
- * @param {Parser<A>} parser 
+ * @template A, E
+ * @param {Parser<A, E>} parser 
  * @param {string} openChar
  * @param {string} closeChar
- * @returns {Parser<A>}
+ * @returns {Parser<A, E | string>}
  */
 function paren(parser, openChar, closeChar) {
     // sp ( sp parser sp ) sp
-    return whitespaceParser.andSecond(Parser.char(openChar)).andSecond(whitespaceParser.andSecond(parser)).andFirst(whitespaceParser.andSecond(Parser.char(closeChar))).andFirst(whitespaceParser);
+    return whitespaceParser.then( _ => Parser.string(openChar)).then(_ => whitespaceParser.then(_ => parser)).skip(whitespaceParser.skip(Parser.string(closeChar))).skip(whitespaceParser);
 }
 
 /**
  * ;は消費しない
- * @returns {Parser<FunctionCallExpression>}
+ * @returns {Parser<FunctionCallExpression, string>}
  */
 export function functionCallExpressionParser() {
-    return whitespaceParser.andSecond(
-        identifierParser.andThen(identifier => {
-            return whitespaceParser.andSecond(leftParen.andSecond(whitespaceParser).andSecond(
-                apgcExpressionParser().sepBy(commaAndWhitespace).andThen(exprs => {
-                    return whitespaceParser.andSecond(rightParen.map(_ => {
+    return whitespaceParser.then(_ =>
+        identifierParser.then(identifier => {
+            return whitespaceParser.then(_ => leftParen.then(_ => whitespaceParser).then(_ =>
+                apgcExpressionParser().sepBy(commaAndWhitespace).then(exprs => {
+                    return whitespaceParser.then(_ => rightParen.map(_ => {
                         return new FunctionCallExpression(identifier, exprs);
                     }));
                 })
@@ -181,14 +163,14 @@ export function functionCallExpressionParser() {
  * @template A
  * @param {string} keyword 
  * @param {(expr: APGCExpression, stmts1: APGCStatements, stmts2: APGCStatements) => A} makeStatement 
- * @returns {Parser<A>}
+ * @returns {Parser<A, string>}
  */
 function makeIfParser(keyword, makeStatement) {
-    return whitespaceParser.andSecond(
-        Parser.string(keyword).andSecond(
-            paren(apgcExpressionParser(), "(", ")").andThen(expr => {
-                return paren(apgcStatementsParser(), "{", "}").andThen(statements => {
-                    return Parser.string('else').andSecond(
+    return whitespaceParser.then(_ =>
+        Parser.string(keyword).then(_ =>
+            paren(apgcExpressionParser(), "(", ")").then(expr => {
+                return paren(apgcStatementsParser(), "{", "}").then(statements => {
+                    return Parser.string('else').then(_ =>
                         paren(apgcStatementsParser(), "{", "}").map(nonZeroStatements => {
                             return makeStatement(expr, statements, nonZeroStatements);
                         })
@@ -204,7 +186,7 @@ function makeIfParser(keyword, makeStatement) {
 /**
  * if_zero (tdec_u(0)) { statemtns } else { statements }
  * if_zero (tdec_u(0)) { statemtns }
- * @returns {Parser<IfZeroStatement>}
+ * @returns {Parser<IfZeroStatement, string>}
  */
 export function ifZeroStatementParser() {
     return makeIfParser('if_zero', (expr, zeroStatements, nonZeroStatements) => {
@@ -216,13 +198,13 @@ export function ifZeroStatementParser() {
  * @template A
  * @param {string} keyword 
  * @param {(expr: APGCExpression, statemtns: APGCStatements) => A} makeWhileStatement 
- * @returns {Parser<A>}
+ * @returns {Parser<A, string>}
  */
 function makeWhileParser(keyword, makeWhileStatement) {
-    return whitespaceParser.andSecond(
-        Parser.string(keyword).andSecond(
-            paren(apgcExpressionParser(), "(", ")").andThen(expr => {
-                return paren(apgcStatementsParser(), "{", "}").andThen(statements => {
+    return whitespaceParser.then(_ =>
+        Parser.string(keyword).then(_ =>
+            paren(apgcExpressionParser(), "(", ")").then(expr => {
+                return paren(apgcStatementsParser(), "{", "}").then(statements => {
                     return (Parser.pure(
                         makeWhileStatement(expr, statements)
                     ))
@@ -233,7 +215,7 @@ function makeWhileParser(keyword, makeWhileStatement) {
 }
 
 /**
- * @returns {Parser<WhileNonZeroStatement>}
+ * @returns {Parser<WhileNonZeroStatement, string>}
  */
 export function whileNonZeroStatementParser() {
     return makeWhileParser('while_non_zero', (expr, stmts) => new WhileNonZeroStatement(expr, stmts));

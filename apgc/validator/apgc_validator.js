@@ -6,7 +6,8 @@ import { validateUniqueLabel } from "./unique_label/unique_label_validator.js";
 
 /**
  * 検証
- * @param {APGCProgram} apgcProgram 
+ * @param {APGCProgram} apgcProgram
+ * @throws
  */
  export function validate(apgcProgram) {
     const uniquelabelMsg = validateUniqueLabel(apgcProgram);

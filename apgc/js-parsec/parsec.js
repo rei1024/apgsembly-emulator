@@ -171,7 +171,8 @@ export class Parser {
 
     /**
      * @template B
-     * @param {(_: A) => B} f 
+     * @param {(_: A) => B} f
+     * @returns {Parser<B>}
      */
     map(f) {
         return this.andThen(x => Parser.pure(f(x)))
