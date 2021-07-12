@@ -28,9 +28,7 @@ export const identifierParser = Parser.regexp(identifierRexExp).withError('expec
 // .は通常は改行文字と一致しない
 const whitespaceRegExp = /^(\s*\/\/.*(\r\n|\n|\r|$))*\s*/m;
 
-class Whitespace {
-
-}
+class Whitespace {}
 
 /**
  * 0文字以上の空白か行コメント
@@ -38,14 +36,17 @@ class Whitespace {
  */
 const whitespaceParser = Parser.regexp(whitespaceRegExp).map(_ => new Whitespace());
 
+class Paren {}
+
 /**
  * "("
  */
-const leftParen = Parser.string('(');
+const leftParen = Parser.string('(').map(_ => new Paren());
+
 /**
  * ")"
  */
-const rightParen = Parser.string(')');
+const rightParen = Parser.string(')').map(_ => new Paren());
 
 /**
  * @returns {Parser<APGCExpression, string>}
