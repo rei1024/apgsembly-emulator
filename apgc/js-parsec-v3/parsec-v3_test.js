@@ -97,20 +97,28 @@ test('Parser sepBy', () => {
     assertEquals(parser.parseToResult('a,a,a'), Result.ok(["a", "a", "a"]));
 });
 
+test('Parser seq', () => {
+    assertEquals(Parser.seq(Parser.string('a'), Parser.string('b')).parseToResult('ab'), Result.ok(['a', 'b']));
+});
+
+test('Parser seq fail', () => {
+    assertEquals(Parser.seq(Parser.string('a'), Parser.string('b')).parseToResult('a'), Result.err('expect "b"'));
+});
+
 test('Parser string', () => {
-    assertEquals(Parser.string('abcde').parseToParseStateWithResult('abcde'), ParseStateWithResult.makeOk(new ParseState("", 5), 'abcde'));
+    assertEquals(Parser.string('abcde').parseToParseStateWithResult('abcde'), ParseStateWithResult.makeOk(ParseState.unsafeMakeParseState("", 5), 'abcde'));
 });
 
 test('Parser string literal', () => {
-    assertEquals(stringLiteralParser.parseToParseStateWithResult('"abc"'), ParseStateWithResult.makeOk(new ParseState("", 5), 'abc'));
+    assertEquals(stringLiteralParser.parseToParseStateWithResult('"abc"'), ParseStateWithResult.makeOk(ParseState.unsafeMakeParseState("", 5), 'abc'));
 });
 
 test('Parser string literal 2', () => {
-    assertEquals(stringLiteralParser.parseToParseStateWithResult('"abc"def'), ParseStateWithResult.makeOk(new ParseState("def", 5), 'abc'));
+    assertEquals(stringLiteralParser.parseToParseStateWithResult('"abc"def'), ParseStateWithResult.makeOk(ParseState.unsafeMakeParseState("def", 5), 'abc'));
 });
 
 test('Parser string literal escape', () => {
-    assertEquals(stringLiteralParser.parseToParseStateWithResult('"a\\"bc"'), ParseStateWithResult.makeOk(new ParseState("", 7), 'a"bc'));
+    assertEquals(stringLiteralParser.parseToParseStateWithResult('"a\\"bc"'), ParseStateWithResult.makeOk(ParseState.unsafeMakeParseState("", 7), 'a"bc'));
 });
 
 test('Parser parseWithErrorLine', () => {
