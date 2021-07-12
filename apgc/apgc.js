@@ -29,6 +29,7 @@ export function parser(string) {
  * コンパイル
  * @param {APGCProgram} program 
  * @returns {Program}
+ * @throws
  */
 export function compiler(program) {
     /** @type {Command[]} */
@@ -42,7 +43,7 @@ export function compiler(program) {
 }
 
 /**
- * 
+ * APGCからAPGsemblyへ変換する
  * @param {string} str APGC
  * @returns {string} APGsembly
  * @throws

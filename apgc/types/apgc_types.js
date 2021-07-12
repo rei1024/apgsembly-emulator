@@ -113,12 +113,16 @@ export class APGCExpressionStatement extends APGCStatement {
     }
 }
 
+/**
+ * if_zero (expr) { statements }
+ * if_zero (expr) { statements } else { statements }
+ */
 export class IfZeroStatement extends APGCStatement {
     /**
      * 
-     * @param {APGCExpression} expr 
-     * @param {APGCStatements} zeroStatements 
-     * @param {APGCStatements} nonZeroStatements 
+     * @param {APGCExpression} expr 評価される式
+     * @param {APGCStatements} zeroStatements Zの場合
+     * @param {APGCStatements} nonZeroStatements NZの場合
      */
     constructor(expr, zeroStatements, nonZeroStatements) {
         super();
@@ -138,6 +142,7 @@ export class IfZeroStatement extends APGCStatement {
 }
 
 /**
+ * 0でない間繰り替えす
  * while_non_zero (expr) { statements } 
  */
 export class WhileNonZeroStatement extends APGCStatement {
@@ -159,6 +164,9 @@ export class WhileNonZeroStatement extends APGCStatement {
     }
 }
 
+/**
+ * プログラム全体
+ */
 export class APGCProgram {
     /**
      * @param {APGCStatements} apgcStatements 

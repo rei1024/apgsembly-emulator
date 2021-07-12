@@ -87,6 +87,7 @@ export class APGCCompiler {
 
     /**
      * @returns {Command[]}
+     * @throws
      */
     compile() {
         const initialState = "INITIAL"
@@ -113,6 +114,7 @@ export class APGCCompiler {
      * @param {string} inputState
      * @param {APGCStatements} apgcStatements 
      * @returns {string} outputState
+     * @throws
      */
     compileStatements(inputState, apgcStatements) {
         for (const statement of apgcStatements.statements) {
@@ -134,6 +136,7 @@ export class APGCCompiler {
      * @param {string} inputState
      * @param {FunctionCallExpression} expr 
      * @returns {string} outputState
+     * @throws
      */
     compileFunctionCallExpression(inputState, expr) {
         const __this__ = this;
@@ -197,6 +200,7 @@ export class APGCCompiler {
      * @param {string} inputState
      * @param {APGCStatement} statement 
      * @returns {string} outputState
+     * @throws
      */
     compileStatement(inputState, statement) {
         if (statement instanceof APGCExpressionStatement) {

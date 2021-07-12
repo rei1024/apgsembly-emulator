@@ -1,9 +1,9 @@
-inc_u(0);
+inc_u(0); // INC U0
 inc_u(0);
 inc_u(0);
 inc_u(0);
 inc_u(0);
 
-while_non_zero(tdec_u(0)) {
-    output("1");
+while_non_zero(tdec_u(0)) { // TDEC U0
+    output("1"); // OUTPUT 1
 }
