@@ -310,7 +310,7 @@ export class Parser {
             /**
              * @type {ParseStateWithResult<A | A2, E2>}
              */
-            const x = parser.parse(state);
+            const x = parser.parse(state); // backtrack
             return x;
         });
     }
@@ -355,16 +355,12 @@ export class Parser {
     catch() {
         const __this__ = this;
         /**
-         * 
          * @param {ParseState} state 
          * @returns {ParseStateWithResult<Result<A, E>, never>}
          */
         function temp(state) {
             const parseStateWithResult = __this__.parse(state);
-            return parseStateWithResult.result.fold(
-                value => ParseStateWithResult.makeOk(parseStateWithResult.parseState, Result.ok(value)),
-                err => ParseStateWithResult.makeOk(parseStateWithResult.parseState, Result.err(err)),
-            );
+            return ParseStateWithResult.makeOk(parseStateWithResult.parseState, parseStateWithResult.result);
         }
         return new Parser(temp);
     }
