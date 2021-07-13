@@ -65,3 +65,9 @@ loop {
 label("START"); # APGC_LABEL_STATEでNOP
 goto("START");
 ```
+
+### git hooks
+```
+cp git_hooks_sample/pre-commit .git/hooks/pre-commit
+chmod a+x .git/hooks/pre-commit
+```

@@ -4,7 +4,7 @@
  * 文
  * @abstract
  */
- export class APGCStatement {
+export class APGCStatement {
 
 }
 
