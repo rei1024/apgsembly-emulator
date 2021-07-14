@@ -1,7 +1,4 @@
 label("x");
 output("1");
-goto("y");
-
-label("y");
 output("2");
-goto("x");
+goto("x"); // jump to `label("x");`
