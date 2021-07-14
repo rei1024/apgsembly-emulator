@@ -47,10 +47,14 @@ export const $command = $type('#command', HTMLElement);
 
 // B2D
 export const $canvas = $type('#canvas', HTMLCanvasElement);
-export const context = $canvas.getContext('2d');
-if (context == null) {
+
+/**
+ * @type {CanvasRenderingContext2D}
+ */
+export const context = $canvas.getContext('2d') ?? (() => {
     throw Error('context is null');
-}
+})();
+
 export const $b2dx = $type('#b2dx', HTMLElement);
 export const $b2dy = $type('#b2dy', HTMLElement);
 
