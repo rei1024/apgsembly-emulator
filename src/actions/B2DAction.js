@@ -16,8 +16,8 @@ export const B2D_B2D = "B2D";
 export class B2DAction extends Action {
     /**
      * 
-     * @param {"INC" | "TDEC" | "READ" | "SET"} op 
-     * @param {"B2DX" | "B2DY" | "B2D"} axis
+     * @param {B2D_INC | B2D_TDEC | B2D_READ | B2D_SET} op 
+     * @param {B2D_B2DX | B2D_B2DY | B2D_B2D} axis
      */
     constructor(op, axis) {
         super();

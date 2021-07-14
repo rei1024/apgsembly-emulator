@@ -52,6 +52,9 @@ Deno.test('ADD complex', () => {
 Deno.test('ADD action', () => {
     const x = new ADD();
     const act = AddAction.parse('ADD A1');
+    if (act === undefined) {
+        throw Error('Parse Error AddAction');
+    }
     assertEquals(act.pretty(), "ADD A1");
     assertEquals(act.regName, "A1");
     assertEquals(x.getValue(), 0);

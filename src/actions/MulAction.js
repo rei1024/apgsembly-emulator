@@ -11,7 +11,7 @@ export const MUL_1 = "1";
 export class MulAction extends Action {
     /**
      * 
-     * @param {"0" | "1"} op 
+     * @param {MUL_0 | MUL_1} op 
      */
     constructor(op) {
         super();

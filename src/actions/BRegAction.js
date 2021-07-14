@@ -13,7 +13,7 @@ export const B_SET = "SET";
 export class BRegAction extends Action {
     /**
      * 
-     * @param {"INC" | "TDEC" | "READ" | "SET"} op 
+     * @param {B_INC | B_TDEC | B_READ | B_SET} op 
      * @param {number} regNumber 
      */
     constructor(op, regNumber) {

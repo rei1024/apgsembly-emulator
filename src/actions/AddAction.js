@@ -12,7 +12,7 @@ export const ADD_B1 = "B1";
 export class AddAction extends Action {
     /**
      * 
-     * @param {"A1" | "B0" | "B1"} regName 
+     * @param {ADD_A1 | ADD_B0 | ADD_B1} regName 
      */
     constructor(regName) {
         super();
