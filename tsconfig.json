@@ -25,6 +25,7 @@
     },
     "include": [
         "src/**/*.js",
+        "apgc/**/*.js",
         "frontend/**/*.js",
         "generator/**/*.js",
         "transpiler/**/*.js"
