@@ -4,3 +4,9 @@ if_zero(tdec_u(0)) {
 } else {
     output("2");
 }
+
+if_non_zero(tdec_u(1)) {
+    output("3");
+} else {
+    output("4");
+}

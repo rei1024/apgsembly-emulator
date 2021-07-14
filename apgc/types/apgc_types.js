@@ -117,15 +117,19 @@ export class APGCExpressionStatement extends APGCStatement {
  * if_zero (expr) { statements }
  * if_zero (expr) { statements } else { statements }
  */
-export class IfZeroStatement extends APGCStatement {
+export class IfStatement extends APGCStatement {
     /**
-     * 
+     * @param {"zero" | "non_zero"} zeroOrNonZero
      * @param {APGCExpression} expr 評価される式
      * @param {APGCStatements} zeroStatements Zの場合
      * @param {APGCStatements} nonZeroStatements NZの場合
      */
-    constructor(expr, zeroStatements, nonZeroStatements) {
+    constructor(zeroOrNonZero, expr, zeroStatements, nonZeroStatements) {
         super();
+        /**
+         * @readonly
+         */
+        this.zeroOrNonZero = zeroOrNonZero;
         /**
          * @readonly
          */
@@ -133,11 +137,11 @@ export class IfZeroStatement extends APGCStatement {
         /**
          * @readonly
          */
-        this.zeroStatements = zeroStatements;
+        this.thenStatements = zeroStatements;
         /**
          * @readonly
          */
-        this.nonZeroStataments = nonZeroStatements;
+        this.elseStataments = nonZeroStatements;
     }
 }
 
@@ -145,14 +149,18 @@ export class IfZeroStatement extends APGCStatement {
  * 0でない間繰り替えす
  * while_non_zero (expr) { statements } 
  */
-export class WhileNonZeroStatement extends APGCStatement {
+export class WhileStatement extends APGCStatement {
     /**
-     * 
+     * @param {"zero" | "non_zero"} zeroOrNonZero
      * @param {APGCExpression} expr 
      * @param {APGCStatements} statements 
      */
-    constructor(expr, statements) {
+    constructor(zeroOrNonZero, expr, statements) {
         super();
+        /**
+         * @readonly
+         */
+        this.zeroOrNonZero = zeroOrNonZero;
         /**
          * @readonly
          */

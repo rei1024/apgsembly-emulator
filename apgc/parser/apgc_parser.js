@@ -7,8 +7,8 @@ import {
     APGCStatement,
     APGCStatements,
     FunctionCallExpression,
-    IfZeroStatement,
-    WhileNonZeroStatement,
+    IfStatement,
+    WhileStatement,
     NumberExpression,
     StringExpression
 } from "../types/apgc_types.js";
@@ -116,8 +116,8 @@ function apgcStatementsParser() {
 function apgcStatementParser() {
     return Parser.or(
         apgcExpressionStatementParser(),
-        ifZeroStatementParser(),
-        whileNonZeroStatementParser()
+        ifStatementParser(),
+        whileStatementParser()
     );
 }
 
@@ -162,21 +162,21 @@ export function functionCallExpressionParser() {
 
 /**
  * @template A
- * @param {string} keyword 
- * @param {(expr: APGCExpression, stmts1: APGCStatements, stmts2: APGCStatements) => A} makeStatement 
+ * @param {Parser<string, string>} keywordParser
+ * @param {(keyword: string, expr: APGCExpression, stmts1: APGCStatements, stmts2: APGCStatements) => A} makeStatement 
  * @returns {Parser<A, string>}
  */
-function makeIfParser(keyword, makeStatement) {
+function makeIfParser(keywordParser, makeStatement) {
     return whitespaceParser.then(_ =>
-        Parser.string(keyword).then(_ =>
+        keywordParser.then(keyword =>
             paren(apgcExpressionParser(), "(", ")").then(expr => {
                 return paren(apgcStatementsParser(), "{", "}").then(statements => {
                     return Parser.string('else').then(_ =>
                         paren(apgcStatementsParser(), "{", "}").map(nonZeroStatements => {
-                            return makeStatement(expr, statements, nonZeroStatements);
+                            return makeStatement(keyword, expr, statements, nonZeroStatements);
                         })
                     ).or(Parser.pure(
-                        makeStatement(expr, statements, new APGCStatements([]))
+                        makeStatement(keyword, expr, statements, new APGCStatements([]))
                     ))
                 });
             })
@@ -184,30 +184,37 @@ function makeIfParser(keyword, makeStatement) {
     )
 }
 
+const ifZeroKeyword = 'if_zero';
+const ifNonZeroKeyword = "if_non_zero";
+
 /**
  * if_zero (tdec_u(0)) { statemtns } else { statements }
  * if_zero (tdec_u(0)) { statemtns }
- * @returns {Parser<IfZeroStatement, string>}
+ * @returns {Parser<IfStatement, string>}
  */
-export function ifZeroStatementParser() {
-    return makeIfParser('if_zero', (expr, zeroStatements, nonZeroStatements) => {
-        return new IfZeroStatement(expr, zeroStatements, nonZeroStatements);
+export function ifStatementParser() {
+    return makeIfParser(Parser.string(ifZeroKeyword).or(Parser.string(ifNonZeroKeyword)), (keyword, expr, zeroStatements, nonZeroStatements) => {
+        switch (keyword) {
+            case ifZeroKeyword: return new IfStatement("zero", expr, zeroStatements, nonZeroStatements);
+            case ifNonZeroKeyword: return new IfStatement("non_zero", expr, zeroStatements, nonZeroStatements);
+            default: throw new Error('ifStatementParser internal error');
+        }
     });
 }
 
 /**
  * @template A
- * @param {string} keyword 
- * @param {(expr: APGCExpression, statemtns: APGCStatements) => A} makeWhileStatement 
+ * @param {Parser<string, string>} keywordParser
+ * @param {(keyword: string, expr: APGCExpression, statemtns: APGCStatements) => A} makeWhileStatement 
  * @returns {Parser<A, string>}
  */
-function makeWhileParser(keyword, makeWhileStatement) {
+function makeWhileParser(keywordParser, makeWhileStatement) {
     return whitespaceParser.then(_ =>
-        Parser.string(keyword).then(_ =>
+        keywordParser.then(keyword =>
             paren(apgcExpressionParser(), "(", ")").then(expr => {
                 return paren(apgcStatementsParser(), "{", "}").then(statements => {
                     return (Parser.pure(
-                        makeWhileStatement(expr, statements)
+                        makeWhileStatement(keyword, expr, statements)
                     ))
                 });
             })
@@ -215,9 +222,17 @@ function makeWhileParser(keyword, makeWhileStatement) {
     )
 }
 
+const whileNonZeroKeyword = 'while_non_zero';
+const whileZeroKeyword = 'while_zero';
 /**
- * @returns {Parser<WhileNonZeroStatement, string>}
+ * @returns {Parser<WhileStatement, string>}
  */
-export function whileNonZeroStatementParser() {
-    return makeWhileParser('while_non_zero', (expr, stmts) => new WhileNonZeroStatement(expr, stmts));
+export function whileStatementParser() {
+    return makeWhileParser(Parser.string(whileNonZeroKeyword).or(Parser.string(whileZeroKeyword)), (keyword, expr, stmts) => {
+        switch (keyword) {
+            case whileNonZeroKeyword: return new WhileStatement("non_zero", expr, stmts);
+            case whileZeroKeyword: return new WhileStatement("zero", expr, stmts);
+            default: throw Error('whileStatementParser: internal error');
+        }
+    });
 }

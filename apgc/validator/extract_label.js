@@ -8,8 +8,8 @@ import {
     LABEL_FUNCTION_NAME,
     StringExpression,
     APGCExpression,
-    IfZeroStatement,
-    WhileNonZeroStatement,
+    IfStatement,
+    WhileStatement,
     GOTO_FUNCTION_NAME
 } from "../types/apgc_types.js";
 
@@ -38,12 +38,12 @@ function extractExpressionFromAPGCStatements(stmts) {
  function extractExpressionFromAPGCStatement(stmt) {
     if (stmt instanceof APGCExpressionStatement) {
         return [stmt.expr];
-    } else if (stmt instanceof IfZeroStatement) {
+    } else if (stmt instanceof IfStatement) {
         return [stmt.expr].concat(
-            extractExpressionFromAPGCStatements(stmt.zeroStatements),
-            extractExpressionFromAPGCStatements(stmt.nonZeroStataments)
+            extractExpressionFromAPGCStatements(stmt.thenStatements),
+            extractExpressionFromAPGCStatements(stmt.elseStataments)
         );
-    } else if (stmt instanceof WhileNonZeroStatement) {
+    } else if (stmt instanceof WhileStatement) {
         return [stmt.expr].concat(
             extractExpressionFromAPGCStatements(stmt.statements)
         );

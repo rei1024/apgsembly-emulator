@@ -265,7 +265,11 @@ export class Parser {
         return new Parser(state => {
             const resultA = this.parse(state);
             return resultA.result.fold(x => {
-                return f(x).parse(resultA.parseState);
+                const parserB = f(x);
+                if (!(parserB instanceof Parser)) {
+                    throw Error('then: does not return a parser');
+                }
+                return parserB.parse(resultA.parseState);
             }, err => {
                 /**
                  * @type {ParseStateWithResult<B, E | E2>}

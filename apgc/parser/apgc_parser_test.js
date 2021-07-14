@@ -4,8 +4,8 @@ import {
     APGCExpressionStatement,
     APGCStatements, 
     FunctionCallExpression,
-    IfZeroStatement,
-    WhileNonZeroStatement,
+    IfStatement,
+    WhileStatement,
     NumberExpression,
     StringExpression,
 } from "../types/apgc_types.js";
@@ -169,7 +169,8 @@ if_zero(tdec_u(0) ) {
     assertEquals(apgcProgramParser(str), new APGCProgram(
         new APGCStatements(
             [
-                new IfZeroStatement(
+                new IfStatement(
+                    "zero",
                     new FunctionCallExpression('tdec_u', [new NumberExpression(0)]),
                     new APGCStatements(
                         [
@@ -200,7 +201,8 @@ if_zero(tdec_u(0)) {
     assertEquals(apgcProgramParser(str), new APGCProgram(
         new APGCStatements(
             [
-                new IfZeroStatement(
+                new IfStatement(
+                    "zero",
                     new FunctionCallExpression('tdec_u', [new NumberExpression(0)]),
                     new APGCStatements(
                         [
@@ -227,7 +229,33 @@ while_non_zero(tdec_u(0)) {
     assertEquals(apgcProgramParser(str), new APGCProgram(
         new APGCStatements(
             [
-                new WhileNonZeroStatement(
+                new WhileStatement(
+                    "non_zero",
+                    new FunctionCallExpression('tdec_u', [new NumberExpression(0)]),
+                    new APGCStatements(
+                        [
+                            new APGCExpressionStatement(
+                                new FunctionCallExpression('output', [new NumberExpression(1)])
+                            )  
+                        ]
+                    )
+                )
+            ]
+        )
+    ))
+});
+
+test('apgcProgramParser while_zero', () => {
+    const str = `
+while_zero(tdec_u(0)) {
+    output(1);
+}
+`
+    assertEquals(apgcProgramParser(str), new APGCProgram(
+        new APGCStatements(
+            [
+                new WhileStatement(
+                    "zero",
                     new FunctionCallExpression('tdec_u', [new NumberExpression(0)]),
                     new APGCStatements(
                         [
