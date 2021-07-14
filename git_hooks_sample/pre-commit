@@ -1,1 +1,1 @@
-deno test
+deno test --no-check
