@@ -1,5 +1,6 @@
 // @ts-check
 import {
+    Command,
     Action,
     HaltOutAction,
     NopAction,
@@ -36,18 +37,17 @@ import {
     MulAction,
     MUL_0,
     MUL_1,
-    Command,
 } from "../apgc_deps.js";
 
 import {
     APGCExpressionStatement,
     APGCProgram,
-    APGCStatement,
     APGCStatements,
-    FunctionCallExpression,
+    APGCStatement,
     IfStatement,
-    StringExpression,
     WhileStatement,
+    FunctionCallExpression,
+    StringExpression,
     LABEL_FUNCTION_NAME,
     GOTO_FUNCTION_NAME,
 } from "../types/apgc_types.js";
@@ -56,6 +56,9 @@ import { compileEmptyArgumentFunction } from "./functions/empty_argument_functio
 import { compileSingleNumberArgumentFunction } from "./functions/single_number_argument_function.js";
 
 const UNREACHABLE_PREFIX =  "APGC_UNREACHABLE_";
+
+// goto and label
+const LABEL_PREFIX = "APGC_LABEL_";
 
 export class APGCCompiler {
     /**
@@ -317,8 +320,6 @@ function compileWhileStatement(ctx, inputState, statement) {
     ctx.addCommand(continueCommand);
     return finalState;
 }
-
-const LABEL_PREFIX = "APGC_LABEL_";
 
 /**
  * @param {APGCCompiler} ctx 
