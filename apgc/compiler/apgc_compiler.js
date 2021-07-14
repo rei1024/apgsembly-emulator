@@ -196,7 +196,7 @@ export class APGCCompiler {
             // HALT_OUT
             case "halt_out": return empty([new HaltOutAction()]);
         }
-        throw Error(`unkown function "${expr.name}"`);
+        throw Error(`unknown function "${expr.name}"`);
     }
 
     /**
@@ -218,7 +218,7 @@ export class APGCCompiler {
         } else if (statement instanceof WhileStatement) {
             return compileWhileStatement(this, inputState, statement);
         } else {
-            throw Error('unkown statement ' + statement);
+            throw Error('unknown statement ' + statement);
         }
     }
 }
