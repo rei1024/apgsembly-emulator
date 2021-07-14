@@ -223,3 +223,16 @@ APGC_LABEL_a; *; STATE_1; NOP
 STATE_1; *; APGC_LABEL_a; NOP`
     assertEquals(main(input), output);
 });
+
+test('apgc main while_non_zero', () => {
+    const input = `
+while_non_zero(tdec_u(0)) {  }
+    `
+    const output = `INITIAL; *; APGC_INITIAL; NOP
+APGC_INITIAL; *; STATE_1; TDEC U0
+STATE_1; Z; STATE_3; NOP
+STATE_1; NZ; STATE_2; NOP
+STATE_2; *; APGC_INITIAL; NOP
+STATE_3; *; STATE_3; HALT_OUT`
+    assertEquals(main(input), output);
+});
