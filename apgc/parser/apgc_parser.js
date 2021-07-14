@@ -8,7 +8,11 @@ import {
     APGCStatements,
     FunctionCallExpression,
     IfStatement,
+    ifZeroKeyword,
+    ifNonZeroKeyword,
     WhileStatement,
+    whileZeroKeyword,
+    whileNonZeroKeyword,
     NumberExpression,
     StringExpression
 } from "../types/apgc_types.js";
@@ -184,9 +188,6 @@ function makeIfParser(keywordParser, makeStatement) {
     )
 }
 
-const ifZeroKeyword = 'if_zero';
-const ifNonZeroKeyword = "if_non_zero";
-
 /**
  * if_zero (tdec_u(0)) { statemtns } else { statements }
  * if_zero (tdec_u(0)) { statemtns }
@@ -222,8 +223,6 @@ function makeWhileParser(keywordParser, makeWhileStatement) {
     )
 }
 
-const whileNonZeroKeyword = 'while_non_zero';
-const whileZeroKeyword = 'while_zero';
 /**
  * @returns {Parser<WhileStatement, string>}
  */

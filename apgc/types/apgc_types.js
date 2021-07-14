@@ -113,6 +113,9 @@ export class APGCExpressionStatement extends APGCStatement {
     }
 }
 
+export const ifZeroKeyword = 'if_zero';
+export const ifNonZeroKeyword = "if_non_zero";
+
 /**
  * if_zero (expr) { statements }
  * if_zero (expr) { statements } else { statements }
@@ -143,7 +146,18 @@ export class IfStatement extends APGCStatement {
          */
         this.elseStataments = nonZeroStatements;
     }
+
+    /**
+     * 
+     * @returns {string}
+     */
+    keyword() {
+        return this.zeroOrNonZero === "zero" ? ifZeroKeyword : ifNonZeroKeyword;
+    }
 }
+
+export const whileNonZeroKeyword = 'while_non_zero';
+export const whileZeroKeyword = 'while_zero';
 
 /**
  * 0でない間繰り替えす
@@ -169,6 +183,13 @@ export class WhileStatement extends APGCStatement {
          * @readonly
          */
         this.statements = statements;
+    }
+    /**
+     * 
+     * @returns {string}
+     */
+    keyword() {
+        return this.zeroOrNonZero === "zero" ? whileZeroKeyword : whileNonZeroKeyword;
     }
 }
 

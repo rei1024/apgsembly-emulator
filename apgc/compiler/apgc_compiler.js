@@ -230,7 +230,7 @@ export class APGCCompiler {
 function compileIfStatement(ctx, inputState, statement) {
     const expr = statement.expr;
     if (!(expr instanceof FunctionCallExpression)) {
-        throw Error('if_zero only accept function call');
+        throw Error(`${statement.keyword()} only accept function call`);
     }
     const ifState = ctx.compileFunctionCallExpression(inputState, expr);
 
@@ -284,7 +284,7 @@ function compileIfStatement(ctx, inputState, statement) {
 function compileWhileStatement(ctx, inputState, statement) {
     const expr = statement.expr;
     if (!(expr instanceof FunctionCallExpression)) {
-        throw Error('while_non_zero only accept function call');
+        throw Error(`${statement.keyword()} only accept function call`);
     }
     const whileState = ctx.compileFunctionCallExpression(inputState, expr);
 
@@ -328,17 +328,17 @@ const LABEL_PREFIX = "APGC_LABEL_";
  */
 function compileLabel(ctx, inputState, expr) {
     if (expr.args.length !== 1) {
-        throw Error('label arguments length is not 1');
+        throw Error(`${LABEL_FUNCTION_NAME} arguments length is not 1`);
     }
     const arg = expr.args[0];
     if (!(arg instanceof StringExpression)) {
-        throw Error('label arguments accepts only strings');
+        throw Error(`${LABEL_FUNCTION_NAME} arguments accepts only strings`);
     }
     if (arg.string.includes(';')) {
-        throw Error(`label arguments should not contain semicolon: label("${arg.string}")`);
+        throw Error(`${LABEL_FUNCTION_NAME} arguments should not contain semicolon: ${LABEL_FUNCTION_NAME}("${arg.string}")`);
     }
     if (arg.string.includes(' ')) {
-        throw Error(`label arguments should not contain whitespace: label("${arg.string}")`);
+        throw Error(`${LABEL_FUNCTION_NAME} arguments should not contain whitespace: ${LABEL_FUNCTION_NAME}("${arg.string}")`);
     }
     const labelState = LABEL_PREFIX + arg.string;
     const nextState = ctx.generateState();
@@ -365,11 +365,11 @@ function compileLabel(ctx, inputState, expr) {
  */
 function compileGoto(ctx, inputState, expr) {
     if (expr.args.length !== 1) {
-        throw Error('goto arguments length is not 1');
+        throw Error(`${GOTO_FUNCTION_NAME} arguments length is not 1`);
     }
     const arg = expr.args[0];
     if (!(arg instanceof StringExpression)) {
-        throw Error('goto arguments accepts only strings');
+        throw Error(`${GOTO_FUNCTION_NAME} arguments accepts only strings`);
     }
     const nextState = LABEL_PREFIX + arg.string;
     ctx.addCommand(new Command({
