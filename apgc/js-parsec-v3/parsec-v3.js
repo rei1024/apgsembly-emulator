@@ -380,18 +380,25 @@ export class Parser {
     many() {
         return new Parser(origState => {
             let state = origState;
+            let prevState = state;
             /** @type {A[]} */
             const array = [];
             while (true) {
                 const parseStateWithResult = this.parse(state);
                 state = parseStateWithResult.parseState;
                 if (parseStateWithResult.result.isOk()) {
+                    // prevent infinite loop
+                    if (prevState.offset === state.offset) {
+                        throw Error('many: infinite loop');
+                    }
+
                     // SAFETY: parseStateWithResult.result is ok
                     const value = parseStateWithResult.result.unsafeGetValue();
                     array.push(value);
                 } else {
                     return ParseStateWithResult.makeOk(state, array);
                 }
+                prevState = state;
             }
         });
     }

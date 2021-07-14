@@ -1,5 +1,5 @@
 import { Parser, ParseState, ParseStateWithResult, parseWithErrorLine, Result, stringLiteralParser } from './parsec-v3.js';
-import { assertEquals } from "../../test/deps.js";
+import { assertEquals, assertThrows } from "../../test/deps.js";
 
 /**
  * 
@@ -92,6 +92,11 @@ test('Parser satisfyChar many', () => {
     assertEquals(parser.many().parseToResult('aabb'), Result.ok(["a", "a"]));
 });
 
+test('Parser satisfyChar many empty', () => {
+    const parser = Parser.satisfyChar(c => c === 'a');
+    assertEquals(parser.many().parseToResult('bb'), Result.ok([]));
+});
+
 test('Parser sepBy', () => {
     const parser = Parser.satisfyChar(c => c === 'a').sepBy(Parser.string(','));
     assertEquals(parser.parseToResult('a,a,a'), Result.ok(["a", "a", "a"]));
@@ -124,4 +129,11 @@ test('Parser string literal escape', () => {
 test('Parser parseWithErrorLine', () => {
     const parser = Parser.satisfyChar(c => c === "a").many().then(_ => Parser.string('\n')).then(_ => Parser.satisfyChar(c => c === 'b')).then(_ => Parser.satisfyChar(c => c === 'c'));
     assertEquals(parseWithErrorLine(parser, "aa\nbb\naaa"), Result.err({ error: "satisfyChar failed: condition is not satisfied", line: 'bb' }));
+});
+
+test('Parser many prevent infinite loop', () => {
+    const parser = Parser.pure(3).many();
+    assertThrows(() => {
+        parser.parseToResult('aaa');
+    });
 });
