@@ -48,6 +48,7 @@ const DATA_DIR = location.origin.includes('github') ? "../apgsembly-emulator-2/d
  * @typedef {"Initial" | "Running" | "Stop" | "ParseError" | "RuntimeError" | "Halted"} AppState
  */
 
+// index.htmlと同期する
 const DEFUALT_FREQUENCY = 30;
 
 /**
@@ -71,7 +72,7 @@ export class App {
          * frequency of update
          * 周波数[Hz]
          */
-        this.frequency = DEFUALT_FREQUENCY; // index.htmlと同期する
+        this.frequency = DEFUALT_FREQUENCY;
 
         /**
          * エラーメッセージ
@@ -629,7 +630,13 @@ $stepInput.addEventListener('input', () => {
 // バイナリを非表示にする
 $hideBinary.addEventListener('change', () => {
     app.renderBinary();
+    localStorage.setItem('hide_binary', $hideBinary.checked.toString());
 });
+
+if (localStorage.getItem('hide_binary') === "true") {
+    $hideBinary.checked = true;
+    app.renderBinary();
+}
 
 // ダークモード
 $darkMode.addEventListener('change', () => {
@@ -655,11 +662,9 @@ $b2dHidePointer.addEventListener('change', () => {
 // Enter: toggle Start and Stop
 // Space: Step
 document.addEventListener('keydown', e => {
+    const activeElementTagName = document.activeElement?.tagName ?? "";
     // 入力中は無し
-    if (document.activeElement?.tagName === "TEXTAREA" ||
-        document.activeElement?.tagName === "INPUT" ||
-        document.activeElement?.tagName === "DETAILS"
-        ) {
+    if (["TEXTAREA", "INPUT", "DETAILS", "BUTTON"].includes(activeElementTagName)) {
         return;
     }
 
