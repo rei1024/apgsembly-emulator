@@ -35,6 +35,8 @@ import {
     $hideBinary,
     $breakpointSelect,
     $darkMode,
+    $darkModeLabel,
+    $b2dHidePointer,
 } from "./bind.js";
 import { makeSpinner } from "./util/spinner.js";
 
@@ -313,7 +315,7 @@ export class App {
             return;
         }
         const b2d = machine.actionExecutor.b2d;
-        renderB2D(context, machine.actionExecutor.b2d);
+        renderB2D(context, b2d, $b2dHidePointer.checked);
         $b2dx.textContent = b2d.x.toString();
         $b2dy.textContent = b2d.y.toString();
     }
@@ -635,14 +637,18 @@ $darkMode.addEventListener('change', () => {
     localStorage.setItem('dark_mode', onOrOff);
     document.body.setAttribute('apge_dark_mode', onOrOff);
 
-    $darkMode.parentElement.querySelector('label').textContent = $darkMode.checked ? "On" : "Off";
+    $darkModeLabel.textContent = $darkMode.checked ? "On" : "Off";
 });
 
 if (localStorage.getItem('dark_mode') === "on") {
     document.body.setAttribute('apge_dark_mode', "on");
     $darkMode.checked = true;
-    $darkMode.parentElement.querySelector('label').textContent = "On";
+    $darkModeLabel.textContent = "On";
 }
+
+$b2dHidePointer.addEventListener('change', () => {
+    app.renderB2D();
+});
 
 // キーボード入力
 // keyboard input

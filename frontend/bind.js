@@ -93,3 +93,9 @@ export const $breakpointSelect = $type('#breakpoint_select', HTMLSelectElement);
 
 // ダークモード
 export const $darkMode = $type('#dark_mode', HTMLInputElement);
+
+export const $darkModeLabel = $darkMode.parentElement?.querySelector('label') ?? (() => {
+    throw Error('label of #dark_mode is not found');
+})();
+
+export const $b2dHidePointer = $type('#b2d_hide_pointer', HTMLInputElement);
