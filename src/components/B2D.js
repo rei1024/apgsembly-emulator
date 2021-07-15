@@ -78,30 +78,30 @@ export class B2D {
         switch (act.op) {
             case B2D_INC: {
                 switch (act.axis) {
-                    case "B2DX": return this.incB2DX();
-                    case "B2DY": return this.incB2DY();
-                    case "B2D": throw Error('B2D: internal');
+                    case B2D_B2DX: return this.incB2DX();
+                    case B2D_B2DY: return this.incB2DY();
+                    case B2D_B2D: throw Error('B2D: internal');
                 }
                 break;
             }
             case B2D_TDEC: {
                 switch (act.axis) {
-                    case "B2DX": return this.tdecB2DX();
-                    case "B2DY": return this.tdecB2DY();
-                    case "B2D": throw Error('B2D: internal');
+                    case B2D_B2DX: return this.tdecB2DX();
+                    case B2D_B2DY: return this.tdecB2DY();
+                    case B2D_B2D: throw Error('B2D: internal');
                 }
                 break;
             }
             case B2D_READ: {
                 switch (act.axis) {
-                    case "B2D": return this.read();
+                    case B2D_B2D: return this.read();
                     default: throw Error('B2D: internal');
                 }
                 break;
             }
             case B2D_SET: {
                 switch (act.axis) {
-                    case "B2D": return this.set();
+                    case B2D_B2D: return this.set();
                     default: throw Error('B2D: internal');
                 }
                 break;
