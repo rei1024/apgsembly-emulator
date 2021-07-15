@@ -1,6 +1,7 @@
 // @ts-check
 import {
     Command,
+    INITIAL_STATE,
     Action,
     HaltOutAction,
     NopAction,
@@ -93,7 +94,7 @@ export class APGCCompiler {
      * @throws
      */
     compile() {
-        const initialState = "INITIAL"
+        const initialState = INITIAL_STATE;
         const apgcInitialState = "APGC_INITIAL";
         this.addCommand(new Command({
             state: initialState,
