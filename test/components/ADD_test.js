@@ -1,6 +1,12 @@
 import { AddAction } from "../../src/actions/AddAction.js";
-import { ADD } from "../../src/components/ADD.js"
+import { ADD, addLookupA1, addLookupB0, addLookupB1 } from "../../src/components/ADD.js"
 import { assertEquals } from "../deps.js";
+
+Deno.test('ADD table', () => {
+    assertEquals(addLookupA1, [5, 4, 7, 6, 1, 0, 3, 2, 13, 12, 15, 14, 9, 8, 11, 10]);
+    assertEquals(addLookupB0, [0, 0, 0, 0, 0, 0, 9, 9, 0, 0, 9, 9, 9, 9, 9, 9]);
+    assertEquals(addLookupB1, [0, 0, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 9, 9]);
+});
 
 Deno.test('ADD a1', () => {
     const x = new ADD();

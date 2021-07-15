@@ -245,6 +245,7 @@ export class App {
         this.errorMessage = "";
         const program = Program.parse($input.value);
         this.machine = undefined;
+        this.frequencyManager.reset();
         if (typeof program === "string") {
             this.appState = "ParseError";
             this.errorMessage = program;
