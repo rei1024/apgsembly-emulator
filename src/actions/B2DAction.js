@@ -74,11 +74,15 @@ export class B2DAction extends Action {
                 op = "TDEC";
             }
             if (axis === "SQX") {
-                // @ts-ignore
-                return new B2DAction(op, B2D_B2DX);
+                return new B2DAction(
+                    // @ts-ignore
+                    op
+                    , B2D_B2DX);
             } else if (axis === "SQY") {
-                // @ts-ignore
-                return new B2DAction(op, B2D_B2DY);
+                return new B2DAction(
+                    // @ts-ignore
+                    op,
+                    B2D_B2DY);
             }
         } else if (op === "READ" || op === "SET") {
             if (axis === "SQ") {

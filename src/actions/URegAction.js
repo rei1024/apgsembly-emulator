@@ -14,7 +14,7 @@ const U_TDEC_STRING = "TDEC";
 export class URegAction extends Action {
     /**
      * 
-     * @param {"INC" | "TDEC"} op 
+     * @param {U_INC | U_TDEC} op 
      * @param {number} regNumber
      */
     constructor(op, regNumber) {

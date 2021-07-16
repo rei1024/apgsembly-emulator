@@ -167,10 +167,12 @@ export class B2D {
      * @returns {0 | 1}
      */
     read() {
-        // @ts-ignore
-        const value = this.array[this.y][this.x];
-        // @ts-ignore
-        this.array[this.y][this.x] = 0;
+        const arrayY = this.array[this.y]
+        if (arrayY === undefined) {
+            throw Error('B2D: internal error');
+        }
+        const value = arrayY[this.x];
+        arrayY[this.x] = 0;
         // @ts-ignore
         return value;
     }
