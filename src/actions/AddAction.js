@@ -6,6 +6,10 @@ export const ADD_A1 = "A1";
 export const ADD_B0 = "B0";
 export const ADD_B1 = "B1";
 
+const ADD_A1_STRING = "A1";
+const ADD_B0_STRING = "B0";
+const ADD_B1_STRING = "B1";
+
 /**
  * Action for `ADD`
  */
@@ -43,7 +47,7 @@ export class AddAction extends Action {
         if (add !== "ADD") {
             return undefined;
         }
-        if (reg === "A1" || reg === "B0" || reg === "B1") {
+        if (reg === ADD_A1_STRING || reg === ADD_B0_STRING || reg === ADD_B1_STRING) {
             return new AddAction(reg);
         }
         return undefined;

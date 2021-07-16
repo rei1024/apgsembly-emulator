@@ -5,6 +5,9 @@ import { Action } from "./Action.js";
 export const MUL_0 = "0";
 export const MUL_1 = "1";
 
+const MUL_0_STRING = "0";
+const MUL_1_STRING = "1";
+
 /**
  * Action for `MUL`
  */
@@ -42,7 +45,7 @@ export class MulAction extends Action {
         if (mul !== "MUL") {
             return undefined;
         }
-        if (op === "0" || op === "1") {
+        if (op === MUL_0_STRING || op === MUL_1_STRING) {
             return new MulAction(op);
         }
         return undefined;

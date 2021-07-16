@@ -6,6 +6,10 @@ export const SUB_A1 = "A1";
 export const SUB_B0 = "B0";
 export const SUB_B1 = "B1";
 
+const SUB_A1_STRING = "A1";
+const SUB_B0_STRING = "B0";
+const SUB_B1_STRING = "B1";
+
 /**
  * Action for `SUB`
  */
@@ -43,7 +47,7 @@ export class SubAction extends Action {
         if (sub !== "SUB") {
             return undefined;
         }
-        if (reg === "A1" || reg === "B0" || reg === "B1") {
+        if (reg === SUB_A1_STRING || reg === SUB_B0_STRING || reg === SUB_B1_STRING) {
             return new SubAction(reg);
         }
         return undefined;

@@ -7,6 +7,11 @@ export const B_TDEC = "TDEC";
 export const B_READ = "READ";
 export const B_SET = "SET";
 
+const B_INC_STRING = "INC";
+const B_TDEC_STRING = "TDEC";
+const B_READ_STRING = "READ";
+const B_SET_STRING = "SET";
+
 /**
  * Action for `Bn`
  */
@@ -54,7 +59,7 @@ export class BRegAction extends Action {
         }
         const [ op, reg ] = array;
         if (op === undefined || reg === undefined) { return undefined; }
-        if (op === "INC" || op === "TDEC" || op === "READ" || op === "SET") {
+        if (op === B_INC_STRING || op === B_TDEC_STRING || op === B_READ_STRING || op === B_SET_STRING) {
             if (reg.startsWith("B")) {
                 const str = reg.slice(1);
                 if (/^[0-9]+$/.test(str)) {

@@ -5,6 +5,9 @@ import { Action } from "./Action.js";
 export const U_INC = "INC";
 export const U_TDEC = "TDEC";
 
+const U_INC_STRING = "INC";
+const U_TDEC_STRING = "TDEC";
+
 /**
  * Action for `Un`
  */
@@ -53,7 +56,7 @@ export class URegAction extends Action {
         }
         const [ op, reg ] = array;
         if (op === undefined || reg === undefined) { return undefined; }
-        if (op === "INC" || op === "TDEC") {
+        if (op === U_INC_STRING || op === U_TDEC_STRING) {
             // R for APGsembly 1.0
             if (reg.startsWith("U") || reg.startsWith('R')) {
                 const str = reg.slice(1);
