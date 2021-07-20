@@ -172,8 +172,10 @@ export class B2D {
             throw Error('B2D: internal error');
         }
         const value = arrayY[this.x];
+        if (value === undefined) {
+            throw Error('B2D: internal error');
+        }
         arrayY[this.x] = 0;
-        // @ts-ignore
         return value;
     }
 
@@ -182,12 +184,14 @@ export class B2D {
      * @returns {void}
      */
     set() {
-        // @ts-ignore
-        if (this.array[this.y][this.x] === 1) {
+        const arrayY = this.array[this.y]
+        if (arrayY === undefined) {
+            throw Error('B2D: internal error');
+        }
+        if (arrayY[this.x] === 1) {
             throw Error('B2D SET: Tried to set when it was already 1');
         }
-        // @ts-ignore
-        this.array[this.y][this.x] = 1;   
+        arrayY[this.x] = 1;   
     }
 
     /**
