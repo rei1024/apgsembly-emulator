@@ -21,6 +21,7 @@ export class AddAction extends Action {
     constructor(regName) {
         super();
         /**
+         * @type {ADD_A1 | ADD_B0 | ADD_B1}
          * @readonly
          */
         this.regName = regName;
@@ -51,5 +52,16 @@ export class AddAction extends Action {
             return new AddAction(reg);
         }
         return undefined;
+    }
+
+    /**
+     * @override
+     */
+    doesReturnValue() {
+        switch (this.regName) {
+            case ADD_A1: return false;
+            case ADD_B0: return true;
+            case ADD_B1: return true;
+        }
     }
 }

@@ -35,10 +35,12 @@ export class B2DAction extends Action {
     constructor(op, axis) {
         super();
         /**
+         * @type {B2D_INC | B2D_TDEC | B2D_READ | B2D_SET}
          * @readonly
          */
         this.op = op;
         /**
+         * @type {B2D_B2DX | B2D_B2DY | B2D_B2D}
          * @readonly
          */
         this.axis = axis;
@@ -101,5 +103,17 @@ export class B2DAction extends Action {
             }
         }
         return undefined;
+    }
+
+    /**
+     * @override
+     */
+    doesReturnValue() {
+        switch (this.op) {
+            case B2D_INC: return false;
+            case B2D_TDEC: return true;
+            case B2D_READ: return true;
+            case B2D_SET: return false;
+        }
     }
 }
