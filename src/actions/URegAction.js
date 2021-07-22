@@ -20,6 +20,7 @@ export class URegAction extends Action {
     constructor(op, regNumber) {
         super();
         /**
+         * @type {U_INC | U_TDEC}
          * @readonly
          */
         this.op = op;
@@ -66,5 +67,15 @@ export class URegAction extends Action {
             }
         }
         return undefined;
+    }
+
+    /**
+     * @override
+     */
+    doesReturnValue() {
+        switch (this.op) {
+            case U_INC: return false;
+            case U_TDEC: return true;
+        }
     }
 }

@@ -1,6 +1,6 @@
 up:
 	file_server . -p 1123
 t:
-	deno test --no-check
+	deno test
 watch:
-	deno test --watch --no-check
+	deno test --watch

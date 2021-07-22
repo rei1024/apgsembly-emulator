@@ -19,6 +19,7 @@ export class MulAction extends Action {
     constructor(op) {
         super();
         /**
+         * @type {MUL_0 | MUL_1}
          * @readonly
          */
         this.op = op;
@@ -49,5 +50,12 @@ export class MulAction extends Action {
             return new MulAction(op);
         }
         return undefined;
+    }
+
+    /**
+     * @override
+     */
+    doesReturnValue() {
+        return true;
     }
 }

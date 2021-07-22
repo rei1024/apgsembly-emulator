@@ -24,6 +24,7 @@ export class BRegAction extends Action {
     constructor(op, regNumber) {
         super();
         /**
+         * @type {B_INC | B_TDEC | B_READ | B_SET}
          * @readonly
          */
         this.op = op;
@@ -68,5 +69,17 @@ export class BRegAction extends Action {
             }
         }
         return undefined;
+    }
+
+    /**
+     * @override
+     */
+    doesReturnValue() {
+        switch (this.op) {
+            case B_INC: return false;
+            case B_TDEC: return true;
+            case B_READ: return true;
+            case B_SET: return false;
+        }
     }
 }

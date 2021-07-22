@@ -21,6 +21,7 @@ export class SubAction extends Action {
     constructor(regName) {
         super();
         /**
+         * @type {SUB_A1 | SUB_B0 | SUB_B1}
          * @readonly
          */
         this.regName = regName;
@@ -51,5 +52,17 @@ export class SubAction extends Action {
             return new SubAction(reg);
         }
         return undefined;
+    }
+
+    /**
+     * 
+     * @returns @override
+     */
+    doesReturnValue() {
+        switch (this.regName) {
+            case SUB_A1: return false;
+            case SUB_B0: return true;
+            case SUB_B1: return true;
+        }
     }
 }
