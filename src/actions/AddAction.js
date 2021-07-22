@@ -11,17 +11,25 @@ const ADD_B0_STRING = "B0";
 const ADD_B1_STRING = "B1";
 
 /**
+ * @typedef {ADD_A1 | ADD_B0 | ADD_B1} AddOp
+ */
+
+/**
+ * @typedef {ADD_A1_STRING | ADD_B0_STRING | ADD_B1_STRING} AddOpString
+ */
+
+/**
  * Action for `ADD`
  */
 export class AddAction extends Action {
     /**
      * 
-     * @param {ADD_A1 | ADD_B0 | ADD_B1} op 
+     * @param {AddOp} op 
      */
     constructor(op) {
         super();
         /**
-         * @type {ADD_A1 | ADD_B0 | ADD_B1}
+         * @type {AddOp}
          * @readonly
          */
         this.op = op;

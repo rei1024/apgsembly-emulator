@@ -9,17 +9,25 @@ const MUL_0_STRING = "0";
 const MUL_1_STRING = "1";
 
 /**
+ * @typedef {MUL_0 | MUL_1} MulOp
+ */
+
+/**
+ * @typedef {MUL_0_STRING | MUL_1_STRING} MulOpString
+ */
+
+/**
  * Action for `MUL`
  */
 export class MulAction extends Action {
     /**
      * 
-     * @param {MUL_0 | MUL_1} op 
+     * @param {MulOp} op 
      */
     constructor(op) {
         super();
         /**
-         * @type {MUL_0 | MUL_1}
+         * @type {MulOp}
          * @readonly
          */
         this.op = op;

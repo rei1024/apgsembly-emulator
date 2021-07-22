@@ -9,18 +9,26 @@ const U_INC_STRING = "INC";
 const U_TDEC_STRING = "TDEC";
 
 /**
+ * @typedef {U_INC | U_TDEC} UOp
+ */
+
+/**
+ * @typedef {U_INC_STRING | U_TDEC_STRING} UOpString
+ */
+
+/**
  * Action for `Un`
  */
 export class URegAction extends Action {
     /**
      * 
-     * @param {U_INC | U_TDEC} op 
+     * @param {UOp} op 
      * @param {number} regNumber
      */
     constructor(op, regNumber) {
         super();
         /**
-         * @type {U_INC | U_TDEC}
+         * @type {UOp}
          * @readonly
          */
         this.op = op;

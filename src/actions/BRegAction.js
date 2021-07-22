@@ -13,18 +13,22 @@ const B_READ_STRING = "READ";
 const B_SET_STRING = "SET";
 
 /**
+ * @typedef {B_INC | B_TDEC | B_READ | B_SET} BOp
+ */
+
+/**
  * Action for `Bn`
  */
 export class BRegAction extends Action {
     /**
      * 
-     * @param {B_INC | B_TDEC | B_READ | B_SET} op 
+     * @param {BOp} op 
      * @param {number} regNumber 
      */
     constructor(op, regNumber) {
         super();
         /**
-         * @type {B_INC | B_TDEC | B_READ | B_SET}
+         * @type {BOp}
          * @readonly
          */
         this.op = op;

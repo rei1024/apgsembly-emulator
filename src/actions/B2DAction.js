@@ -10,6 +10,22 @@ export const B2D_B2DX = "B2DX";
 export const B2D_B2DY = "B2DY";
 export const B2D_B2D = "B2D";
 
+/**
+ * @typedef {B2D_INC | B2D_TDEC | B2D_READ | B2D_SET} B2DOp
+ */
+
+/**
+ * @typedef {B2D_INC_STRING | B2D_TDEC_STRING | B2D_READ_STRING | B2D_SET_STRING} B2DOpString
+ */
+
+/**
+ * @typedef {B2D_B2DX | B2D_B2DY | B2D_B2D} B2DAxis
+ */
+
+/**
+ * @typedef {B2D_B2DX_STRING | B2D_B2DY_STRING | B2D_B2D_STRING} B2DAxisString
+ */
+
 const B2D_INC_STRING = "INC";
 const B2D_TDEC_STRING = "TDEC";
 const B2D_READ_STRING = "READ";
@@ -29,18 +45,18 @@ const B2D_LEGACY_B2D_STRING = "SQ";
 export class B2DAction extends Action {
     /**
      * 
-     * @param {B2D_INC | B2D_TDEC | B2D_READ | B2D_SET} op 
-     * @param {B2D_B2DX | B2D_B2DY | B2D_B2D} axis
+     * @param {B2DOp} op 
+     * @param {B2DAxis} axis
      */
     constructor(op, axis) {
         super();
         /**
-         * @type {B2D_INC | B2D_TDEC | B2D_READ | B2D_SET}
+         * @type {B2DOp}
          * @readonly
          */
         this.op = op;
         /**
-         * @type {B2D_B2DX | B2D_B2DY | B2D_B2D}
+         * @type {B2DAxis}
          * @readonly
          */
         this.axis = axis;

@@ -11,17 +11,25 @@ const SUB_B0_STRING = "B0";
 const SUB_B1_STRING = "B1";
 
 /**
+ * @typedef {SUB_A1 | SUB_B0 | SUB_B1} SubOp
+ */
+
+/**
+ * @typedef {SUB_A1_STRING | SUB_B0_STRING | SUB_B1_STRING} SubOpString
+ */
+
+/**
  * Action for `SUB`
  */
 export class SubAction extends Action {
     /**
      * 
-     * @param {SUB_A1 | SUB_B0 | SUB_B1} op 
+     * @param {SubOp} op 
      */
     constructor(op) {
         super();
         /**
-         * @type {SUB_A1 | SUB_B0 | SUB_B1}
+         * @type {SubOp}
          * @readonly
          */
         this.op = op;
