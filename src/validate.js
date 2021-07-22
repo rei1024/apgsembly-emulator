@@ -41,7 +41,7 @@ function validateNoDuplicatedActionCommand(command) {
 }
 
 /**
- * 同じアクションが複数含まれていないか検査する
+ * アクションが値を一度だけ返すか検査する
  * エラーメッセージを返却する
  * @param {Command[]} commands
  * @returns {string | undefined}
