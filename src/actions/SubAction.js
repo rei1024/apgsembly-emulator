@@ -16,22 +16,22 @@ const SUB_B1_STRING = "B1";
 export class SubAction extends Action {
     /**
      * 
-     * @param {SUB_A1 | SUB_B0 | SUB_B1} regName 
+     * @param {SUB_A1 | SUB_B0 | SUB_B1} op 
      */
-    constructor(regName) {
+    constructor(op) {
         super();
         /**
          * @type {SUB_A1 | SUB_B0 | SUB_B1}
          * @readonly
          */
-        this.regName = regName;
+        this.op = op;
     }
 
     /**
      * @override
      */
     pretty() {
-        return `SUB ${this.regName}`;
+        return `SUB ${this.op}`;
     }
 
     /**
@@ -59,7 +59,7 @@ export class SubAction extends Action {
      * @returns @override
      */
     doesReturnValue() {
-        switch (this.regName) {
+        switch (this.op) {
             case SUB_A1: return false;
             case SUB_B0: return true;
             case SUB_B1: return true;

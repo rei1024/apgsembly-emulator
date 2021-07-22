@@ -16,22 +16,22 @@ const ADD_B1_STRING = "B1";
 export class AddAction extends Action {
     /**
      * 
-     * @param {ADD_A1 | ADD_B0 | ADD_B1} regName 
+     * @param {ADD_A1 | ADD_B0 | ADD_B1} op 
      */
-    constructor(regName) {
+    constructor(op) {
         super();
         /**
          * @type {ADD_A1 | ADD_B0 | ADD_B1}
          * @readonly
          */
-        this.regName = regName;
+        this.op = op;
     }
 
     /**
      * @override
      */
     pretty() {
-        return `ADD ${this.regName}`;
+        return `ADD ${this.op}`;
     }
 
     /**
@@ -58,7 +58,7 @@ export class AddAction extends Action {
      * @override
      */
     doesReturnValue() {
-        switch (this.regName) {
+        switch (this.op) {
             case ADD_A1: return false;
             case ADD_B0: return true;
             case ADD_B1: return true;

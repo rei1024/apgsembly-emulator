@@ -62,7 +62,7 @@ Deno.test('ADD action', () => {
         throw Error('Parse Error AddAction');
     }
     assertEquals(act.pretty(), "ADD A1");
-    assertEquals(act.regName, "A1");
+    assertEquals(act.op, "A1");
     assertEquals(x.getValue(), 0);
 
     x.action(act);

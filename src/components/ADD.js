@@ -24,7 +24,7 @@ export class ADD {
      * @param {AddAction} act 
      */
     action(act) {
-        switch (act.regName) {
+        switch (act.op) {
             case ADD_A1: return this.a1();
             case ADD_B0: return this.b0();
             case ADD_B1: return this.b1();

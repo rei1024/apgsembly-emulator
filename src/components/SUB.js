@@ -26,7 +26,7 @@ export class SUB {
      * @param {SubAction} act 
      */
     action(act) {
-        switch(act.regName) {
+        switch(act.op) {
             case SUB_A1: return this.a1();
             case SUB_B0: return this.b0();
             case SUB_B1: return this.b1();
