@@ -2,9 +2,9 @@
 
 import { Action } from "./Action.js";
 
-export const ADD_A1 = "A1";
-export const ADD_B0 = "B0";
-export const ADD_B1 = "B1";
+export const ADD_A1 = 0;
+export const ADD_B0 = 1;
+export const ADD_B1 = 2;
 
 const ADD_A1_STRING = "A1";
 const ADD_B0_STRING = "B0";
@@ -17,6 +17,32 @@ const ADD_B1_STRING = "B1";
 /**
  * @typedef {ADD_A1_STRING | ADD_B0_STRING | ADD_B1_STRING} AddOpString
  */
+
+/**
+ * 
+ * @param {AddOp} op 
+ * @returns {AddOpString}
+ */
+function prettyOp(op) {
+    switch (op) {
+        case ADD_A1: return ADD_A1_STRING;
+        case ADD_B0: return ADD_B0_STRING;
+        case ADD_B1: return ADD_B1_STRING;
+    }
+}
+
+/**
+ * 
+ * @param {AddOpString} op 
+ * @returns {AddOp}
+ */
+ function parseOp(op) {
+    switch (op) {
+        case ADD_A1_STRING: return ADD_A1;
+        case ADD_B0_STRING: return ADD_B0;
+        case ADD_B1_STRING: return ADD_B1;
+    }
+}
 
 /**
  * Action for `ADD`
@@ -39,7 +65,7 @@ export class AddAction extends Action {
      * @override
      */
     pretty() {
-        return `ADD ${this.op}`;
+        return `ADD ${prettyOp(this.op)}`;
     }
 
     /**
@@ -57,7 +83,7 @@ export class AddAction extends Action {
             return undefined;
         }
         if (reg === ADD_A1_STRING || reg === ADD_B0_STRING || reg === ADD_B1_STRING) {
-            return new AddAction(reg);
+            return new AddAction(parseOp(reg));
         }
         return undefined;
     }

@@ -1,4 +1,4 @@
-import { AddAction } from "../../src/actions/AddAction.js";
+import { AddAction, ADD_A1 } from "../../src/actions/AddAction.js";
 import { ADD, addLookupA1, addLookupB0, addLookupB1 } from "../../src/components/ADD.js"
 import { assertEquals } from "../deps.js";
 
@@ -62,7 +62,7 @@ Deno.test('ADD action', () => {
         throw Error('Parse Error AddAction');
     }
     assertEquals(act.pretty(), "ADD A1");
-    assertEquals(act.op, "A1");
+    assertEquals(act.op, ADD_A1);
     assertEquals(x.getValue(), 0);
 
     x.action(act);
