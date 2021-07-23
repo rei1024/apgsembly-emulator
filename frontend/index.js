@@ -83,9 +83,14 @@ export class App {
         /** ステップ数設定 */
         this.stepConfig = 1;
 
-        this.frequencyManager = new Frequency(() => this.appState === "Running", () => this.frequency, n => this.run(n));
+        this.frequencyManager = new Frequency(
+            () => this.appState === "Running",
+            () => this.frequency,
+            n => this.run(n)
+        );
 
         /**
+         * キャッシュ
          * @type {undefined | NodeListOf<ChildNode>}
          */
         this.unaryRegisterItems = undefined;
