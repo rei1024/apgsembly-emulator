@@ -6,6 +6,7 @@ import { Frequency } from "./util/frequency.js";
 import { setCustomError, removeCustomError } from "./util/validation_ui.js";
 
 import { renderB2D } from "./renderB2D.js";
+
 import {
     $error,
     $input,
@@ -42,6 +43,7 @@ import {
     $statsBody,
 } from "./bind.js";
 import { makeSpinner } from "./util/spinner.js";
+import { renderStats } from "./renderStats.js";
 
 // データ
 // GitHub Pagesは1階層上になる
@@ -359,6 +361,13 @@ export class App {
     }
 
     /**
+     * @returns {never}
+     */
+    __error__() {
+        throw Error('internal error');
+    }
+
+    /**
      * バイナリレジスタの表示
      */
     renderBinary() {
@@ -377,11 +386,11 @@ export class App {
             if (row === undefined) {
                 throw Error('renderBinary: internal error');
             }
-            const $prefix = row.querySelector('.prefix');
-            const $head = row.querySelector('.head');
-            const $suffix = row.querySelector('.suffix');
-            const $decimal = row.querySelector('.decimal');
-            const $pointer = row.querySelector('.pointer');
+            const $prefix = row.querySelector('.prefix') ?? this.__error__();
+            const $head = row.querySelector('.head') ?? this.__error__();
+            const $suffix = row.querySelector('.suffix') ?? this.__error__();
+            const $decimal = row.querySelector('.decimal') ?? this.__error__();
+            const $pointer = row.querySelector('.pointer') ?? this.__error__();
             if (hideBinary) {
                 $prefix.textContent = '';
                 $head.textContent = '';
@@ -433,22 +442,7 @@ export class App {
             $statsBody.innerHTML = "";
             return;
         }
-        $statsBody.innerHTML = "";
-        for (const [i, stat] of this.machine.stateStats.entries()) {
-            const name = this.machine.states[i] ?? "";
-            const $tr = document.createElement('tr');
-            const $name = document.createElement('td');
-            $name.colSpan = 2
-            $name.textContent = name;
-            const $sum = document.createElement('td');
-            $sum.textContent = (stat.z + stat.nz).toString();
-            const $z = document.createElement('td');
-            $z.textContent = stat.z.toString();
-            const $nz = document.createElement('td');
-            $nz.textContent = stat.nz.toString();
-            $tr.append($name, $sum, $z, $nz);
-            $statsBody.append($tr);
-        }
+        renderStats($statsBody, this.machine.stateStats, this.machine.states);
     }
 
     /**

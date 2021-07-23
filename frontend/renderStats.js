@@ -1,0 +1,25 @@
+// @ts-check
+
+/**
+ * @param {HTMLTableSectionElement} $statsBody
+ * @param {{ z: number, nz: number }[]} stateStats
+ * @param {string[]} states
+ */
+export function renderStats($statsBody, stateStats, states) {
+    $statsBody.innerHTML = "";
+    for (const [i, stat] of stateStats.entries()) {
+        const name = states[i] ?? "";
+        const $tr = document.createElement('tr');
+        const $name = document.createElement('td');
+        $name.colSpan = 2
+        $name.textContent = name;
+        const $sum = document.createElement('td');
+        $sum.textContent = (stat.z + stat.nz).toString();
+        const $z = document.createElement('td');
+        $z.textContent = stat.z.toString();
+        const $nz = document.createElement('td');
+        $nz.textContent = stat.nz.toString();
+        $tr.append($name, $sum, $z, $nz);
+        $statsBody.append($tr);
+    }
+}
