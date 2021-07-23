@@ -488,7 +488,7 @@ export class App {
         for (let i = 0; i < steps; i++) {
             try {
                 const res = machine.execCommand();
-                if (res === "HALT_OUT") {
+                if (res === -1) {
                     this.appState = "Halted";
                     this.steps += i + 1; 
                     this.render();
