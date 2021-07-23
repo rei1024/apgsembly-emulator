@@ -1,6 +1,6 @@
 // @ts-check
 
-import { $type } from "./util/selector.js";
+import { $, $type } from "./util/selector.js";
 
 // エラーメッセージ
 // Error messsage
@@ -102,3 +102,9 @@ export const $darkModeLabel = $darkMode.parentElement?.querySelector('label') ??
 })();
 
 export const $b2dHidePointer = $type('#b2d_hide_pointer', HTMLInputElement);
+
+// Stats Modal
+
+export const $statsModal = $type('#stats_modal', HTMLElement);
+
+export const $statsBody = $type('#stats_body', HTMLTableSectionElement);

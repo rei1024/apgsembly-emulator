@@ -38,6 +38,8 @@ import {
     $darkMode,
     $darkModeLabel,
     $b2dHidePointer,
+    $statsModal,
+    $statsBody,
 } from "./bind.js";
 import { makeSpinner } from "./util/spinner.js";
 
@@ -422,6 +424,33 @@ export class App {
         }
     }
 
+    renderStats() {
+        if (!$statsModal.classList.contains('show')) {
+            $statsBody.innerHTML = "";
+            return;
+        }
+        if (this.machine === undefined) {
+            $statsBody.innerHTML = "";
+            return;
+        }
+        $statsBody.innerHTML = "";
+        for (const [i, stat] of this.machine.stateStats.entries()) {
+            const name = this.machine.states[i] ?? "";
+            const $tr = document.createElement('tr');
+            const $name = document.createElement('td');
+            $name.colSpan = 2
+            $name.textContent = name;
+            const $sum = document.createElement('td');
+            $sum.textContent = (stat.z + stat.nz).toString();
+            const $z = document.createElement('td');
+            $z.textContent = stat.z.toString();
+            const $nz = document.createElement('td');
+            $nz.textContent = stat.nz.toString();
+            $tr.append($name, $sum, $z, $nz);
+            $statsBody.append($tr);
+        }
+    }
+
     /**
      * 全体を描画する
      */
@@ -462,6 +491,7 @@ export class App {
         this.renderFrequencyOutput();
         // output
         this.renderOutput();
+        this.renderStats();
 
         $steps.textContent = this.steps.toString();
 
@@ -682,6 +712,11 @@ if (localStorage.getItem('dark_mode') === "on") {
 
 $b2dHidePointer.addEventListener('change', () => {
     app.renderB2D();
+});
+
+// showの場合クラスが追加されない
+$statsModal.addEventListener('shown.bs.modal', () => {
+    app.renderStats();
 });
 
 // キーボード入力
