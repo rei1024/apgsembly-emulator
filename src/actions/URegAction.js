@@ -2,8 +2,8 @@
 
 import { Action } from "./Action.js";
 
-export const U_INC = "INC";
-export const U_TDEC = "TDEC";
+export const U_INC = 0;
+export const U_TDEC = 1;
 
 const U_INC_STRING = "INC";
 const U_TDEC_STRING = "TDEC";
@@ -15,6 +15,30 @@ const U_TDEC_STRING = "TDEC";
 /**
  * @typedef {U_INC_STRING | U_TDEC_STRING} UOpString
  */
+
+/**
+ * 
+ * @param {UOp} op
+ * @returns {UOpString}
+ */
+function prettyOp(op) {
+    switch (op) {
+        case U_INC: return U_INC_STRING;
+        case U_TDEC: return U_TDEC_STRING;
+    }
+}
+
+/**
+ * 
+ * @param {UOpString} op
+ * @returns {UOp}
+ */
+ function parseOp(op) {
+    switch (op) {
+        case U_INC_STRING: return U_INC;
+        case U_TDEC_STRING: return U_TDEC;
+    }
+}
 
 /**
  * Action for `Un`
@@ -50,7 +74,7 @@ export class URegAction extends Action {
      * @override
      */
     pretty() {
-        return `${this.op} U${this.regNumber}`;
+        return `${prettyOp(this.op)} U${this.regNumber}`;
     }
 
     /**
@@ -70,7 +94,7 @@ export class URegAction extends Action {
             if (reg.startsWith("U") || reg.startsWith('R')) {
                 const str = reg.slice(1);
                 if (/^[0-9]+$/.test(str)) {
-                    return new URegAction(op, parseInt(str, 10));
+                    return new URegAction(parseOp(op), parseInt(str, 10));
                 }
             }
         }
