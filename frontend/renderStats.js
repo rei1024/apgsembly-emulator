@@ -11,8 +11,12 @@ export function renderStats($statsBody, stateStats, states) {
         const name = states[i] ?? "";
         const $tr = document.createElement('tr');
         const $name = document.createElement('td');
-        $name.colSpan = 2
-        $name.textContent = name;
+        if (true) {
+            const $code = document.createElement('code');
+            $code.textContent = name;
+            $name.colSpan = 2
+            $name.append($code);
+        }
         const $sum = document.createElement('td');
         $sum.textContent = (stat.z + stat.nz).toString();
         const $z = document.createElement('td');
