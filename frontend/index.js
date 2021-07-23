@@ -33,6 +33,7 @@ import {
     $sampleCodes,
     $stepInput,
     $hideBinary,
+    $reverseBinary,
     $breakpointSelect,
     $darkMode,
     $darkModeLabel,
@@ -363,6 +364,7 @@ export class App {
         const rows = $binaryRegister.querySelectorAll('tr');
         let i = 0;
         const hideBinary = $hideBinary.checked;
+        const reverseBinary = $reverseBinary.checked;
         for (const reg of this.machine.actionExecutor.bRegMap.values()) {
             const row = rows[i];
             if (row === undefined) {
@@ -377,6 +379,11 @@ export class App {
                 $prefix.textContent = '';
                 $head.textContent = '';
                 $suffix.textContent = '';
+            } else if (reverseBinary) {
+                const obj = reg.toObject();
+                $prefix.textContent = obj.suffix.slice().reverse().join('');
+                $head.textContent = obj.head.toString();
+                $suffix.textContent = obj.prefix.slice().reverse().join('');
             } else {
                 const obj = reg.toObject();
                 $prefix.textContent = obj.prefix.join('');
@@ -640,6 +647,16 @@ $hideBinary.addEventListener('change', () => {
 
 if (localStorage.getItem('hide_binary') === "true") {
     $hideBinary.checked = true;
+    app.renderBinary();
+}
+
+$reverseBinary.addEventListener('change', () => {
+    app.renderBinary();
+    localStorage.setItem('reverse_binary', $reverseBinary.checked.toString());
+});
+
+if (localStorage.getItem('reverse_binary') === "true") {
+    $reverseBinary.checked = true;
     app.renderBinary();
 }
 
