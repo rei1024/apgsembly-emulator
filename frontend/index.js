@@ -443,7 +443,7 @@ export class App {
             $statsBody.innerHTML = "";
             return;
         }
-        renderStats($statsBody, this.machine.stateStats, this.machine.states);
+        renderStats($statsBody, this.machine.stateStats, this.machine.states, this.machine.getCurrentStateIndex());
     }
 
     /**
