@@ -83,6 +83,11 @@ export class App {
         this.stepConfig = 1;
 
         this.frequencyManager = new Frequency(() => this.appState === "Running", () => this.frequency, n => this.run(n));
+
+        /**
+         * @type {undefined | NodeListOf<ChildNode>}
+         */
+        this.unaryRegisterItems = undefined;
     }
 
     /**
@@ -153,6 +158,8 @@ export class App {
         unaryTable.style.marginBottom = "0px";
         $unaryRegister.innerHTML = "";
         $unaryRegister.appendChild(unaryTable);
+
+        this.unaryRegisterItems = $unaryRegister.querySelectorAll('tr')[1]?.childNodes;
     }
 
     /**
@@ -328,12 +335,10 @@ export class App {
         if (this.machine === undefined) {
             return;
         }
-        const rows = $unaryRegister.querySelectorAll('tr');
-        const row = rows[1];
-        if (row === undefined) {
+        const items = this.unaryRegisterItems;
+        if (items === undefined) {
             return;
         }
-        const items = row.children;
         let i = 0;
         for (const reg of this.machine.actionExecutor.uRegMap.values()) {
             const item = items[i];
