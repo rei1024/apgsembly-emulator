@@ -417,10 +417,11 @@ export class App {
             $addSubMul.textContent = "";
             return;
         }
+        const actionExecutor = this.machine.actionExecutor;
         $addSubMul.textContent = `
-        ADD = ${this.machine.actionExecutor.add.toStringDetail()},
-        SUB = ${this.machine.actionExecutor.sub.toStringDetail()},
-        MUL = ${this.machine.actionExecutor.mul.toString()}
+        ADD = ${actionExecutor.add.toStringDetail()},
+        SUB = ${actionExecutor.sub.toStringDetail()},
+        MUL = ${actionExecutor.mul.toString()}
         `;
     }
 
