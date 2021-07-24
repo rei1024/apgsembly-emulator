@@ -722,28 +722,33 @@ $statsModal.addEventListener('shown.bs.modal', () => {
 // Enter: toggle Start and Stop
 // Space: Step
 document.addEventListener('keydown', e => {
-    const activeElementTagName = document.activeElement?.tagName ?? "";
+    const activeElementTagName = document.activeElement?.tagName.toUpperCase() ?? "";
     // 入力中は無し
     if (["TEXTAREA", "INPUT", "DETAILS", "BUTTON"].includes(activeElementTagName)) {
         return;
     }
 
-    if (e.code === "Enter") {
-        if (app.appState === "Running") {
-            app.stop();
-        } else if (app.appState === "Stop") {
-            app.start();
-        }
-    } else if (e.code === "Space") {
-        // ステップが無効化されていないときだけ
-        if (!$step.disabled) {
-            // スペースで下に移動することを防ぐ
-            e.preventDefault();
-            // 実行中の場合は停止する
+    switch (e.code) {
+        case "Enter": {
             if (app.appState === "Running") {
                 app.stop();
+            } else if (app.appState === "Stop") {
+                app.start();
             }
-            app.run(app.stepConfig);
+            break;
+        }
+        case "Space": {
+            // ステップが無効化されていないときだけ
+            if (!$step.disabled) {
+                // スペースで下に移動することを防ぐ
+                e.preventDefault();
+                // 実行中の場合は停止する
+                if (app.appState === "Running") {
+                    app.stop();
+                }
+                app.run(app.stepConfig);
+            }
+            break;
         }
     }
 });
