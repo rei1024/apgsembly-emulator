@@ -1,4 +1,5 @@
 {
+  "private": true,
   "name": "apgsembly-emulator-2",
   "version": "0.1.0",
   "description": "Emulator for APGsembly",
