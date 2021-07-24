@@ -9,7 +9,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "make test",
+    "test": "make t",
     "cypress:open": "cypress open"
   },
   "repository": {
