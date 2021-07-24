@@ -4,3 +4,5 @@ t:
 	deno test --no-check src/ apgc/ test/
 watch:
 	deno test --watch --no-check src/ apgc/ test/
+cy:
+	npm run cypress:open
