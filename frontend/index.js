@@ -4,6 +4,8 @@ import { Machine } from "../src/Machine.js";
 import { Program } from "../src/Program.js";
 import { Frequency } from "./util/frequency.js";
 import { setCustomError, removeCustomError } from "./util/validation_ui.js";
+import { makeSpinner } from "./util/spinner.js";
+import { importFileAsText } from "./util/import_file.js";
 
 import { renderB2D } from "./renderB2D.js";
 
@@ -43,7 +45,6 @@ import {
     $statsModal,
     $statsBody,
 } from "./bind.js";
-import { makeSpinner } from "./util/spinner.js";
 import { renderStats } from "./renderStats.js";
 
 // データ
@@ -170,7 +171,7 @@ export class App {
         $unaryRegister.innerHTML = "";
         $unaryRegister.appendChild(unaryTable);
 
-        this.unaryRegisterItems = $unaryRegister.querySelectorAll('tr')[1]?.childNodes;
+        this.unaryRegisterItems = unaryData.childNodes;
     }
 
     /**
@@ -643,18 +644,9 @@ $binaryRegisterDetail.addEventListener('toggle', () => {
 });
 
 // ファイルインポート
-$fileImport.addEventListener('input', (e) => {
-    const reader = new FileReader();
-    reader.onload = function (e) {
-        const result = e.target?.result;
-        if (typeof result !== "string") {
-            throw Error('import: internal error');
-        }
-        $input.value = result;
-        app.reset();
-    };
-    // @ts-ignore
-    reader.readAsText(e.target.files[0]);
+importFileAsText($fileImport, result => {
+    $input.value = result;
+    app.reset();
 });
 
 // ** Modal ** //
