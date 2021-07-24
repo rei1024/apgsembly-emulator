@@ -6,6 +6,7 @@ import { Frequency } from "./util/frequency.js";
 import { setCustomError, removeCustomError } from "./util/validation_ui.js";
 
 import { renderB2D } from "./renderB2D.js";
+
 import {
     $error,
     $input,
@@ -38,8 +39,11 @@ import {
     $darkMode,
     $darkModeLabel,
     $b2dHidePointer,
+    $statsModal,
+    $statsBody,
 } from "./bind.js";
 import { makeSpinner } from "./util/spinner.js";
+import { renderStats } from "./renderStats.js";
 
 // データ
 // GitHub Pagesは1階層上になる
@@ -357,6 +361,13 @@ export class App {
     }
 
     /**
+     * @returns {never}
+     */
+    __error__() {
+        throw Error('internal error');
+    }
+
+    /**
      * バイナリレジスタの表示
      */
     renderBinary() {
@@ -375,11 +386,11 @@ export class App {
             if (row === undefined) {
                 throw Error('renderBinary: internal error');
             }
-            const $prefix = row.querySelector('.prefix');
-            const $head = row.querySelector('.head');
-            const $suffix = row.querySelector('.suffix');
-            const $decimal = row.querySelector('.decimal');
-            const $pointer = row.querySelector('.pointer');
+            const $prefix = row.querySelector('.prefix') ?? this.__error__();
+            const $head = row.querySelector('.head') ?? this.__error__();
+            const $suffix = row.querySelector('.suffix') ?? this.__error__();
+            const $decimal = row.querySelector('.decimal') ?? this.__error__();
+            const $pointer = row.querySelector('.pointer') ?? this.__error__();
             if (hideBinary) {
                 $prefix.textContent = '';
                 $head.textContent = '';
@@ -406,10 +417,11 @@ export class App {
             $addSubMul.textContent = "";
             return;
         }
+        const actionExecutor = this.machine.actionExecutor;
         $addSubMul.textContent = `
-        ADD = ${this.machine.actionExecutor.add.toStringDetail()},
-        SUB = ${this.machine.actionExecutor.sub.toStringDetail()},
-        MUL = ${this.machine.actionExecutor.mul.toString()}
+        ADD = ${actionExecutor.add.toStringDetail()},
+        SUB = ${actionExecutor.sub.toStringDetail()},
+        MUL = ${actionExecutor.mul.toString()}
         `;
     }
 
@@ -420,6 +432,18 @@ export class App {
         } else {
             $output.value = "";
         }
+    }
+
+    renderStats() {
+        if (!$statsModal.classList.contains('show')) {
+            $statsBody.innerHTML = "";
+            return;
+        }
+        if (this.machine === undefined) {
+            $statsBody.innerHTML = "";
+            return;
+        }
+        renderStats($statsBody, this.machine.stateStats, this.machine.states, this.machine.getCurrentStateIndex());
     }
 
     /**
@@ -462,6 +486,7 @@ export class App {
         this.renderFrequencyOutput();
         // output
         this.renderOutput();
+        this.renderStats();
 
         $steps.textContent = this.steps.toString();
 
@@ -682,6 +707,11 @@ if (localStorage.getItem('dark_mode') === "on") {
 
 $b2dHidePointer.addEventListener('change', () => {
     app.renderB2D();
+});
+
+// showの場合クラスが追加されない
+$statsModal.addEventListener('shown.bs.modal', () => {
+    app.renderStats();
 });
 
 // キーボード入力

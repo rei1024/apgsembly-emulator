@@ -63,7 +63,12 @@ export class Machine {
          */
         this.currentStateIndex = this.stateMap.get(INITIAL_STATE) ?? (() => {
             throw Error('INITIAL state is not present');
-        })() ;
+        })();
+
+        /**
+         * @type {{ z: number, nz: number }[]}
+         */
+        this.stateStats = this.lookup.map(() => ({ z: 0, nz: 0 }));
 
         const regHeader = program.registersHeader;
         if (regHeader !== undefined) {
@@ -129,10 +134,11 @@ export class Machine {
     }
 
     /**
+     * @param {boolean} [logStats=false] 記録する
      * @throws
      * @returns {CompiledCommandWithNextState}
      */
-    getNextCompiledCommandWithNextState() {
+    getNextCompiledCommandWithNextState(logStats = false) {
         const compiledCommand = this.lookup[this.currentStateIndex];
 
         if (compiledCommand === undefined) {
@@ -140,11 +146,21 @@ export class Machine {
         }
 
         if (this.prevOutput === 0) {
+            if (logStats) {
+                const stat = this.stateStats[this.currentStateIndex];
+                if (stat === undefined) { throw Error('Internal error'); }
+                stat.z += 1;
+            }
             const z = compiledCommand.z;
             if (z !== undefined) {
                 return z;
             }
         } else {
+            if (logStats) {
+                const stat = this.stateStats[this.currentStateIndex];
+                if (stat === undefined) { throw Error('Internal error'); }
+                stat.nz += 1;
+            }
             const nz = compiledCommand.nz;
             if (nz !== undefined) {
                 return nz;
@@ -161,7 +177,7 @@ export class Machine {
      * @throws
      */
     execCommand() {
-        const compiledCommand = this.getNextCompiledCommandWithNextState();
+        const compiledCommand = this.getNextCompiledCommandWithNextState(true);
 
         const command = compiledCommand.command;
 
