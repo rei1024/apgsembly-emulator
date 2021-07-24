@@ -26,7 +26,7 @@
         </div>
         <div class="mb-3">
             <label for="input" class="form-label">Input</label>
-            <textarea class="form-control" name="" id="input" cols="50" rows="8"></textarea>
+            <textarea class="code-mono form-control" name="" id="input" cols="50" rows="8"></textarea>
         </div>
         <div class="btn-group" role="group" aria-label="Control">
             <!-- 読み込まれるまではdisabled -->
@@ -77,6 +77,11 @@
                 body[apge_dark_mode=on] #steps {
                     color: var(--dark-mode-color);
                 }
+                .code-mono {
+                    font-family: var(--bs-font-monospace);
+                    font-size: .875em;
+                    word-wrap: break-word;
+                }
             </style>
             <table class="table" id="state">
                 <tbody>
@@ -86,8 +91,8 @@
                         <th>Steps</th>
                     </tr>
                     <tr class="pb-0">
-                        <td id="current_state">INITIAL</td>
-                        <td id="previous_output">Z</td>
+                        <td class="code-mono" id="current_state">INITIAL</td>
+                        <td class="code-mono" id="previous_output">Z</td>
                         <td><code id="steps"></code></td>
                     </tr>
                 </tbody>
@@ -101,7 +106,7 @@
                 <summary>
                     Output
                 </summary>
-                <textarea class="form-control" name="" id="output" cols="50" rows="3"></textarea>
+                <textarea class="code-mono form-control" name="" id="output" cols="50" rows="3"></textarea>
             </details>
         </div>
         <div class="mb-2">
