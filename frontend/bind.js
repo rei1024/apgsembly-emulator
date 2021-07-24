@@ -103,6 +103,8 @@ export const $darkModeLabel = $darkMode.parentElement?.querySelector('label') ??
 
 export const $b2dHidePointer = $type('#b2d_hide_pointer', HTMLInputElement);
 
+export const $b2dFlipUpsideDown = $type('#b2d_flip_upside_down', HTMLInputElement);
+
 // Stats Modal
 
 export const $statsModal = $type('#stats_modal', HTMLElement);

@@ -39,6 +39,7 @@ import {
     $darkMode,
     $darkModeLabel,
     $b2dHidePointer,
+    $b2dFlipUpsideDown,
     $statsModal,
     $statsBody,
 } from "./bind.js";
@@ -333,7 +334,7 @@ export class App {
             return;
         }
         const b2d = machine.actionExecutor.b2d;
-        renderB2D(context, b2d, $b2dHidePointer.checked);
+        renderB2D(context, b2d, $b2dHidePointer.checked, $b2dFlipUpsideDown.checked);
         $b2dx.textContent = b2d.x.toString();
         $b2dy.textContent = b2d.y.toString();
     }
@@ -708,6 +709,16 @@ if (localStorage.getItem('dark_mode') === "on") {
 $b2dHidePointer.addEventListener('change', () => {
     app.renderB2D();
 });
+
+$b2dFlipUpsideDown.addEventListener('change', () => {
+    localStorage.setItem('b2d_flip_upside_down', $b2dFlipUpsideDown.checked.toString());
+    app.renderB2D();
+});
+
+if (localStorage.getItem('b2d_flip_upside_down') === "true") {
+    $b2dFlipUpsideDown.checked = true;
+    app.renderB2D();
+}
 
 // showの場合クラスが追加されない
 $statsModal.addEventListener('shown.bs.modal', () => {
