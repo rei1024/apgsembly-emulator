@@ -1,4 +1,5 @@
-import { Machine } from "../src/Machine.js"
+/* eslint-disable camelcase */
+import { Machine } from "../src/Machine.js";
 import { Program } from "../src/Program.js";
 import { program9_1, program9_2, program9_3, program9_4 } from "./Program_test.js";
 import { piCalculator } from "./pi_calculator.js";
@@ -279,15 +280,10 @@ Deno.test('Machine PI Calculator', () => {
     // console.log(machine);
     // console.log(machine.actionExecutor);
     for (let i = 0; i < 250000; i++) {
-        try {
-            const res = machine.execCommand();
-            if (res === -1) {
-                break;
-            }
-        } catch (e) {
-            throw e;
+        const res = machine.execCommand();
+        if (res === -1) {
+            break;
         }
-
     }
     // console.log(machine.actionExecutor);
     assertEquals(machine.actionExecutor.output.getString(), "3.14");

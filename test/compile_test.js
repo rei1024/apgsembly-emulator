@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { commandsToLookupTable } from "../src/compile.js";
 import { Program } from "../src/Program.js";
 import { assertEquals } from "./deps.js";

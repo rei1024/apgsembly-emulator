@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { ProgramLines } from '../src/ProgramLines.js';
 import { assertEquals } from "./deps.js";
 import { program9_1, program9_2 } from './Program_test.js';

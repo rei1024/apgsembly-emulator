@@ -1,5 +1,5 @@
 import { SubAction } from "../../src/actions/SubAction.js";
-import { SUB } from "../../src/components/SUB.js"
+import { SUB } from "../../src/components/SUB.js";
 import { assertEquals } from "../deps.js";
 
 Deno.test('SUB a1', () => {
