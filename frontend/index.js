@@ -1,5 +1,8 @@
 // @ts-check
 
+// critical path 
+import {} from "./util/selector.js";
+
 import { Machine } from "../src/Machine.js";
 import { Program } from "../src/Program.js";
 import { Frequency } from "./util/frequency.js";
