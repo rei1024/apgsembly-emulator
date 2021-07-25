@@ -109,9 +109,7 @@ output(2, 3);
                 new APGCExpressionStatement(
                     new FunctionCallExpression(
                         'output',
-                        [
-                            new NumberExpression(1)
-                        ]
+                        [new NumberExpression(1)]
                     )
                 ),
                 new APGCExpressionStatement(
@@ -139,9 +137,7 @@ output(1); // abc
                 new APGCExpressionStatement(
                     new FunctionCallExpression(
                         'output',
-                        [
-                            new NumberExpression(1)
-                        ]
+                        [new NumberExpression(1)]
                     )
                 )
             ]
