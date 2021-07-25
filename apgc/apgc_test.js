@@ -1,14 +1,5 @@
-import { assertEquals } from "../test/deps.js";
+import { assertEquals, test } from "../test/deps.js";
 import { main } from "./apgc.js";
-
-/**
- * 
- * @param {string} name 
- * @param {() => void} fn 
- */
-function test(name, fn) {
-    Deno.test(name, fn);
-}
 
 test('apgc main output("1");', () => {
     assertEquals(main(`output("1");`), 

@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import { Program } from '../src/Program.js';
-import { assertEquals } from "./deps.js";
+import { assertEquals, test } from "./deps.js";
 
 export const program9_1 = `
 INITIAL; ZZ; ID1; TDEC U0
@@ -59,7 +59,7 @@ LSB2; Z; LSB2; HALT_OUT
 LSB2; NZ; LSB2; TDEC B0
 `;
 
-Deno.test('Program empty', () => {
+test('Program empty', () => {
     const program = Program.parse('');
     if (program instanceof Program) {
         throw Error('expected parse error');
@@ -68,7 +68,7 @@ Deno.test('Program empty', () => {
     }
 });
 
-Deno.test('Program multiple $REGISTERS', () => {
+test('Program multiple $REGISTERS', () => {
     const program = Program.parse(`
 #COMPONENTS U0-1,HALT_OUT
 #REGISTERS {"U0":7, "U1":5}
@@ -81,7 +81,7 @@ INITIAL; ZZ; ID1; TDEC U0`);
     }
 });
 
-Deno.test('Program multiple $COMPONENTS', () => {
+test('Program multiple $COMPONENTS', () => {
     const program = Program.parse(`
 #COMPONENTS U0-1,HALT_OUT
 #COMPONENTS U0-1,HALT_OUT
@@ -94,7 +94,7 @@ INITIAL; ZZ; ID1; TDEC U0`);
     }
 });
 
-Deno.test('Program duplicated actions', () => {
+test('Program duplicated actions', () => {
     const program = Program.parse(`
     INITIAL; ZZ; A0; NOP, NOP
     A0; *; A0; NOP`);
@@ -105,7 +105,7 @@ Deno.test('Program duplicated actions', () => {
     }
 });
 
-Deno.test('Program pretty program9_1', () => {
+test('Program pretty program9_1', () => {
     const program = Program.parse(program9_1);
     if (program instanceof Program) {
         assertEquals(program.pretty().trim(), program9_1.trim());
@@ -114,7 +114,7 @@ Deno.test('Program pretty program9_1', () => {
     }
 });
 
-Deno.test('Program pretty inverse', () => {
+test('Program pretty inverse', () => {
     const str = `
 #COMPONENTS U0-1,HALT_OUT
 #REGISTERS {"U0":7, "U1":5}
@@ -128,7 +128,7 @@ INITIAL; ZZ; ID1; TDEC U0
     }
 });
 
-Deno.test('Program parse 9.1', () => {
+test('Program parse 9.1', () => {
     // p252 APGsembly 9.1
     const str = program9_1;
     const program = Program.parse(str);
@@ -142,7 +142,7 @@ Deno.test('Program parse 9.1', () => {
     }
 });
 
-Deno.test('Program parse 9.2', () => {
+test('Program parse 9.2', () => {
     // p252 APGsembly 9.2
     const str = program9_2;
     const program = Program.parse(str);

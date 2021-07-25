@@ -2,9 +2,9 @@ import { NopAction } from "../src/actions/NopAction.js";
 import { OutputAction } from "../src/actions/OutputAction.js";
 import { Command } from "../src/Command.js";
 import { validateNoDuplicatedAction } from "../src/validate.js";
-import { assertEquals } from "./deps.js";
+import { assertEquals, test } from "./deps.js";
 
-Deno.test('validateNoDuplicatedAction NOP NOP', () => {
+test('validateNoDuplicatedAction NOP NOP', () => {
     const err = validateNoDuplicatedAction([new Command({
         state: "INITIAL",
         input: "ZZ",
@@ -18,7 +18,7 @@ Deno.test('validateNoDuplicatedAction NOP NOP', () => {
     }
 });
 
-Deno.test('validateNoDuplicatedAction NOP, OUTPUT 1, NOP', () => {
+test('validateNoDuplicatedAction NOP, OUTPUT 1, NOP', () => {
     const err = validateNoDuplicatedAction([new Command({
         state: "INITIAL",
         input: "ZZ",
