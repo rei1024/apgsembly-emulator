@@ -3,6 +3,24 @@
 import { BRegAction, B_INC, B_TDEC, B_SET, B_READ } from "../actions/BRegAction.js";
 
 /**
+ * バイナリの文字列を0と1の配列に変換する
+ * @param {string} str '01011101'
+ * @returns {(0 | 1)[]}
+ * @throws
+ */
+ function parseBits(str) {
+    return [...str].map(c => {
+        if (c === '0') {
+            return 0;
+        } else if (c === '1') {
+            return 1;
+        } else {
+            throw Error(`Invalid #REGISTERS: "${str}"`);
+        }
+    });
+}
+
+/**
  * Bn: Binary Register
  */
 export class BReg {
@@ -150,5 +168,35 @@ export class BReg {
             head: this.bits[this.pointer] ?? this.error(),
             suffix: this.bits.slice(this.pointer + 1),
         };
+    }
+
+    /**
+     * 
+     * @param {string} key 
+     * @param {unknown} value 
+     */
+    setByRegistersInit(key, value) {
+        const debugStr = `"${key}": ${JSON.stringify(value)}`;
+        // 数字の場合の処理は数字をバイナリにして配置する
+        if (typeof value === 'number') {
+            this.setBits(parseBits(value.toString(2)).reverse());
+            this.extend();
+        } else if (!Array.isArray(value)) {
+            throw Error(`Invalid #REGISTERS ${debugStr}`);
+        } else if (value.length !== 2) {
+            throw Error(`Invalid #REGISTERS ${debugStr}`);
+        } else {
+            /** @type {unknown} */
+            const value0 = value[0];
+            /** @type {unknown} */
+            const value1 = value[1];
+            if (typeof value0 !== 'number' || typeof value1 !== 'string') {
+                throw Error(`Invalid #REGISTERS ${debugStr}`);
+            } else {
+                this.pointer = value0;
+                this.setBits(parseBits(value1));
+                this.extend();
+            }
+        }
     }
 }
