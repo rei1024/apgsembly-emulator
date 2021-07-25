@@ -1,4 +1,4 @@
-import { AddAction } from "../../src/actions/AddAction.js"
+import { AddAction } from "../../src/actions/AddAction.js";
 import { assertEquals } from "../deps.js";
 
 Deno.test('ADD parse ADD B0', () => {

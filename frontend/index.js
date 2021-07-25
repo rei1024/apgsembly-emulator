@@ -162,7 +162,7 @@ export class App {
         const unaryTable = document.createElement('table');
         unaryTable.appendChild(unaryHeader);
         unaryTable.appendChild(unaryData);
-        unaryTable.classList.add('table')
+        unaryTable.classList.add('table');
 
         // 幅を均等にする
         unaryTable.style.tableLayout = "fixed";
@@ -629,7 +629,7 @@ $frequencyInput.min = "0";
 $frequencyInput.max = (frequencyArray.length - 1).toString();
 
 $frequencyInput.addEventListener('input', () => {
-    const value = parseInt($frequencyInput.value);
+    const value = parseInt($frequencyInput.value, 10);
     app.frequency = frequencyArray[value] ?? DEFUALT_FREQUENCY;
     app.renderFrequencyOutput();
 });
@@ -652,7 +652,7 @@ importFileAsText($fileImport, result => {
 // ** Modal ** //
 
 $stepInput.addEventListener('input', () => {
-    const n = Number($stepInput.value)
+    const n = Number($stepInput.value);
     if (isNaN(n) || n <= 0 || !Number.isInteger(n)) {
         setCustomError($stepInput, 'Enter a positive integer');
         app.stepConfig = 1;

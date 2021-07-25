@@ -1,4 +1,4 @@
-import { B2DAction } from "../../src/actions/B2DAction.js"
+import { B2DAction } from "../../src/actions/B2DAction.js";
 import { assertEquals } from "../deps.js";
 
 Deno.test('B2DAction pretty', () => {

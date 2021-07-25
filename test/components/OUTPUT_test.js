@@ -1,5 +1,5 @@
 import { OutputAction } from "../../src/actions/OutputAction.js";
-import { OUTPUT } from "../../src/components/OUTPUT.js"
+import { OUTPUT } from "../../src/components/OUTPUT.js";
 import { assertEquals } from "../deps.js";
 
 Deno.test('OUTPUT initial', () => {
@@ -16,7 +16,7 @@ Deno.test('OUTPUT output', () => {
 Deno.test('OUTPUT output twice', () => {
     const x = new OUTPUT();
     x.output('3');
-    x.output('4')
+    x.output('4');
     assertEquals(x.getString(), "34");
 });
 

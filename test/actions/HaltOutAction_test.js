@@ -1,4 +1,4 @@
-import { HaltOutAction } from "../../src/actions/HaltOutAction.js"
+import { HaltOutAction } from "../../src/actions/HaltOutAction.js";
 import { assertEquals } from "../deps.js";
 
 Deno.test('parse HALT_OUT', () => {

@@ -12,7 +12,7 @@ export function renderStats($statsBody, stateStats, states, currentIndex) {
         const name = states[i] ?? "";
         const $tr = document.createElement('tr');
         if (currentIndex === i) {
-            $tr.style.backgroundColor = '#e1f5fe'
+            $tr.style.backgroundColor = '#e1f5fe';
         }
         const $name = document.createElement('td');
         if (true) {

@@ -1,4 +1,4 @@
-import { BRegAction, B_INC, B_TDEC, B_READ, B_SET } from "../../src/actions/BRegAction.js"
+import { BRegAction, B_INC, B_TDEC, B_READ, B_SET } from "../../src/actions/BRegAction.js";
 import { assertEquals } from "../deps.js";
 
 Deno.test("BRegAction parse success", () => {

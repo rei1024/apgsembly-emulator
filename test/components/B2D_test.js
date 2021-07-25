@@ -1,5 +1,5 @@
 import { B2DAction } from "../../src/actions/B2DAction.js";
-import { B2D } from "../../src/components/B2D.js"
+import { B2D } from "../../src/components/B2D.js";
 import { assertEquals, assertThrows } from "../deps.js";
 
 Deno.test("B2D read initial", () => {
@@ -104,7 +104,7 @@ Deno.test("B2D set Error", () => {
     x.set();
     assertThrows(() => {
         x.set();
-    })
+    });
 });
 
 Deno.test("B2D toString", () => {

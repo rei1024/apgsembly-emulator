@@ -18,10 +18,8 @@ Deno.test('Command parse', () => {
 Deno.test('Command parse empty line', () => {
     const str = ``;
     const res = Command.parse(str);
-    if (res instanceof EmptyLine) {
-        
-    } else {
-        throw Error('parse error ' + str);
+    if (!(res instanceof EmptyLine)) {
+        throw Error('parse error ' + str);        
     }
 });
 
@@ -51,10 +49,8 @@ Deno.test('Command parse unknown action', () => {
 Deno.test('Command parse empty action', () => {
     const str = `INITIAL; ZZ; DIR0;`;
     const res = Command.parse(str);
-    if (typeof res === "string") {
-        
-    } else {
-        throw Error('expect parse error ' + str);
+    if (typeof res !== "string") {
+        throw Error('expect parse error ' + str);        
     }
 });
 

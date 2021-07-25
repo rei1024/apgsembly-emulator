@@ -1,5 +1,5 @@
 import { MulAction } from "../../src/actions/MulAction.js";
-import { MUL } from "../../src/components/MUL.js"
+import { MUL } from "../../src/components/MUL.js";
 import { assertEquals } from "../deps.js";
 
 Deno.test('MUL 0', () => {

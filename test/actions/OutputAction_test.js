@@ -1,4 +1,4 @@
-import { OutputAction } from "../../src/actions/OutputAction.js"
+import { OutputAction } from "../../src/actions/OutputAction.js";
 import { assertEquals } from "../deps.js";
 
 Deno.test('OutputAction parse OUTPUT 0', () => {

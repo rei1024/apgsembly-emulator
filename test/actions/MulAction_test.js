@@ -1,4 +1,4 @@
-import { MulAction } from "../../src/actions/MulAction.js"
+import { MulAction } from "../../src/actions/MulAction.js";
 import { assertEquals } from "../deps.js";
 
 Deno.test('parse MUL 0', () => {

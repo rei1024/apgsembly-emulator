@@ -111,7 +111,7 @@ test('apgcProgramParser', () => {
     const str = `
 output(1);
 output(2, 3);    
-`
+`;
     assertEquals(apgcProgramParser(str), new APGCProgram(
         new APGCStatements(
             [
@@ -134,7 +134,7 @@ output(2, 3);
                 )
             ]
         )
-    ))
+    ));
 });
 
 test('apgcProgramParser comment', () => {
@@ -155,7 +155,7 @@ output(1); // abc
                 )
             ]
         )
-    ))
+    ));
 });
 
 test('apgcProgramParser if_zero', () => {
@@ -165,7 +165,7 @@ if_zero(tdec_u(0) ) {
 } else {
     output(2);  
 }
-`
+`;
     assertEquals(apgcProgramParser(str), new APGCProgram(
         new APGCStatements(
             [
@@ -189,7 +189,7 @@ if_zero(tdec_u(0) ) {
                 )
             ]
         )
-    ))
+    ));
 });
 
 test('apgcProgramParser if_zero empty else', () => {
@@ -197,7 +197,7 @@ test('apgcProgramParser if_zero empty else', () => {
 if_zero(tdec_u(0)) {
     output(1);
 }
-`
+`;
     assertEquals(apgcProgramParser(str), new APGCProgram(
         new APGCStatements(
             [
@@ -217,7 +217,7 @@ if_zero(tdec_u(0)) {
                 )
             ]
         )
-    ))
+    ));
 });
 
 test('apgcProgramParser while_non_zero', () => {
@@ -225,7 +225,7 @@ test('apgcProgramParser while_non_zero', () => {
 while_non_zero(tdec_u(0)) {
     output(1);
 }
-`
+`;
     assertEquals(apgcProgramParser(str), new APGCProgram(
         new APGCStatements(
             [
@@ -242,7 +242,7 @@ while_non_zero(tdec_u(0)) {
                 )
             ]
         )
-    ))
+    ));
 });
 
 test('apgcProgramParser while_zero', () => {
@@ -250,7 +250,7 @@ test('apgcProgramParser while_zero', () => {
 while_zero(tdec_u(0)) {
     output(1);
 }
-`
+`;
     assertEquals(apgcProgramParser(str), new APGCProgram(
         new APGCStatements(
             [
@@ -267,5 +267,5 @@ while_zero(tdec_u(0)) {
                 )
             ]
         )
-    ))
+    ));
 });

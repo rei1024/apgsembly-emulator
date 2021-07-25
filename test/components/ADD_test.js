@@ -1,5 +1,5 @@
 import { AddAction, ADD_A1 } from "../../src/actions/AddAction.js";
-import { ADD, addLookupA1, addLookupB0, addLookupB1 } from "../../src/components/ADD.js"
+import { ADD, addLookupA1, addLookupB0, addLookupB1 } from "../../src/components/ADD.js";
 import { assertEquals } from "../deps.js";
 
 Deno.test('ADD table', () => {

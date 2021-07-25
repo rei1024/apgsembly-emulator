@@ -1,5 +1,5 @@
 import { URegAction } from "../../src/actions/URegAction.js";
-import { UReg } from "../../src/components/UReg.js"
+import { UReg } from "../../src/components/UReg.js";
 import { assertEquals } from "../deps.js";
 
 Deno.test("UReg tdec", () => {

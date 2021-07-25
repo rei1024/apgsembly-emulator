@@ -1,4 +1,4 @@
-import { URegAction, U_INC, U_TDEC } from "../../src/actions/URegAction.js"
+import { URegAction, U_INC, U_TDEC } from "../../src/actions/URegAction.js";
 import { assertEquals } from "../deps.js";
 
 Deno.test("URegAction parse", () => {
@@ -11,7 +11,7 @@ Deno.test("URegAction parse", () => {
 
     assertEquals(URegAction.parse("TDEC U0"), new URegAction(U_TDEC, 0));
 
-    assertEquals(URegAction.parse("TDEC U5"),new URegAction(U_TDEC, 5));
+    assertEquals(URegAction.parse("TDEC U5"), new URegAction(U_TDEC, 5));
 
     assertEquals(URegAction.parse("TDEC U12"), new URegAction(U_TDEC, 12));
 });

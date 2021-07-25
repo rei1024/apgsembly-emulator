@@ -73,7 +73,7 @@ export class Machine {
         const regHeader = program.registersHeader;
         if (regHeader !== undefined) {
             /** @type {string} */
-            const str = regHeader.content
+            const str = regHeader.content;
 
             /** @type {import("./ActionExecutor.js").RegistersInit} */
             let parsed = {};
@@ -85,11 +85,9 @@ export class Machine {
             if (parsed === null || typeof parsed !== 'object') {
                 throw Error(`Invalid #REGISTERS: "${str}" is not an object`);
             }
-            try {
-                this.actionExecutor.setByRegistersInit(parsed);
-            } catch (e) {
-               throw e;
-            }
+            
+            // throw if error is occurred
+            this.actionExecutor.setByRegistersInit(parsed);
         }
     }
 
@@ -118,7 +116,7 @@ export class Machine {
      * @returns {Map<string, number>}
      */
     getStateMap() {
-        return this.stateMap
+        return this.stateMap;
     }
 
     /**

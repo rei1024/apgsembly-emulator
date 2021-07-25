@@ -1,4 +1,4 @@
-import { NopAction } from "../../src/actions/NopAction.js"
+import { NopAction } from "../../src/actions/NopAction.js";
 import { assertEquals } from "../deps.js";
 
 Deno.test('parse NOP', () => {

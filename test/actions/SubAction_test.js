@@ -1,4 +1,4 @@
-import { SubAction } from "../../src/actions/SubAction.js"
+import { SubAction } from "../../src/actions/SubAction.js";
 import { assertEquals } from "../deps.js";
 
 Deno.test('SubAction parse SUB A1', () => {
