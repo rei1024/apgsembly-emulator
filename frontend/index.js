@@ -44,6 +44,7 @@ import {
     $b2dFlipUpsideDown,
     $statsModal,
     $statsBody,
+    $samples,
 } from "./bind.js";
 import { renderStats } from "./renderStats.js";
 
@@ -604,11 +605,14 @@ $sampleCodes.forEach(e => {
     }
     const SRC = 'src';
     e.addEventListener('click', () => {
+        $samples.disabled = true;
         fetch(DATA_DIR + e.dataset[SRC]).then(res => res.text()).then(text => {
             $input.value = text;
             app.reset();
         }).catch(() => {
             console.log('Fetch Error: ' + e.dataset[SRC]);
+        }).finally(() => {
+            $samples.disabled = false;
         });
     });
 });

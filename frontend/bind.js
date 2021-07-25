@@ -76,6 +76,8 @@ export const $addSubMul = $type('#add_sub_mul', HTMLElement);
 // ファイルインポート
 export const $fileImport = $type('#import_file', HTMLInputElement);
 
+export const $samples =  $type('#samples', HTMLButtonElement);
+
 // サンプルコード
 export const $sampleCodes = document.querySelectorAll('.js_sample');
 
