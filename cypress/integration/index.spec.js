@@ -1,3 +1,5 @@
+export {};
+
 const apgsemblyEmulatorPageURL = 'http://localhost:1123/';
 
 describe('Load', () => {
@@ -31,12 +33,14 @@ function loadProgram(str) {
  */
 function setStep(n) {
     cy.contains('Config').click();
-    cy.wait(100);
+    cy.wait(500);
     cy.get('#step_input').type(`{selectall}{backspace}${n}`);
     cy.wait(100);
     cy.get('#config_modal .btn-close').click();
     cy.wait(100);
 }
+
+const outputSelector = '#output';
 
 describe('Integers', () => {
     it('should print integers', () => {
@@ -46,7 +50,7 @@ describe('Integers', () => {
 
         setStep(1050);
         cy.get('#step').click();
-        cy.get('#output').should('have.value', '1.2.3.4.5.6.7.8.9.10');
+        cy.get(outputSelector).should('have.value', '1.2.3.4.5.6.7.8.9.10');
 
         cy.get('#steps').should('have.text', '1050');
     });
@@ -65,7 +69,7 @@ describe('Pi calculator', () => {
 
         setStep(1000000);
         cy.get('#step').click();
-        cy.get('#output').should('have.value', '3.141');
+        cy.get(outputSelector).should('have.value', '3.141');
 
         cy.get('#steps').should('have.text', '1000000');
     });
@@ -81,5 +85,21 @@ describe('Rule 110', () => {
         cy.get('#step').click();
 
         cy.get('#steps').should('have.text', '1000');
+    });
+});
+
+describe('Start Stop Reset', () => {
+    it('Start, Stop and Reset button', () => {
+        cy.visit(apgsemblyEmulatorPageURL);
+        cy.contains('APGsembly');
+        loadProgram('rule110.apg');
+        cy.get('#start').click();
+        cy.wait(1000);
+        cy.get('#stop').click();
+        cy.get('#steps').should('not.have.text', '0');
+
+        cy.get('#reset').click();
+
+        cy.get('#steps').should('have.text', '0');
     });
 });
