@@ -32,7 +32,7 @@ function loadProgram(str) {
  * @param {number} n 
  */
 function setStep(n) {
-    cy.contains('Config').click();
+    cy.get(`[data-test="config_button"]`).click();
     cy.wait(500);
     cy.get('#step_input').type(`{selectall}{backspace}${n}`);
     cy.wait(100);

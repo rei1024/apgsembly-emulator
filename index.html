@@ -36,13 +36,13 @@
             <label for="input" class="form-label">Input</label>
             <textarea class="code-mono form-control" name="" id="input" cols="50" rows="8"></textarea>
         </div>
-        <div class="btn-group" role="group" aria-label="Control">
+        <div data-test="control_buttons" class="btn-group" role="group" aria-label="Control">
             <!-- 読み込まれるまではdisabled -->
             <button id="reset" type="button" class="btn btn-primary" disabled>Reset</button>
             <button id="start" type="button" class="btn btn-primary" disabled>Start</button>
             <button id="stop" type="button" class="btn btn-primary" disabled>Stop</button>
             <button id="step" type="button" class="btn btn-primary" disabled>Step</button>
-            <button type="button" class="btn btn-primary"
+            <button data-test="config_button" type="button" class="btn btn-primary"
                 data-bs-toggle="modal" data-bs-target="#config_modal">
                 Config
             </button>
