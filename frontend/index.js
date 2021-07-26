@@ -3,14 +3,16 @@
 // critical path 
 import {} from "./util/selector.js";
 
-import { Machine } from "../src/Machine.js";
-import { Program } from "../src/Program.js";
-import { Frequency } from "./util/frequency.js";
 import { setCustomError, removeCustomError } from "./util/validation_ui.js";
 import { makeSpinner } from "./util/spinner.js";
 import { importFileAsText } from "./util/import_file.js";
 
+import { Machine } from "../src/Machine.js";
+import { Program } from "../src/Program.js";
+import { Frequency } from "./util/frequency.js";
+
 import { renderB2D } from "./renderB2D.js";
+import { renderStats } from "./renderStats.js";
 
 import {
     $error,
@@ -49,7 +51,6 @@ import {
     $statsBody,
     $samples,
 } from "./bind.js";
-import { renderStats } from "./renderStats.js";
 
 // データ
 // GitHub Pagesは1階層上になる
@@ -676,20 +677,10 @@ $hideBinary.addEventListener('change', () => {
     localStorage.setItem('hide_binary', $hideBinary.checked.toString());
 });
 
-if (localStorage.getItem('hide_binary') === "true") {
-    $hideBinary.checked = true;
-    app.renderBinary();
-}
-
 $reverseBinary.addEventListener('change', () => {
     app.renderBinary();
     localStorage.setItem('reverse_binary', $reverseBinary.checked.toString());
 });
-
-if (localStorage.getItem('reverse_binary') === "true") {
-    $reverseBinary.checked = true;
-    app.renderBinary();
-}
 
 // ダークモード
 $darkMode.addEventListener('change', () => {
@@ -700,12 +691,6 @@ $darkMode.addEventListener('change', () => {
     $darkModeLabel.textContent = $darkMode.checked ? "On" : "Off";
 });
 
-if (localStorage.getItem('dark_mode') === "on") {
-    document.body.setAttribute('apge_dark_mode', "on");
-    $darkMode.checked = true;
-    $darkModeLabel.textContent = "On";
-}
-
 $b2dHidePointer.addEventListener('change', () => {
     app.renderB2D();
 });
@@ -714,11 +699,6 @@ $b2dFlipUpsideDown.addEventListener('change', () => {
     localStorage.setItem('b2d_flip_upside_down', $b2dFlipUpsideDown.checked.toString());
     app.renderB2D();
 });
-
-if (localStorage.getItem('b2d_flip_upside_down') === "true") {
-    $b2dFlipUpsideDown.checked = true;
-    app.renderB2D();
-}
 
 // showの場合クラスが追加されない
 $statsModal.addEventListener('shown.bs.modal', () => {
@@ -738,10 +718,9 @@ document.addEventListener('keydown', e => {
 
     switch (e.code) {
         case "Enter": {
-            if (app.appState === "Running") {
-                app.stop();
-            } else if (app.appState === "Stop") {
-                app.start();
+            switch (app.appState) {
+                case "Running": return app.stop();
+                case "Stop": return app.start();
             }
             break;
         }
@@ -761,13 +740,31 @@ document.addEventListener('keydown', e => {
     }
 });
 
+// 実行時間が掛かる処理をまとめる
+if (localStorage.getItem('dark_mode') === "on") {
+    document.body.setAttribute('apge_dark_mode', "on");
+    $darkMode.checked = true;
+    $darkModeLabel.textContent = "On";
+}
+
+if (localStorage.getItem('b2d_flip_upside_down') === "true") {
+    $b2dFlipUpsideDown.checked = true;
+}
+
+if (localStorage.getItem('reverse_binary') === "true") {
+    $reverseBinary.checked = true;
+}
+
+if (localStorage.getItem('hide_binary') === "true") {
+    $hideBinary.checked = true;
+}
+
 // 初回描画
 // first render
 try {
     app.render();
+    app.frequencyManager.start();
 } catch (e) {
     console.error('first render failed');
     console.log(e);
 }
-
-app.frequencyManager.start();

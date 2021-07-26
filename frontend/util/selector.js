@@ -1,22 +1,6 @@
 // @ts-check
 
 /**
- * @type {(selector: string) => Element}
- * @throws {Error}
- */
- export function $(selector) {
-    if (typeof selector === 'undefined') {
-        throw TypeError('selector is not a string');
-    }
-    const el = document.querySelector(selector);
-
-    if (el == null) {
-        throw Error(`can't found a element for "${selector}"`);
-    }
-    return el;
-}
-
-/**
  * @type {<T extends Element>(selector: string, klass: new () => T) => T}
  * @throws {Error}
  */
