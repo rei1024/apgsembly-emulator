@@ -140,10 +140,10 @@ export class ActionExecutor {
             return this.bRegMap.get(action.regNumber)?.action(action);
         } else if (action instanceof URegAction) {
             return this.uRegMap.get(action.regNumber)?.action(action);
+        } else if (action instanceof NopAction) {
+            return this.nop.action();
         } else if (action instanceof B2DAction) {
             return this.b2d.action(action);
-        } else if (action instanceof NopAction) {
-            return this.nop.action(action);
         } else if (action instanceof AddAction) {
             return this.add.action(action);
         } else if (action instanceof MulAction) {

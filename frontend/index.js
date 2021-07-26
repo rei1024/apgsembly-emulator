@@ -63,6 +63,8 @@ const DATA_DIR = location.origin.includes('github') ? "../apgsembly-emulator-2/d
 // index.htmlと同期する
 const DEFUALT_FREQUENCY = 30;
 
+const hasToLocaleString = typeof (42).toLocaleString === 'function';
+
 /**
  * APGsembly 2.0 Emulator frontend application
  */
@@ -296,11 +298,11 @@ export class App {
      * 周波数の表示
      */
     renderFrequencyOutput() {
-        if (typeof app.frequency.toLocaleString === "function") {
+        if (hasToLocaleString) {
             // with ","
-            $freqencyOutput.textContent = app.frequency.toLocaleString() + "Hz";
+            $freqencyOutput.textContent = this.frequency.toLocaleString() + "Hz";
         } else {
-            $freqencyOutput.textContent = app.frequency.toString() + "Hz";
+            $freqencyOutput.textContent = this.frequency.toString() + "Hz";
         }
     }
 

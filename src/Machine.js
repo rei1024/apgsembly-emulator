@@ -66,6 +66,13 @@ export class Machine {
         })();
 
         /**
+         * @type {number}
+         * @readonly
+         * @private
+         */
+        this.initialIndex = this.currentStateIndex;
+
+        /**
          * 統計
          * @type {{ z: number, nz: number }[]}
          */
@@ -178,13 +185,11 @@ export class Machine {
     execCommand() {
         const compiledCommand = this.getNextCompiledCommandWithNextState(true);
 
-        const command = compiledCommand.command;
-
         /** @type {0 | 1 | undefined} */
         let result = undefined;
 
         const actionExecutor = this.actionExecutor;
-        for (const action of command.actions) {
+        for (const action of compiledCommand.command.actions) {
             const actionResult = actionExecutor.execAction(action);
             if (actionResult === -1) {
                 return -1;
@@ -193,19 +198,20 @@ export class Machine {
                 if (result === undefined) {
                     result = actionResult;
                 } else {
-                    throw Error(`Return value twice: line = ${command.pretty()}`);
+                    throw Error(`Return value twice: line = ${compiledCommand.command.pretty()}`);
                 }
             }
         }
         if (result === undefined) {
-            throw Error(`No return value: line = ${command.pretty()}`);
+            throw Error(`No return value: line = ${compiledCommand.command.pretty()}`);
         }
 
         // INITIALに返ってくることは禁止
-        if (command.nextState === INITIAL_STATE) {
-            throw Error(`Return to INITIAL state during execution: line = ${command.pretty()}`);
+        const nextStateIndex = compiledCommand.nextState;
+        if (nextStateIndex === this.initialIndex) {
+            throw Error(`Return to INITIAL state during execution: line = ${compiledCommand.command.pretty()}`);
         }
-        this.currentStateIndex = compiledCommand.nextState;
+        this.currentStateIndex = nextStateIndex;
         this.prevOutput = result;
         return undefined;
     }
