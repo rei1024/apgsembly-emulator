@@ -158,9 +158,10 @@ export class App {
             unaryHeader.appendChild(th);
         }
         const unaryData = document.createElement('tr');
-        for (const value of regs.values()) {
+        for (const [key, value] of regs.entries()) {
             const td = document.createElement('td');
             td.textContent = value.getValue().toString();
+            td.dataset['test'] = `U${key}`;
             unaryData.appendChild(td);
         }
         const unaryTable = document.createElement('table');
@@ -193,13 +194,13 @@ export class App {
             const th = document.createElement('th');
             th.textContent = `B${key}`;
             const td = document.createElement('td');
-
+            td.dataset['test'] = `B${key}`;
             if (true) {
                 const code0 = document.createElement('code');
                 code0.style.color = "black";
                 // 長い場合は改行を入れる
                 code0.style.wordBreak = "break-all";            
-    
+
                 const decimal = document.createElement('span');
                 decimal.classList.add('decimal');
                 const pointer = document.createElement('span');
