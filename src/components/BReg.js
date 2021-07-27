@@ -8,7 +8,7 @@ import { BRegAction, B_INC, B_TDEC, B_SET, B_READ } from "../actions/BRegAction.
  * @returns {(0 | 1)[]}
  * @throws
  */
- function parseBits(str) {
+function parseBits(str) {
     return [...str].map(c => {
         if (c === '0') {
             return 0;
@@ -19,6 +19,8 @@ import { BRegAction, B_INC, B_TDEC, B_SET, B_READ } from "../actions/BRegAction.
         }
     });
 }
+
+const hasBigInt = typeof BigInt !== 'undefined';
 
 /**
  * Bn: Binary Register
@@ -156,7 +158,7 @@ export class BReg {
      * @returns {string} "123"
      */
     toDecimalString() {
-        if (typeof BigInt !== "undefined") {
+        if (hasBigInt) {
             return BigInt("0b" + this.toBinaryString()).toString();
         } else {
             return Number("0b" + this.toBinaryString()).toString();
@@ -164,7 +166,6 @@ export class BReg {
     }
 
     /**
-     * 
      * @returns {{
         prefix: (0 | 1)[];
         head: 0 | 1;
