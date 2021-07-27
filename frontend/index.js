@@ -537,8 +537,9 @@ export class App {
         if (machine === undefined) {
             return;
         }
-        for (let i = 0; i < steps; i++) {
-            try {
+        let i = 0;
+        try {
+            for (i = 0; i < steps; i++) {
                 const res = machine.execCommand();
                 if (res === -1) {
                     this.appState = "Halted";
@@ -553,13 +554,13 @@ export class App {
                     this.render();
                     return;
                 }
-            } catch (e) {
-                this.appState = "RuntimeError";
-                this.errorMessage = e.message;
-                this.steps += i + 1; // 1回目でエラーが発生したら1ステップとする
-                this.render();
-                return;
             }
+        } catch (e) {
+            this.appState = "RuntimeError";
+            this.errorMessage = e.message;
+            this.steps += i + 1; // 1回目でエラーが発生したら1ステップとする
+            this.render();
+            return;
         }
         this.steps += steps;
         this.render();

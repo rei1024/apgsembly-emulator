@@ -120,8 +120,18 @@ export class BReg {
      * ポインターの範囲までメモリを広げる
      */
     extend() {
-        if (this.pointer >= this.bits.length) {
-            this.bits = [...this.bits, ...Array(this.pointer - this.bits.length + 1).fill(0)];
+        const pointer = this.pointer;
+        const len = this.bits.length;
+        if (pointer >= len) {
+            if (pointer === len) {
+                this.bits.push(0);
+            } else {
+                /**
+                 * @type {0[]}
+                 */
+                const rest = Array(pointer - len + 1).fill(0);
+                this.bits.push(...rest);
+            }
         }
     }
 

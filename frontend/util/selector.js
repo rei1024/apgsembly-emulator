@@ -5,7 +5,7 @@
  * @throws {Error}
  */
 export function $type(selector, klass) {
-    if (typeof selector === 'undefined') {
+    if (typeof selector !== 'string') {
         throw TypeError('selector is not a string');
     }
     const el = document.querySelector(selector);
