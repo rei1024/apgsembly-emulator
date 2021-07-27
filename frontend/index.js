@@ -34,6 +34,7 @@ import {
     $b2dy,
     $b2dDetail,
     $unaryRegister,
+    $unaryRegisterDetail,
     $binaryRegister,
     $binaryRegisterDetail,
     $addSubMul,
@@ -355,6 +356,9 @@ export class App {
         if (this.machine === undefined) {
             return;
         }
+        if (!$unaryRegisterDetail.open) {
+            return;
+        }
         const items = this.unaryRegisterItems;
         if (items === undefined) {
             return;
@@ -653,6 +657,10 @@ $b2dDetail.addEventListener('toggle', () => {
 
 $binaryRegisterDetail.addEventListener('toggle', () => {
     app.renderBinary();
+});
+
+$unaryRegisterDetail.addEventListener('toggle', () => {
+    app.renderUnary();
 });
 
 // ファイルインポート

@@ -109,6 +109,9 @@ describe('unary_multiply.apg', () => {
         cy.contains('APGsembly');
         loadProgram('unary_multiply.apg');
 
+        cy.get(`[data-test="U0"]`).should('have.text', '7');
+        cy.get(`[data-test="U1"]`).should('have.text', '5');
+
         setStep(100);
         cy.get('#step').click();
 
