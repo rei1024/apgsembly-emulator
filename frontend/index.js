@@ -450,11 +450,9 @@ export class App {
 
     renderStats() {
         if (!$statsModal.classList.contains('show')) {
-            $statsBody.innerHTML = "";
             return;
         }
         if (this.machine === undefined) {
-            $statsBody.innerHTML = "";
             return;
         }
         renderStats($statsBody, this.machine.stateStats, this.machine.states, this.machine.getCurrentStateIndex());
