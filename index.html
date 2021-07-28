@@ -24,6 +24,31 @@
     <title>APGsembly 2.0 Emulator</title>
     <meta name="description" content="An Emulator for APGsembly 2.0">
     <meta name="keywords" content="Conway's Game of Life,Game of Life,GoL,APGsembly,General purpose calculator,GPC">
+    <style>
+        #state td, #state th {
+            padding: 4px;
+        }
+        #state {
+            /* 幅が変化しないようにする */
+            table-layout: fixed;
+        }
+        #steps {
+            color: black;
+        }
+        body[apge_dark_mode=on] #steps {
+            color: var(--dark-mode-color);
+        }
+        .code-mono {
+            font-family: var(--bs-font-monospace);
+            font-size: .875em;
+            word-wrap: break-word;
+        }
+    </style>
+    <style>
+        #stats_table td, #stats_table th {
+            padding: 2px;
+        }
+    </style>
 </head>
 <body>
     <header class="text-center">
@@ -34,7 +59,7 @@
         </div>
         <div class="mb-3">
             <label for="input" class="form-label">Input</label>
-            <textarea class="code-mono form-control" name="" id="input" cols="50" rows="8"></textarea>
+            <textarea class="code-mono form-control" name="input" id="input" cols="50" rows="8"></textarea>
         </div>
         <div data-test="control_buttons" class="btn-group" role="group" aria-label="Control">
             <!-- 読み込まれるまではdisabled -->
@@ -63,7 +88,7 @@
                 </li>
             </ul>
             <input id="import_file" type="file" style="display: none;">
-            <label for="import_file" type="button" class="btn btn-primary">Import</button>
+            <label for="import_file" class="btn btn-primary">Import</label>
         </div>
         <div class="mt-1 mb-2">
             <label for="frequency_input" class="form-label m-0">Speed <span id="frequency_output"></span></label>
@@ -71,26 +96,6 @@
             <input id="frequency_input" class="form-range" value="11" type="range" max="63">
         </div>
         <div>
-            <style>
-                #state td, #state th {
-                    padding: 4px;
-                }
-                #state {
-                    /* 幅が変化しないようにする */
-                    table-layout: fixed;
-                }
-                #steps {
-                    color: black;
-                }
-                body[apge_dark_mode=on] #steps {
-                    color: var(--dark-mode-color);
-                }
-                .code-mono {
-                    font-family: var(--bs-font-monospace);
-                    font-size: .875em;
-                    word-wrap: break-word;
-                }
-            </style>
             <table class="table" id="state">
                 <thead>
                     <tr>
@@ -121,7 +126,7 @@
                 <summary>
                     Output
                 </summary>
-                <textarea class="code-mono form-control" name="" id="output" cols="50" rows="3"></textarea>
+                <textarea class="code-mono form-control" name="output" id="output" cols="50" rows="3"></textarea>
             </details>
         </div>
         <div class="mb-2">
@@ -192,7 +197,7 @@
                 </div>
                 <div class="mt-3">
                     <label for="breakpoint_select" class="form-label">Breakpoint state</label>
-                    <select name="" class="form-select" id="breakpoint_select">
+                    <select name="breakpoint_select" class="form-select" id="breakpoint_select">
                     </select>
                 </div>
                 <div class="mt-3">
@@ -247,11 +252,6 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <style>
-                    #stats_table td, #stats_table th {
-                        padding: 2px;
-                    }
-                </style>
                 <table id="stats_table" style="table-layout: fixed;" class="table">
                     <thead>
                         <tr>
