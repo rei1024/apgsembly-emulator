@@ -92,13 +92,15 @@ export class BReg {
      * @returns {0 | 1}
      */
     read() {
-        if (this.pointer < this.bits.length) {
-            const value = this.bits[this.pointer];
-            this.bits[this.pointer] = 0;
+        const pointer = this.pointer;
+        const bits = this.bits;
+        if (pointer < bits.length) {
+            const value = bits[pointer];
+            bits[pointer] = 0;
             return value ?? this.error();
         } else {
             return 0;
-        }      
+        }
     }
 
     /**
@@ -106,16 +108,16 @@ export class BReg {
      * @returns {void}
      */
     set() {
-        if (this.pointer < this.bits.length) {
-            const value = this.bits[this.pointer];
-            if (value === 1) {
-                throw Error('The bit of binary register is already 1: bits = ' + this.bits.join('') + " pointer = " + this.pointer);
-            }
-            this.bits[this.pointer] = 1;
-        } else {
-            this.bits = [...this.bits, ...Array(this.pointer - this.bits.length + 1).fill(0)];
-            this.bits[this.pointer] = 1;
+        const bits = this.bits;
+        const pointer = this.pointer;
+        if (pointer >= bits.length) {
+            this.extend();
         }
+        const value = bits[pointer];
+        if (value === 1) {
+            throw Error('The bit of binary register is already 1: bits = ' + bits.join('') + " pointer = " + pointer);
+        }
+        bits[pointer] = 1;
     }
 
     /**
