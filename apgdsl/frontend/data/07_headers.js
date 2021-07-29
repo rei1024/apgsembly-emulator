@@ -1,6 +1,7 @@
+// APGsembly header
 headers = [
     '#COMPONENTS U0',
-    '#REGISTERS { "U0": 3 }'
+    '#REGISTERS { "U0": 5 }'
 ]
 
 main = [

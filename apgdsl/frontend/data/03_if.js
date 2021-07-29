@@ -1,3 +1,5 @@
+// if_zero and if_non_zero
+
 main = [
     inc_u(0),
     if_zero(tdec_u(0), [

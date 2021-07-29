@@ -1,3 +1,5 @@
+// while_zero and while_non_zero
+
 main = [
     inc_u(0),
     inc_u(0),

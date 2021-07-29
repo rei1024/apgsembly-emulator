@@ -1,3 +1,5 @@
+// Nested array
+
 main = [
     output('1'),
     [

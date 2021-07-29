@@ -1,3 +1,5 @@
+// Declare functions for DSL.
+
 /**
  * Set a value of Un to 0
  * @param {number} n 
