@@ -63,17 +63,39 @@ if (!($error instanceof HTMLElement)) {
 
 const $inner = document.querySelector('#ir_inner');
 
+const $compileIR = document.querySelector('#compile_ir');
+if (!($compileIR instanceof HTMLButtonElement)) {
+    throw Error('$compile_ir');
+}
+
 $compile.addEventListener('click', () => {
     try {
         globalThis.main = "";
         globalThis.headers = [];
+        if ($input.value.trim().length === 0) {
+            throw Error('Input is empty');
+        }
         eval($input.value);
-        $copy.disabled = false;
-        $error.style.display = "none";
         const obj = promote(globalThis.main);
         $inner.textContent = JSON.stringify(obj, null, 2);
         const str = typeof globalThis.headers === 'string' ? globalThis.headers.trim() : globalThis.headers.join('\n').trim();
         $output.value = (str.length === 0 ? "" : (str + "\n"))  + emit(obj).map(x => x.pretty()).join('\n');
+        $copy.disabled = false;
+        $error.style.display = "none";
+    } catch (e) {
+        $error.textContent = e.message;
+        $error.style.display = "block";
+        $copy.disabled = true;
+    }
+});
+
+$compileIR.addEventListener('click', () => {
+    try {
+        $copy.disabled = false;
+        $error.style.display = "none";
+        const obj = JSON.parse($input.value);
+        $inner.textContent = JSON.stringify(obj, null, 2);
+        $output.value = emit(obj).map(x => x.pretty()).join('\n');
     } catch (e) {
         $error.textContent = e.message;
         $error.style.display = "block";

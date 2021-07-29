@@ -1,4 +1,5 @@
 // DSL for APGsembly in JS
+// Click `Compile` to generate APGsembly.
 
 // `main` is the entry point.
 // The contents of the array are executed sequentially.
