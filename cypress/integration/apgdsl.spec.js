@@ -4,12 +4,13 @@ const apgsemblyEmulatorPageURL = 'http://localhost:1123/';
 
 const dslURL = 'http://localhost:1123/apgdsl/index.html';
 
-describe('Load', () => {
+describe('APGDSL Load', () => {
     it('should load', () => {
         cy.visit(dslURL);
         cy.get('h1').should('have.text', 'APGDSL');
     });
 });
+
 /**
  *
  * @param {number} n 
@@ -22,7 +23,7 @@ describe('Load', () => {
     cy.wait(50);
 }
 
-describe('Integration', () => {
+describe('APGDSL Integration', () => {
     it('Integration', () => {
         cy.visit(dslURL);
         cy.get('#samples').click();
