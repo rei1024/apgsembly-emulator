@@ -235,7 +235,7 @@ export class Emitter {
         const condExpr = expr.args[0];
         const ifState = this.emitExpr(input, condExpr);
         const zeroExpr = isZero ? expr.args[1] : expr.args[2];
-        const nonZeroExpr =  isZero ? expr.args[2] : expr.args[1];
+        const nonZeroExpr = isZero ? expr.args[2] : expr.args[1];
         const zeroState = this.getNextState();
         const nonZeroState = this.getNextState();
         this.emitCommand(new Command({

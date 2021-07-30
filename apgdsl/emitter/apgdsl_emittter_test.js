@@ -9,7 +9,7 @@ test('apgdsl emitter output', () => {
         emitter.getCommands(),
         [
             new Command({
-                actions:  [new OutputAction('a'), new NopAction()],
+                actions: [new OutputAction('a'), new NopAction()],
                 input: '*',
                 nextState: 'STATE0',
                 state: 'START'
