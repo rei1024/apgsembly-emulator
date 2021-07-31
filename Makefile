@@ -8,3 +8,7 @@ cy:
 	npm run cypress:open
 lint:
 	eslint .
+chore:
+	deno upgrade
+	npm audit
+	git gc
