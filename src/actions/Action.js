@@ -38,4 +38,13 @@ export class Action {
     doesReturnValue() {
         return false;
     }
+
+    /**
+     * 
+     * @param {Action} _action
+     * @returns {boolean}
+     */
+    isSameComponent(_action) {
+        return true;
+    }
 }

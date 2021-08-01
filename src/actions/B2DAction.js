@@ -132,4 +132,14 @@ export class B2DAction extends Action {
             case B2D_SET: return false;
         }
     }
+
+    /**
+     * 
+     * @override
+     * @param {Action} action
+     * @returns {boolean}
+     */
+    isSameComponent(action) {
+        return action instanceof B2DAction;
+    }
 }

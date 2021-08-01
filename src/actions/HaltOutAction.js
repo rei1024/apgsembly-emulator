@@ -42,4 +42,14 @@ export class HaltOutAction extends Action {
     doesReturnValue() {
         return false;
     }
+
+    /**
+     * 
+     * @override
+     * @param {Action} action
+     * @returns {boolean}
+     */
+    isSameComponent(action) {
+        return action instanceof HaltOutAction;
+    }
 }

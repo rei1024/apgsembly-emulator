@@ -42,4 +42,14 @@ export class NopAction extends Action {
     doesReturnValue() {
         return true;
     }
+
+    /**
+     * 
+     * @override
+     * @param {Action} action
+     * @returns {boolean}
+     */
+    isSameComponent(action) {
+        return action instanceof NopAction;
+    }
 }

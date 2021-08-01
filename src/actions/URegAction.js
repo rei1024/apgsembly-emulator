@@ -110,4 +110,18 @@ export class URegAction extends Action {
             case U_TDEC: return true;
         }
     }
+
+    /**
+     * 
+     * @override
+     * @param {Action} action
+     * @returns {boolean}
+     */
+    isSameComponent(action) {
+        if (action instanceof URegAction) {
+            return this.regNumber === action.regNumber;
+        } else {
+            return false;
+        }
+    }
 }

@@ -49,4 +49,14 @@ export class OutputAction extends Action {
     doesReturnValue() {
         return false;
     }
+
+    /**
+     * 
+     * @override
+     * @param {Action} action
+     * @returns {boolean}
+     */
+    isSameComponent(action) {
+        return action instanceof OutputAction;
+    }
 }

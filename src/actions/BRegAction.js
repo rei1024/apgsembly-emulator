@@ -118,4 +118,18 @@ export class BRegAction extends Action {
             case B_SET: return false;
         }
     }
+
+    /**
+     * 
+     * @override
+     * @param {Action} action
+     * @returns {boolean}
+     */
+    isSameComponent(action) {
+        if (action instanceof BRegAction) {
+            return this.regNumber === action.regNumber;
+        } else {
+            return false;
+        }
+    }
 }

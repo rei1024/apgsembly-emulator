@@ -98,4 +98,14 @@ export class AddAction extends Action {
             case ADD_B1: return true;
         }
     }
+
+    /**
+     * 
+     * @override
+     * @param {Action} action
+     * @returns {boolean}
+     */
+    isSameComponent(action) {
+        return action instanceof AddAction;
+    }
 }

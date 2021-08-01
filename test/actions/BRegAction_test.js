@@ -33,3 +33,8 @@ test("BRegAction pretty", () => {
 test("BRegAction extract", () => {
     assertEquals(BRegAction.parse('INC B2').extractBinaryRegisterNumbers(), [2]);
 });
+
+test("BRegAction isSameComponent", () => {
+    assertEquals(BRegAction.parse('INC B2').isSameComponent(BRegAction.parse('INC B2')), true);
+    assertEquals(BRegAction.parse('INC B1').isSameComponent(BRegAction.parse('INC B2')), false);
+});

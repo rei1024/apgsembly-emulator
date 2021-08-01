@@ -99,4 +99,14 @@ export class SubAction extends Action {
             case SUB_B1: return true;
         }
     }
+
+    /**
+     * 
+     * @override
+     * @param {Action} action
+     * @returns {boolean}
+     */
+    isSameComponent(action) {
+        return action instanceof SubAction;
+    }
 }
