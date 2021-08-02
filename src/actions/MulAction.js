@@ -33,7 +33,7 @@ function parseOp(op) {
  * @param {MulOp} op
  * @returns {MulOpString}
  */
- function prettyOp(op) {
+function prettyOp(op) {
     switch (op) {
         case MUL_0: return MUL_0_STRING;
         case MUL_1: return MUL_1_STRING;
@@ -70,7 +70,7 @@ export class MulAction extends Action {
      * @returns {MulAction | undefined}
      */
     static parse(str) {
-        const array = str.trim().split(/\s+/);
+        const array = str.trim().split(/\s+/u);
         if (array.length !== 2) {
             return undefined;
         }

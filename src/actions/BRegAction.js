@@ -39,7 +39,7 @@ function prettyOp(op) {
  * @param {BOpString} op
  * @returns {BOp}
  */
- function parseOp(op) {
+function parseOp(op) {
     switch (op) {
         case B_INC_STRING: return B_INC;
         case B_TDEC_STRING: return B_TDEC;
@@ -90,7 +90,7 @@ export class BRegAction extends Action {
      * @returns {BRegAction | undefined}
      */
     static parse(str) {
-        const array = str.trim().split(/\s+/);
+        const array = str.trim().split(/\s+/u);
         if (array.length !== 2) {
             return undefined;
         }
@@ -99,7 +99,7 @@ export class BRegAction extends Action {
         if (op === B_INC_STRING || op === B_TDEC_STRING || op === B_READ_STRING || op === B_SET_STRING) {
             if (reg.startsWith("B")) {
                 const str = reg.slice(1);
-                if (/^[0-9]+$/.test(str)) {
+                if (/^[0-9]+$/u.test(str)) {
                     return new BRegAction(parseOp(op), parseInt(str, 10));
                 }
             }
@@ -120,7 +120,7 @@ export class BRegAction extends Action {
     }
 
     /**
-     * 
+     *
      * @override
      * @param {Action} action
      * @returns {boolean}

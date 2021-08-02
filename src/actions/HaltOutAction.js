@@ -19,16 +19,16 @@ export class HaltOutAction extends Action {
     }
 
     /**
-     * 
-     * @param {string} str 
+     *
+     * @param {string} str
      * @returns {HaltOutAction | undefined}
      */
     static parse(str) {
-        const array = str.trim().split(/\s+/);
+        const array = str.trim().split(/\s+/u);
         if (array.length !== 1) {
             return undefined;
         }
-        const [ haltOut ] = array;
+        const [haltOut] = array;
         if (haltOut !== "HALT_OUT") {
             return undefined;
         }

@@ -2,7 +2,7 @@ import { BRegAction, B_INC, B_TDEC, B_READ, B_SET } from "../../src/actions/BReg
 import { assertEquals, test } from "../deps.js";
 
 test("BRegAction parse success", () => {
-    assertEquals(BRegAction.parse('INC B2'),  new BRegAction(B_INC, 2));
+    assertEquals(BRegAction.parse('INC B2'), new BRegAction(B_INC, 2));
 
     assertEquals(BRegAction.parse('TDEC B2'), new BRegAction(B_TDEC, 2));
 

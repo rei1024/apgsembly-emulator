@@ -29,7 +29,7 @@ export class OutputAction extends Action {
      * @returns {OutputAction | undefined}
      */
     static parse(str) {
-        const array = str.trim().split(/\s+/);
+        const array = str.trim().split(/\s+/u);
         if (array.length !== 2) {
             return undefined;
         }

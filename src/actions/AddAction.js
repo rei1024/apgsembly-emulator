@@ -32,11 +32,11 @@ function prettyOp(op) {
 }
 
 /**
- * 
- * @param {AddOpString} op 
+ *
+ * @param {AddOpString} op
  * @returns {AddOp}
  */
- function parseOp(op) {
+function parseOp(op) {
     switch (op) {
         case ADD_A1_STRING: return ADD_A1;
         case ADD_B0_STRING: return ADD_B0;
@@ -74,7 +74,7 @@ export class AddAction extends Action {
      * @returns {AddAction | undefined}
      */
     static parse(str) {
-        const array = str.trim().split(/\s+/);
+        const array = str.trim().split(/\s+/u);
         if (array.length !== 2) {
             return undefined;
         }

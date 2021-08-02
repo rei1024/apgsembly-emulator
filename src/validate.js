@@ -4,24 +4,8 @@ import { HaltOutAction } from "./actions/HaltOutAction.js";
 import { Command } from "./Command.js";
 
 /**
- * 同じアクションが複数含まれていないか検査する
- * エラーメッセージを返却する
- * @param {Command[]} commands
- * @returns {string | undefined}
- */
-export function validateNoDuplicatedAction(commands) {
-    for (const command of commands) {
-        const err = validateNoDuplicatedActionCommand(command);
-        if (typeof err === 'string') {
-            return err;
-        }   
-    }
-    return undefined;
-}
-
-/**
- * 
- * @param {Command} command 
+ *
+ * @param {Command} command
  * @returns {string | undefined}
  */
 function validateNoDuplicatedActionCommand(command) {
@@ -41,23 +25,23 @@ function validateNoDuplicatedActionCommand(command) {
 }
 
 /**
- * アクションが値を一度だけ返すか検査する
+ * 同じアクションが複数含まれていないか検査する
  * エラーメッセージを返却する
  * @param {Command[]} commands
  * @returns {string | undefined}
  */
- export function validateActionReturnOnce(commands) {
+export function validateNoDuplicatedAction(commands) {
     for (const command of commands) {
-        const err = validateActionReturnOnceCommand(command);
+        const err = validateNoDuplicatedActionCommand(command);
         if (typeof err === 'string') {
             return err;
-        }   
+        }
     }
     return undefined;
 }
 
 /**
- * 
+ *
  * @param {Command} command
  * @returns {string | undefined}
  */
@@ -78,27 +62,27 @@ function validateActionReturnOnceCommand(command) {
 }
 
 /**
- * アクションが同じコンポーネントを使用していないか検査する
+ * アクションが値を一度だけ返すか検査する
  * エラーメッセージを返却する
  * @param {Command[]} commands
  * @returns {string | undefined}
  */
- export function validateNoSameComponent(commands) {
+export function validateActionReturnOnce(commands) {
     for (const command of commands) {
-        const err = validateNoSameComponentCommand(command);
+        const err = validateActionReturnOnceCommand(command);
         if (typeof err === 'string') {
             return err;
-        }   
+        }
     }
     return undefined;
 }
 
 /**
- * 
+ *
  * @param {Command} command
  * @returns {string | undefined}
  */
- function validateNoSameComponentCommand(command) {
+function validateNoSameComponentCommand(command) {
     // HALT_OUTの場合は一旦無視
     // FIXME
     if (command.actions.find(x => x instanceof HaltOutAction) !== undefined) {
@@ -114,6 +98,22 @@ function validateActionReturnOnceCommand(command) {
             if (a?.isSameComponent(b)) {
                 return `Actions "${a.pretty()}" and "${b.pretty()}" act on the same component in "${command.pretty()}"`;
             }
+        }
+    }
+    return undefined;
+}
+
+/**
+ * アクションが同じコンポーネントを使用していないか検査する
+ * エラーメッセージを返却する
+ * @param {Command[]} commands
+ * @returns {string | undefined}
+ */
+export function validateNoSameComponent(commands) {
+    for (const command of commands) {
+        const err = validateNoSameComponentCommand(command);
+        if (typeof err === 'string') {
+            return err;
         }
     }
     return undefined;

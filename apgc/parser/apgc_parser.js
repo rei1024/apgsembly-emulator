@@ -21,7 +21,7 @@ import { Parser, parseWithErrorLine, stringLiteralParser } from "../js-parsec-v3
 /**
  * 識別子の正規表現
  */
-const identifierRexExp = /^[a-zA-Z_][a-zA-Z_0-9]*/;
+const identifierRexExp = /^[a-zA-Z_][a-zA-Z_0-9]*/u;
 
 /**
  * 識別子
@@ -30,7 +30,7 @@ const identifierRexExp = /^[a-zA-Z_][a-zA-Z_0-9]*/;
 export const identifierParser = Parser.regexp(identifierRexExp).withError('expect identifier');
 
 // .は通常は改行文字と一致しない
-const whitespaceRegExp = /^(\s*\/\/.*(\r\n|\n|\r|$))*\s*/m;
+const whitespaceRegExp = /^(\s*\/\/.*(\r\n|\n|\r|$))*\s*/mu;
 
 class Whitespace {}
 
@@ -62,7 +62,7 @@ const rightParen = Parser.string(')').map(_ => new Paren());
 /**
  * @type {Parser<NumberExpression, string>}
  */
-export const numberExpressionParser = Parser.regexp(/^[0-9]+/).then(str => {
+export const numberExpressionParser = Parser.regexp(/^[0-9]+/u).then(str => {
     const n = parseInt(str, 10);
     if (Number.isInteger(n)) {
         return Parser.pure(new NumberExpression(n));
@@ -79,7 +79,7 @@ export const stringExpressionParser = stringLiteralParser.map(x => new StringExp
  * @throws
  */
 export function apgcProgramParser(str) {
-    const lines = str.split(/\r\n|\n|\r/);
+    const lines = str.split(/\r\n|\n|\r/u);
     /** @type {string[]} */
     const outputLines = [];
     /**

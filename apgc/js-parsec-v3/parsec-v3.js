@@ -463,7 +463,7 @@ export function extractLine(str, offset) {
  */
 export function lines(str) {
     let start = 0;
-    const matches = [...str.matchAll(/\r\n|\n|\r/g)];
+    const matches = [...str.matchAll(/\r\n|\n|\r/gu)];
 
     /** @type {{ start: number, end: number, line: string }[]} */
     const objs = [];

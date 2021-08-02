@@ -11,7 +11,7 @@ import { B2D } from "../src/components/B2D.js";
  * @param {boolean} flipUpsideDown 上下逆にする
  */
 export function renderB2D(context, b2d, hidePointer, flipUpsideDown) {
-    const width =  context.canvas.width;
+    const width = context.canvas.width;
     context.canvas.height = width;
     const maxX = b2d.getMaxX();
     const maxY = b2d.getMaxY();

@@ -40,7 +40,7 @@ export class ProgramLines {
      * @returns {ProgramLines | string}
      */
     static parse(str) {
-        const lines = str.split(/\r\n|\n|\r/);
+        const lines = str.split(/\r\n|\n|\r/u);
         /** @type {ProgramLine[]} */
         const array = [];
         for (const line of lines) {

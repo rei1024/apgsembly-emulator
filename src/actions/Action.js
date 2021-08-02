@@ -5,6 +5,7 @@
  * @abstract
  */
 export class Action {
+
     /**
      * Convert to string
      * 文字列化する
@@ -40,7 +41,7 @@ export class Action {
     }
 
     /**
-     * 
+     * 同じコンポーネントのアクションであればtrueを返す
      * @param {Action} _action
      * @returns {boolean}
      */

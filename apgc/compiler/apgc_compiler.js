@@ -57,7 +57,7 @@ import { compileOutput } from "./functions/output.js";
 import { compileEmptyArgumentFunction } from "./functions/empty_argument_function.js";
 import { compileSingleNumberArgumentFunction } from "./functions/single_number_argument_function.js";
 
-const UNREACHABLE_PREFIX =  "APGC_UNREACHABLE_";
+const UNREACHABLE_PREFIX = "APGC_UNREACHABLE_";
 
 // goto and label
 const LABEL_PREFIX = "APGC_LABEL_";

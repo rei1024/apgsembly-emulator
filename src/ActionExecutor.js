@@ -37,7 +37,7 @@ export class ActionExecutor {
      * @param {{
      *    unaryRegisterNumbers: number[];
      *    binaryRegisterNumbers: number[];
-     * }} param0 
+     * }} param0
      */
     constructor({ unaryRegisterNumbers, binaryRegisterNumbers }) {
         /**
@@ -107,7 +107,7 @@ export class ActionExecutor {
                 }
                 const reg = this.uRegMap.get(n);
                 if (reg === undefined) {
-                    throw Error(`Invalid #REGISTERS: U${n} does not exist`);
+                    throw Error(`Invalid #REGISTERS: U${n} isn't used in the program`);
                 }
                 reg.setByRegistersInit(key, value);
             } else if (key.startsWith('B')) {
@@ -118,7 +118,7 @@ export class ActionExecutor {
                 }
                 const reg = this.bRegMap.get(n);
                 if (reg === undefined) {
-                    throw Error(`Invalid #REGISTERS: B${n} does not exist`);
+                    throw Error(`Invalid #REGISTERS: B${n} isn't used in the program`);
                 }
                 reg.setByRegistersInit(key, value);
             } else {

@@ -39,10 +39,13 @@
         "quote-props": ["error", "as-needed"],
         "function-call-argument-newline": "off", // TODO
         "sort-imports": "off", // TODO
-        "array-bracket-newline": "error"
+        "array-bracket-newline": "error",
         // "array-element-newline": "error"
         // "no-trailing-spaces": "error"
-        
+        "require-unicode-regexp": "error",
+        "no-undefined": "off",
+        "no-multi-spaces": "error",
+        "func-style": "off"
     },
     "globals": {
         "Deno": true

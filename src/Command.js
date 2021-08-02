@@ -202,7 +202,7 @@ export class Command extends ProgramLine {
             }
             return new Comment(str);
         }
-        const array = trimmedStr.split(/\s*;\s*/);
+        const array = trimmedStr.split(/\s*;\s*/u);
         if (array.length < 4) {
             return `Invalid command "${str}"`;
         }
@@ -217,7 +217,7 @@ export class Command extends ProgramLine {
         const inputStr = array[1] ?? this.error();
         const nextState = array[2] ?? this.error();
         const actionsStr = array[3] ?? this.error();
-        const actionStrs = actionsStr.trim().split(/\s*,\s*/);
+        const actionStrs = actionsStr.trim().split(/\s*,\s*/u);
 
         /** @type {Action[]} */
         const actions = [];
