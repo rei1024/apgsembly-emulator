@@ -4,8 +4,8 @@ import { Action } from "./Action.js";
 
 export class OutputAction extends Action {
     /**
-     * 
-     * @param {string} digit 
+     *
+     * @param {string} digit
      */
     constructor(digit) {
         super();
@@ -24,8 +24,8 @@ export class OutputAction extends Action {
     }
 
     /**
-     * 
-     * @param {string} str 
+     *
+     * @param {string} str
      * @returns {OutputAction | undefined}
      */
     static parse(str) {
@@ -51,7 +51,7 @@ export class OutputAction extends Action {
     }
 
     /**
-     * 
+     *
      * @override
      * @param {Action} action
      * @returns {boolean}

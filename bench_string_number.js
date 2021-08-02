@@ -15,7 +15,7 @@ function bench(name, fn) {
 class A {
     /**
      *
-     * @param {string} x 
+     * @param {string} x
      */
     constructor(x) {
         this.x = x;

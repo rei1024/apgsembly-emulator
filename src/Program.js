@@ -9,13 +9,13 @@ import { validateActionReturnOnce, validateNoDuplicatedAction, validateNoSameCom
  */
 export class Program {
     /**
-     * 
+     *
      * @param {{
      *   commands: Command[];
      *   componentsHeader: ComponentsHeader | undefined;
      *   registersHeader: RegistersHeader | undefined;
      *   programLines: ProgramLines
-     * }} param0 
+     * }} param0
      */
     constructor({
         commands,
@@ -85,7 +85,7 @@ export class Program {
         if (typeof returnOnceError === 'string') {
             return returnOnceError;
         }
-        const noSameComponentError = validateNoSameComponent(commands); 
+        const noSameComponentError = validateNoSameComponent(commands);
         if (typeof noSameComponentError === 'string') {
             return noSameComponentError;
         }
@@ -143,7 +143,7 @@ export class Program {
                 str += this.registersHeader.pretty() + "\n";
             }
             str += this.commands.map(command => command.pretty()).join('\n');
-    
+
             return str.trim();
         } else {
             return this.programLines.pretty();
@@ -153,7 +153,7 @@ export class Program {
 
 /**
  * 要素を一意にしてソートする
- * @param {number[]} array 
+ * @param {number[]} array
  * @returns {number[]}
  */
 function sortNub(array) {

@@ -19,7 +19,7 @@ const SUB_B1_STRING = "B1";
  */
 
 /**
- * 
+ *
  * @param {SubOp} op
  * @returns {SubOpString}
  */
@@ -32,7 +32,7 @@ function prettyOp(op) {
 }
 
 /**
- * 
+ *
  * @param {SubOpString} op
  * @returns {SubOp}
  */
@@ -49,8 +49,8 @@ function prettyOp(op) {
  */
 export class SubAction extends Action {
     /**
-     * 
-     * @param {SubOp} op 
+     *
+     * @param {SubOp} op
      */
     constructor(op) {
         super();
@@ -69,8 +69,8 @@ export class SubAction extends Action {
     }
 
     /**
-     * 
-     * @param {string} str 
+     *
+     * @param {string} str
      * @returns {SubAction | undefined}
      */
     static parse(str) {
@@ -89,7 +89,7 @@ export class SubAction extends Action {
     }
 
     /**
-     * 
+     *
      * @returns @override
      */
     doesReturnValue() {
@@ -101,7 +101,7 @@ export class SubAction extends Action {
     }
 
     /**
-     * 
+     *
      * @override
      * @param {Action} action
      * @returns {boolean}

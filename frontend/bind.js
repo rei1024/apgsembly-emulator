@@ -85,7 +85,7 @@ export const $sampleCodes = document.querySelectorAll('.js_sample');
 
 // --------- Modal --------- //
 
-// ステップ数入力 
+// ステップ数入力
 export const $stepInput = $type('#step_input', HTMLInputElement);
 
 // Hide Binary

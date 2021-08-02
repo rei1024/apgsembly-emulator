@@ -19,8 +19,8 @@ const ADD_B1_STRING = "B1";
  */
 
 /**
- * 
- * @param {AddOp} op 
+ *
+ * @param {AddOp} op
  * @returns {AddOpString}
  */
 function prettyOp(op) {
@@ -49,8 +49,8 @@ function parseOp(op) {
  */
 export class AddAction extends Action {
     /**
-     * 
-     * @param {AddOp} op 
+     *
+     * @param {AddOp} op
      */
     constructor(op) {
         super();
@@ -70,7 +70,7 @@ export class AddAction extends Action {
 
     /**
      * 文字列から変換する
-     * @param {string} str 
+     * @param {string} str
      * @returns {AddAction | undefined}
      */
     static parse(str) {
@@ -100,7 +100,7 @@ export class AddAction extends Action {
     }
 
     /**
-     * 
+     *
      * @override
      * @param {Action} action
      * @returns {boolean}

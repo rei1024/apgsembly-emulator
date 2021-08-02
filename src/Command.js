@@ -20,7 +20,7 @@ export class ProgramLine {
  */
 export class ComponentsHeader extends ProgramLine {
     /**
-     * 
+     *
      * @param {string} content
      */
     constructor(content) {
@@ -39,7 +39,7 @@ export class ComponentsHeader extends ProgramLine {
     }
 
     /**
-     * 
+     *
      * @returns {string}
      * @override
      */
@@ -53,8 +53,8 @@ export class ComponentsHeader extends ProgramLine {
  */
 export class RegistersHeader extends ProgramLine {
     /**
-     * 
-     * @param {string} content 
+     *
+     * @param {string} content
      */
     constructor(content) {
         super();
@@ -85,8 +85,8 @@ export class RegistersHeader extends ProgramLine {
  */
 export class Comment extends ProgramLine {
     /**
-     * 
-     * @param {string} str 
+     *
+     * @param {string} str
      */
     constructor(str) {
         super();
@@ -130,7 +130,7 @@ export class EmptyLine extends ProgramLine {
 }
 
 /**
- * 
+ *
  * @param {string} inputStr
  * @returns {"Z" | "NZ" | "ZZ" | "*" | undefined}
  */
@@ -149,13 +149,13 @@ function parseInput(inputStr) {
  */
 export class Command extends ProgramLine {
     /**
-     * 
+     *
      * @param {{
      *    state: string;
      *    input: "Z" | "NZ" | "ZZ" | "*";
      *    nextState: string;
      *    actions: Action[]
-     * }} param0 
+     * }} param0
      */
     constructor({ state, input, nextState, actions }) {
         super();
@@ -177,12 +177,12 @@ export class Command extends ProgramLine {
         /**
          * @readonly
          */
-        this.actions = actions;   
+        this.actions = actions;
     }
 
     /**
      * CommandまたはCommentまたは空行またはエラーメッセージ
-     * @param {string} str 
+     * @param {string} str
      * @returns {Command | RegistersHeader | ComponentsHeader | Comment | EmptyLine | string}
      */
     static parse(str) {

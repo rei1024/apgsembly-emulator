@@ -25,7 +25,7 @@ const identifierRexExp = /^[a-zA-Z_][a-zA-Z_0-9]*/u;
 
 /**
  * 識別子
- * @type {Parser<string, string>} 
+ * @type {Parser<string, string>}
  */
 export const identifierParser = Parser.regexp(identifierRexExp).withError('expect identifier');
 
@@ -136,7 +136,7 @@ const commaAndWhitespace = whitespaceParser.skip(Parser.string(',')).skip(whites
 
 /**
  * @template A, E
- * @param {Parser<A, E>} parser 
+ * @param {Parser<A, E>} parser
  * @param {string} openChar
  * @param {string} closeChar
  * @returns {Parser<A, E | string>}
@@ -167,7 +167,7 @@ export function functionCallExpressionParser() {
 /**
  * @template A
  * @param {Parser<string, string>} keywordParser
- * @param {(keyword: string, expr: APGCExpression, stmts1: APGCStatements, stmts2: APGCStatements) => A} makeStatement 
+ * @param {(keyword: string, expr: APGCExpression, stmts1: APGCStatements, stmts2: APGCStatements) => A} makeStatement
  * @returns {Parser<A, string>}
  */
 function makeIfParser(keywordParser, makeStatement) {
@@ -206,7 +206,7 @@ export function ifStatementParser() {
 /**
  * @template A
  * @param {Parser<string, string>} keywordParser
- * @param {(keyword: string, expr: APGCExpression, statemtns: APGCStatements) => A} makeWhileStatement 
+ * @param {(keyword: string, expr: APGCExpression, statemtns: APGCStatements) => A} makeWhileStatement
  * @returns {Parser<A, string>}
  */
 function makeWhileParser(keywordParser, makeWhileStatement) {

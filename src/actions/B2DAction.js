@@ -45,7 +45,7 @@ const B2D_LEGACY_B2D_STRING = "SQ";
 export class B2DAction extends Action {
     /**
      *
-     * @param {B2DOp} op 
+     * @param {B2DOp} op
      * @param {B2DAxis} axis
      */
     constructor(op, axis) {
@@ -134,7 +134,7 @@ export class B2DAction extends Action {
     }
 
     /**
-     * 
+     *
      * @override
      * @param {Action} action
      * @returns {boolean}

@@ -7,8 +7,8 @@ import { Command, Comment, ComponentsHeader, EmptyLine, ProgramLine, RegistersHe
  */
 export class ProgramLines {
     /**
-     * 
-     * @param {ProgramLine[]} array 
+     *
+     * @param {ProgramLine[]} array
      */
     constructor(array) {
         /**
@@ -19,7 +19,7 @@ export class ProgramLines {
     }
 
     /**
-     * 
+     *
      * @returns {ProgramLine[]}
      */
     getArray() {
@@ -36,7 +36,7 @@ export class ProgramLines {
     /**
      * stringはエラーメッセージ
      * string is an error
-     * @param {string} str 
+     * @param {string} str
      * @returns {ProgramLines | string}
      */
     static parse(str) {

@@ -131,7 +131,7 @@ export class ActionExecutor {
     /**
      * `-1`が正常終了
      * `-1` is success
-     * @param {Action} action 
+     * @param {Action} action
      * @returns {0 | 1 | -1 | void}
      * @throws
      */

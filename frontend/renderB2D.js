@@ -5,8 +5,8 @@ import { B2D } from "../src/components/B2D.js";
 /**
  * B2Dをcanvasに描画する
  * render B2D to canvas
- * @param {CanvasRenderingContext2D} context 
- * @param {B2D} b2d 
+ * @param {CanvasRenderingContext2D} context
+ * @param {B2D} b2d
  * @param {boolean} hidePointer ポインタを非表示にする
  * @param {boolean} flipUpsideDown 上下逆にする
  */
@@ -21,7 +21,7 @@ export function renderB2D(context, b2d, hidePointer, flipUpsideDown) {
 
     if (flipUpsideDown) {
         context.scale(1, -1);
-        context.translate(0, -width);  
+        context.translate(0, -width);
     }
 
     const array = b2d.getArray();

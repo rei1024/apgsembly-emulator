@@ -21,7 +21,7 @@ const B_SET_STRING = "SET";
  */
 
 /**
- * 
+ *
  * @param {BOp} op
  * @returns {BOpString}
  */
@@ -35,7 +35,7 @@ function prettyOp(op) {
 }
 
 /**
- * 
+ *
  * @param {BOpString} op
  * @returns {BOp}
  */
@@ -53,9 +53,9 @@ function parseOp(op) {
  */
 export class BRegAction extends Action {
     /**
-     * 
-     * @param {BOp} op 
-     * @param {number} regNumber 
+     *
+     * @param {BOp} op
+     * @param {number} regNumber
      */
     constructor(op, regNumber) {
         super();

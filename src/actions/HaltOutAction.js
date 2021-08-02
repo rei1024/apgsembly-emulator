@@ -44,7 +44,7 @@ export class HaltOutAction extends Action {
     }
 
     /**
-     * 
+     *
      * @override
      * @param {Action} action
      * @returns {boolean}

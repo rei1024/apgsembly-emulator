@@ -249,7 +249,7 @@ test('Machine program9_3', () => {
     assertEquals(machine.actionExecutor.uRegMap.get(0)?.getValue(), 0);
     assertEquals(machine.actionExecutor.uRegMap.get(1)?.getValue(), 5);
     assertEquals(machine.actionExecutor.uRegMap.get(2)?.getValue(), 35);
-    assertEquals(machine.actionExecutor.uRegMap.get(3)?.getValue(), 0); 
+    assertEquals(machine.actionExecutor.uRegMap.get(3)?.getValue(), 0);
 });
 
 test('Machine program9_4', () => {

@@ -45,7 +45,8 @@
         "require-unicode-regexp": "error",
         "no-undefined": "off",
         "no-multi-spaces": "error",
-        "func-style": "off"
+        "func-style": "off",
+        "no-trailing-spaces": "error"
     },
     "globals": {
         "Deno": true

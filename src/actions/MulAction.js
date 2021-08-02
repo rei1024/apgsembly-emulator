@@ -17,7 +17,7 @@ const MUL_1_STRING = "1";
  */
 
 /**
- * 
+ *
  * @param {MulOpString} op
  * @returns {MulOp}
  */
@@ -29,7 +29,7 @@ function parseOp(op) {
 }
 
 /**
- * 
+ *
  * @param {MulOp} op
  * @returns {MulOpString}
  */
@@ -45,8 +45,8 @@ function prettyOp(op) {
  */
 export class MulAction extends Action {
     /**
-     * 
-     * @param {MulOp} op 
+     *
+     * @param {MulOp} op
      */
     constructor(op) {
         super();
@@ -65,8 +65,8 @@ export class MulAction extends Action {
     }
 
     /**
-     * 
-     * @param {string} str 
+     *
+     * @param {string} str
      * @returns {MulAction | undefined}
      */
     static parse(str) {
@@ -92,7 +92,7 @@ export class MulAction extends Action {
     }
 
     /**
-     * 
+     *
      * @override
      * @param {Action} action
      * @returns {boolean}

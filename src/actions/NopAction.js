@@ -19,8 +19,8 @@ export class NopAction extends Action {
     }
 
     /**
-     * 
-     * @param {string} str 
+     *
+     * @param {string} str
      * @returns {NopAction | undefined}
      */
     static parse(str) {
@@ -36,7 +36,7 @@ export class NopAction extends Action {
     }
 
     /**
-     * 
+     *
      * @returns @override
      */
     doesReturnValue() {
@@ -44,7 +44,7 @@ export class NopAction extends Action {
     }
 
     /**
-     * 
+     *
      * @override
      * @param {Action} action
      * @returns {boolean}

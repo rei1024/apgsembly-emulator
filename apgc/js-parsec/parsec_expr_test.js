@@ -8,7 +8,7 @@ const rightParen = Parser.satisfy(c => c === ')');
 const plus = Parser.satisfy(c => c === "+");
 
 /**
- * 
+ *
  * @returns {Parser<unknown>}
  */
 function exprParser() {

@@ -17,7 +17,7 @@ const U_TDEC_STRING = "TDEC";
  */
 
 /**
- * 
+ *
  * @param {UOp} op
  * @returns {UOpString}
  */
@@ -29,7 +29,7 @@ function prettyOp(op) {
 }
 
 /**
- * 
+ *
  * @param {UOpString} op
  * @returns {UOp}
  */
@@ -45,8 +45,8 @@ function parseOp(op) {
  */
 export class URegAction extends Action {
     /**
-     * 
-     * @param {UOp} op 
+     *
+     * @param {UOp} op
      * @param {number} regNumber
      */
     constructor(op, regNumber) {
@@ -78,7 +78,7 @@ export class URegAction extends Action {
     }
 
     /**
-     * 
+     *
      * @param {string} str
      * @returns {URegAction | undefined}
      */
@@ -112,7 +112,7 @@ export class URegAction extends Action {
     }
 
     /**
-     * 
+     *
      * @override
      * @param {Action} action
      * @returns {boolean}
