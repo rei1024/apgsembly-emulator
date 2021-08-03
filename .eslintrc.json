@@ -12,8 +12,8 @@
     "ignorePatterns": ["cypress_default/**/*.js", "cypress/**/*.js", "doc/**/*.js", "apgdsl/frontend/data/**/*.js"],
     "rules": {
         "no-unused-vars": "off",
-        "no-constant-condition": "off",
-        "no-unreachable": "off",
+        "no-constant-condition": "off", // デバッグのため
+        "no-unreachable": "off", // TSで判断
         "semi": ["error", "always"],
         "curly": "error",
         "no-caller": "error",

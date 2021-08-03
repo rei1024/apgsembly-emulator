@@ -598,6 +598,12 @@ $step.addEventListener('click', () => {
     if (app.stepConfig >= 5000000) {
         $step.append(spinner);
         $step.disabled = true;
+
+        // 他のボタンも一時的に無効化する app.runで有効化される
+        $reset.disabled = true;
+        $start.disabled = true;
+        $stop.disabled = true;
+
         setTimeout(() => {
             // $step.disabled = false; // app.runで更新されるため必要ない
             app.run(app.stepConfig);
@@ -620,7 +626,7 @@ $sampleCodes.forEach(e => {
             $input.value = text;
             app.reset();
         }).catch(() => {
-            console.log('Fetch Error: ' + e.dataset[SRC]);
+            console.error(`Fetch Error: ${e.dataset[SRC]}`);
         }).finally(() => {
             $samples.disabled = false;
         });
