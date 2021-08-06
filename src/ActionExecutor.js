@@ -44,6 +44,7 @@ export class ActionExecutor {
          * @readonly
          */
         this.unaryRegisterNumbers = unaryRegisterNumbers;
+
         /**
          * @readonly
          */
