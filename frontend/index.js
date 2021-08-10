@@ -774,6 +774,9 @@ if (localStorage.getItem('hide_binary') === "true") {
     $hideBinary.checked = true;
 }
 
+// ボタンの有効化
+$samples.disabled = false;
+
 // 初回描画
 // first render
 try {
