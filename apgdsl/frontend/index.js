@@ -70,22 +70,29 @@ if (!($compileIR instanceof HTMLButtonElement)) {
 
 $compile.addEventListener('click', () => {
     try {
-        globalThis.main = "";
-        globalThis.headers = [];
-        if ($input.value.trim().length === 0) {
-            throw Error('Input is empty');
-        }
-        eval($input.value);
-        const obj = promote(globalThis.main);
-        $inner.textContent = JSON.stringify(obj, null, 2);
-        const str = typeof globalThis.headers === 'string' ? globalThis.headers.trim() : globalThis.headers.join('\n').trim();
-        $output.value = (str.length === 0 ? "" : (str + "\n")) + emit(obj).map(x => x.pretty()).join('\n');
-        $copy.disabled = false;
-        $error.style.display = "none";
+        $compile.disabled = true;
+        $copy.disabled = true;
+        setTimeout(() => {
+            globalThis.main = "";
+            globalThis.headers = [];
+            if ($input.value.trim().length === 0) {
+                $compile.disabled = false;
+                throw Error('Input is empty');
+            }
+            eval($input.value);
+            const obj = promote(globalThis.main);
+            $inner.textContent = JSON.stringify(obj, null, 2);
+            const str = typeof globalThis.headers === 'string' ? globalThis.headers.trim() : globalThis.headers.join('\n').trim();
+            $output.value = (str.length === 0 ? "" : (str + "\n")) + emit(obj).map(x => x.pretty()).join('\n');
+            $copy.disabled = false;
+            $compile.disabled = false;
+            $error.style.display = "none";
+        }, 33);
     } catch (e) {
         $error.textContent = e.message;
         $error.style.display = "block";
         $copy.disabled = true;
+        $compile.disabled = false;
     }
 });
 
