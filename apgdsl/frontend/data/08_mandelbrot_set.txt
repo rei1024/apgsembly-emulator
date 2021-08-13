@@ -1,4 +1,3 @@
-
 /**
  * ```
  * to = to + from
@@ -7,7 +6,7 @@
  * @param {number} from
  * @param {number} to
  */
- function move_u(from, to) {
+function move_u(from, to) {
     return [
         while_non_zero(tdec_u(from), [
             inc_u(to)

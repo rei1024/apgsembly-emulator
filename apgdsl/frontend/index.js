@@ -1,5 +1,4 @@
 /* eslint-disable camelcase */
-// @ts-check
 
 import {
     emit,
@@ -63,16 +62,20 @@ if (!($error instanceof HTMLElement)) {
 
 const $inner = document.querySelector('#ir_inner');
 
+if (!($inner instanceof HTMLElement)) {
+    throw Error('$inner');
+}
+
 const $compileIR = document.querySelector('#compile_ir');
 if (!($compileIR instanceof HTMLButtonElement)) {
     throw Error('$compile_ir');
 }
 
 $compile.addEventListener('click', () => {
-    try {
-        $compile.disabled = true;
-        $copy.disabled = true;
-        setTimeout(() => {
+    $compile.disabled = true;
+    $copy.disabled = true;
+    setTimeout(() => {
+        try {
             globalThis.main = "";
             globalThis.headers = [];
             if ($input.value.trim().length === 0) {
@@ -87,13 +90,14 @@ $compile.addEventListener('click', () => {
             $copy.disabled = false;
             $compile.disabled = false;
             $error.style.display = "none";
-        }, 33);
-    } catch (e) {
-        $error.textContent = e.message;
-        $error.style.display = "block";
-        $copy.disabled = true;
-        $compile.disabled = false;
-    }
+        } catch (e) {
+            $output.value = "";
+            $error.textContent = e.message;
+            $error.style.display = "block";
+            $copy.disabled = true;
+            $compile.disabled = false;
+        }
+    }, 33);
 });
 
 $compileIR.addEventListener('click', () => {
@@ -127,7 +131,9 @@ $samples.forEach(sample => {
         throw Error('sample is not HTMLElement');
     }
     sample.addEventListener('click', () => {
-        fetch(DATA_DIR + sample.dataset.src).then(x => x.text()).then(str => {
+        // @ts-ignore
+        fetch(DATA_DIR + sample.dataset.src)
+            .then(x => x.text()).then(str => {
             $input.value = str;
         });
     });
