@@ -1,3 +1,5 @@
+/// <reference types="cypress" />
+
 import { APGsemblyEmulatorURL, loadProgram, setStep } from "../common/common.js";
 
 describe('Load', () => {
