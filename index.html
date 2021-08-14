@@ -72,17 +72,18 @@
             <label for="input" class="form-label">Input</label>
             <textarea class="code-mono form-control" name="input" id="input" cols="50" rows="8"></textarea>
         </div>
+        <!-- Buttons -->
         <div data-test="control_buttons" class="btn-group" role="group" aria-label="Control">
-            <!-- 読み込まれるまではdisabled -->
+            <!-- index.jsが読み込まれるまではdisabled -->
             <button id="reset" type="button" class="btn btn-primary" disabled>Reset</button>
             <button id="start" type="button" class="btn btn-primary" disabled>Start</button>
             <button id="stop" type="button" class="btn btn-primary" disabled>Stop</button>
             <button id="step" type="button" class="btn btn-primary" disabled>Step</button>
-            <button data-test="config_button" type="button" class="btn btn-primary"
+            <button id="config_button" disabled data-test="config_button" type="button" class="btn btn-primary"
                 data-bs-toggle="modal" data-bs-target="#config_modal">
                 Config
             </button>
-            <button type="button" class="btn btn-primary"
+            <button id="stats_button" disabled type="button" class="btn btn-primary"
                 data-bs-toggle="modal" data-bs-target="#stats_modal">
                 Stats
             </button>
@@ -101,6 +102,7 @@
             <input id="import_file" type="file" class="d-none">
             <label for="import_file" class="btn btn-primary">Import</label>
         </div>
+        <!-- End Buttons -->
         <div class="mt-1 mb-2">
             <label for="frequency_input" class="form-label m-0">Speed <span id="frequency_output"></span></label>
             <!-- index.jsでminとmaxは設定するが、ジャンプを防ぐため手動でも設定する -->
