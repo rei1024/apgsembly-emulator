@@ -104,7 +104,8 @@
         </div>
         <!-- End Buttons -->
         <div class="mt-1 mb-2">
-            <label for="frequency_input" class="form-label m-0">Speed <span id="frequency_output"></span></label>
+            <!-- チラつき防止のためデフォルト値を設定 DEFUALT_FREQUENCYと同期すること -->
+            <label for="frequency_input" class="form-label m-0">Speed <span id="frequency_output">30Hz</span></label>
             <!-- index.jsでminとmaxは設定するが、ジャンプを防ぐため手動でも設定する -->
             <input id="frequency_input" class="form-range" value="11" type="range" max="63">
         </div>
