@@ -133,7 +133,7 @@ function makeMandelbrot() {
                     return 0;
                 }
             }
-            return acc.abs() > 2 ? 0 : 1;
+            return 1;
         });
     });
 }
