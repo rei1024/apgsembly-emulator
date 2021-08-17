@@ -162,6 +162,8 @@ export class App {
      */
     setUpUnary() {
         if (this.machine === undefined) {
+            // GC
+            this.unaryRegisterItems = undefined;
             $unaryRegister.innerHTML = "";
             return;
         }
