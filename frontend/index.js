@@ -554,11 +554,12 @@ $sampleCodes.forEach(e => {
     const SRC = 'src';
     e.addEventListener('click', () => {
         $samples.disabled = true;
-        fetch(DATA_DIR + e.dataset[SRC]).then(res => res.text()).then(text => {
+        const src = e.dataset[SRC];
+        fetch(DATA_DIR + src).then(res => res.text()).then(text => {
             $input.value = text;
             app.reset();
         }).catch(() => {
-            console.error(`Fetch Error: ${e.dataset[SRC]}`);
+            console.error(`Fetch Error: ${src}`);
         }).finally(() => {
             $samples.disabled = false;
         });
@@ -619,20 +620,25 @@ $stepInput.addEventListener('input', () => {
 });
 
 // バイナリを非表示にする
+const HIDE_BINARY_KEY = 'hide_binary';
+
 $hideBinary.addEventListener('change', () => {
     app.renderBinary();
-    localStorage.setItem('hide_binary', $hideBinary.checked.toString());
+    localStorage.setItem(HIDE_BINARY_KEY, $hideBinary.checked.toString());
 });
+
+const REVERSE_BINARY_KEY = 'reverse_binary';
 
 $reverseBinary.addEventListener('change', () => {
     app.renderBinary();
-    localStorage.setItem('reverse_binary', $reverseBinary.checked.toString());
+    localStorage.setItem(REVERSE_BINARY_KEY, $reverseBinary.checked.toString());
 });
 
 // ダークモード
+const DARK_MODE_KEY = 'dark_mode';
 $darkMode.addEventListener('change', () => {
     const onOrOff = $darkMode.checked ? "on" : "off";
-    localStorage.setItem('dark_mode', onOrOff);
+    localStorage.setItem(DARK_MODE_KEY, onOrOff);
     document.body.setAttribute('apge_dark_mode', onOrOff);
 
     $darkModeLabel.textContent = $darkMode.checked ? "On" : "Off";
@@ -642,9 +648,11 @@ $b2dHidePointer.addEventListener('change', () => {
     app.renderB2D();
 });
 
+const B2D_FLIP_UPSIDE_DOWN_KEY = 'b2d_flip_upside_down';
+
 $b2dFlipUpsideDown.addEventListener('change', () => {
     localStorage.setItem(
-        'b2d_flip_upside_down',
+        B2D_FLIP_UPSIDE_DOWN_KEY,
         $b2dFlipUpsideDown.checked.toString()
     );
     app.renderB2D();
@@ -693,21 +701,21 @@ document.addEventListener('keydown', e => {
 });
 
 // 実行時間が掛かる処理をまとめる
-if (localStorage.getItem('dark_mode') === "on") {
+if (localStorage.getItem(DARK_MODE_KEY) === "on") {
     document.body.setAttribute('apge_dark_mode', "on");
     $darkMode.checked = true;
     $darkModeLabel.textContent = "On";
 }
 
-if (localStorage.getItem('b2d_flip_upside_down') === "true") {
+if (localStorage.getItem(B2D_FLIP_UPSIDE_DOWN_KEY) === "true") {
     $b2dFlipUpsideDown.checked = true;
 }
 
-if (localStorage.getItem('reverse_binary') === "true") {
+if (localStorage.getItem(REVERSE_BINARY_KEY) === "true") {
     $reverseBinary.checked = true;
 }
 
-if (localStorage.getItem('hide_binary') === "true") {
+if (localStorage.getItem(HIDE_BINARY_KEY) === "true") {
     $hideBinary.checked = true;
 }
 
