@@ -18,7 +18,7 @@ import {
     UNARY_REG_ITEMS_CLASS
 } from "./renderUnary.js";
 import { setUpBinary, renderBinary } from "./renderBinary.js";
-import { renderStats } from "./renderStats.js";
+import { setUpStats, renderStats } from "./renderStats.js";
 
 import {
     $error,
@@ -212,6 +212,7 @@ export class App {
     onMachineSet() {
         this.setUpUnary();
         this.setUpBinary();
+        this.setUpStats();
         this.setUpBreakpointSelect();
     }
 
@@ -368,6 +369,14 @@ export class App {
         }
     }
 
+    setUpStats() {
+        if (this.machine === undefined) {
+            $statsBody.innerHTML = "";
+            return;
+        }
+        setUpStats($statsBody, this.machine.stateStats, this.machine.states);
+    }
+
     renderStats() {
         if (!$statsModal.classList.contains('show')) {
             return;
@@ -378,7 +387,6 @@ export class App {
         renderStats(
             $statsBody,
             this.machine.stateStats,
-            this.machine.states,
             this.machine.getCurrentStateIndex()
         );
     }
