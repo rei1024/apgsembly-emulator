@@ -635,6 +635,7 @@ $reverseBinary.addEventListener('change', () => {
 });
 
 // ダークモード
+// bodyタグ直下で設定してDark mode flashingを防ぐ
 const DARK_MODE_KEY = 'dark_mode';
 $darkMode.addEventListener('change', () => {
     const onOrOff = $darkMode.checked ? "on" : "off";
@@ -701,6 +702,7 @@ document.addEventListener('keydown', e => {
 });
 
 // 実行時間が掛かる処理をまとめる
+// bodyタグ直下でも設定する
 if (localStorage.getItem(DARK_MODE_KEY) === "on") {
     document.body.setAttribute('apge_dark_mode', "on");
     $darkMode.checked = true;

@@ -62,6 +62,12 @@
     </style>
 </head>
 <body>
+    <script>
+        // Fix Dark mode flashing
+        if (localStorage.getItem('dark_mode') === "on") {
+            document.body.setAttribute('apge_dark_mode', "on");
+        }
+    </script>
     <header class="text-center">
         <h1>APGsembly 2.0 Emulator</h1>
     </header>
