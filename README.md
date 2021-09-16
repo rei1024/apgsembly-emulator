@@ -1,5 +1,5 @@
 # apgsembly-emulator-2
-An Emulator for APGsembly 2.0
+An emulator for APGsembly 2.0
 
 ## Testing
 ### Requirements
