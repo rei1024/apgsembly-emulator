@@ -85,10 +85,10 @@ function direction(array, zOrNZ, state, direction) {
         array.push(`${state}__CHECK_SYMBOL_3; Z; ${state}__Z_WRITE_SYMBOL_1; NOP`);
         array.push(`${state}__CHECK_SYMBOL_3; NZ; ${state}__NZ_WRITE_SYMBOL_1; NOP`);
 
-        // 書き込み
         // 空白の場合
         if (true) {
             const blankLine = tmMap.getLine(state, BLANK_SYMBOL);
+            // 書き込み
             if (blankLine === undefined) {
                 array.push(`${state}__Z_WRITE_SYMBOL_1; Z; ${state}__Z_WRITE_SYMBOL_1; HALT_OUT`);
                 continue;

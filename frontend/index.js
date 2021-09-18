@@ -237,7 +237,11 @@ export class App {
                 this.render();
             } catch (e) {
                 this.appState = "ParseError";
-                this.errorMessage = e.message;
+                if (e instanceof Error) {
+                    this.errorMessage = e.message;
+                } else {
+                    this.errorMessage = "Unknown error is occurred.";
+                }
                 this.render();
             }
         }
@@ -490,7 +494,11 @@ export class App {
             }
         } catch (e) {
             this.appState = "RuntimeError";
-            this.errorMessage = e.message;
+            if (e instanceof Error) {
+                this.errorMessage = e.message;
+            } else {
+                this.errorMessage = "Unkown error is occurred.";
+            }
             this.steps += i + 1; // 1回目でエラーが発生したら1ステップとする
             this.render();
             return;

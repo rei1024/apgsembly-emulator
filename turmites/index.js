@@ -57,7 +57,7 @@ const addSample = (ruleString, desc) => {
     const button = document.createElement('button');
     button.classList.add('dropdown-item');
     button.textContent = desc;
-    button.addEventListener('click', e => {
+    button.addEventListener('click', () => {
         code.value = "";
         rule.value = ruleString;
     });
