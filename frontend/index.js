@@ -52,6 +52,7 @@ import {
     $hideBinary,
     $reverseBinary,
     $breakpointSelect,
+    $breakpointInputSelect,
     $darkMode,
     $darkModeLabel,
     $b2dHidePointer,
@@ -465,10 +466,12 @@ export class App {
 
         // ブレークポイントの処理
         let breakpointIndex = -1;
-        const n = parseInt($breakpointSelect.value, 10);
-        if (!isNaN(n)) {
-            breakpointIndex = n;
+        const tempN = parseInt($breakpointSelect.value, 10);
+        if (!isNaN(tempN)) {
+            breakpointIndex = tempN;
         }
+
+        const breakpointInputValue = parseInt($breakpointInputSelect.value, 10);
 
         const machine = this.machine;
         if (machine === undefined) {
@@ -485,7 +488,10 @@ export class App {
                     return;
                 }
                 // ブレークポイントの状態の場合、停止する
-                if (machine.getCurrentStateIndex() === breakpointIndex) {
+                if (
+                    machine.getCurrentStateIndex() === breakpointIndex &&
+                    (breakpointInputValue === -1 || breakpointInputValue === machine.prevOutput)
+                ) {
                     this.appState = "Stop";
                     this.steps += i + 1;
                     this.render();
