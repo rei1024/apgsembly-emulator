@@ -684,7 +684,7 @@ $statsModal.addEventListener('shown.bs.modal', () => {
 document.addEventListener('keydown', e => {
     const activeElementTagName =
         document.activeElement?.tagName.toUpperCase() ?? "";
-    const tags = ["TEXTAREA", "INPUT", "DETAILS", "BUTTON"];
+    const tags = ["TEXTAREA", "INPUT", "DETAILS", "BUTTON", "AUDIO", "VIDEO", "SELECT", "OPTION"];
     // 入力中は無し
     if (tags.includes(activeElementTagName)) {
         return;
