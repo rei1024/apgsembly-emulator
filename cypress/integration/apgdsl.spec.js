@@ -11,6 +11,7 @@ describe('APGDSL Integration', () => {
         cy.get('#samples').click();
         cy.get('[data-src="01_output.txt"]').click();
         cy.get('#compile').click();
+        cy.get('#output').should('include.value', 'INITIAL');
     });
     it('should run', () => {
         cy.get('#output').then(x => {
