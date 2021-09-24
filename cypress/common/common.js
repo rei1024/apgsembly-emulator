@@ -8,6 +8,8 @@ export const dslURL = baseURL + '/apgdsl/index.html';
 
 export const genURL = baseURL + '/generator/index.html';
 
+export const turmitesURL = baseURL + '/turmites/index.html';
+
 /**
  *
  * @param {string} str
