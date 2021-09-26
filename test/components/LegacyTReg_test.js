@@ -11,7 +11,7 @@ import {
 } from "../../src/components/LegacyTReg.js";
 import { assertEquals, test } from "../deps.js";
 
-test("LegacyTReg parse success", () => {
+test("LegacyTReg action", () => {
     const x = new LegacyTReg();
     x.action(LegacyTRegAction.parse('INC T0'));
     assertEquals(x.getPointer(), 1);

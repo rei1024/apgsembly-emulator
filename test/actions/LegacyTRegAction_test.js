@@ -31,6 +31,7 @@ test("LegacyTRegAction parse fail", () => {
 test("LegacyTRegAction pretty", () => {
     assertEquals(LegacyTRegAction.parse('INC T2').pretty(), "INC T2");
     assertEquals(LegacyTRegAction.parse('DEC T2').pretty(), "DEC T2");
+    assertEquals(LegacyTRegAction.parse('RESET T2').pretty(), "RESET T2");
 });
 
 test("LegacyTRegAction extract", () => {
