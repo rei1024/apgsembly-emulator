@@ -120,7 +120,7 @@ function validateNoSameComponentCommand(command) {
                     a.pretty()
                 }" and "${
                     b.pretty()
-                }" act on the same component in "${command.pretty()}"`;
+                }" use same component in "${command.pretty()}"`;
             }
         }
     }
