@@ -3,25 +3,6 @@
 import { SubAction, SUB_A1, SUB_B0, SUB_B1 } from "../actions/SubAction.js";
 
 /**
- * `-1` is `"FAILURE"`
- */
-export const subLookupA1 =
-    [
-        3, 2, -1, -1, 7, 6, -1, -1, 11, 10, -1, -1, 15, 14, -1, -1,
-        19, 18, -1, -1, 23, 22, -1, -1, 27, 26, -1, -1, 31, 30, -1, -1
-    ];
-export const subLookupB0 =
-    [
-        0, 0, 0, 0, 17, 17, 0, 0, 0, 0, 0, 0, 0, 0, 17, 17,
-        17, 17, 0, 0, 17, 17, 17, 17, 0, 0, 17, 17, 17, 17, 17, 17
-    ];
-export const subLookupB1 =
-    [
-        17, 17, 0, 0, 0, 0, 0, 0, 0, 0, 17, 17, 0, 0, 0, 0,
-        17, 17, 17, 17, 17, 17, 0, 0, 17, 17, 17, 17, 0, 0, 17, 17
-    ];
-
-/**
  * `SUB`
  */
 export class SUB {
@@ -59,6 +40,14 @@ export class SUB {
      * @returns {void}
      */
     a1() {
+        /**
+         * `-1` is `"FAILURE"`
+         */
+        const subLookupA1 =
+            [
+                3, 2, -1, -1, 7, 6, -1, -1, 11, 10, -1, -1, 15, 14, -1, -1,
+                19, 18, -1, -1, 23, 22, -1, -1, 27, 26, -1, -1, 31, 30, -1, -1
+            ];
         const x = subLookupA1[this.value] ?? this.error();
         if (x === -1) {
             throw Error("SUB error: A1");
@@ -72,6 +61,11 @@ export class SUB {
      */
     b0() {
         const t = this.value % 2;
+        const subLookupB0 =
+            [
+                0, 0, 0, 0, 17, 17, 0, 0, 0, 0, 0, 0, 0, 0, 17, 17,
+                17, 17, 0, 0, 17, 17, 17, 17, 0, 0, 17, 17, 17, 17, 17, 17
+            ];
         this.value = subLookupB0[this.value] ?? this.error();
         // @ts-ignore
         return t;
@@ -83,6 +77,11 @@ export class SUB {
      */
     b1() {
         const t = 1 - this.value % 2;
+        const subLookupB1 =
+            [
+                17, 17, 0, 0, 0, 0, 0, 0, 0, 0, 17, 17, 0, 0, 0, 0,
+                17, 17, 17, 17, 17, 17, 0, 0, 17, 17, 17, 17, 0, 0, 17, 17
+            ];
         this.value = subLookupB1[this.value] ?? this.error();
         // @ts-ignore
         return t;
