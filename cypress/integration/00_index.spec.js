@@ -106,3 +106,19 @@ describe('Start Stop Reset', () => {
         cy.get('#steps').should('have.text', '0');
     });
 });
+
+describe('Error Steps', () => {
+    it('should load', () => {
+        cy.visit(APGsemblyEmulatorURL);
+        cy.contains('APGsembly');
+    });
+    it('Run', () => {
+        cy.get('#input').type(`
+INITIAL; ZZ; A0; NOP
+A0; ZZ; A1; SET B0, NOP
+A1; ZZ; A1; SET B0, NOP`, { delay: 1 });
+        setStep(100);
+        cy.get('#step').click();
+        cy.get('#steps').should('have.text', '3');
+    });
+});

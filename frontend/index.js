@@ -478,6 +478,7 @@ export class App {
             return;
         }
         let i = 0;
+        const start = performance.now();
         try {
             for (i = 0; i < steps; i++) {
                 const res = machine.execCommand();
@@ -493,6 +494,12 @@ export class App {
                     (breakpointInputValue === -1 || breakpointInputValue === machine.prevOutput)
                 ) {
                     this.appState = "Stop";
+                    this.steps += i + 1;
+                    this.render();
+                    return;
+                }
+                // 1フレームに100ms以上時間が掛かっていたら、残りはスキップする
+                if (i % 500000 === 0 && (performance.now() - start >= 100)) {
                     this.steps += i + 1;
                     this.render();
                     return;
