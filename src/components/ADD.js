@@ -21,9 +21,12 @@ export class ADD {
      */
     action(act) {
         switch (act.op) {
-            case ADD_A1: return this.a1();
+            // A1 479061
+            // B1 535537
+            // B0 4135003
             case ADD_B0: return this.b0();
             case ADD_B1: return this.b1();
+            case ADD_A1: return this.a1();
             default: throw Error('ADD action: internal');
         }
     }
