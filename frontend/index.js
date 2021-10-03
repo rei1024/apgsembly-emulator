@@ -345,7 +345,6 @@ export class App {
             return;
         }
         renderBinary(
-            $binaryRegister,
             this.machine.actionExecutor.bRegMap,
             $hideBinary.checked,
             $reverseBinary.checked
