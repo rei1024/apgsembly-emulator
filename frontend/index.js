@@ -300,14 +300,21 @@ export class App {
             return;
         }
         const b2d = machine.actionExecutor.b2d;
+        $b2dx.textContent = b2d.x.toString();
+        $b2dy.textContent = b2d.y.toString();
+
+        const start = performance.now();
         renderB2D(
             context,
             b2d,
             $b2dHidePointer.checked,
             $b2dFlipUpsideDown.checked
         );
-        $b2dx.textContent = b2d.x.toString();
-        $b2dy.textContent = b2d.y.toString();
+
+        // 実行中に時間がかかっている場合閉じる
+        if (this.appState === 'Running' && performance.now() - start >= 200) {
+            $b2dDetail.open = false;
+        }
     }
 
     /**
