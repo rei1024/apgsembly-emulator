@@ -311,7 +311,7 @@ export class App {
             $b2dFlipUpsideDown.checked
         );
 
-        // 実行中に時間がかかっている場合閉じる
+        // 描画に時間がかかっている場合閉じる
         if (this.appState === 'Running' && performance.now() - start >= 200) {
             $b2dDetail.open = false;
         }
@@ -470,6 +470,8 @@ export class App {
             return;
         }
 
+        const isRunning = this.appState === "Running";
+
         // ブレークポイントの処理
         let breakpointIndex = -1;
         const tempN = parseInt($breakpointSelect.value, 10);
@@ -505,7 +507,7 @@ export class App {
                     return;
                 }
                 // 1フレームに100ms以上時間が掛かっていたら、残りはスキップする
-                if (i % 500000 === 0 && (performance.now() - start >= 100)) {
+                if (isRunning && i % 500000 === 0 && (performance.now() - start >= 100)) {
                     this.steps += i + 1;
                     this.render();
                     return;
