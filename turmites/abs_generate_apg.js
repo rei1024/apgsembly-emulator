@@ -54,7 +54,7 @@ SET_Y_2; NZ; SET_Y_1; INC B2DY, NOP`
 
     for (const [state, colors] of turmites.array.entries()) {
         if (colors.length !== 2) {
-            throw Error('only works with two colors');
+            throw Error('Only works with two colors');
         }
         const color0 = colors[0] ?? intenalError();
         const color1 = colors[1] ?? intenalError();

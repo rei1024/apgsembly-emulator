@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Turmites</title>
+    <title>Turmites code generator</title>
     <meta name="robots" content="noindex">
 
     <!-- Bootstrap -->
@@ -16,7 +16,7 @@
 <body>
     <header>
         <h1 class="text-center">
-            Turmites
+            Turmites code generator
         </h1>
     </header>
     <main class="container">
@@ -29,6 +29,9 @@
         <div class="mt-3">
             <label for="rule" class="form-label">Turmite rule specification</label>
             <input id="rule" type="text" class="form-control" placeholder="">
+            <div id="rule_invalid" class="invalid-feedback">
+                Invalid specification.
+            </div>
         </div>
         <div class="mt-3">
             <button id="generate" disabled class="btn btn-primary">Generate</button>
