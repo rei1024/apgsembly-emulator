@@ -375,6 +375,15 @@ export class App {
         const output = this.machine?.actionExecutor.output.getString();
         if (output !== undefined) {
             $output.value = output;
+            if (output.length >= 36 * 3) {
+                $output.rows = 4;
+            } else if (output.length >= 36 * 2) {
+                $output.rows = 3;
+            } else if (output.length >= 36) {
+                $output.rows = 2;
+            } else {
+                $output.rows = 1;
+            }
         } else {
             $output.value = "";
         }
