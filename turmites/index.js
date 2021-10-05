@@ -1,5 +1,4 @@
 // @ts-check
-// @ts-check
 
 import { generate } from './generate_apg.js';
 import { generate as absGenerate } from './abs_generate_apg.js';
