@@ -59,6 +59,7 @@ import {
     $b2dFlipUpsideDown,
     $statsModal,
     $statsBody,
+    $statsNumberOfStates,
     $samples,
 } from "./bind.js";
 
@@ -394,6 +395,7 @@ export class App {
             $statsBody.innerHTML = "";
             return;
         }
+        $statsNumberOfStates.textContent = this.machine.states.length.toString();
         setUpStats($statsBody, this.machine.stateStats, this.machine.states);
     }
 

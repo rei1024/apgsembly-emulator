@@ -15,3 +15,9 @@
    * `npm install -g typescript`
 * VSCodeを更新する
    * `Code > Restart to Update`
+* npmを更新する
+   * ` npm install -g npm`
+* nodeを更新する
+  * `nodebrew ls-remote`バージョン確認
+  * `nodebrew install v16.10.0`
+  * `nodebrew use v16.10.0`
