@@ -6,10 +6,12 @@ import {} from "./util/selector.js";
 import { setCustomError, removeCustomError } from "./util/validation_ui.js";
 import { makeSpinner } from "./util/spinner.js";
 import { importFileAsText } from "./util/import_file.js";
+import { getSaveData } from "./util/save_data.js";
+import { idle } from "./util/idle.js";
+import { Frequency } from "./util/frequency.js";
 
 import { Machine } from "../src/Machine.js";
 import { Program } from "../src/Program.js";
-import { Frequency } from "./util/frequency.js";
 
 import { renderB2D } from "./renderB2D.js";
 import {
@@ -443,21 +445,21 @@ export class App {
                 break;
             }
         }
-        this.renderCommand();
         this.renderErrorMessage();
         this.renderFrequencyOutput();
-        this.renderB2D();
-        this.renderUnary();
-        this.renderBinary();
-        this.renderAddSubMul();
-        this.renderOutput();
-        this.renderStats();
 
         $steps.textContent = this.steps.toString();
-
         // current state
         $currentState.textContent = this.machine?.currentState ?? "";
         $previousOutput.textContent = this.machine?.getPreviousOutput() ?? "";
+
+        this.renderCommand();
+        this.renderOutput();
+        this.renderUnary();
+        this.renderBinary();
+        this.renderAddSubMul();
+        this.renderStats();
+        this.renderB2D();
     }
 
     /**
@@ -585,15 +587,17 @@ $step.addEventListener('click', () => {
     }
 });
 
+const SRC_KEY = 'src';
+
 // サンプル
 $sampleCodes.forEach(e => {
     if (!(e instanceof HTMLElement)) {
         throw Error('is not HTMLElement');
     }
-    const SRC = 'src';
+
     e.addEventListener('click', () => {
         $samples.disabled = true;
-        const src = e.dataset[SRC];
+        const src = e.dataset[SRC_KEY];
         fetch(DATA_DIR + src).then(res => res.text()).then(text => {
             $input.value = text;
             app.reset();
@@ -740,26 +744,6 @@ document.addEventListener('keydown', e => {
     }
 });
 
-// 実行時間が掛かる処理をまとめる
-// bodyタグ直下でも設定する
-if (localStorage.getItem(DARK_MODE_KEY) === "on") {
-    document.body.setAttribute('apge_dark_mode', "on");
-    $darkMode.checked = true;
-    $darkModeLabel.textContent = "On";
-}
-
-if (localStorage.getItem(B2D_FLIP_UPSIDE_DOWN_KEY) === "true") {
-    $b2dFlipUpsideDown.checked = true;
-}
-
-if (localStorage.getItem(REVERSE_BINARY_KEY) === "true") {
-    $reverseBinary.checked = true;
-}
-
-if (localStorage.getItem(HIDE_BINARY_KEY) === "true") {
-    $hideBinary.checked = true;
-}
-
 // ボタンの有効化
 $samples.disabled = false;
 $configButton.disabled = false;
@@ -773,4 +757,49 @@ try {
 } catch (e) {
     console.error('first render failed');
     console.log(e);
+}
+
+idle(() => {
+    // 実行時間が掛かる処理をまとめる
+    if (localStorage.getItem(B2D_FLIP_UPSIDE_DOWN_KEY) === "true") {
+        $b2dFlipUpsideDown.checked = true;
+    }
+
+    if (localStorage.getItem(REVERSE_BINARY_KEY) === "true") {
+        $reverseBinary.checked = true;
+    }
+
+    if (localStorage.getItem(HIDE_BINARY_KEY) === "true") {
+        $hideBinary.checked = true;
+    }
+    // ダークモードについてはbodyタグ直下でも設定する
+    if (localStorage.getItem(DARK_MODE_KEY) === "on") {
+        document.body.setAttribute('apge_dark_mode', "on");
+        $darkMode.checked = true;
+        $darkModeLabel.textContent = "On";
+    }
+});
+
+// サンプルコードをプレフェッチ
+try {
+    idle(() => {
+        const saveData = getSaveData();
+        if (saveData === false || saveData === undefined) {
+            // <link rel="prefetch" href="second.html">
+            $sampleCodes.forEach(e => {
+                if (!(e instanceof HTMLElement)) {
+                    throw Error('is not HTMLElement');
+                }
+                const src = e.dataset[SRC_KEY];
+                if (src !== undefined) {
+                    const link = document.createElement('link');
+                    link.rel = "prefetch";
+                    link.href = DATA_DIR + src;
+                    document.head.append(link);
+                }
+            });
+        }
+    });
+} catch (e) {
+    console.error(e);
 }
