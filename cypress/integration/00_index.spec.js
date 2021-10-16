@@ -55,7 +55,7 @@ describe('Integers', () => {
     });
 });
 
-describe('Pi calculator', () => {
+describe('π calculator', () => {
     it('should load', () => {
         cy.visit(APGsemblyEmulatorURL);
         cy.contains('APGsembly');
