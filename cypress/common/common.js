@@ -12,6 +12,8 @@ export const genURL = baseURL + '/generator/index.html';
 
 export const turmitesURL = baseURL + '/turmites/index.html';
 
+export const tmToAPGURL = baseURL + '/tm_to_apg/index.html';
+
 /**
  *
  * @param {string} src

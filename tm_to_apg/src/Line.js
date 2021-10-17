@@ -139,5 +139,5 @@ export class Line {
  * @returns {boolean}
  */
 export function isHaltState(state) {
-    return state.startsWith('halt');
+    return state.toLowerCase().startsWith('halt');
 }
