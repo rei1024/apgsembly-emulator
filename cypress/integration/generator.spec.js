@@ -29,7 +29,7 @@ describe('Generator integration', () => {
             setStep(100);
             cy.get('#step').click();
             cy.get('#steps').should('contain.text', '100');
-        })
+        });
     });
 });
 
