@@ -21,3 +21,8 @@
   * `nodebrew ls-remote`バージョン確認
   * `nodebrew install v16.10.0`
   * `nodebrew use v16.10.0`
+
+## プロジェクト追加
+* Makefileに追加
+* test.ymlに追加
+* tsconfig.jsonに追加

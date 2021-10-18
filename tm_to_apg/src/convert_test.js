@@ -5,8 +5,7 @@ import { TMMap } from "./TMMap.js";
 import { palindrome } from "./test_data_test.js";
 import { convert } from "./convert.js";
 
-test('convert', () => {
-    let tm = TM.parse(`
+const test1 = `
 0 _ * r 7
 0 1 _ r 1
 1 1 * r 1
@@ -39,7 +38,14 @@ test('convert', () => {
 14 1 _ l 15
 15 _ * l halt
 15 1 * r 5
-    `);
+`;
+
+test('convert', () => {
+    let tm = TM.parse(test1);
+
+    if (tm instanceof Error) {
+        throw tm;
+    }
 
     tm = TM.parse(`
     0 _ * r 5
