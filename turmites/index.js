@@ -1,10 +1,10 @@
 // @ts-check
 
-import { generate } from './generate_apg.js';
-import { generate as absGenerate } from './abs_generate_apg.js';
+import { generate } from './src/generate_apg.js';
+import { generate as absGenerate } from './src/abs_generate_apg.js';
 
-import { Turmites } from './turmites.js';
-import { AbsTurmites } from './abs_turmites.js';
+import { Turmites } from './src/turmites.js';
+import { AbsTurmites } from './src/abs_turmites.js';
 
 import { peggLibrary, timLibrary, absLibrary } from './lib.js';
 
