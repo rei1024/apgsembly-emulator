@@ -781,8 +781,8 @@ idle(() => {
 });
 
 // サンプルコードをプレフェッチ
-try {
-    idle(() => {
+idle(() => {
+    try {
         const saveData = getSaveData();
         if (saveData === false || saveData === undefined) {
             // <link rel="prefetch" href="second.html">
@@ -799,7 +799,7 @@ try {
                 }
             });
         }
-    });
-} catch (e) {
-    console.error(e);
-}
+    } catch (e) {
+        console.error(e);
+    }
+});

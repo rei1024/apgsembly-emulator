@@ -68,7 +68,7 @@ for (const { name, prog } of list) {
     button.classList.add('dropdown-item');
     button.textContent = name;
     button.addEventListener('click', () => {
-        $input.textContent = prog;
+        $input.value = prog;
     });
     $list.append(button);
 }
