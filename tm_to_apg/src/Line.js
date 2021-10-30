@@ -11,7 +11,9 @@
 export function parseDirection(str) {
     switch (str) {
         case "l": return str;
+        case "L": return "l";
         case "r": return str;
+        case "R": return "r";
         case "*": return str;
         default: return undefined;
     }

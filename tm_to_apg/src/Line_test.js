@@ -4,6 +4,10 @@ import { Line, isHaltState } from "./Line.js";
 test('parse Line', () => {
     assertEquals(Line.parse('0 0 _ r 1o'), Line.make('0', '0', '_', 'r', '1o'));
 
+    assertEquals(Line.parse('0 0 _ R 1o'), Line.make('0', '0', '_', 'r', '1o'));
+
+    assertEquals(Line.parse('0 0 _ L 1o'), Line.make('0', '0', '_', 'l', '1o'));
+
     assertEquals(Line.parse('1 a b r 2 !'), Line.make('1', 'a', 'b', 'r', '2'));
 
     assertEquals(Line.parse('0 0 _ r 1o; abc def'), Line.make('0', '0', '_', 'r', '1o'));
