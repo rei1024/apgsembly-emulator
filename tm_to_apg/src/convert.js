@@ -46,7 +46,7 @@ function direction(array, zOrNZ, state, direction) {
 /**
  *
  * @param {TMMap} tmMap
- * @returns {string | Error}
+ * @returns {string | Error} APGsembly
  */
  export function convert(tmMap) {
     /**

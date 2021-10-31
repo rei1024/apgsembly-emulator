@@ -50,10 +50,34 @@ export class Line {
      * }} param0
      */
     constructor({ currentState, currentSymbol, newSymbol, direction, newState }) {
+        /**
+         * @type {string | undefined}
+         * @readonly
+         */
         this.currentState = currentState;
+
+        /**
+         * @type {string | undefined}
+         * @readonly
+         */
         this.currentSymbol = currentSymbol;
+
+        /**
+         * @type {string | undefined}
+         * @readonly
+         */
         this.newSymbol = newSymbol;
+
+        /**
+         * @type {Direction}
+         * @readonly
+         */
         this.direction = direction;
+
+        /**
+         * @type {string | undefined}
+         * @readonly
+         */
         this.newState = newState;
     }
 

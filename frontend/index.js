@@ -201,8 +201,7 @@ export class App {
         none.value = "-1";
         none.selected = true;
         $breakpointSelect.append(none);
-        const stateMap = machine.getStateMap();
-        for (const [state, stateIndex] of stateMap.entries()) {
+        for (const [state, stateIndex] of machine.getStateMap().entries()) {
             const option = document.createElement('option');
             option.textContent = state;
             option.value = stateIndex.toString();

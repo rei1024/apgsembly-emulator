@@ -30,8 +30,22 @@ export class TMMap {
      * @param {string[]} symbols
      */
     constructor(map, states, symbols) {
+        /**
+         * @type {Map<string, Map<string, Line | undefined>>}
+         * @readonly
+         */
         this.map = map;
+
+        /**
+         * @type {string[]}
+         * @readonly
+         */
         this.states = states;
+
+        /**
+         * @type {string[]}
+         * @readonly
+         */
         this.symbols = symbols;
     }
 
