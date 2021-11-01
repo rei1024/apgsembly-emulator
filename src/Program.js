@@ -1,6 +1,7 @@
 // @ts-check
 
 import { Command, ComponentsHeader, RegistersHeader } from "./Command.js";
+import { Action } from "./actions/Action.js";
 import { ProgramLines } from "./ProgramLines.js";
 import {
     validateActionReturnOnce,
@@ -128,30 +129,32 @@ export class Program {
     }
 
     /**
+     * @private
+     * @returns {Action[]}
+     */
+    _actions() {
+        return this.commands.flatMap(command => command.actions);
+    }
+
+    /**
      * @returns {number[]}
      */
     extractUnaryRegisterNumbers() {
-        const array = this.commands.flatMap(command => command.actions)
-            .flatMap(action => action.extractUnaryRegisterNumbers());
-        return sortNub(array);
+        return sortNub(this._actions().flatMap(a => a.extractUnaryRegisterNumbers()));
     }
 
     /**
      * @returns {number[]}
      */
     extractBinaryRegisterNumbers() {
-        const array = this.commands.flatMap(command => command.actions)
-            .flatMap(action => action.extractBinaryRegisterNumbers());
-        return sortNub(array);
+        return sortNub(this._actions().flatMap(a => a.extractBinaryRegisterNumbers()));
     }
 
     /**
      * @returns {number[]}
      */
     extractLegacyTRegisterNumbers() {
-        const array = this.commands.flatMap(command => command.actions)
-            .flatMap(action => action.extractLegacyTRegisterNumbers());
-        return sortNub(array);
+        return sortNub(this._actions().flatMap(a => a.extractLegacyTRegisterNumbers()));
     }
 
     /**
