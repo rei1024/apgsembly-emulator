@@ -4,6 +4,40 @@ import { HaltOutAction } from "./actions/HaltOutAction.js";
 import { Command, INITIAL_STATE } from "./Command.js";
 
 /**
+ * 全てのバリデーションを通す
+ * @param {Command[]} commands
+ * @returns {undefined | string} string is error
+ */
+export function validateAll(commands) {
+    const duplicateError = validateNoDuplicatedAction(commands);
+    if (typeof duplicateError === 'string') {
+        return duplicateError;
+    }
+
+    const returnOnceError = validateActionReturnOnce(commands);
+    if (typeof returnOnceError === 'string') {
+        return returnOnceError;
+    }
+
+    const noSameComponentError = validateNoSameComponent(commands);
+    if (typeof noSameComponentError === 'string') {
+        return noSameComponentError;
+    }
+
+    const nextStateIsNotInitialError = validateNextStateIsNotINITIAL(commands);
+    if (typeof nextStateIsNotInitialError === 'string') {
+        return nextStateIsNotInitialError;
+    }
+
+    const zAndNZError = validateZAndNZ(commands);
+    if (typeof zAndNZError === 'string') {
+        return zAndNZError;
+    }
+
+    return undefined;
+}
+
+/**
  * @returns {never}
  */
 function internalError() {
