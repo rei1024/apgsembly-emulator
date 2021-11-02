@@ -50,19 +50,25 @@ import {
     $addSubMul,
     $fileImport,
     $sampleCodes,
+    $samples,
+
+    // Modal
     $stepInput,
     $hideBinary,
     $reverseBinary,
+    $showBinaryValueInDecimal,
+    $showBinaryValueInHex,
     $breakpointSelect,
     $breakpointInputSelect,
     $darkMode,
     $darkModeLabel,
     $b2dHidePointer,
     $b2dFlipUpsideDown,
+
+    // Stats
     $statsModal,
     $statsBody,
     $statsNumberOfStates,
-    $samples,
 } from "./bind.js";
 
 // データ
@@ -356,7 +362,9 @@ export class App {
         renderBinary(
             this.machine.actionExecutor.bRegMap,
             $hideBinary.checked,
-            $reverseBinary.checked
+            $reverseBinary.checked,
+            $showBinaryValueInDecimal.checked,
+            $showBinaryValueInHex.checked
         );
     }
 
@@ -676,6 +684,20 @@ $reverseBinary.addEventListener('change', () => {
     localStorage.setItem(REVERSE_BINARY_KEY, $reverseBinary.checked.toString());
 });
 
+const SHOW_BINARY_IN_DECIMAL_KEY = 'show_binary_in_decimal';
+
+$showBinaryValueInDecimal.addEventListener('change', () => {
+    app.renderBinary();
+    localStorage.setItem(SHOW_BINARY_IN_DECIMAL_KEY, $showBinaryValueInDecimal.checked.toString());
+});
+
+const SHOW_BINARY_IN_HEX_KEY = 'show_binary_in_hex';
+
+$showBinaryValueInHex.addEventListener('change', () => {
+    app.renderBinary();
+    localStorage.setItem(SHOW_BINARY_IN_HEX_KEY, $showBinaryValueInHex.checked.toString());
+});
+
 // ダークモード
 // bodyタグ直下で設定してDark mode flashingを防ぐ
 const DARK_MODE_KEY = 'dark_mode';
@@ -771,12 +793,27 @@ idle(() => {
     if (localStorage.getItem(HIDE_BINARY_KEY) === "true") {
         $hideBinary.checked = true;
     }
+
+    // デフォルトはtrue
+    if (localStorage.getItem(SHOW_BINARY_IN_DECIMAL_KEY) === null) {
+        localStorage.setItem(SHOW_BINARY_IN_DECIMAL_KEY, 'true');
+    }
+
+    if (localStorage.getItem(SHOW_BINARY_IN_DECIMAL_KEY) === "true") {
+        $showBinaryValueInDecimal.checked = true;
+    }
+
+    if (localStorage.getItem(SHOW_BINARY_IN_HEX_KEY) === "true") {
+        $showBinaryValueInHex.checked = true;
+    }
+
     // ダークモードについてはbodyタグ直下でも設定する
     if (localStorage.getItem(DARK_MODE_KEY) === "on") {
         document.body.setAttribute('apge_dark_mode', "on");
         $darkMode.checked = true;
         $darkModeLabel.textContent = "On";
     }
+    app.render();
 });
 
 // サンプルコードをプレフェッチ

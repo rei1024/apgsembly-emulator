@@ -181,6 +181,18 @@ export class BReg {
     }
 
     /**
+     * 16進数
+     * @returns {string} "FF"
+     */
+    toHexString() {
+        if (hasBigInt) {
+            return BigInt("0b" + this.toBinaryString()).toString(16);
+        } else {
+            return Number("0b" + this.toBinaryString()).toString(16);
+        }
+    }
+
+    /**
      * prefixとsuffixがsliceされていることは保証する
      * @returns {{
         prefix: (0 | 1)[];
