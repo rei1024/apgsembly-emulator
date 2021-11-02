@@ -8,6 +8,7 @@ import { makeSpinner } from "./util/spinner.js";
 import { importFileAsText } from "./util/import_file.js";
 import { getSaveData } from "./util/save_data.js";
 import { idle } from "./util/idle.js";
+import { prefetch } from "./util/prefetch.js";
 import { Frequency } from "./util/frequency.js";
 
 import { Machine } from "../src/Machine.js";
@@ -821,17 +822,13 @@ idle(() => {
     try {
         const saveData = getSaveData();
         if (saveData === false || saveData === undefined) {
-            // <link rel="prefetch" href="second.html">
             $sampleCodes.forEach(e => {
                 if (!(e instanceof HTMLElement)) {
                     throw Error('is not HTMLElement');
                 }
                 const src = e.dataset[SRC_KEY];
                 if (src !== undefined) {
-                    const link = document.createElement('link');
-                    link.rel = "prefetch";
-                    link.href = DATA_DIR + src;
-                    document.head.append(link);
+                    prefetch(DATA_DIR + src);
                 }
             });
         }
