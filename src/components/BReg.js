@@ -169,15 +169,23 @@ export class BReg {
     }
 
     /**
+     * @param {number} [base]
+     * @private
+     */
+    toString(base = 10) {
+        if (hasBigInt) {
+            return BigInt("0b" + this.toBinaryString()).toString(base);
+        } else {
+            return Number("0b" + this.toBinaryString()).toString(base);
+        }
+    }
+
+    /**
      * 十進数
      * @returns {string} "123"
      */
     toDecimalString() {
-        if (hasBigInt) {
-            return BigInt("0b" + this.toBinaryString()).toString();
-        } else {
-            return Number("0b" + this.toBinaryString()).toString();
-        }
+        return this.toString();
     }
 
     /**
@@ -185,11 +193,7 @@ export class BReg {
      * @returns {string} "FF"
      */
     toHexString() {
-        if (hasBigInt) {
-            return BigInt("0b" + this.toBinaryString()).toString(16);
-        } else {
-            return Number("0b" + this.toBinaryString()).toString(16);
-        }
+        return this.toString(16);
     }
 
     /**
