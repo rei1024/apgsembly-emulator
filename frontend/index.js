@@ -287,7 +287,7 @@ export class App {
      */
     renderCommand() {
         try {
-            const next = this.machine?.getNextCompiledCommandWithNextState();
+            const next = this.machine?.getNextCompiledCommandWithNextState(false);
             $command.textContent = next?.command.pretty() ?? "";
         } catch (e) {
             $command.textContent = "";

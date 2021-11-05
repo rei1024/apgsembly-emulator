@@ -80,7 +80,7 @@ export class BReg {
      * @returns {void}
      */
     inc() {
-        this.pointer += 1;
+        this.pointer++;
         this.extend();
     }
 
@@ -92,7 +92,7 @@ export class BReg {
         if (this.pointer === 0) {
             return 0;
         } else {
-            this.pointer -= 1;
+            this.pointer--;
             return 1;
         }
     }

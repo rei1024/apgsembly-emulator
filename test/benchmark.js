@@ -9,7 +9,7 @@ const N = 10000000;
 
 // let max = 0;
 
-for (let k = 0; k < 5; k++) {
+for (let k = 0; k < 10; k++) {
     const program = Program.parse(piCalculator);
     const machine = new Machine(program);
     const start = performance.now();
