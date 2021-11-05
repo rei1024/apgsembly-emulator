@@ -1,6 +1,6 @@
 // @ts-check
 
-import { BReg } from "../src/components/BReg.js";
+import { BReg } from "../../src/components/BReg.js";
 
 /**
  * @type {{

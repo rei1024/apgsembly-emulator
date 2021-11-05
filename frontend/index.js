@@ -14,14 +14,14 @@ import { Frequency } from "./util/frequency.js";
 import { Machine } from "../src/Machine.js";
 import { Program } from "../src/Program.js";
 
-import { renderB2D } from "./renderB2D.js";
+import { renderB2D } from "./render_component/renderB2D.js";
 import {
     renderUnary,
     setUpUnary,
     UNARY_REG_ITEMS_CLASS
-} from "./renderUnary.js";
-import { setUpBinary, renderBinary } from "./renderBinary.js";
-import { setUpStats, renderStats } from "./renderStats.js";
+} from "./render_component/renderUnary.js";
+import { setUpBinary, renderBinary } from "./render_component/renderBinary.js";
+import { setUpStats, renderStats } from "./render_component/renderStats.js";
 
 import {
     $error,
