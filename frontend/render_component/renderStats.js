@@ -51,7 +51,7 @@ export function renderStats(stateStats, currentIndex) {
     const len = cache.length;
     for (let i = 0; i < len; i++) {
         const item = cache[i] ?? error();
-        const cls = 'stats_current_state'; /* dark_mode.cssで設定 */
+        const cls = 'stats_current_state'; /* style.cssで設定 */
         if (currentIndex === i) {
             item.tr.classList.add(cls);
         } else {

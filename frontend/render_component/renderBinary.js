@@ -32,7 +32,7 @@ export function setUpBinary($binaryRegister, regs) {
         const metaDataCode = document.createElement('code');
         // 長い場合は改行を入れる
         metaDataCode.style.wordBreak = "break-all";
-        metaDataCode.classList.add('binary_info'); // dark_mode.cssで設定
+        metaDataCode.classList.add('binary_info'); // style.cssで設定
         const decimal = document.createElement('span');
         decimal.classList.add('decimal');
         const hex = document.createElement('span');
