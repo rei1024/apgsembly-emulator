@@ -20,7 +20,7 @@ test('validateNoSameComponent NOP NOP', () => {
     } else {
         assertEquals(
             err,
-            `Actions "NOP" and "NOP" use same component in "INITIAL; ZZ; A0; NOP, NOP"`
+            [`Actions "NOP" and "NOP" use same component in "INITIAL; ZZ; A0; NOP, NOP"`]
         );
     }
 });
@@ -39,7 +39,7 @@ test('validateNoDuplicatedAction NOP NOP', () => {
     } else {
         assertEquals(
             err,
-            `Duplicated actions "NOP" in "INITIAL; ZZ; A0; NOP, NOP"`
+            [`Duplicated actions "NOP" in "INITIAL; ZZ; A0; NOP, NOP"`]
         );
     }
 });
@@ -58,7 +58,7 @@ test('validateNoDuplicatedAction NOP, OUTPUT 1, NOP', () => {
     } else {
         assertEquals(
             err,
-            `Duplicated actions "NOP" in "INITIAL; ZZ; A0; NOP, OUTPUT 1, NOP"`
+            [`Duplicated actions "NOP" in "INITIAL; ZZ; A0; NOP, OUTPUT 1, NOP"`]
         );
     }
 });

@@ -274,7 +274,14 @@ export class App {
     renderErrorMessage() {
         if (this.appState === "RuntimeError" ||
             this.appState === "ParseError") {
-            $error.textContent = this.errorMessage;
+            const messages = this.errorMessage.split('\n');
+            $error.innerHTML = "";
+            for (const message of messages) {
+                const span = document.createElement('span');
+                span.textContent = "- " + message;
+                const br = document.createElement('br');
+                $error.append(span, br);
+            }
             $error.style.display = "block";
             console.error("RENDER: " + this.errorMessage);
         } else {
