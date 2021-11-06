@@ -33,7 +33,9 @@ const hasBigInt = typeof BigInt !== 'undefined';
  */
 export class BReg {
     constructor() {
+        // invariant: this.pointer < this.bits.length
         this.pointer = 0;
+
         /**
          * @private
          * @type {(0 | 1)[]}
@@ -47,6 +49,9 @@ export class BReg {
      * @returns {0 | 1 | void}
      */
     action(act) {
+        // if (this.pointer >= this.bits.length) {
+        //     throw Error('failed');
+        // }
         switch (act.op) {
             // INC  3207502
             // TDEC 3217502
@@ -81,7 +86,10 @@ export class BReg {
      */
     inc() {
         this.pointer++;
-        this.extend();
+        // using invariant
+        if (this.pointer === this.bits.length) {
+            this.bits.push(0);
+        }
     }
 
     /**
@@ -105,9 +113,9 @@ export class BReg {
         const pointer = this.pointer;
         const bits = this.bits;
         if (pointer < bits.length) {
-            const value = bits[pointer];
+            const value = bits[pointer] ?? this.error();
             bits[pointer] = 0;
-            return value ?? this.error();
+            return value;
         } else {
             return 0;
         }
@@ -146,7 +154,7 @@ export class BReg {
                 /**
                  * @type {0[]}
                  */
-                const rest = Array(pointer - len + 1).fill(0);
+                const rest = Array(pointer - len + 1).fill(0).map(() => 0);
                 this.bits.push(...rest);
             }
         }

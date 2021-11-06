@@ -1,3 +1,5 @@
+// @ts-check
+
 /* eslint-disable camelcase */
 import { Program } from '../src/Program.js';
 import { assertEquals, test } from "./deps.js";

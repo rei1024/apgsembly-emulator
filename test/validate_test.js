@@ -1,3 +1,5 @@
+// @ts-check
+
 import { NopAction } from "../src/actions/NopAction.js";
 import { OutputAction } from "../src/actions/OutputAction.js";
 import { Command } from "../src/Command.js";

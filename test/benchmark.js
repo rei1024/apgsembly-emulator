@@ -1,3 +1,5 @@
+// @ts-check
+
 import { Machine } from "../src/Machine.js";
 import { Program } from "../src/Program.js";
 import { piCalculator } from "./pi_calculator.js";
@@ -11,6 +13,9 @@ const N = 10000000;
 
 for (let k = 0; k < 10; k++) {
     const program = Program.parse(piCalculator);
+    if (typeof program === 'string') {
+        throw Error('error');
+    }
     const machine = new Machine(program);
     const start = performance.now();
     for (let i = 0; i < N; i++) {

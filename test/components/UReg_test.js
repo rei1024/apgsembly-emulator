@@ -1,3 +1,5 @@
+// @ts-check
+
 import { URegAction } from "../../src/actions/URegAction.js";
 import { UReg } from "../../src/components/UReg.js";
 import { assertEquals, test, assertThrows } from "../deps.js";

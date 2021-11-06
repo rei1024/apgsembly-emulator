@@ -43,7 +43,7 @@ export class B2D {
          * @type {(0 | 1)[][]}
          */
         this.array = Array(this.maxY + 1).fill(0).map(_ => {
-            return Array(this.maxX + 1).fill(0);
+            return Array(this.maxX + 1).fill(0).map(() => 0);
         });
     }
 

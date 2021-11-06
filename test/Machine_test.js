@@ -1,3 +1,5 @@
+// @ts-check
+
 /* eslint-disable camelcase */
 import { Machine } from "../src/Machine.js";
 import { Program } from "../src/Program.js";
