@@ -185,4 +185,22 @@ export class ActionExecutor {
         }
         throw Error(`execAction: unknown action ${action.pretty()}`);
     }
+
+    /**
+     *
+     * @param {number} n
+     * @returns {UReg | undefined}
+     */
+    getUReg(n) {
+        return this.uRegMap.get(n);
+    }
+
+    /**
+     *
+     * @param {number} n
+     * @returns {BReg | undefined}
+     */
+    getBReg(n) {
+        return this.bRegMap.get(n);
+    }
 }
