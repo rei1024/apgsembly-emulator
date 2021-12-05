@@ -471,7 +471,8 @@ export class App {
         this.renderErrorMessage();
         this.renderFrequencyOutput();
 
-        $steps.textContent = this.steps.toString();
+        $steps.textContent = hasToLocaleString ? this.steps.toLocaleString() : this.steps.toString();
+
         // current state
         $currentState.textContent = this.machine?.currentState ?? "";
         $previousOutput.textContent = this.machine?.getPreviousOutput() ?? "";
