@@ -16,7 +16,9 @@ import { Program } from "../src/Program.js";
 
 import { renderB2D } from "./render_component/renderB2D.js";
 import { UnaryUI } from "./components/unary_ui.js";
-import { setUpBinary, renderBinary } from "./render_component/renderBinary.js";
+import { BinaryUI } from "./components/binary_ui.js";
+
+// import { setUpBinary, renderBinary } from "./render_component/renderBinary.js";
 import { setUpStats, renderStats } from "./render_component/renderStats.js";
 
 import {
@@ -122,6 +124,8 @@ export class App {
         );
 
         this.unaryUI = new UnaryUI($unaryRegister);
+
+        this.binaryUI = new BinaryUI($binaryRegister);
     }
 
     /**
@@ -177,10 +181,10 @@ export class App {
      */
     setUpBinary() {
         if (this.machine === undefined) {
-            $binaryRegister.innerHTML = "";
+            this.binaryUI.clear();
             return;
         }
-        setUpBinary($binaryRegister, this.machine.actionExecutor.bRegMap);
+        this.binaryUI.initialize(this.machine.actionExecutor.bRegMap);
     }
 
     /**
@@ -352,7 +356,7 @@ export class App {
         if (!$binaryRegisterDetail.open) {
             return;
         }
-        renderBinary(
+        this.binaryUI.render(
             this.machine.actionExecutor.bRegMap,
             $hideBinary.checked,
             $reverseBinary.checked,
