@@ -15,10 +15,7 @@ import { Machine } from "../src/Machine.js";
 import { Program } from "../src/Program.js";
 
 import { renderB2D } from "./render_component/renderB2D.js";
-import {
-    renderUnary,
-    setUpUnary,
-} from "./render_component/renderUnary.js";
+import { UnaryUI } from "./components/unary_ui.js";
 import { setUpBinary, renderBinary } from "./render_component/renderBinary.js";
 import { setUpStats, renderStats } from "./render_component/renderStats.js";
 
@@ -123,6 +120,8 @@ export class App {
             () => this.frequency,
             n => this.run(n)
         );
+
+        this.unaryUI = new UnaryUI($unaryRegister);
     }
 
     /**
@@ -166,12 +165,11 @@ export class App {
      */
     setUpUnary() {
         if (this.machine === undefined) {
-            // GC
-            $unaryRegister.innerHTML = "";
+            this.unaryUI.clear();
             return;
         }
         const regs = this.machine.actionExecutor.uRegMap;
-        setUpUnary($unaryRegister, regs);
+        this.unaryUI.initialize(regs);
     }
 
     /**
@@ -334,7 +332,7 @@ export class App {
         if (!$unaryRegisterDetail.open) {
             return;
         }
-        renderUnary(this.machine.actionExecutor.uRegMap);
+        this.unaryUI.render(this.machine.actionExecutor.uRegMap);
     }
 
     /**
