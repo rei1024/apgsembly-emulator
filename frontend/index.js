@@ -17,9 +17,7 @@ import { Program } from "../src/Program.js";
 import { renderB2D } from "./render_component/renderB2D.js";
 import { UnaryUI } from "./components/unary_ui.js";
 import { BinaryUI } from "./components/binary_ui.js";
-
-// import { setUpBinary, renderBinary } from "./render_component/renderBinary.js";
-import { setUpStats, renderStats } from "./render_component/renderStats.js";
+import { StatsUI } from "./components/stats_ui.js";
 
 import {
     $error,
@@ -126,6 +124,8 @@ export class App {
         this.unaryUI = new UnaryUI($unaryRegister);
 
         this.binaryUI = new BinaryUI($binaryRegister);
+
+        this.statsUI = new StatsUI($statsBody);
     }
 
     /**
@@ -398,11 +398,11 @@ export class App {
 
     setUpStats() {
         if (this.machine === undefined) {
-            $statsBody.innerHTML = "";
+            this.statsUI.clear();
             return;
         }
         $statsNumberOfStates.textContent = this.machine.states.length.toString();
-        setUpStats($statsBody, this.machine.stateStats, this.machine.states);
+        this.statsUI.initialize(this.machine.stateStats, this.machine.states);
     }
 
     renderStats() {
@@ -412,7 +412,7 @@ export class App {
         if (this.machine === undefined) {
             return;
         }
-        renderStats(
+        this.statsUI.render(
             this.machine.stateStats,
             this.machine.getCurrentStateIndex()
         );
