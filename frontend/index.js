@@ -283,13 +283,7 @@ $statsButton.disabled = false;
 
 // 初回描画
 // first render
-try {
-    app.render();
-    app.frequencyManager.start();
-} catch (e) {
-    console.error('first render failed');
-    console.log(e);
-}
+app.initializeApp();
 
 idle(() => {
     // 実行時間が掛かる処理をまとめる

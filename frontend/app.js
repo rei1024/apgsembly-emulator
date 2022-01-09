@@ -58,12 +58,18 @@ const hasToLocaleString = typeof (42).toLocaleString === 'function';
 /**
  * APGsembly 2.0 Emulator frontend application
  */
- export class App {
+export class App {
     constructor() {
-        /** @type {Machine | undefined} */
+        /**
+         * @type {Machine | undefined}
+         * @private
+         */
         this.machine = undefined;
 
-        /** ステップ数 */
+        /**
+         * ステップ数
+         * @private
+         */
         this.steps = 0;
 
         /**
@@ -80,23 +86,53 @@ const hasToLocaleString = typeof (42).toLocaleString === 'function';
 
         /**
          * エラーメッセージ
+         * @private
          */
         this.errorMessage = "";
 
         /** ステップ数設定 */
         this.stepConfig = 1;
 
+        /**
+         * @readonly
+         * @private
+         */
         this.frequencyManager = new Frequency(
             () => this.appState === "Running",
             () => this.frequency,
             n => this.run(n)
         );
 
+        /**
+         * @private
+         * @readonly
+         */
         this.unaryUI = new UnaryUI($unaryRegister);
 
+        /**
+         * @private
+         * @readonly
+         */
         this.binaryUI = new BinaryUI($binaryRegister);
 
+        /**
+         * @private
+         * @readonly
+         */
         this.statsUI = new StatsUI($statsBody);
+    }
+
+    /**
+     * 初期化
+     */
+    initializeApp() {
+        try {
+            this.render();
+            this.frequencyManager.start();
+        } catch (e) {
+            console.error('first render failed');
+            console.log(e);
+        }
     }
 
     /**
@@ -137,6 +173,7 @@ const hasToLocaleString = typeof (42).toLocaleString === 'function';
 
     /**
      * スライディングレジスタ表示の初期化
+     * @private
      */
     setUpUnary() {
         if (this.machine === undefined) {
@@ -149,6 +186,7 @@ const hasToLocaleString = typeof (42).toLocaleString === 'function';
 
     /**
      * バイナリレジスタの表示の初期化
+     * @private
      */
     setUpBinary() {
         if (this.machine === undefined) {
@@ -160,6 +198,7 @@ const hasToLocaleString = typeof (42).toLocaleString === 'function';
 
     /**
      * ブレークポイントの選択肢の設定
+     * @private
      */
     setUpBreakpointSelect() {
         $breakpointSelect.innerHTML = "";
@@ -182,6 +221,7 @@ const hasToLocaleString = typeof (42).toLocaleString === 'function';
 
     /**
      * machineがセットされた時のコールバック
+     * @private
      */
     onMachineSet() {
         this.setUpUnary();
@@ -234,7 +274,10 @@ const hasToLocaleString = typeof (42).toLocaleString === 'function';
         }
     }
 
-    // エラーメッセージ
+    /**
+     * エラーメッセージ
+     * @private
+     */
     renderErrorMessage() {
         if (this.appState === "RuntimeError" ||
             this.appState === "ParseError") {
@@ -255,6 +298,7 @@ const hasToLocaleString = typeof (42).toLocaleString === 'function';
 
     /**
      * 次のコマンドの表示
+     * @private
      */
     renderCommand() {
         try {
@@ -311,13 +355,6 @@ const hasToLocaleString = typeof (42).toLocaleString === 'function';
     }
 
     /**
-     * @returns {never}
-     */
-    __error__() {
-        throw Error('internal error');
-    }
-
-    /**
      * バイナリレジスタの表示
      */
     renderBinary() {
@@ -336,6 +373,9 @@ const hasToLocaleString = typeof (42).toLocaleString === 'function';
         );
     }
 
+    /**
+     * @private
+     */
     renderAddSubMul() {
         if (this.machine === undefined) {
             $addSubMul.textContent = "";
@@ -349,6 +389,9 @@ const hasToLocaleString = typeof (42).toLocaleString === 'function';
         `;
     }
 
+    /**
+     * @private
+     */
     renderOutput() {
         const output = this.machine?.actionExecutor.output.getString();
         if (output !== undefined) {
@@ -367,6 +410,9 @@ const hasToLocaleString = typeof (42).toLocaleString === 'function';
         }
     }
 
+    /**
+     * @private
+     */
     setUpStats() {
         if (this.machine === undefined) {
             $statsNumberOfStates.textContent = '';
@@ -377,6 +423,9 @@ const hasToLocaleString = typeof (42).toLocaleString === 'function';
         this.statsUI.initialize(this.machine.stateStats, this.machine.states);
     }
 
+    /**
+     * @property
+     */
     renderStats() {
         if (!$statsModal.classList.contains('show')) {
             return;
@@ -463,7 +512,7 @@ const hasToLocaleString = typeof (42).toLocaleString === 'function';
             }
         }
 
-        if (steps === 0) {
+        if (steps <= 0) {
             // no render
             return;
         }
