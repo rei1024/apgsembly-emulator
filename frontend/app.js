@@ -1,5 +1,5 @@
-
 // @ts-check
+
 import { Frequency } from "./util/frequency.js";
 
 import { Machine } from "../src/Machine.js";
@@ -50,7 +50,7 @@ import {
     $statsNumberOfStates,
 } from "./bind.js";
 
-// index.htmlと同期する
+/** index.htmlと同期する */
 export const DEFUALT_FREQUENCY = 30;
 
 const hasToLocaleString = typeof (42).toLocaleString === 'function';
