@@ -398,6 +398,7 @@ export class App {
 
     setUpStats() {
         if (this.machine === undefined) {
+            $statsNumberOfStates.textContent = '';
             this.statsUI.clear();
             return;
         }
@@ -505,6 +506,7 @@ export class App {
             breakpointIndex = tempN;
         }
 
+        // -1: *, 0: Z, 1: NZ
         const breakpointInputValue = parseInt($breakpointInputSelect.value, 10);
 
         const machine = this.machine;
@@ -532,8 +534,8 @@ export class App {
                     this.render();
                     return;
                 }
-                // 1フレームに100ms以上時間が掛かっていたら、残りはスキップする
-                if (isRunning && i % 500000 === 0 && (performance.now() - start >= 100)) {
+                // 1フレームに50ms以上時間が掛かっていたら、残りはスキップする
+                if (isRunning && i % 500000 === 0 && (performance.now() - start >= 50)) {
                     this.steps += i + 1;
                     this.render();
                     return;
