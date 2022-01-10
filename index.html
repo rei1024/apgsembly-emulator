@@ -4,9 +4,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>APGsembly 2.0 Emulator</title>
+    <!-- CSP -->
+    <!-- `data://*` is close button for modal -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' cdn.jsdelivr.net 'unsafe-inline'; script-src 'self' cdn.jsdelivr.net 'sha256-xYJ0eyX805nvgf5HIKl5CyP65vauWTNQ90lkobGlIOA='; img-src 'self' data://*; ">
 
-    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+    <title>APGsembly 2.0 Emulator</title>
 
     <!-- critical path -->
     <script src="./src/exports.js" type="module"></script>
@@ -40,6 +42,7 @@
     <meta name="twitter:creator" content="@rei_1729" />
 </head>
 <body>
+    <!-- CSP hash 'sha256-xYJ0eyX805nvgf5HIKl5CyP65vauWTNQ90lkobGlIOA=' -->
     <script>
         // Fix Dark mode flashing
         if (localStorage.getItem('dark_mode') === "on") {
