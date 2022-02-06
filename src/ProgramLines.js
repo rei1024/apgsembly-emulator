@@ -1,6 +1,13 @@
 // @ts-check
 
-import { Command, Comment, ComponentsHeader, EmptyLine, ProgramLine, RegistersHeader } from "./Command.js";
+import {
+    Command,
+    Comment,
+    ComponentsHeader,
+    EmptyLine,
+    ProgramLine,
+    RegistersHeader
+} from "./Command.js";
 
 /**
  * プログラムの行の配列
@@ -34,6 +41,7 @@ export class ProgramLines {
     }
 
     /**
+     * 1行をパース
      * stringはエラーメッセージ
      * string is an error
      * @param {string} str
