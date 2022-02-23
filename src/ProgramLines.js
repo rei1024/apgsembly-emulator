@@ -2,11 +2,7 @@
 
 import {
     Command,
-    Comment,
-    ComponentsHeader,
-    EmptyLine,
     ProgramLine,
-    RegistersHeader
 } from "./Command.js";
 
 /**
