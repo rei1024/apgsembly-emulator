@@ -279,6 +279,22 @@ document.addEventListener('keydown', e => {
     }
 });
 
+// ファイルドロップ
+$input.addEventListener("drop", async (event) => {
+    event.preventDefault();
+    const file = event.dataTransfer?.files.item(0);
+    if (file == null) {
+        return;
+    }
+
+    const text = await file.text();
+    if (text === undefined) {
+        return;
+    }
+    $input.value = text;
+    app.reset();
+});
+
 // ボタンの有効化
 $samples.disabled = false;
 $configButton.disabled = false;
