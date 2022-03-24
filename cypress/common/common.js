@@ -34,7 +34,7 @@ export function loadProgram(src) {
     cy.get('#samples').click();
     cy.get(`[data-src="${src}"]`).click();
     cy.get('#samples').should('not.be.disabled'); // ロードされるまで待つ
-    cy.get('#toggle').should('not.be.disabled');
+    assertToggleStart();
 }
 
 /**
