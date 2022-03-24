@@ -17,8 +17,7 @@ import { prefetch } from "./util/prefetch.js";
 
 import {
     $input,
-    $start,
-    $stop,
+    $toggle,
     $reset,
     $step,
     $configButton,
@@ -67,14 +66,13 @@ $reset.addEventListener('click', () => {
     app.reset();
 });
 
-// Start button
-$start.addEventListener('click', () => {
-    app.start();
-});
-
-// Stop button
-$stop.addEventListener('click', () => {
-    app.stop();
+// Toggle button
+$toggle.addEventListener('click', () => {
+    if (app.appState === "Running") {
+        app.stop();
+    } else {
+        app.start();
+    }
 });
 
 const spinner = makeSpinner();
@@ -92,8 +90,7 @@ $step.addEventListener('click', () => {
 
         // 他のボタンも一時的に無効化する app.runで有効化される
         $reset.disabled = true;
-        $start.disabled = true;
-        $stop.disabled = true;
+        $toggle.disabled = true;
 
         setTimeout(() => {
             // $step.disabled = false; // app.runで更新されるため必要ない
