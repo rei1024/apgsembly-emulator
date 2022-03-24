@@ -1,14 +1,23 @@
 // @ts-check
 /// <reference types="cypress" />
 
-import { APGsemblyEmulatorURL, loadProgram, setProgram, setStep, setProgramSlow } from "../common/common.js";
+import {
+    APGsemblyEmulatorURL,
+    loadProgram,
+    setProgram,
+    setStep,
+    setProgramSlow,
+    assertToggleStart,
+    assertToggleStop,
+    toggleSel,
+} from "../common/common.js";
 
 const outputSelector = '#output';
 
 describe('Load', () => {
     it('should load', () => {
         cy.visit(APGsemblyEmulatorURL);
-        cy.get('#start').should('not.be.disabled');
+        assertToggleStart();
     });
 });
 
@@ -18,18 +27,16 @@ describe('Run APGsembly', () => {
         INITIAL; ZZ; A0; INC U0, NOP
         A0; ZZ; A0; HALT_OUT
         `)
-        cy.get('#start').should('not.be.disabled');
+        assertToggleStart();
         cy.get('#step').should('not.be.disabled');
-        cy.get('#stop').should('be.disabled');
         cy.get('#current_state').should('have.text', 'INITIAL');
         cy.get(`[data-test="U0"]`).should('have.text', '0');
         cy.get('#error').should('have.text', '');
     });
     it('shold run', () => {
-        cy.get('#start').click();
-        cy.get('#start').should('be.disabled');
+        cy.get(toggleSel).click();
+        assertToggleStop();
         cy.get('#step').should('be.disabled');
-        cy.get('#stop').should('not.be.disabled');
         cy.get('#current_state').should('have.text', 'A0');
         cy.get(`[data-test="U0"]`).should('have.text', '1');
     });
@@ -39,7 +46,8 @@ describe('Error: empty program', () => {
     it('should show error', () => {
         cy.visit(APGsemblyEmulatorURL);
         cy.contains('APGsembly');
-        cy.get('#start').click();
+        assertToggleStart();
+        cy.get(toggleSel).click();
         cy.get('#error').should('have.text', '- Program is empty');
     });
 });
@@ -131,9 +139,11 @@ describe('Start Stop Reset', () => {
         loadProgram('rule110.apg');
     });
     it('Start and Stop', () => {
-        cy.get('#start').click();
+        assertToggleStart();
+        cy.get(toggleSel).click();
+        assertToggleStop();
         cy.wait(400);
-        cy.get('#stop').click();
+        cy.get(toggleSel).click();
         cy.get('#steps').should('not.have.text', '0');
 
         cy.get('#error').should('have.text', '');

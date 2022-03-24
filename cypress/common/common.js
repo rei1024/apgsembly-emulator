@@ -14,6 +14,18 @@ export const turmitesURL = baseURL + '/turmites/index.html';
 
 export const tmToAPGURL = baseURL + '/tm_to_apg/index.html';
 
+export const toggleSel = '#toggle';
+
+export function assertToggleStart() {
+    cy.get(toggleSel).should('not.be.disabled');
+    cy.get(toggleSel).should('have.text', 'Start');
+}
+
+export function assertToggleStop() {
+    cy.get(toggleSel).should('not.be.disabled');
+    cy.get(toggleSel).should('have.text', 'Stop');
+}
+
 /**
  *
  * @param {string} src
@@ -22,7 +34,7 @@ export function loadProgram(src) {
     cy.get('#samples').click();
     cy.get(`[data-src="${src}"]`).click();
     cy.get('#samples').should('not.be.disabled'); // ロードされるまで待つ
-    cy.get('#start').should('not.be.disabled');
+    cy.get('#toggle').should('not.be.disabled');
 }
 
 /**
