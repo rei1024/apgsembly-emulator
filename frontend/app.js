@@ -503,7 +503,7 @@ export class App {
             }
         }
 
-        if (steps <= 0) {
+        if (steps <= 0 || Number.isNaN(steps)) {
             // no render
             return;
         }

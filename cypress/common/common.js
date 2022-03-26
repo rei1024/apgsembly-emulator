@@ -26,6 +26,30 @@ export function assertToggleStop() {
 
 /**
  *
+ * @param {number} n
+ */
+export function assertSteps(n) {
+    cy.get('#steps').should('have.text', n.toLocaleString());
+}
+
+/**
+ *
+ * @param {number} n
+ */
+export function assertStepsNot(n) {
+    cy.get('#steps').should('not.have.text', n.toLocaleString());
+}
+
+/**
+ *
+ * @param {string} msg
+ */
+export function assertError(msg) {
+    cy.get('#error').should('have.text', msg);
+}
+
+/**
+ *
  * @param {string} src
  */
 export function loadProgram(src) {
