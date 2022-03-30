@@ -55,6 +55,7 @@ import {
     $statsModal,
     $statsBody,
     $statsNumberOfStates,
+    $statsButton,
 } from "./bind.js";
 
 /** index.htmlと同期する */
@@ -440,25 +441,40 @@ export class App {
     render() {
         // ボタンの有効無効
         switch (this.appState) {
-            case "Stop":
             case "Initial": {
                 startButton($toggle);
                 $step.disabled = false;
                 $reset.disabled = false;
+                $statsButton.disabled = true;
+                break;
+            }
+            case "Stop": {
+                startButton($toggle);
+                $step.disabled = false;
+                $reset.disabled = false;
+                $statsButton.disabled = false;
                 break;
             }
             case "Running": {
                 stopButton($toggle);
                 $step.disabled = true;
                 $reset.disabled = true;
+                $statsButton.disabled = false;
                 break;
             }
             case "RuntimeError":
-            case "ParseError":
+            case "ParseError": {
+                startButtonDisabled($toggle);
+                $step.disabled = true;
+                $reset.disabled = false;
+                $statsButton.disabled = true;
+                break;
+            }
             case "Halted": {
                 startButtonDisabled($toggle);
                 $step.disabled = true;
                 $reset.disabled = false;
+                $statsButton.disabled = false;
                 break;
             }
         }
