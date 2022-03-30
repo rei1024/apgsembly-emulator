@@ -425,6 +425,7 @@ export class App {
             return;
         }
         if (this.machine === undefined) {
+            this.statsUI.clear();
             return;
         }
         this.statsUI.render(
@@ -495,7 +496,7 @@ export class App {
         switch (this.appState) {
             case "Initial": {
                 this.reset();
-                // エラーでなければ走らせない
+                // エラーであれば走らせない
                 // @ts-ignore
                 if (this.appState !== "Stop") {
                     return;
