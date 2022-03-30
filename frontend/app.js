@@ -537,7 +537,10 @@ export class App {
         // -1: *
         // 0 : Z
         // 1 : NZ
-        const breakpointInputValue = parseInt($breakpointInputSelect.value, 10);
+        const biStr = $breakpointInputSelect.value;
+        const breakpointInputValue =
+            biStr === "any" ? -1 :
+            biStr === "zero" ? 0 : 1;
 
         const machine = this.machine;
         if (machine === undefined) {
