@@ -138,21 +138,7 @@ export class Program {
      * @returns {string}
      */
     pretty() {
-        if (this.commands.length >= 1 && this.programLines.getArray().length === 0) {
-            // 合成された場合
-            let str = "";
-            if (this.componentsHeader !== undefined) {
-                str += this.componentsHeader.pretty() + "\n";
-            }
-            if (this.registersHeader !== undefined) {
-                str += this.registersHeader.pretty() + "\n";
-            }
-            str += this.commands.map(command => command.pretty()).join('\n');
-
-            return str.trim();
-        } else {
-            return this.programLines.pretty();
-        }
+        return this.programLines.pretty();
     }
 }
 
