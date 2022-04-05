@@ -10,7 +10,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "make t",
+    "test": "deno task t",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run"
   },

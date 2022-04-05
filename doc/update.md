@@ -1,4 +1,4 @@
-* `make chore`を走らせる
+* `deno task chore`を走らせる
 * cypressとeslintを確認してpackage.jsonを更新
    * https://docs.cypress.io/guides/references/changelog
      * `/Users/[your name]/Library/Caches/Cypress`に古いバージョンが残るので削除する
@@ -23,6 +23,6 @@
   * `nodebrew use v16.10.0`
 
 ## プロジェクト追加
-* Makefileに追加
+* deno.jsoncに追加
 * test.ymlに追加
 * tsconfig.jsonに追加
