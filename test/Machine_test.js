@@ -112,7 +112,7 @@ test('Machine INITIAL is not exist', () => {
     }
     assertThrows(() => {
         new Machine(program);
-    });
+    }, Error, 'INITIAL state is not present');
 });
 
 test('Machine Program no return value', () => {
