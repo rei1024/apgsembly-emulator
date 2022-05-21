@@ -23,8 +23,8 @@ self.addEventListener('activate', function (event) {
  *
  * @param {string} url
  */
-function isNotAPGM(url) {
-    return !url.includes('apgm');
+function canCache(url) {
+    return !url.includes('apgm') && !url.includes('localhost');
 }
 
 /**
@@ -73,7 +73,7 @@ self.addEventListener('fetch', function (event) {
          */
         const request = event.request;
         const cache = await caches.open(CACHE_VERSION);
-        if (isNotAPGM(request.url)) {
+        if (canCache(request.url)) {
             const cachedResponse = await getCachedResponse(cache, request);
             if (cachedResponse !== "not found") {
                 return cachedResponse;
