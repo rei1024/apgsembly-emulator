@@ -9,11 +9,7 @@ const CACHE_VERSION = "2022-05-21";
 self.addEventListener('activate', function (event) {
     async function deleteCache() {
         const oldCacheNames = (await caches.keys()).filter(x => x !== CACHE_VERSION);
-        return Promise.all(
-            oldCacheNames.map(name => {
-                return caches.delete(name);
-            })
-        );
+        return Promise.all(oldCacheNames.map(name => caches.delete(name)));
     }
 
     event.waitUntil(deleteCache());
