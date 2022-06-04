@@ -144,9 +144,9 @@ $frequencyInput.addEventListener('input', () => {
     if (!isNaN(value)) {
         const freq = frequencyArray[value] ?? DEFUALT_FREQUENCY;
         $frequencyInput.ariaValueText = "(" + freq.toString() + "Hz" + ")";
-        app.frequency = freq;
+        app.cve.frequency = freq;
     } else {
-        app.frequency = DEFUALT_FREQUENCY;
+        app.cve.frequency = DEFUALT_FREQUENCY;
     }
 
     app.renderFrequencyOutput();
