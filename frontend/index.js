@@ -373,5 +373,5 @@ idle(() => {
 
 // PWA
 if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("./service-worker.js?2022-06-05");
+    navigator.serviceWorker.register("./service-worker.js?2022-06-10");
 }
