@@ -8,7 +8,13 @@
 }
 
 .table-layout-fixed {
+    /* 幅が変化しないようにする */
     table-layout: fixed;
+}
+
+/* 数字の幅が変わらないようにする */
+.tabular-nums {
+    font-variant-numeric: tabular-nums;
 }
 
 /* 広げる */
@@ -18,11 +24,6 @@
 
 #state td, #state th {
     padding: 4px;
-}
-
-#state {
-    /* 幅が変化しないようにする */
-    table-layout: fixed;
 }
 
 #steps {
