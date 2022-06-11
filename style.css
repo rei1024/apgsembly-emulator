@@ -75,6 +75,10 @@
     --dark-mode-background-color: black;
 }
 
+.animate-color-and-background-color {
+    transition: color .4s, background-color .4s;
+}
+
 body[apge_dark_mode="on"] :is(td, th, #steps) {
     color: var(--dark-mode-color);
 }
@@ -133,7 +137,7 @@ body[apge_dark_mode="on"] .stats_current_state {
 
 /**** speedy animation ****/
 .fade {
-    transition: opacity .10s linear; /* 0.15s */
+    transition: opacity .1s linear; /* 0.15s */
 }
 
 .modal.fade .modal-dialog {

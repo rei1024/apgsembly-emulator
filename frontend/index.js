@@ -31,6 +31,7 @@ import {
     $samples,
 
     // Modal
+    $configModalContent,
     $stepInput,
     $hideBinary,
     $reverseBinary,
@@ -242,6 +243,14 @@ $darkMode.addEventListener('change', () => {
     document.body.setAttribute('apge_dark_mode', onOrOff);
 
     $darkModeLabel.textContent = $darkMode.checked ? "On" : "Off";
+
+    const ANIMATE = "animate-color-and-background-color";
+    document.body.classList.add(ANIMATE);
+    $configModalContent.classList.add(ANIMATE);
+    setTimeout(() => {
+        document.body.classList.remove(ANIMATE);
+        $configModalContent.classList.remove(ANIMATE);
+    }, 500);
 });
 
 // キーボード入力
