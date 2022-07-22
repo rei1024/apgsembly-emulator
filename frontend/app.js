@@ -129,12 +129,7 @@ export class App {
      * 初期化
      */
     initializeApp() {
-        try {
-            this.render();
-        } catch (e) {
-            console.error('first render failed');
-            console.log(e);
-        }
+        this.render();
     }
 
     /**
@@ -241,25 +236,29 @@ export class App {
         this.machine = undefined;
         this.cve.reset();
         const program = Program.parse($input.value);
+
         if (typeof program === "string") {
+            // Error
             this.appState = "ParseError";
             this.errorMessage = program;
             this.render();
-        } else {
-            try {
-                this.machine = new Machine(program);
-                this.onMachineSet();
-                this.appState = "Stop";
-                this.render();
-            } catch (e) {
-                this.appState = "ParseError";
-                if (e instanceof Error) {
-                    this.errorMessage = e.message;
-                } else {
-                    this.errorMessage = "Unknown error is occurred.";
-                }
-                this.render();
+            return;
+        }
+
+        // Parse success
+        try {
+            this.machine = new Machine(program);
+            this.onMachineSet();
+            this.appState = "Stop";
+        } catch (e) {
+            this.appState = "ParseError";
+            if (e instanceof Error) {
+                this.errorMessage = e.message;
+            } else {
+                this.errorMessage = "Unknown error is occurred.";
             }
+        } finally {
+            this.render();
         }
     }
 
