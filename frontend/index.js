@@ -3,6 +3,7 @@
 // critical path
 import {} from "./util/selector.js";
 import {} from "./util/frequency.js";
+import {} from "./util/create.js";
 import {} from "./components/renderB2D.js";
 import {} from "./components/unary_ui.js";
 import {} from "./components/binary_ui.js";
@@ -139,9 +140,9 @@ $frequencyInput.addEventListener('input', () => {
     if (!isNaN(value)) {
         const freq = frequencyArray[value] ?? DEFUALT_FREQUENCY;
         $frequencyInput.ariaValueText = `(${freq.toString()}Hz)`;
-        app.cve.frequency = freq;
+        app.setFrequency(freq);
     } else {
-        app.cve.frequency = DEFUALT_FREQUENCY;
+        app.setFrequency(DEFUALT_FREQUENCY);
     }
 
     app.renderFrequencyOutput();

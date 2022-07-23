@@ -9,6 +9,7 @@ export function $type(selector, klass) {
     if (typeof selector !== 'string') {
         throw TypeError('selector is not a string');
     }
+
     const el = document.querySelector(selector);
 
     if (el == null) {
