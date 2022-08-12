@@ -8,6 +8,7 @@ import {} from "./components/renderB2D.js";
 import {} from "./components/unary_ui.js";
 import {} from "./components/binary_ui.js";
 import {} from "./components/stats_ui.js";
+import { setupFrequencyInput } from "./components/frequency_input.js";
 
 import { setCustomError, removeCustomError } from "./util/validation_ui.js";
 import { makeSpinner } from "./util/spinner.js";
@@ -121,32 +122,7 @@ $sampleCodes.forEach(e => {
 });
 
 // 周波数の設定
-/** @type {number[]} */
-const frequencyArray = [];
-for (let i = 0; i < 7; i++) {
-    const base = 10 ** i;
-    for (let j = 1; j <= 9; j++) {
-        frequencyArray.push(base * j);
-    }
-}
-
-frequencyArray.push(10 ** 7);
-
-$frequencyInput.min = "0";
-$frequencyInput.max = (frequencyArray.length - 1).toString();
-
-$frequencyInput.addEventListener('input', () => {
-    const value = parseInt($frequencyInput.value, 10);
-    if (!isNaN(value)) {
-        const freq = frequencyArray[value] ?? DEFUALT_FREQUENCY;
-        $frequencyInput.ariaValueText = `(${freq.toString()}Hz)`;
-        app.setFrequency(freq);
-    } else {
-        app.setFrequency(DEFUALT_FREQUENCY);
-    }
-
-    app.renderFrequencyOutput();
-});
+setupFrequencyInput($frequencyInput, app, DEFUALT_FREQUENCY);
 
 // 開閉で描画
 $b2dDetail.addEventListener('toggle', () => {
@@ -180,34 +156,29 @@ $stepInput.addEventListener('input', () => {
     }
 });
 
+/**
+ * @param {HTMLInputElement} $checkbox
+ * @param {string} key
+ */
+function setupCheckbox($checkbox, key) {
+    $checkbox.addEventListener("change", () => {
+        app.render();
+        localStorage.setItem(key, $checkbox.checked.toString());
+    });
+}
+
 // バイナリを非表示にする
 const HIDE_BINARY_KEY = 'hide_binary';
-
-$hideBinary.addEventListener('change', () => {
-    app.renderBinary();
-    localStorage.setItem(HIDE_BINARY_KEY, $hideBinary.checked.toString());
-});
+setupCheckbox($hideBinary, HIDE_BINARY_KEY);
 
 const REVERSE_BINARY_KEY = 'reverse_binary';
-
-$reverseBinary.addEventListener('change', () => {
-    app.renderBinary();
-    localStorage.setItem(REVERSE_BINARY_KEY, $reverseBinary.checked.toString());
-});
+setupCheckbox($reverseBinary, REVERSE_BINARY_KEY);
 
 const SHOW_BINARY_IN_DECIMAL_KEY = 'show_binary_in_decimal';
-
-$showBinaryValueInDecimal.addEventListener('change', () => {
-    app.renderBinary();
-    localStorage.setItem(SHOW_BINARY_IN_DECIMAL_KEY, $showBinaryValueInDecimal.checked.toString());
-});
+setupCheckbox($showBinaryValueInDecimal, SHOW_BINARY_IN_DECIMAL_KEY);
 
 const SHOW_BINARY_IN_HEX_KEY = 'show_binary_in_hex';
-
-$showBinaryValueInHex.addEventListener('change', () => {
-    app.renderBinary();
-    localStorage.setItem(SHOW_BINARY_IN_HEX_KEY, $showBinaryValueInHex.checked.toString());
-});
+setupCheckbox($showBinaryValueInHex, SHOW_BINARY_IN_HEX_KEY);
 
 // B2D
 $b2dHidePointer.addEventListener('change', () => {
@@ -215,14 +186,7 @@ $b2dHidePointer.addEventListener('change', () => {
 });
 
 const B2D_FLIP_UPSIDE_DOWN_KEY = 'b2d_flip_upside_down';
-
-$b2dFlipUpsideDown.addEventListener('change', () => {
-    localStorage.setItem(
-        B2D_FLIP_UPSIDE_DOWN_KEY,
-        $b2dFlipUpsideDown.checked.toString()
-    );
-    app.renderB2D();
-});
+setupCheckbox($b2dFlipUpsideDown, B2D_FLIP_UPSIDE_DOWN_KEY);
 
 // showの場合クラスが追加されない
 $statsModal.addEventListener('shown.bs.modal', () => {
@@ -235,10 +199,11 @@ const DARK_MODE_KEY = 'dark_mode';
 $darkMode.addEventListener('change', () => {
     const onOrOff = $darkMode.checked ? "on" : "off";
     localStorage.setItem(DARK_MODE_KEY, onOrOff);
-    document.body.setAttribute('apge_dark_mode', onOrOff);
+    document.body.setAttribute('apge_dark', onOrOff);
 
     $darkModeLabel.textContent = $darkMode.checked ? "On" : "Off";
 
+    // アニメーションを付与
     const ANIMATE = "animate-color-and-background-color";
     document.body.classList.add(ANIMATE);
     $configModalContent.classList.add(ANIMATE);
@@ -254,8 +219,8 @@ $darkMode.addEventListener('change', () => {
 // Space: Step
 document.addEventListener('keydown', e => {
     const activeElementTagName =
-        document.activeElement?.tagName.toUpperCase() ?? "";
-    const tags = ["TEXTAREA", "INPUT", "DETAILS", "BUTTON", "AUDIO", "VIDEO", "SELECT", "OPTION"];
+        document.activeElement?.tagName.toLowerCase() ?? "";
+    const tags = ["textarea", "input", "details", "button", "audio", "video", "select", "option"];
     // 入力中は無し
     if (tags.includes(activeElementTagName)) {
         return;
@@ -288,15 +253,12 @@ document.addEventListener('keydown', e => {
 // ファイルドロップ
 $input.addEventListener("drop", async (event) => {
     event.preventDefault();
-    const file = event.dataTransfer?.files.item(0);
+    const file = event.dataTransfer?.files?.item(0);
     if (file == null) {
         return;
     }
 
     const text = await file.text();
-    if (text === undefined) {
-        return;
-    }
     $input.value = text;
     app.reset();
 });
@@ -334,8 +296,9 @@ idle(() => {
     }
 
     // ダークモードについてはbodyタグ直下でも設定する
+    // チェックボタンはここで処理する
     if (localStorage.getItem(DARK_MODE_KEY) === "on") {
-        document.body.setAttribute('apge_dark_mode', "on");
+        document.body.setAttribute('apge_dark', "on");
         $darkMode.checked = true;
         $darkModeLabel.textContent = "On";
     }
