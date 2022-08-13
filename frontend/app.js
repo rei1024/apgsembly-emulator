@@ -236,6 +236,15 @@ export class App {
     }
 
     /**
+     * コードを変更してリセットする
+     * @param {string} text
+     */
+    setInputAndReset(text) {
+        $input.value = text;
+        this.reset();
+    }
+
+    /**
      * 状態をリセットし、パースする
      */
     reset() {

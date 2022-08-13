@@ -28,8 +28,8 @@ import {
     $unaryRegisterDetail,
     $binaryRegisterDetail,
     $fileImport,
-    $sampleCodes,
-    $samples,
+    $exampleCodes,
+    $examples,
 
     // Modal
     $configModalContent,
@@ -77,13 +77,13 @@ $toggle.addEventListener('click', () => {
     }
 });
 
-const spinner = makeSpinner();
-
 // Step button
 $step.addEventListener('click', () => {
     // 時間がかかる時はスピナーを表示する
     // show a spinner
     if (app.stepConfig >= 5000000) {
+        const spinner = makeSpinner();
+
         $step.append(spinner);
         $step.disabled = true;
 
@@ -104,19 +104,17 @@ $step.addEventListener('click', () => {
 const SRC_KEY = 'src';
 
 // サンプル
-$sampleCodes.forEach(e => {
+$exampleCodes.forEach(e => {
     e.addEventListener('click', async () => {
-        $samples.style.opacity = "0.5";
+        $examples.style.opacity = "0.5";
         const src = e.dataset[SRC_KEY];
         try {
             const response = await fetch(DATA_DIR + src);
-            const text = await response.text();
-            $input.value = text;
-            app.reset();
+            app.setInputAndReset(await response.text());
         } catch (_) {
             console.error(`Fetch Error: ${src}`);
         } finally {
-            $samples.style.opacity = "1";
+            $examples.style.opacity = "1";
         }
     });
 });
@@ -139,8 +137,7 @@ $unaryRegisterDetail.addEventListener('toggle', () => {
 
 // ファイルインポート
 importFileAsText($fileImport, result => {
-    $input.value = result;
-    app.reset();
+    app.setInputAndReset(result);
 });
 
 // ** Modal ** //
@@ -253,18 +250,16 @@ document.addEventListener('keydown', e => {
 // ファイルドロップ
 $input.addEventListener("drop", async (event) => {
     event.preventDefault();
-    const file = event.dataTransfer?.files?.item(0);
-    if (file == null) {
+    const file = event.dataTransfer?.files.item(0);
+    if (file == undefined) {
         return;
     }
 
-    const text = await file.text();
-    $input.value = text;
-    app.reset();
+    app.setInputAndReset(await file.text());
 });
 
 // ボタンの有効化
-$samples.disabled = false;
+$examples.disabled = false;
 $configButton.disabled = false;
 
 // 初回描画
@@ -275,7 +270,7 @@ idle(() => {
     // 実行時間が掛かる処理をまとめる
     // デフォルトはtrue
     if (localStorage.getItem(SHOW_BINARY_IN_DECIMAL_KEY) === null) {
-        localStorage.setItem(SHOW_BINARY_IN_DECIMAL_KEY, 'true');
+        localStorage.setItem(SHOW_BINARY_IN_DECIMAL_KEY, "true");
     }
 
     /**
@@ -310,8 +305,7 @@ const INIT_CODE = "initial_code";
 const initCode = localStorage.getItem(INIT_CODE);
 if (initCode !== null && initCode !== "") {
     localStorage.removeItem(INIT_CODE);
-    $input.value = initCode;
-    app.reset();
+    app.setInputAndReset(initCode);
 }
 
 // サンプルコードをプレフェッチ
@@ -320,7 +314,7 @@ idle(() => {
     if (saveData) {
         return;
     }
-    $sampleCodes.forEach(e => {
+    $exampleCodes.forEach(e => {
         const src = e.dataset[SRC_KEY];
         if (src !== undefined) {
             prefetch(DATA_DIR + src);
