@@ -228,13 +228,14 @@ export class Machine {
             }`);
         }
 
-        // INITIALに返ってくることは禁止
         const nextStateIndex = compiledCommand.nextState;
-        if (nextStateIndex === this.initialIndex) {
-            throw Error(`Return to INITIAL state during execution: line = ${
-                compiledCommand.command.pretty()
-            }`);
-        }
+        // INITIALに返ってくることは禁止
+        // バリデーションしているので省く
+        // if (nextStateIndex === this.initialIndex) {
+        //     throw Error(`Return to INITIAL state during execution: line = ${
+        //         compiledCommand.command.pretty()
+        //     }`);
+        // }
         this.currentStateIndex = nextStateIndex;
         this.prevOutput = result;
     }

@@ -84,7 +84,7 @@ test('ActionExecutor setByRegistersInit 2', () => {
         [...x.getBReg(0).toBinaryString()].reverse().join(''),
         '1101'
     );
-    assertEquals(x.getBReg(0).pointer, 0);
+    assertEquals(x.getBReg(0)?.pointer, 0);
 });
 
 test('ActionExecutor setByRegistersInit error', () => {
