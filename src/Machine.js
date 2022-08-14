@@ -66,7 +66,7 @@ export class Machine {
         this.lookup = obj.lookup;
 
         /**
-         * @private
+         * 現在の状態の添字
          */
         this.currentStateIndex = this.stateMap.get(INITIAL_STATE) ?? (() => {
             throw Error(`${INITIAL_STATE} state is not present`);
@@ -116,14 +116,6 @@ export class Machine {
             throw Error('State name is not found');
         }
         return name;
-    }
-
-    /**
-     * 現在の状態の添字を取得する
-     * @returns {number}
-     */
-    getCurrentStateIndex() {
-        return this.currentStateIndex;
     }
 
     /**
