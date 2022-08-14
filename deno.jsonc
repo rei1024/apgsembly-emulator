@@ -5,7 +5,8 @@
         "w": "deno test --watch --no-check src/ test/ turmites/ tm_to_apg/ transpiler/ labs/fast_emulator/ generator/",
         "cy": "npm run cypress:open",
         "lint": "./node_modules/.bin/eslint .",
-        "chore": "deno upgrade && npm audit && git gc"
+        "chore": "deno upgrade && npm audit && git gc",
+        "bench": "deno bench --unstable --no-check test/bench.js"
     },
     "lint": {
         "files": {
