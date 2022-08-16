@@ -474,8 +474,8 @@ export class App {
         this.renderUnary();
         this.renderBinary();
         this.renderAddSubMul();
-        this.renderStats();
         this.renderB2D();
+        this.renderStats();
     }
 
     /**
@@ -519,12 +519,14 @@ export class App {
         const isRunning = this.appState === "Running";
 
         // ブレークポイントの処理
-        let breakpointIndex = -1;
+        const NON_BREAKPOINT = -1;
+        let breakpointIndex = NON_BREAKPOINT;
+
         const tempN = parseInt($breakpointSelect.value, 10);
         if (!isNaN(tempN)) {
             breakpointIndex = tempN;
         }
-
+        const hasBreakpoint = breakpointIndex !== NON_BREAKPOINT;
         const breakpointInputValue = this.getBreakpointInput();
 
         let i = 0;
@@ -540,6 +542,7 @@ export class App {
                 }
                 // ブレークポイントの状態の場合、停止する
                 if (
+                    hasBreakpoint &&
                     machine.currentStateIndex === breakpointIndex &&
                     (breakpointInputValue === -1 || breakpointInputValue === machine.prevOutput)
                 ) {
