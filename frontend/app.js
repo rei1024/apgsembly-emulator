@@ -123,7 +123,7 @@ export class App {
          * @private
          * @readonly
          */
-        this.statsUI = new StatsUI($statsBody);
+        this.statsUI = new StatsUI($statsBody, $statsNumberOfStates);
     }
 
     /**
@@ -289,12 +289,8 @@ export class App {
      * @private
      */
     renderCommand() {
-        try {
-            const next = this.machine?.getNextCompiledCommandWithNextState(false);
-            $command.textContent = next?.command.pretty() ?? "";
-        } catch (e) {
-            $command.textContent = "";
-        }
+        const next = this.machine?.getNextCompiledCommandWithNextState(false);
+        $command.textContent = next?.command.pretty() ?? "";
     }
 
     /**
@@ -383,12 +379,10 @@ export class App {
      */
     setUpStats() {
         if (this.machine === undefined) {
-            $statsNumberOfStates.textContent = '';
             this.statsUI.clear();
-            return;
+        } else {
+            this.statsUI.initialize(this.machine.stateStats, this.machine.states);
         }
-        $statsNumberOfStates.textContent = this.machine.states.length.toString();
-        this.statsUI.initialize(this.machine.stateStats, this.machine.states);
     }
 
     /**
