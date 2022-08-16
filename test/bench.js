@@ -57,3 +57,60 @@ Deno.bench('pi', () => {
 //     },
 //     group: 'test'
 // });
+
+// class X {
+//     constructor() {
+//         this.value = 0;
+//     }
+//     x() {
+//         switch (this.value) {
+//             case 0: {
+//                 this.value = 1;
+//                 break;
+//             }
+//             case 1: {
+//                 this.value = 0;
+//                 break;
+//             }
+//         }
+//     }
+
+//     y() {
+//         switch (this.value) {
+//             case 0: {
+//                 this._do1();
+//                 break;
+//             }
+//             case 1: {
+//                 this._do2();
+//                 break;
+//             }
+//         }
+//     }
+
+//     _do1() {
+//         this.value = 1;
+//     }
+
+//     _do2() {
+//         this.value = 0;
+//     }
+// }
+
+// const o1 = new X();
+// Deno.bench({
+//     name: 'inline',
+//     fn() {
+//         o1.x();
+//     },
+//     group: 'test'
+// });
+
+// const o2 = new X();
+// Deno.bench({
+//     name: 'non-inline',
+//     fn() {
+//         o2.y();
+//     },
+//     group: 'test'
+// });
