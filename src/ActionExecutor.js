@@ -172,10 +172,10 @@ export class ActionExecutor {
         // SUB   2251968
         // NOP   3771596
         if (action instanceof BRegAction) {
-            const bReg = this.bRegMap.get(action.regNumber) ?? throwNotFound("B", action.regNumber);
+            const bReg = action.registerCache ?? this.bRegMap.get(action.regNumber) ?? throwNotFound("B", action.regNumber);
             return bReg.action(action);
         } else if (action instanceof URegAction) {
-            const uReg = this.uRegMap.get(action.regNumber) ?? throwNotFound("U", action.regNumber);
+            const uReg = action.registerCache ?? this.uRegMap.get(action.regNumber) ?? throwNotFound("U", action.regNumber);
             return uReg.action(action);
         } else if (action instanceof AddAction) {
             return this.add.action(action);

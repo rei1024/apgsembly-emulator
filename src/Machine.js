@@ -8,6 +8,9 @@ import {
 } from "./compile.js";
 import { Program } from "./Program.js";
 import { INITIAL_STATE } from "./Command.js";
+import { Action } from "./actions/Action.js";
+import { BRegAction } from "./actions/BRegAction.js";
+import { URegAction } from "./actions/URegAction.js";
 export { INITIAL_STATE };
 
 /**
@@ -65,6 +68,16 @@ export class Machine {
          */
         this.lookup = obj.lookup;
 
+        // set cache
+        for (const compiledCommand of obj.lookup) {
+            for (const action of compiledCommand.z?.command.actions ?? []) {
+                this.setCache(action);
+            }
+            for (const action of compiledCommand.nz?.command.actions ?? []) {
+                this.setCache(action);
+            }
+        }
+
         /**
          * 現在の状態の添字
          */
@@ -103,6 +116,18 @@ export class Machine {
 
             // throw if error is occurred
             this.actionExecutor.setByRegistersInit(parsed);
+        }
+    }
+
+    /**
+     * @private
+     * @param {Action} action
+     */
+    setCache(action) {
+        if (action instanceof BRegAction) {
+            action.registerCache = this.actionExecutor.getBReg(action.regNumber);
+        } else if (action instanceof URegAction) {
+            action.registerCache = this.actionExecutor.getUReg(action.regNumber);
         }
     }
 
