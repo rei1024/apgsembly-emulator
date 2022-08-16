@@ -14,7 +14,6 @@ import { LegacyTRegAction } from "./actions/LegacyTRegAction.js";
 import { ADD } from "./components/ADD.js";
 import { B2D } from "./components/B2D.js";
 import { BReg } from "./components/BReg.js";
-// import { HALTOUT } from "./components/HALT_OUT.js";
 import { MUL } from "./components/MUL.js";
 import { NOP } from "./components/NOP.js";
 import { OUTPUT } from "./components/OUTPUT.js";
@@ -106,8 +105,6 @@ export class ActionExecutor {
          * @readonly
          */
         this.nop = new NOP();
-
-        // this.haltOut = new HALTOUT();
     }
 
     /**
