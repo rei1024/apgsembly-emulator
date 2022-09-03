@@ -16,14 +16,19 @@ function createRow(stateName, stat) {
         $code.textContent = stateName;
     }));
 
+    const num = 'num';
+
     const $sum = document.createElement('td');
     $sum.textContent = (stat.z + stat.nz).toString();
+    $sum.classList.add(num);
 
     const $z = document.createElement('td');
     $z.textContent = stat.z.toString();
+    $z.classList.add(num);
 
     const $nz = document.createElement('td');
     $nz.textContent = stat.nz.toString();
+    $nz.classList.add(num);
 
     // row
     const $tr = document.createElement('tr');

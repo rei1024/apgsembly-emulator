@@ -22,6 +22,15 @@
     max-width: 550px;
 }
 
+#stats_modal thead th {
+    text-align: center;
+}
+
+/* 数は右寄せ */
+#stats_body .num {
+    text-align: right;
+}
+
 #state td, #state th {
     padding: 4px;
 }
@@ -44,6 +53,12 @@
 .binary-head {
     color: #0D47A1;
     border-bottom: 3px solid #0D47A1;
+}
+
+/* コントラスト向上 */
+body[apge_dark="on"] .binary-head {
+    color: #438af4;
+    border-bottom-color: #438af4;
 }
 
 @media screen and (max-width: 480px) {
@@ -86,17 +101,8 @@
     transition: color .4s, background-color .4s;
 }
 
-body[apge_dark="on"] :is(td, th, #steps) {
-    color: var(--dark-mode-color);
-}
-
 body[apge_dark="on"] #canvas {
     filter: invert();
-}
-
-body[apge_dark="on"] .binary-head {
-    color: #438af4;
-    border-bottom-color: #438af4;
 }
 
 /* ライトモード */
@@ -104,17 +110,18 @@ body[apge_dark="on"] .binary-head {
     color: black;
 }
 
-body[apge_dark="on"], body[apge_dark="on"] :is(
+body[apge_dark="on"],
+body[apge_dark="on"] :is(
+    /* header for info */
+    td,
+    th,
+    #steps,
+    /* generic */
     .btn-primary,
     textarea.form-control,
     textarea.form-control:focus,
-    .binary_info
-) {
-    background-color: var(--dark-mode-background-color);
-    color: var(--dark-mode-color);
-}
-
-body[apge_dark="on"] :is(
+    .binary_info,
+    /* modal */
     .modal-content,
     input[type=number],
     input[type=number]:focus,
