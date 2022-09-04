@@ -332,3 +332,5 @@ if ("serviceWorker" in navigator) {
         }
     });
 }
+
+export const _index = null;
