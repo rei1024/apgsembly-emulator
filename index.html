@@ -6,7 +6,7 @@
 
     <!-- CSP -->
     <!-- `data://*` is close button for modal -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' cdn.jsdelivr.net; script-src 'self' cdn.jsdelivr.net 'sha256-lzkzvGpRo6mB8ulsJYSQwSeWClMoDHToCPm1VS2kXcU='; img-src 'self' data://*; object-src 'none'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' cdn.jsdelivr.net; script-src 'self' cdn.jsdelivr.net 'sha256-XgSuI+ouCZFnUnMiuXyyjkBDGwBQtt1Lb700zhlq3yQ='; img-src 'self' data://*; object-src 'none'">
 
     <title>APGsembly 2.0 Emulator</title>
 
@@ -47,12 +47,15 @@
     <link rel="apple-touch-icon" href="./images/apple-touch-icon-180x180.png" sizes="180x180">
 </head>
 <body>
-    <!-- CSP hash 'sha256-lzkzvGpRo6mB8ulsJYSQwSeWClMoDHToCPm1VS2kXcU=' -->
+    <!-- CSP hash 'sha256-XgSuI+ouCZFnUnMiuXyyjkBDGwBQtt1Lb700zhlq3yQ=' -->
     <script>
+        'use strict';
         // Fix Dark mode flashing
-        if (localStorage.getItem("dark_mode") === "on") {
-            document.body.setAttribute("apge_dark", "on");
-        }
+        try {
+            if (localStorage.getItem("dark_mode") === "on") {
+                document.body.setAttribute("apge_dark", "on");
+            }
+        } catch (_) {}
     </script>
     <header class="text-center">
         <h1>APGsembly 2.0 Emulator</h1>
@@ -153,20 +156,6 @@
                     Binary Registers
                 </summary>
                 <div id="binary_register"></div>
-                <!-- <table>
-                    <tr>
-                        <th>B1</th>
-                        <td>
-                            <code style="color: black;">
-                                <span class="decimal">value = 3432</span><span class="pointer">, pointer = 12</span>
-                            </code>
-                            <br>
-                            <code style="word-break: break-all">
-                                <span class="prefix">110011010</span><span class="head" style="border-bottom: 3px solid #0D47A1; color: #0D47A1;">1</span><span class="suffix">101101001</span>
-                            </code>
-                        </td>
-                    </tr>
-                </table> -->
             </details>
         </div>
         <div class="mb-2">

@@ -16,6 +16,7 @@ import { importFileAsText } from "./util/import_file.js";
 import { getSaveData } from "./util/save_data.js";
 import { idle } from "./util/idle.js";
 import { prefetch } from "./util/prefetch.js";
+import { localStorageSetItem } from "./util/local-storage-set-item.js";
 
 import {
     $input,
@@ -155,7 +156,7 @@ $stepInput.addEventListener('input', () => {
 function setupCheckbox($checkbox, key) {
     $checkbox.addEventListener("change", () => {
         app.render();
-        localStorage.setItem(key, $checkbox.checked.toString());
+        localStorageSetItem(key, $checkbox.checked.toString());
     });
 }
 
@@ -190,7 +191,7 @@ $statsModal.addEventListener('shown.bs.modal', () => {
 const DARK_MODE_KEY = 'dark_mode';
 $darkMode.addEventListener('change', () => {
     const onOrOff = $darkMode.checked ? "on" : "off";
-    localStorage.setItem(DARK_MODE_KEY, onOrOff);
+    localStorageSetItem(DARK_MODE_KEY, onOrOff);
     document.body.setAttribute('apge_dark', onOrOff);
 
     $darkModeLabel.textContent = $darkMode.checked ? "On" : "Off";
@@ -261,11 +262,11 @@ $configButton.disabled = false;
 // first render
 app.initializeApp();
 
+// 実行時間が掛かる処理をまとめる
 idle(() => {
-    // 実行時間が掛かる処理をまとめる
     // デフォルトはtrue
     if (localStorage.getItem(SHOW_BINARY_IN_DECIMAL_KEY) === null) {
-        localStorage.setItem(SHOW_BINARY_IN_DECIMAL_KEY, "true");
+        localStorageSetItem(SHOW_BINARY_IN_DECIMAL_KEY, "true");
     }
 
     /**
@@ -296,11 +297,16 @@ idle(() => {
 });
 
 // 初期コード
-const INIT_CODE = "initial_code";
-const initCode = localStorage.getItem(INIT_CODE);
-if (initCode !== null && initCode !== "") {
-    localStorage.removeItem(INIT_CODE);
-    app.setInputAndReset(initCode);
+try {
+    const INIT_CODE = "initial_code";
+    const initCode = localStorage.getItem(INIT_CODE);
+    if (initCode !== null && initCode !== "") {
+        localStorage.removeItem(INIT_CODE);
+        app.setInputAndReset(initCode);
+    }
+
+} catch (error) {
+    console.error(error);
 }
 
 // サンプルコードをプレフェッチ
