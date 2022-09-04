@@ -62,6 +62,11 @@ import {
 export const DEFUALT_FREQUENCY = 30;
 
 /**
+ * @typedef {"Initial" | "Running" | "Stop" | "ParseError" |
+ *           "RuntimeError" | "Halted"} AppState
+ */
+
+/**
  * APGsembly 2.0 Emulator frontend application
  */
 export class App {
@@ -80,9 +85,15 @@ export class App {
 
         /**
          * アプリ状態
-         * @type {import("./index.js").AppState}
+         * @type {AppState}
          */
         this.appState = "Initial";
+
+        /**
+         * @private
+         * @type {AppState | undefined}
+         */
+        this.prevAppState = undefined;
 
         /**
          * エラーメッセージ
@@ -106,6 +117,11 @@ export class App {
             const ev = e;
             this.run(ev.value);
         });
+
+        /**
+         * @type {undefined | number}
+         */
+        this.prevFrequency = undefined;
 
         /**
          * @private
@@ -281,7 +297,11 @@ export class App {
      * 周波数の表示
      */
     renderFrequencyOutput() {
-        $freqencyOutput.textContent = this.cve.frequency.toLocaleString() + "Hz";
+        const currentFreqeucy = this.cve.frequency;
+        if (this.prevFrequency !== currentFreqeucy) {
+            $freqencyOutput.textContent = currentFreqeucy.toLocaleString();
+        }
+        this.prevFrequency = currentFreqeucy;
     }
 
     /**
@@ -402,6 +422,10 @@ export class App {
         );
     }
 
+    /**
+     * AppStateのみに依存する
+     * @private
+     */
     renderButton() {
         // ボタンの有効無効
         switch (this.appState) {
@@ -451,16 +475,19 @@ export class App {
         // cve
         this.cve.disabled = this.appState !== "Running";
 
-        this.renderButton();
+        if (this.prevAppState !== this.appState) {
+            this.renderButton();
 
-        // ParseErrorのときにエラー表示
-        if (this.appState === "ParseError") {
-            $input.classList.add('is-invalid');
-        } else {
-            $input.classList.remove('is-invalid');
+            // ParseErrorのときにエラー表示
+            if (this.appState === "ParseError") {
+                $input.classList.add('is-invalid');
+            } else {
+                $input.classList.remove('is-invalid');
+            }
         }
 
         renderErrorMessage($error, this.appState, this.errorMessage);
+
         this.renderFrequencyOutput();
 
         $steps.textContent = this.steps.toLocaleString();
@@ -476,6 +503,8 @@ export class App {
         this.renderAddSubMul();
         this.renderB2D();
         this.renderStats();
+
+        this.prevAppState = this.appState;
     }
 
     /**

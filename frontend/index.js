@@ -55,11 +55,6 @@ const DATA_DIR = location.origin.includes('github') ?
     "../apgsembly-emulator-2/data/" :
     "../data/";
 
-/**
- * @typedef {"Initial" | "Running" | "Stop" | "ParseError" |
- *           "RuntimeError" | "Halted"} AppState
- */
-
 /** instance */
 const app = new App();
 

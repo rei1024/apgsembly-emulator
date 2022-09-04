@@ -104,10 +104,10 @@ export class StatsUI {
                 item.$tr.classList.remove(CURRENT_STATE_CLASS);
             }
 
-            const stat = stats[i] ?? error();
-            item.$sum.textContent = (stat.z + stat.nz).toString();
-            item.$z.textContent = stat.z.toString();
-            item.$nz.textContent = stat.nz.toString();
+            const { z, nz } = stats[i] ?? error();
+            item.$sum.textContent = (z + nz).toString();
+            item.$z.textContent = z.toString();
+            item.$nz.textContent = nz.toString();
         }
     }
 }
