@@ -8,6 +8,8 @@ import {} from "./components/renderB2D.js";
 import {} from "./components/unary_ui.js";
 import {} from "./components/binary_ui.js";
 import {} from "./components/stats_ui.js";
+import {} from "./components/breakpoint.js";
+
 import { setupFrequencyInput } from "./components/frequency_input.js";
 
 import { setCustomError, removeCustomError } from "./util/validation_ui.js";

@@ -1,7 +1,6 @@
 // @ts-check
 
 import { Machine } from "../src/Machine.js";
-import { Program } from "../src/Program.js";
 
 // Components
 import { renderB2D } from "./components/renderB2D.js";
@@ -15,6 +14,7 @@ import {
 } from "./components/toggle.js";
 import { renderOutput } from "./components/output.js";
 import { renderErrorMessage } from "./components/error.js";
+import { initializeBreakpointSelect, getBreakpointInput } from "./components/breakpoint.js";
 
 import { CVE, CVEEvent } from "./util/continuously-variable-emitter.js";
 
@@ -220,21 +220,11 @@ export class App {
      * @private
      */
     setUpBreakpointSelect() {
-        $breakpointSelect.innerHTML = "";
         const machine = this.machine;
         if (machine === undefined) {
-            return;
-        }
-        const none = document.createElement('option');
-        none.textContent = "None";
-        none.value = "-1";
-        none.selected = true;
-        $breakpointSelect.append(none);
-        for (const [state, stateIndex] of machine.getStateMap().entries()) {
-            const option = document.createElement('option');
-            option.textContent = state;
-            option.value = stateIndex.toString();
-            $breakpointSelect.append(option);
+            $breakpointSelect.innerHTML = "";
+        } else {
+            initializeBreakpointSelect($breakpointSelect, machine);
         }
     }
 
@@ -266,19 +256,10 @@ export class App {
         this.errorMessage = "";
         this.machine = undefined;
         this.cve.reset();
-        const program = Program.parse($input.value);
-
-        if (typeof program === "string") {
-            // Error
-            this.appState = "ParseError";
-            this.errorMessage = program;
-            this.render();
-            return;
-        }
 
         // Parse success
         try {
-            this.machine = new Machine(program);
+            this.machine = Machine.fromString($input.value);
             this.onMachineSet();
             this.appState = "Stop";
         } catch (e) {
@@ -508,18 +489,6 @@ export class App {
     }
 
     /**
-     * @returns {-1 | 0 | 1} -1 is any
-     */
-    getBreakpointInput() {
-        // -1: *
-        // 0 : Z
-        // 1 : NZ
-        const biStr = $breakpointInputSelect.value;
-        return biStr === "any" ? -1 :
-               biStr === "zero" ? 0 : 1;
-    }
-
-    /**
      * `steps`ステップ走らせる
      * @param {number} steps
      */
@@ -556,7 +525,7 @@ export class App {
             breakpointIndex = tempN;
         }
         const hasBreakpoint = breakpointIndex !== NON_BREAKPOINT;
-        const breakpointInputValue = this.getBreakpointInput();
+        const breakpointInputValue = getBreakpointInput($breakpointInputSelect);
 
         let i = 0;
         const start = performance.now();

@@ -105,6 +105,21 @@ export class Machine {
     }
 
     /**
+     * 文字列から作成する
+     * @param {string} source
+     * @returns {Machine}
+     */
+    static fromString(source) {
+        const program = Program.parse(source);
+
+        if (typeof program === "string") {
+            throw new Error(program);
+        }
+
+        return new Machine(program);
+    }
+
+    /**
      * @returns {{ z: number, nz: number }[]}
      */
     getStateStats() {
