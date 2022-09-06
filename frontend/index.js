@@ -37,10 +37,7 @@ import {
     // Modal
     $configModalContent,
     $stepInput,
-    $hideBinary,
-    $reverseBinary,
-    $showBinaryValueInDecimal,
-    $showBinaryValueInHex,
+    binaryConfig,
     $darkMode,
     $darkModeLabel,
     $b2dHidePointer,
@@ -164,16 +161,16 @@ function setupCheckbox($checkbox, key) {
 
 // バイナリを非表示にする
 const HIDE_BINARY_KEY = 'hide_binary';
-setupCheckbox($hideBinary, HIDE_BINARY_KEY);
+setupCheckbox(binaryConfig.$hideBinary, HIDE_BINARY_KEY);
 
 const REVERSE_BINARY_KEY = 'reverse_binary';
-setupCheckbox($reverseBinary, REVERSE_BINARY_KEY);
+setupCheckbox(binaryConfig.$reverseBinary, REVERSE_BINARY_KEY);
 
 const SHOW_BINARY_IN_DECIMAL_KEY = 'show_binary_in_decimal';
-setupCheckbox($showBinaryValueInDecimal, SHOW_BINARY_IN_DECIMAL_KEY);
+setupCheckbox(binaryConfig.$showBinaryValueInDecimal, SHOW_BINARY_IN_DECIMAL_KEY);
 
 const SHOW_BINARY_IN_HEX_KEY = 'show_binary_in_hex';
-setupCheckbox($showBinaryValueInHex, SHOW_BINARY_IN_HEX_KEY);
+setupCheckbox(binaryConfig.$showBinaryValueInHex, SHOW_BINARY_IN_HEX_KEY);
 
 // B2D
 $b2dHidePointer.addEventListener('change', () => {
@@ -276,10 +273,10 @@ idle(() => {
      */
     const items = [
         { key: B2D_FLIP_UPSIDE_DOWN_KEY, checkbox: $b2dFlipUpsideDown },
-        { key: REVERSE_BINARY_KEY, checkbox: $reverseBinary },
-        { key: HIDE_BINARY_KEY, checkbox: $hideBinary },
-        { key: SHOW_BINARY_IN_DECIMAL_KEY, checkbox: $showBinaryValueInDecimal },
-        { key: SHOW_BINARY_IN_HEX_KEY, checkbox: $showBinaryValueInHex },
+        { key: REVERSE_BINARY_KEY, checkbox: binaryConfig.$reverseBinary },
+        { key: HIDE_BINARY_KEY, checkbox: binaryConfig.$hideBinary },
+        { key: SHOW_BINARY_IN_DECIMAL_KEY, checkbox: binaryConfig.$showBinaryValueInDecimal },
+        { key: SHOW_BINARY_IN_HEX_KEY, checkbox: binaryConfig.$showBinaryValueInHex },
     ];
 
     for (const { key, checkbox } of items) {

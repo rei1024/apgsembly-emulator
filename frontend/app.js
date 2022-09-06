@@ -42,10 +42,7 @@ import {
     $addSubMul,
 
     // Modal
-    $hideBinary,
-    $reverseBinary,
-    $showBinaryValueInDecimal,
-    $showBinaryValueInHex,
+    binaryConfig,
     $breakpointSelect,
     $breakpointInputSelect,
     $b2dHidePointer,
@@ -343,10 +340,10 @@ export class App {
         if (this.machine !== undefined && $binaryRegisterDetail.open) {
             this.binaryUI.render(
                 this.machine.actionExecutor.bRegMap,
-                $hideBinary.checked,
-                $reverseBinary.checked,
-                $showBinaryValueInDecimal.checked,
-                $showBinaryValueInHex.checked
+                binaryConfig.$hideBinary.checked,
+                binaryConfig.$reverseBinary.checked,
+                binaryConfig.$showBinaryValueInDecimal.checked,
+                binaryConfig.$showBinaryValueInHex.checked
             );
         }
     }

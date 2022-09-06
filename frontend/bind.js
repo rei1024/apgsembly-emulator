@@ -99,18 +99,16 @@ export const $configModalContent = $type('#config_modal_content', HTMLElement);
 // ステップ数入力
 export const $stepInput = $type('#step_input', HTMLInputElement);
 
-// Hide Binary
-// 二進数を非表示にする
-export const $hideBinary = $type('#hide_binary', HTMLInputElement);
-
-// 二進数を逆順にする
-export const $reverseBinary = $type('#reverse_binary', HTMLInputElement);
-
-// 10進数に変換して表示
-export const $showBinaryValueInDecimal = $type('#show_binary_value_in_decimal', HTMLInputElement);
-
-// 16進数に変換して表示
-export const $showBinaryValueInHex = $type('#show_binary_value_in_hex', HTMLInputElement);
+export const binaryConfig = {
+    /** 2進数を非表示にする */
+    $hideBinary: $type('#hide_binary', HTMLInputElement),
+    /** 2進数を逆順にする */
+    $reverseBinary: $type('#reverse_binary', HTMLInputElement),
+    /** 10進数に変換して表示 */
+    $showBinaryValueInDecimal: $type('#show_binary_value_in_decimal', HTMLInputElement),
+    /** 16進数に変換して表示 */
+    $showBinaryValueInHex: $type('#show_binary_value_in_hex', HTMLInputElement)
+};
 
 // ブレークポイント
 export const $breakpointSelect = $type('#breakpoint_select', HTMLSelectElement);
