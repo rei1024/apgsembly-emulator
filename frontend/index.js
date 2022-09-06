@@ -306,7 +306,6 @@ try {
         localStorage.removeItem(INIT_CODE);
         app.setInputAndReset(initCode);
     }
-
 } catch (error) {
     console.error(error);
 }
@@ -327,11 +326,13 @@ idle(() => {
 
 // PWA
 if ("serviceWorker" in navigator) {
-    // navigator.serviceWorker.register("./service-worker.js?2022-06-10");
-    navigator.serviceWorker.getRegistrations().then(registrations => {
-        for (const registration of registrations) {
-            registration.unregister();
-        }
+    idle(() => {
+        // navigator.serviceWorker.register("./service-worker.js?2022-06-10");
+        navigator.serviceWorker.getRegistrations().then(registrations => {
+            for (const registration of registrations) {
+                registration.unregister();
+            }
+        });
     });
 }
 

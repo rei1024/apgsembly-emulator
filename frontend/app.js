@@ -386,9 +386,6 @@ export class App {
         }
     }
 
-    /**
-     * @property
-     */
     renderStats() {
         if (!$statsModal.classList.contains('show')) {
             return;

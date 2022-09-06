@@ -29,6 +29,14 @@ function parseBits(str) {
 const hasBigInt = typeof BigInt !== 'undefined';
 
 /**
+ * @private
+ * @returns {never}
+ */
+function error() {
+    throw Error('error');
+}
+
+/**
  * Bn: Binary Register
  */
 export class BReg {
@@ -68,8 +76,9 @@ export class BReg {
             case B_INC: {
                 this.pointer++;
                 // using invariant
-                if (this.pointer === this.bits.length) {
-                    this.bits.push(0);
+                const bits = this.bits;
+                if (this.pointer === bits.length) {
+                    bits.push(0);
                 }
                 break;
             }
@@ -77,7 +86,7 @@ export class BReg {
                 const pointer = this.pointer;
                 const bits = this.bits;
                 if (pointer < bits.length) {
-                    const value = bits[pointer] ?? this.error();
+                    const value = bits[pointer] ?? error();
                     bits[pointer] = 0;
                     return value;
                 } else {
@@ -187,14 +196,6 @@ export class BReg {
     }
 
     /**
-     * @private
-     * @returns {never}
-     */
-    error() {
-        throw Error('error');
-    }
-
-    /**
      *
      * @returns {string}
      */
@@ -243,7 +244,7 @@ export class BReg {
         this.extend();
         return {
             prefix: this.bits.slice(0, this.pointer),
-            head: this.bits[this.pointer] ?? this.error(),
+            head: this.bits[this.pointer] ?? error(),
             suffix: this.bits.slice(this.pointer + 1),
         };
     }
