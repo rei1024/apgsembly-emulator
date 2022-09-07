@@ -9,9 +9,12 @@ import {} from "./components/unary_ui.js";
 import {} from "./components/binary_ui.js";
 import {} from "./components/stats_ui.js";
 import {} from "./components/breakpoint.js";
+import {} from "./util/continuously-variable-emitter.js";
+import {} from "./components/toggle.js";
+import {} from "./components/error.js";
+import {} from "./components/output.js";
 
 import { setupFrequencyInput } from "./components/frequency_input.js";
-
 import { setCustomError, removeCustomError } from "./util/validation_ui.js";
 import { makeSpinner } from "./util/spinner.js";
 import { importFileAsText } from "./util/import_file.js";
