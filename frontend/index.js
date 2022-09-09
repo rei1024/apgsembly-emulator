@@ -50,7 +50,7 @@ import {
     $statsModal,
 } from "./bind.js";
 
-import { App, DEFUALT_FREQUENCY } from "./app.js";
+import { App } from "./app.js";
 
 // データ
 // GitHub Pagesは1階層上になる
@@ -118,7 +118,7 @@ $exampleCodes.forEach(e => {
 });
 
 // 周波数の設定
-setupFrequencyInput($frequencyInput, app, DEFUALT_FREQUENCY);
+setupFrequencyInput($frequencyInput, app);
 
 // 開閉で描画
 $b2dDetail.addEventListener('toggle', () => {

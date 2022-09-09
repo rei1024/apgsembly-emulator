@@ -55,7 +55,7 @@ import {
     $statsButton,
 } from "./bind.js";
 
-/** index.htmlと同期する */
+/** index.htmlと同期すること */
 export const DEFUALT_FREQUENCY = 30;
 
 /**
