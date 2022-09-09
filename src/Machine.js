@@ -257,9 +257,9 @@ export class Machine {
      * nステップ進める
      * @param {number} n
      * @param {boolean} isRunning 実行中は重い場合途中で止める
-     * @param {number} breakpointIndex
-     * @param {number} breakpointInputValue
-     * @returns {"Halted" | "Stop" | undefined}
+     * @param {number} breakpointIndex -1はブレークポイントなし
+     * @param {-1 | 0 | 1} breakpointInputValue -1はZとNZ両方
+     * @returns {"Halted" | "Stop" | undefined} HALT_OUTによる停止は"Halted"、ブレークポイントによる停止は"Stop"
      * @throws {Error} 実行時エラー
      */
     exec(n, isRunning, breakpointIndex, breakpointInputValue) {
