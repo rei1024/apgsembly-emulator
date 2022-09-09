@@ -47,8 +47,10 @@ export function isUnaryRegisterTdecCommand(z, nz) {
     }
 
     return {
+        state: z.state,
+        nextState: z.nextState,
         regNumber: tdecUNumber,
         zActions: z.actions,
-        nzActions: nzActions.filter(!(x => x instanceof URegAction && x.regNumber === tdecUNumber))
+        nzActions: nzActions.filter(!(x => x instanceof URegAction && x.op === U_TDEC && x.regNumber === tdecUNumber))
     };
 }
