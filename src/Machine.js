@@ -254,12 +254,50 @@ export class Machine {
     }
 
     /**
+     * nステップ進める
+     * @param {number} n
+     * @param {boolean} isRunning 実行中は重い場合途中で止める
+     * @param {number} breakpointIndex
+     * @param {number} breakpointInputValue
+     * @returns {"Halted" | "Stop" | undefined}
+     * @throws {Error} 実行時エラー
+     */
+    exec(n, isRunning, breakpointIndex, breakpointInputValue) {
+        const hasBreakpoint = breakpointIndex !== -1;
+        let i = 0;
+        const start = performance.now();
+
+        for (; i < n; i++) {
+            const res = this.execCommand();
+            if (res === -1) {
+                return "Halted";
+            }
+
+            // ブレークポイントの状態の場合、停止する
+            if (
+                hasBreakpoint &&
+                this.currentStateIndex === breakpointIndex &&
+                (breakpointInputValue === -1 || breakpointInputValue === this.prevOutput)
+            ) {
+                return "Stop";
+            }
+
+            // 1フレームに50ms以上時間が掛かっていたら、残りはスキップする
+            if (isRunning && (i + 1) % 500000 === 0 && (performance.now() - start >= 50)) {
+                return undefined;
+            }
+        }
+
+        return undefined;
+    }
+
+    /**
      * 次のコマンドを実行する
      * エラーが発生した場合は例外を投げる
      * -1はHALT_OUT
      * voidは正常
      * @returns {-1 | void}
-     * @throws
+     * @throws {Error} 実行時エラー
      */
     execCommand() {
         this.stepCount += 1;

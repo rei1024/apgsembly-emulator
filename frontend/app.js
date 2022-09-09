@@ -238,7 +238,6 @@ export class App {
      * 状態をリセットし、パースする
      */
     reset() {
-        this.steps = 0;
         this.errorMessage = "";
         this.machine = undefined;
         this.cve.reset();
@@ -454,7 +453,7 @@ export class App {
 
         this.renderFrequencyOutput();
 
-        $steps.textContent = this.machine?.stepCount.toLocaleString() ?? "0";
+        $steps.textContent = this.machine?.stepCount.toLocaleString() ?? "";
 
         // current state
         $currentState.textContent = this.machine?.currentState ?? "";
@@ -501,45 +500,25 @@ export class App {
 
         // ブレークポイントの処理
         const breakpointIndex = parseInt($breakpointSelect.value, 10);
-        const hasBreakpoint = breakpointIndex !== -1;
         const breakpointInputValue = getBreakpointInput($breakpointInputSelect);
 
-        let i = 0;
-        const start = performance.now();
         try {
-            for (; i < steps; i++) {
-                const res = machine.execCommand();
-                if (res === -1) {
-                    this.appState = "Halted";
-                    this.render();
-                    return;
-                }
-                // ブレークポイントの状態の場合、停止する
-                if (
-                    hasBreakpoint &&
-                    machine.currentStateIndex === breakpointIndex &&
-                    (breakpointInputValue === -1 || breakpointInputValue === machine.prevOutput)
-                ) {
-                    this.appState = "Stop";
-                    this.render();
-                    return;
-                }
-
-                // 1フレームに50ms以上時間が掛かっていたら、残りはスキップする
-                if (isRunning && (i + 1) % 500000 === 0 && (performance.now() - start >= 50)) {
-                    this.render();
-                    return;
-                }
+            const resultState = machine.exec(
+                steps,
+                isRunning,
+                breakpointIndex,
+                breakpointInputValue
+            );
+            if (resultState !== undefined) {
+                this.appState = resultState;
             }
-        } catch (e) {
+        } catch (error) {
             this.appState = "RuntimeError";
-            if (e instanceof Error) {
-                this.errorMessage = e.message;
+            if (error instanceof Error) {
+                this.errorMessage = error.message;
             } else {
                 this.errorMessage = "Unkown error is occurred.";
             }
-            this.render();
-            return;
         }
 
         this.render();
