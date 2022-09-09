@@ -1,5 +1,8 @@
 // @ts-check
 
+/**
+ * @returns {number[]}
+ */
 function createFrequencyArray() {
     /** @type {number[]} */
     const frequencyArray = [];
