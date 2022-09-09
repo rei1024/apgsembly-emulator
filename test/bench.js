@@ -164,3 +164,32 @@ Deno.bench('pi', () => {
 //     },
 //     group: 'test'
 // });
+
+// const rep = 10000000;
+
+// Deno.bench({
+//     name: 'switch',
+//     fn() {
+//         let x = "abc";
+//         for (let j = 0; j < rep; j++) {
+//             switch (x) {
+//                 case 'xyz': console.log(x);
+//             }
+//         }
+//     },
+//     group: 'test'
+// });
+
+// Deno.bench({
+//     name: 'switch int',
+//     fn() {
+//         let x = 3;
+//         let y = 4;
+//         for (let j = 0; j < rep; j++) {
+//             switch (x) {
+//                 case y: console.log(x);
+//             }
+//         }
+//     },
+//     group: 'test'
+// });

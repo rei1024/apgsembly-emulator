@@ -3,10 +3,14 @@
 /**
  * ブレークポイント初期化
  * @param {HTMLSelectElement} $breakpointSelect
- * @param {import('../../src/Machine.js').Machine} machine
+ * @param {import('../../src/Machine.js').Machine | undefined} machine
  */
 export function initializeBreakpointSelect($breakpointSelect, machine) {
     $breakpointSelect.innerHTML = '';
+    if (machine === undefined) {
+        return;
+    }
+
     const none = document.createElement('option');
     none.textContent = "None";
     none.value = "-1";

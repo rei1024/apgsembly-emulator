@@ -14,6 +14,13 @@ import { URegAction } from "./actions/URegAction.js";
 export { INITIAL_STATE };
 
 /**
+ * @returns {never}
+ */
+function error(msg = 'error') {
+    throw Error(msg);
+}
+
+/**
  * @typedef {"Z" | "NZ" | "ZZ" | "*"} Input
  */
 
@@ -70,7 +77,9 @@ export class Machine {
 
         // set cache
         for (const compiledCommand of obj.lookup) {
-            const actions = (compiledCommand.z?.command.actions ?? []).concat(compiledCommand.nz?.command.actions ?? []);
+            const actions = (compiledCommand.z?.command.actions ?? []).concat(
+                compiledCommand.nz?.command.actions ?? []
+            );
             for (const action of actions) {
                 this.setCache(action);
             }
@@ -79,9 +88,8 @@ export class Machine {
         /**
          * 現在の状態の添字
          */
-        this.currentStateIndex = this.stateMap.get(INITIAL_STATE) ?? (() => {
-            throw Error(`${INITIAL_STATE} state is not present`);
-        })();
+        this.currentStateIndex = this.stateMap.get(INITIAL_STATE) ??
+            error(`${INITIAL_STATE} state is not present`);
 
         /**
          * @type {number}
@@ -124,18 +132,14 @@ export class Machine {
      */
     getStateStats() {
         /**
-         * @returns {never}
-         */
-        function error() {
-            throw Error('error');
-        }
-
-        /**
          * @type {{ z: number, nz: number }[]}
          */
         const result = [];
         for (let i = 0; i < this.stateStatsArray.length; i += 2) {
-            result.push({ z: this.stateStatsArray[i] ?? error(), nz: this.stateStatsArray[i + 1] ?? error() });
+            result.push({
+                z: this.stateStatsArray[i] ?? error(),
+                nz: this.stateStatsArray[i + 1] ?? error()
+            });
         }
 
         return result;

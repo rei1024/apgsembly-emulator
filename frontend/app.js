@@ -217,12 +217,7 @@ export class App {
      * @private
      */
     setUpBreakpointSelect() {
-        const machine = this.machine;
-        if (machine === undefined) {
-            $breakpointSelect.innerHTML = "";
-        } else {
-            initializeBreakpointSelect($breakpointSelect, machine);
-        }
+        initializeBreakpointSelect($breakpointSelect, this.machine);
     }
 
     /**
@@ -511,14 +506,8 @@ export class App {
         const isRunning = this.appState === "Running";
 
         // ブレークポイントの処理
-        const NON_BREAKPOINT = -1;
-        let breakpointIndex = NON_BREAKPOINT;
-
-        const tempN = parseInt($breakpointSelect.value, 10);
-        if (!isNaN(tempN)) {
-            breakpointIndex = tempN;
-        }
-        const hasBreakpoint = breakpointIndex !== NON_BREAKPOINT;
+        const breakpointIndex = parseInt($breakpointSelect.value, 10);
+        const hasBreakpoint = breakpointIndex !== -1;
         const breakpointInputValue = getBreakpointInput($breakpointInputSelect);
 
         let i = 0;
@@ -543,8 +532,9 @@ export class App {
                     this.render();
                     return;
                 }
+
                 // 1フレームに50ms以上時間が掛かっていたら、残りはスキップする
-                if (isRunning && i % 500000 === 0 && (performance.now() - start >= 50)) {
+                if (isRunning && (i + 1) % 500000 === 0 && (performance.now() - start >= 50)) {
                     this.steps += i + 1;
                     this.render();
                     return;
