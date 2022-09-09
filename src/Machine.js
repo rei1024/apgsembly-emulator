@@ -40,6 +40,11 @@ export class Machine {
         }
 
         /**
+         * ステップ数
+         */
+        this.stepCount = 0;
+
+        /**
          * @readonly
          */
         this.actionExecutor = new ActionExecutor({
@@ -257,6 +262,7 @@ export class Machine {
      * @throws
      */
     execCommand() {
+        this.stepCount += 1;
         const compiledCommand = this.getNextCompiledCommandWithNextState(true);
 
         /**

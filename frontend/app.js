@@ -75,12 +75,6 @@ export class App {
         this.machine = undefined;
 
         /**
-         * ステップ数
-         * @private
-         */
-        this.steps = 0;
-
-        /**
          * アプリ状態
          * @type {AppState}
          */
@@ -460,7 +454,7 @@ export class App {
 
         this.renderFrequencyOutput();
 
-        $steps.textContent = this.steps.toLocaleString();
+        $steps.textContent = this.machine?.stepCount.toLocaleString() ?? "0";
 
         // current state
         $currentState.textContent = this.machine?.currentState ?? "";
@@ -517,7 +511,6 @@ export class App {
                 const res = machine.execCommand();
                 if (res === -1) {
                     this.appState = "Halted";
-                    this.steps += i + 1;
                     this.render();
                     return;
                 }
@@ -528,14 +521,12 @@ export class App {
                     (breakpointInputValue === -1 || breakpointInputValue === machine.prevOutput)
                 ) {
                     this.appState = "Stop";
-                    this.steps += i + 1;
                     this.render();
                     return;
                 }
 
                 // 1フレームに50ms以上時間が掛かっていたら、残りはスキップする
                 if (isRunning && (i + 1) % 500000 === 0 && (performance.now() - start >= 50)) {
-                    this.steps += i + 1;
                     this.render();
                     return;
                 }
@@ -547,12 +538,10 @@ export class App {
             } else {
                 this.errorMessage = "Unkown error is occurred.";
             }
-            this.steps += i + 1; // 1回目でエラーが発生したら1ステップとする
             this.render();
             return;
         }
 
-        this.steps += steps;
         this.render();
     }
 }
