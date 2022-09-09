@@ -264,6 +264,16 @@ $configButton.disabled = false;
 // first render
 app.initializeApp();
 
+// 初期コード
+idle(() => {
+    const INIT_CODE = "initial_code";
+    const initCode = localStorage.getItem(INIT_CODE);
+    if (initCode !== null && initCode !== "") {
+        localStorage.removeItem(INIT_CODE);
+        app.setInputAndReset(initCode);
+    }
+});
+
 // 実行時間が掛かる処理をまとめる
 idle(() => {
     // デフォルトはtrue
@@ -297,18 +307,6 @@ idle(() => {
     }
     app.render();
 });
-
-// 初期コード
-try {
-    const INIT_CODE = "initial_code";
-    const initCode = localStorage.getItem(INIT_CODE);
-    if (initCode !== null && initCode !== "") {
-        localStorage.removeItem(INIT_CODE);
-        app.setInputAndReset(initCode);
-    }
-} catch (error) {
-    console.error(error);
-}
 
 // サンプルコードをプレフェッチ
 idle(() => {
