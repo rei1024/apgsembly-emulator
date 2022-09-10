@@ -1,6 +1,6 @@
 import { bundle } from "https://deno.land/x/emit@0.8.0/mod.ts";
 
-// expetimental bundling
+// experimental bundling
 
 // deno run --allow-env --allow-read --allow-write --allow-net bundle.ts
 const result = await bundle("./frontend/index.js", {

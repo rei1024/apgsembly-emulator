@@ -22,7 +22,7 @@ import {
     $error,
     $input,
     $output,
-    $steps,
+    $stepCount,
     $toggle,
     $reset,
     $step,
@@ -32,8 +32,7 @@ import {
     $command,
     $canvas,
     context,
-    $b2dx,
-    $b2dy,
+    $b2dPos,
     $b2dDetail,
     $unaryRegister,
     $unaryRegisterDetail,
@@ -288,15 +287,15 @@ export class App {
         }
         const machine = this.machine;
         if (machine === undefined) {
-            $b2dx.textContent = "0";
-            $b2dy.textContent = "0";
+            $b2dPos.x.textContent = "0";
+            $b2dPos.y.textContent = "0";
             context.clearRect(0, 0, $canvas.width, $canvas.height);
             context.resetTransform();
             return;
         }
         const b2d = machine.actionExecutor.b2d;
-        $b2dx.textContent = b2d.x.toString();
-        $b2dy.textContent = b2d.y.toString();
+        $b2dPos.x.textContent = b2d.x.toString();
+        $b2dPos.y.textContent = b2d.y.toString();
 
         const start = performance.now();
         renderB2D(
@@ -453,7 +452,7 @@ export class App {
 
         this.renderFrequencyOutput();
 
-        $steps.textContent = this.machine?.stepCount.toLocaleString() ?? "";
+        $stepCount.textContent = this.machine?.stepCount.toLocaleString() ?? "";
 
         // current state
         $currentState.textContent = this.machine?.getCurrentState() ?? "";

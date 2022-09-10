@@ -29,7 +29,7 @@ function error() {
 /**
  * 周波数入力
  * @param {HTMLInputElement} $frequencyInput
- * @param {import("../app").App} app
+ * @param {import("../app.js").App} app
  */
 export function setupFrequencyInput($frequencyInput, app) {
     const frequencyArray = createFrequencyArray();
