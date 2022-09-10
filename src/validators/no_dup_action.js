@@ -1,6 +1,6 @@
 // @ts-check
 
-import { Command } from "../Command.js";
+import { addLineNumber, Command } from "../Command.js";
 
 /**
  *
@@ -17,7 +17,7 @@ function validateNoDuplicatedActionCommand(command) {
         const act1 = actionStrs[i];
         const act2 = actionStrs[i + 1];
         if (act1 === act2) {
-            return `Duplicated actions "${act1}" in "${command.pretty()}"`;
+            return `Duplicated actions "${act1}" in "${command.pretty()}"${addLineNumber(command)}`;
         }
     }
     return undefined;

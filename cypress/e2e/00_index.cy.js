@@ -156,7 +156,7 @@ describe('Error Steps', () => {
         clickStep();
         assertSteps(3);
 
-        assertError('- The bit of binary register is already 1: bits = 1, pointer = 0');
+        assertError('- The bit of the binary register B0 is already 1 in "A1; ZZ; A1; SET B0, NOP" at line 4');
     });
 });
 

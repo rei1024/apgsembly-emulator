@@ -7,7 +7,7 @@ import {
     CompiledCommandWithNextState
 } from "./compile.js";
 import { Program } from "./Program.js";
-import { INITIAL_STATE, RegistersHeader } from "./Command.js";
+import { INITIAL_STATE, RegistersHeader, addLineNumber } from "./Command.js";
 import { Action } from "./actions/Action.js";
 import { BRegAction } from "./actions/BRegAction.js";
 import { URegAction } from "./actions/URegAction.js";
@@ -268,7 +268,22 @@ export class Machine {
         const start = performance.now();
 
         for (; i < n; i++) {
-            const res = this.execCommand();
+            /**
+             * @type {void | -1}
+             */
+            let res = undefined;
+            try {
+                res = this.execCommand();
+            } catch (error) {
+                if (error instanceof Error) {
+                    const command = this.getNextCompiledCommandWithNextState(false).command;
+                    const line = addLineNumber(command);
+                    throw new Error(error.message + ` in "${command.pretty()}"` + line);
+                } else {
+                    throw error;
+                }
+            }
+
             if (res === -1) {
                 return "Halted";
             }
@@ -321,7 +336,7 @@ export class Machine {
                 } else {
                     throw Error(`Return value twice: line = ${
                         compiledCommand.command.pretty()
-                    }`);
+                    }${addLineNumber(compiledCommand.command)}`);
                 }
             }
         }
@@ -329,7 +344,7 @@ export class Machine {
         if (result === -1) {
             throw Error(`No return value: line = ${
                 compiledCommand.command.pretty()
-            }`);
+            }${addLineNumber(compiledCommand.command)}`);
         }
 
         const nextStateIndex = compiledCommand.nextState;

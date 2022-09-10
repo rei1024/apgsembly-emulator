@@ -1,6 +1,6 @@
 // @ts-check
 
-import { Command } from "../Command.js";
+import { addLineNumber, Command } from "../Command.js";
 import { HaltOutAction } from "../actions/HaltOutAction.js";
 
 /**
@@ -40,7 +40,7 @@ function validateNoSameComponentCommand(command) {
                     a.pretty()
                 }" and "${
                     b.pretty()
-                }" use same component in "${command.pretty()}"`;
+                }" use same component in "${command.pretty()}"${addLineNumber(command)}`;
             }
         }
     }

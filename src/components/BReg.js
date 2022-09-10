@@ -33,7 +33,7 @@ const hasBigInt = typeof BigInt !== 'undefined';
  * @returns {never}
  */
 function error() {
-    throw Error('error');
+    throw Error('internal error');
 }
 
 /**
@@ -102,8 +102,7 @@ export class BReg {
                 const value = bits[pointer];
                 if (value === 1) {
                     throw Error(
-                        'The bit of binary register is already 1: bits = ' +
-                        bits.join('') + ", pointer = " + pointer
+                        `The bit of the binary register B${ act.regNumber } is already 1`
                     );
                 }
                 bits[pointer] = 1;
@@ -135,7 +134,7 @@ export class BReg {
     inc() {
         const value = this.action(new BRegAction(B_INC, 0)); // regNumberは仮
         if (value !== undefined) {
-            throw Error('internal error');
+            error();
         }
         return value;
     }
@@ -147,7 +146,7 @@ export class BReg {
     tdec() {
         const value = this.action(new BRegAction(B_TDEC, 0)); // regNumberは仮
         if (value === undefined) {
-            throw Error('internal error');
+            error();
         }
         return value;
     }
@@ -159,7 +158,7 @@ export class BReg {
     read() {
         const value = this.action(new BRegAction(B_READ, 0)); // regNumberは仮
         if (value === undefined) {
-            throw Error('internal error');
+            error();
         }
         return value;
     }
@@ -171,7 +170,7 @@ export class BReg {
     set() {
         const value = this.action(new BRegAction(B_SET, 0)); // regNumberは仮
         if (value !== undefined) {
-            throw Error('internal error');
+            error();
         }
         return value;
     }

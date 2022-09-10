@@ -1,7 +1,7 @@
 // @ts-check
 
 import { HaltOutAction } from "../actions/HaltOutAction.js";
-import { Command } from "../Command.js";
+import { Command, addLineNumber } from "../Command.js";
 
 /**
  *
@@ -18,13 +18,13 @@ function validateActionReturnOnceCommand(command) {
     if (valueReturnActions.length === 1) {
         return undefined;
     } else if (valueReturnActions.length === 0) {
-        return `Does not produce the return value in "${command.pretty()}"`;
+        return `Does not produce the return value in "${command.pretty()}"${addLineNumber(command)}`;
     } else {
         return `Does not contain exactly one action that produces a return value in "${
             command.pretty()
         }": Actions that produce value are ${
             valueReturnActions.map(x => `"${x.pretty()}"`).join(', ')
-        }`;
+        }${addLineNumber(command)}`;
     }
 }
 
