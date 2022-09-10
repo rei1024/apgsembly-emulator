@@ -456,7 +456,7 @@ export class App {
         $steps.textContent = this.machine?.stepCount.toLocaleString() ?? "";
 
         // current state
-        $currentState.textContent = this.machine?.currentState ?? "";
+        $currentState.textContent = this.machine?.getCurrentState() ?? "";
         $previousOutput.textContent = this.machine?.getPreviousOutput() ?? "";
 
         this.renderCommand();

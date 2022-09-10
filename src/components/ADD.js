@@ -18,15 +18,38 @@ export class ADD {
     /**
      *
      * @param {AddAction} act
+     * @returns {0 | 1 | undefined}
      */
     action(act) {
         switch (act.op) {
             // A1 479061
             // B1 535537
             // B0 4135003
-            case ADD_B0: return this.b0();
-            case ADD_B1: return this.b1();
-            case ADD_A1: return this.a1();
+            case ADD_B0: {
+                const t = this.value % 2;
+                this.value = [
+                    0b0000, 0b0000, 0b0000, 0b0000, 0b0000, 0b0000, 0b1001, 0b1001,
+                    0b0000, 0b0000, 0b1001, 0b1001, 0b1001, 0b1001, 0b1001, 0b1001
+                ][this.value] ?? this.error();
+                // @ts-ignore
+                return t;
+            }
+            case ADD_B1: {
+                const t = 1 - this.value % 2;
+                this.value = [
+                    0b0000, 0b0000, 0b0000, 0b0000, 0b1001, 0b1001, 0b0000, 0b0000,
+                    0b1001, 0b1001, 0b0000, 0b0000, 0b1001, 0b1001, 0b1001, 0b1001
+                ][this.value] ?? this.error();
+                // @ts-ignore
+                return t;
+            }
+            case ADD_A1: {
+                this.value = [
+                    0b0101, 0b0100, 0b0111, 0b0110, 0b0001, 0b0000, 0b0011, 0b0010,
+                    0b1101, 0b1100, 0b1111, 0b1110, 0b1001, 0b1000, 0b1011, 0b1010
+                ][this.value] ?? this.error();
+                return undefined;
+            }
             default: throw Error('ADD action: internal');
         }
     }
@@ -44,8 +67,7 @@ export class ADD {
      * @returns {void}
      */
     a1() {
-        this.value = [0b0101, 0b0100, 0b0111, 0b0110, 0b0001, 0b0000, 0b0011, 0b0010, 0b1101, 0b1100, 0b1111, 0b1110, 0b1001, 0b1000, 0b1011, 0b1010][this.value] ?? this.error();
-        return undefined;
+        this.action(new AddAction(ADD_A1));
     }
 
     /**
@@ -53,8 +75,7 @@ export class ADD {
      * @returns {0 | 1}
      */
     b0() {
-        const t = this.value % 2;
-        this.value = [0b0000, 0b0000, 0b0000, 0b0000, 0b0000, 0b0000, 0b1001, 0b1001, 0b0000, 0b0000, 0b1001, 0b1001, 0b1001, 0b1001, 0b1001, 0b1001][this.value] ?? this.error();
+        const t = this.action(new AddAction(ADD_B0));
         // @ts-ignore
         return t;
     }
@@ -64,8 +85,7 @@ export class ADD {
      * @returns {0 | 1}
      */
     b1() {
-        const t = 1 - this.value % 2;
-        this.value = [0b0000, 0b0000, 0b0000, 0b0000, 0b1001, 0b1001, 0b0000, 0b0000, 0b1001, 0b1001, 0b0000, 0b0000, 0b1001, 0b1001, 0b1001, 0b1001][this.value] ?? this.error();
+        const t = this.action(new AddAction(ADD_B1));
         // @ts-ignore
         return t;
     }

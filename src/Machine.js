@@ -189,7 +189,7 @@ export class Machine {
      * 現在の状態の名前
      * @returns {string}
      */
-    get currentState() {
+    getCurrentState() {
         const name = this.states[this.currentStateIndex];
         if (name === undefined) {
             throw Error('State name is not found');
@@ -198,7 +198,7 @@ export class Machine {
     }
 
     /**
-     * 状態の文字列から添字へのマップを取得する
+     * 状態の名前から添字へのマップを取得する
      * @returns {Map<string, number>}
      */
     getStateMap() {
@@ -250,7 +250,7 @@ export class Machine {
         }
 
         throw Error('Next command is not found: Current state = ' +
-            this.currentState + ', output = ' + this.getPreviousOutput());
+            this.getCurrentState() + ', output = ' + this.getPreviousOutput());
     }
 
     /**
