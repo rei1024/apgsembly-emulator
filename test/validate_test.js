@@ -8,6 +8,7 @@ import { Command } from "../src/Command.js";
 import { validateNoSameComponent } from "../src/validators/no_same_component.js";
 import { validateActionReturnOnce } from "../src/validators/action_return_once.js";
 import { validateNoDuplicatedAction } from "../src/validators/no_dup_action.js";
+import { validateZAndNZ } from "../src/validators/z_and_nz.js";
 import { validateAll } from "../src/validate.js";
 import { assertEquals, test } from "./deps.js";
 
@@ -45,14 +46,31 @@ test('validateNoSameComponent NOP NOP', () => {
             actions: [new NopAction(), new NopAction()]
         })
     ]);
-    if (err === undefined) {
-        throw Error('expected error');
-    } else {
-        assertEquals(
-            err,
-            [`Actions "NOP" and "NOP" use same component in "INITIAL; ZZ; A0; NOP, NOP"`]
-        );
-    }
+    assertEquals(
+        err,
+        [`Actions "NOP" and "NOP" use same component in "INITIAL; ZZ; A0; NOP, NOP"`]
+    );
+});
+
+test('validateZAndNZ ZZ and NZ', () => {
+    const err = validateZAndNZ([
+        new Command({
+            state: "A0",
+            input: "ZZ",
+            nextState: "A0",
+            actions: [new NopAction()]
+        }),
+        new Command({
+            state: "INITIAL",
+            input: "NZ",
+            nextState: "A0",
+            actions: [new NopAction()]
+        })
+    ]);
+    assertEquals(
+        err,
+        [`Need Z line followed by NZ line in "A0; ZZ; A0; NOP"`]
+    );
 });
 
 test('validateNoDuplicatedAction NOP NOP', () => {
@@ -64,14 +82,10 @@ test('validateNoDuplicatedAction NOP NOP', () => {
             actions: [new NopAction(), new NopAction()]
         })
     ]);
-    if (err === undefined) {
-        throw Error('expected error');
-    } else {
-        assertEquals(
-            err,
-            [`Duplicated actions "NOP" in "INITIAL; ZZ; A0; NOP, NOP"`]
-        );
-    }
+    assertEquals(
+        err,
+        [`Duplicated actions "NOP" in "INITIAL; ZZ; A0; NOP, NOP"`]
+    );
 });
 
 test('validateNoDuplicatedAction NOP, OUTPUT 1, NOP', () => {
@@ -83,12 +97,8 @@ test('validateNoDuplicatedAction NOP, OUTPUT 1, NOP', () => {
             actions: [new NopAction(), new OutputAction("1"), new NopAction()]
         })
     ]);
-    if (err === undefined) {
-        throw Error('expected error');
-    } else {
-        assertEquals(
-            err,
-            [`Duplicated actions "NOP" in "INITIAL; ZZ; A0; NOP, OUTPUT 1, NOP"`]
-        );
-    }
+    assertEquals(
+        err,
+        [`Duplicated actions "NOP" in "INITIAL; ZZ; A0; NOP, OUTPUT 1, NOP"`]
+    );
 });

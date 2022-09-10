@@ -26,20 +26,22 @@ export class ADD {
             // B1 535537
             // B0 4135003
             case ADD_B0: {
-                const t = this.value % 2;
+                const value = this.value;
+                const t = value % 2;
                 this.value = [
                     0b0000, 0b0000, 0b0000, 0b0000, 0b0000, 0b0000, 0b1001, 0b1001,
                     0b0000, 0b0000, 0b1001, 0b1001, 0b1001, 0b1001, 0b1001, 0b1001
-                ][this.value] ?? this.error();
+                ][value] ?? this.error();
                 // @ts-ignore
                 return t;
             }
             case ADD_B1: {
-                const t = 1 - this.value % 2;
+                const value = this.value;
+                const t = 1 - value % 2;
                 this.value = [
                     0b0000, 0b0000, 0b0000, 0b0000, 0b1001, 0b1001, 0b0000, 0b0000,
                     0b1001, 0b1001, 0b0000, 0b0000, 0b1001, 0b1001, 0b1001, 0b1001
-                ][this.value] ?? this.error();
+                ][value] ?? this.error();
                 // @ts-ignore
                 return t;
             }
@@ -64,10 +66,11 @@ export class ADD {
 
     /**
      * `ADD A1`
-     * @returns {void}
+     * @returns {undefined}
      */
     a1() {
         this.action(new AddAction(ADD_A1));
+        return undefined;
     }
 
     /**
@@ -76,7 +79,9 @@ export class ADD {
      */
     b0() {
         const t = this.action(new AddAction(ADD_B0));
-        // @ts-ignore
+        if (t === undefined) {
+            this.error();
+        }
         return t;
     }
 
@@ -86,7 +91,9 @@ export class ADD {
      */
     b1() {
         const t = this.action(new AddAction(ADD_B1));
-        // @ts-ignore
+        if (t === undefined) {
+            this.error();
+        }
         return t;
     }
 

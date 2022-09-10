@@ -41,19 +41,23 @@ function addLineNumberTwo(command1, command2) {
         const a = commands[i] ?? internalError();
         const b = commands[i + 1] ?? internalError();
 
+        // Zならば次がNZである必要がある
         if (a.input === "Z" && b.input !== 'NZ') {
             return [errMsg(a, b)];
         }
 
+        // NZならば前がZである必要がある
         if (b.input === "NZ" && a.input !== 'Z') {
             return [errMsg(a, b)];
         }
 
+        // Zの次がNZの時、入力状態は同じである必要がある
         if (a.input === "Z" && b.input === "NZ" && a.state !== b.state) {
             return [errMsg(a, b)];
         }
     }
 
+    // 最後の行がZで終わっている場合
     const lastLine = commands[commands.length - 1];
     if (lastLine !== undefined) {
         if (lastLine.input === 'Z') {
