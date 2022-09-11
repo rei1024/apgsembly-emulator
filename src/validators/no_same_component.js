@@ -12,10 +12,11 @@ function internalError() {
 
 /**
  * アクションが同じコンポーネントを使用していないか検査する
+ * エラーメッセージを返却する
  * @param {Command} command
  * @returns {string | undefined}
  */
-function validateNoSameComponentCommand(command) {
+export function validateNoSameComponentCommand(command) {
     // HALT_OUTの場合は一旦無視
     // FIXME
     if (command.actions.find(x => x instanceof HaltOutAction) !== undefined) {
@@ -43,27 +44,6 @@ function validateNoSameComponentCommand(command) {
                 }" use same component in "${command.pretty()}"${addLineNumber(command)}`;
             }
         }
-    }
-    return undefined;
-}
-
-/**
- * アクションが同じコンポーネントを使用していないか検査する
- * エラーメッセージを返却する
- * @param {Command[]} commands
- * @returns {string[] | undefined}
- */
-export function validateNoSameComponent(commands) {
-    /** @type {string[]} */
-    const errors = [];
-    for (const command of commands) {
-        const err = validateNoSameComponentCommand(command);
-        if (typeof err === 'string') {
-            errors.push(err);
-        }
-    }
-    if (errors.length > 0) {
-        return errors;
     }
     return undefined;
 }
