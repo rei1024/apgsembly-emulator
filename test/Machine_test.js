@@ -218,6 +218,22 @@ test('Machine program9_4', () => {
     );
 });
 
+test('Machine program9_4 exec', () => {
+    const program = Program.parse(program9_4);
+    if (!(program instanceof Program)) {
+        throw Error('parse error program9_4');
+    }
+    const machine = new Machine(program);
+    assertEquals(machine.actionExecutor.getBReg(0)?.toBinaryString(), "0");
+
+    machine.exec(100, false, -1, 0);
+
+    assertEquals(
+        machine.actionExecutor.getBReg(0)?.toBinaryString(),
+        "10001011"
+    );
+});
+
 test('Machine exec', () => {
     const program = Program.parse(`
 #REGISTERS { "U0": 42 }
