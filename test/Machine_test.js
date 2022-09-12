@@ -114,11 +114,18 @@ INITIAL; ZZ; NON_EXIST; NOP
     assertNewMachineThrows(str);
 });
 
-test('Machine program9_1', () => {
+test('Machine program9_1 new Machine', () => {
     const program = Program.parse(program9_1);
     if (!(program instanceof Program)) {
         throw Error('parse error program9_1');
     }
+    const machine = new Machine(program);
+    assertEquals(machine.getCurrentState(), "INITIAL");
+});
+
+test('Machine program9_1 fromString', () => {
+    const machine = Machine.fromString(program9_1);
+    assertEquals(machine.getCurrentState(), "INITIAL");
 });
 
 test('Machine program9_2', () => {
@@ -170,6 +177,25 @@ test('Machine program9_3', () => {
     assertEquals(machine.actionExecutor.getUReg(1)?.getValue(), 5);
     assertEquals(machine.actionExecutor.getUReg(2)?.getValue(), 35);
     assertEquals(machine.actionExecutor.getUReg(3)?.getValue(), 0);
+
+    assertEquals(machine.getStateStats(), [
+        {
+            nz: 0,
+            z: 1,
+        },
+        {
+            nz: 7,
+            z: 1,
+        },
+        {
+            nz: 35,
+            z: 7,
+        },
+        {
+            nz: 35,
+            z: 7,
+        },
+    ]);
 });
 
 test('Machine program9_4', () => {

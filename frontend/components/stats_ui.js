@@ -73,6 +73,7 @@ export class StatsUI {
 
         this.cells = [];
         this.root.innerHTML = "";
+
         for (const [i, stat] of stateStats.entries()) {
             const name = states[i] ?? "";
             const { $tr, $sum, $z, $nz } = createRow(name, stat);

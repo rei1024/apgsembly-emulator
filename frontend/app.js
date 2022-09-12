@@ -22,7 +22,7 @@ import {
     $error,
     $input,
     $output,
-    $steps,
+    $stepCount,
     $toggle,
     $reset,
     $step,
@@ -32,8 +32,7 @@ import {
     $command,
     $canvas,
     context,
-    $b2dx,
-    $b2dy,
+    $b2dPos,
     $b2dDetail,
     $unaryRegister,
     $unaryRegisterDetail,
@@ -55,7 +54,7 @@ import {
     $statsButton,
 } from "./bind.js";
 
-/** index.htmlと同期する */
+/** index.htmlと同期すること */
 export const DEFUALT_FREQUENCY = 30;
 
 /**
@@ -73,12 +72,6 @@ export class App {
          * @private
          */
         this.machine = undefined;
-
-        /**
-         * ステップ数
-         * @private
-         */
-        this.steps = 0;
 
         /**
          * アプリ状態
@@ -217,12 +210,7 @@ export class App {
      * @private
      */
     setUpBreakpointSelect() {
-        const machine = this.machine;
-        if (machine === undefined) {
-            $breakpointSelect.innerHTML = "";
-        } else {
-            initializeBreakpointSelect($breakpointSelect, machine);
-        }
+        initializeBreakpointSelect($breakpointSelect, this.machine);
     }
 
     /**
@@ -249,7 +237,6 @@ export class App {
      * 状態をリセットし、パースする
      */
     reset() {
-        this.steps = 0;
         this.errorMessage = "";
         this.machine = undefined;
         this.cve.reset();
@@ -300,15 +287,15 @@ export class App {
         }
         const machine = this.machine;
         if (machine === undefined) {
-            $b2dx.textContent = "0";
-            $b2dy.textContent = "0";
+            $b2dPos.x.textContent = "0";
+            $b2dPos.y.textContent = "0";
             context.clearRect(0, 0, $canvas.width, $canvas.height);
             context.resetTransform();
             return;
         }
         const b2d = machine.actionExecutor.b2d;
-        $b2dx.textContent = b2d.x.toString();
-        $b2dy.textContent = b2d.y.toString();
+        $b2dPos.x.textContent = b2d.x.toString();
+        $b2dPos.y.textContent = b2d.y.toString();
 
         const start = performance.now();
         renderB2D(
@@ -465,10 +452,10 @@ export class App {
 
         this.renderFrequencyOutput();
 
-        $steps.textContent = this.steps.toLocaleString();
+        $stepCount.textContent = this.machine?.stepCount.toLocaleString() ?? "";
 
         // current state
-        $currentState.textContent = this.machine?.currentState ?? "";
+        $currentState.textContent = this.machine?.getCurrentState() ?? "";
         $previousOutput.textContent = this.machine?.getPreviousOutput() ?? "";
 
         this.renderCommand();
@@ -511,58 +498,28 @@ export class App {
         const isRunning = this.appState === "Running";
 
         // ブレークポイントの処理
-        const NON_BREAKPOINT = -1;
-        let breakpointIndex = NON_BREAKPOINT;
-
-        const tempN = parseInt($breakpointSelect.value, 10);
-        if (!isNaN(tempN)) {
-            breakpointIndex = tempN;
-        }
-        const hasBreakpoint = breakpointIndex !== NON_BREAKPOINT;
+        const breakpointIndex = parseInt($breakpointSelect.value, 10);
         const breakpointInputValue = getBreakpointInput($breakpointInputSelect);
 
-        let i = 0;
-        const start = performance.now();
         try {
-            for (; i < steps; i++) {
-                const res = machine.execCommand();
-                if (res === -1) {
-                    this.appState = "Halted";
-                    this.steps += i + 1;
-                    this.render();
-                    return;
-                }
-                // ブレークポイントの状態の場合、停止する
-                if (
-                    hasBreakpoint &&
-                    machine.currentStateIndex === breakpointIndex &&
-                    (breakpointInputValue === -1 || breakpointInputValue === machine.prevOutput)
-                ) {
-                    this.appState = "Stop";
-                    this.steps += i + 1;
-                    this.render();
-                    return;
-                }
-                // 1フレームに50ms以上時間が掛かっていたら、残りはスキップする
-                if (isRunning && i % 500000 === 0 && (performance.now() - start >= 50)) {
-                    this.steps += i + 1;
-                    this.render();
-                    return;
-                }
+            const resultState = machine.exec(
+                steps,
+                isRunning,
+                breakpointIndex,
+                breakpointInputValue
+            );
+            if (resultState !== undefined) {
+                this.appState = resultState;
             }
-        } catch (e) {
+        } catch (error) {
             this.appState = "RuntimeError";
-            if (e instanceof Error) {
-                this.errorMessage = e.message;
+            if (error instanceof Error) {
+                this.errorMessage = error.message;
             } else {
                 this.errorMessage = "Unkown error is occurred.";
             }
-            this.steps += i + 1; // 1回目でエラーが発生したら1ステップとする
-            this.render();
-            return;
         }
 
-        this.steps += steps;
         this.render();
     }
 }

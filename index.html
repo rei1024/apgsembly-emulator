@@ -61,6 +61,9 @@
         <h1>APGsembly 2.0 Emulator</h1>
     </header>
     <main class="container">
+        <noscript class="alert alert-danger" role="alert">
+            This application requires JavaScript to be enabled.
+        </noscript>
         <!-- 初期は非表示 -->
         <div id="error" class="d-none alert alert-danger" role="alert"></div>
         <div class="mb-3">
@@ -104,7 +107,7 @@
             <!-- frequency_input.jsでminとmaxは設定するが、ジャンプを防ぐため手動でも設定する -->
             <input id="frequency_input" class="form-range" value="11" type="range" max="64" aria-valuetext="(30Hz)">
         </div>
-        <div>
+        <div aria-label="info">
             <table class="mb-1 table table-layout-fixed" id="state">
                 <thead>
                     <tr>

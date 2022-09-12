@@ -15,7 +15,7 @@ export const $input = $type('#input', HTMLTextAreaElement);
 export const $output = $type('#output', HTMLTextAreaElement);
 
 // ステップ数表示
-export const $steps = $type('#steps', HTMLElement);
+export const $stepCount = $type('#steps', HTMLElement);
 
 // Toggle Start and Stop
 export const $toggle = $type('#toggle', HTMLButtonElement);
@@ -58,8 +58,10 @@ export const context = $canvas.getContext('2d') ?? (() => {
     throw Error('context is null');
 })();
 
-export const $b2dx = $type('#b2dx', HTMLElement);
-export const $b2dy = $type('#b2dy', HTMLElement);
+export const $b2dPos = {
+    x: $type('#b2dx', HTMLElement),
+    y: $type('#b2dy', HTMLElement)
+};
 
 // B2Dの開閉
 export const $b2dDetail = $type('#b2d_detail', HTMLDetailsElement);
