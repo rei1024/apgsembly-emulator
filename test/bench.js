@@ -16,17 +16,18 @@ if (typeof program === 'string') {
 
 function run() {
     const machine = new Machine(program);
-    for (let i = 0; i < N; i++) {
-        try {
-            const res = machine.execCommand();
-            if (res === -1) {
-                break;
-            }
-        } catch (e) {
-            console.log(e);
-            throw e;
-        }
-    }
+    // for (let i = 0; i < N; i++) {
+    //     try {
+    //         const res = machine.execCommand();
+    //         if (res === -1) {
+    //             break;
+    //         }
+    //     } catch (e) {
+    //         console.log(e);
+    //         throw e;
+    //     }
+    // }
+    machine.exec(N, false, -1, 0);
 
     const exp = '3.141';
     const act = machine.actionExecutor.output.getString();

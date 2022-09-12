@@ -9,7 +9,7 @@ import {
 import { Program } from "./Program.js";
 import { INITIAL_STATE, RegistersHeader, addLineNumber } from "./Command.js";
 import { Action } from "./actions/Action.js";
-import { BRegAction } from "./actions/BRegAction.js";
+import { BRegAction, B_INC } from "./actions/BRegAction.js";
 import { URegAction, U_TDEC } from "./actions/URegAction.js";
 export { INITIAL_STATE };
 
@@ -272,7 +272,9 @@ export class Machine {
             const command = compiledCommand.command;
             if (command.input === "NZ" &&
                 compiledCommand.nextState === this.currentStateIndex &&
-                command.actions.every(action => action instanceof URegAction)
+                command.actions.every(action =>
+                    action instanceof URegAction ||
+                    (action instanceof BRegAction && action.op === B_INC))
                 ) {
                 const tdec = command.actions.find(x => x instanceof URegAction && x.op === U_TDEC);
                 if (tdec && tdec instanceof URegAction) {

@@ -201,9 +201,12 @@ export class ActionExecutor {
      * @throws
      */
     execActionN(action, n) {
-         if (action instanceof URegAction) {
+        if (action instanceof URegAction) {
             const uReg = action.registerCache ?? this.uRegMap.get(action.regNumber) ?? throwNotFound("U", action.regNumber);
             return uReg.actionN(action, n);
+        } else if (action instanceof BRegAction) {
+            const bReg = action.registerCache ?? this.bRegMap.get(action.regNumber) ?? throwNotFound("B", action.regNumber);
+            return bReg.actionN(action, n);
         }
         throw Error(`execActionN: todo ${action.pretty()}`);
     }
