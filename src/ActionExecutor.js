@@ -193,6 +193,22 @@ export class ActionExecutor {
     }
 
     /**
+     * `-1`が正常終了
+     * `-1` is success
+     * @param {Action} action
+     * @param {number} n
+     * @returns {0 | 1 | -1 | void}
+     * @throws
+     */
+    execActionN(action, n) {
+         if (action instanceof URegAction) {
+            const uReg = action.registerCache ?? this.uRegMap.get(action.regNumber) ?? throwNotFound("U", action.regNumber);
+            return uReg.actionN(action, n);
+        }
+        throw Error(`execActionN: todo ${action.pretty()}`);
+    }
+
+    /**
      *
      * @param {number} n
      * @returns {UReg | undefined}

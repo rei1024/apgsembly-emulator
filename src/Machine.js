@@ -10,7 +10,7 @@ import { Program } from "./Program.js";
 import { INITIAL_STATE, RegistersHeader, addLineNumber } from "./Command.js";
 import { Action } from "./actions/Action.js";
 import { BRegAction } from "./actions/BRegAction.js";
-import { URegAction } from "./actions/URegAction.js";
+import { URegAction, U_TDEC } from "./actions/URegAction.js";
 export { INITIAL_STATE };
 
 /**
@@ -268,6 +268,36 @@ export class Machine {
         const start = performance.now();
 
         for (; i < n; i++) {
+            const compiledCommand = this.getNextCompiledCommandWithNextState(false);
+            const command = compiledCommand.command;
+            if (command.input === "NZ" &&
+                compiledCommand.nextState === this.currentStateIndex &&
+                command.actions.every(action => action instanceof URegAction)
+                ) {
+                const tdec = command.actions.find(x => x instanceof URegAction && x.op === U_TDEC);
+                if (tdec && tdec instanceof URegAction) {
+                    const num = tdec.registerCache?.getValue();
+                    if (num !== undefined && num !== 0 && num < (n - i)) {
+                        for (const action of command.actions) {
+                            try {
+                                this.actionExecutor.execActionN(action, num);
+                            } catch (error) {
+                                if (error instanceof Error) {
+                                    this.throwError(error);
+                                } else {
+                                    throw error;
+                                }
+                            }
+                        }
+                        this.stateStatsArray[this.currentStateIndex * 2 + this.prevOutput] += num;
+                        i += num;
+                        this.stepCount += num;
+                        i--; // i++しているため減らす
+                        continue;
+                    }
+                }
+            }
+
             /**
              * @type {void | -1}
              */
@@ -276,9 +306,7 @@ export class Machine {
                 res = this.execCommand();
             } catch (error) {
                 if (error instanceof Error) {
-                    const command = this.getNextCompiledCommandWithNextState(false).command;
-                    const line = addLineNumber(command);
-                    throw new Error(error.message + ` in "${command.pretty()}"` + line);
+                    this.throwError(error);
                 } else {
                     throw error;
                 }
@@ -304,6 +332,16 @@ export class Machine {
         }
 
         return undefined;
+    }
+
+    /**
+     * @private
+     * @param {Error} error
+     */
+    throwError(error) {
+        const command = this.getNextCompiledCommandWithNextState(false).command;
+        const line = addLineNumber(command);
+        throw new Error(error.message + ` in "${command.pretty()}"` + line);
     }
 
     /**
