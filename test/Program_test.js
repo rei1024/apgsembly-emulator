@@ -150,9 +150,11 @@ test('Program duplicated actions', () => {
     INITIAL; ZZ; A0; NOP, NOP
     A0; *; A0; NOP`;
     const errorMessage = parseProgramExpectError(src);
-    assertEquals(errorMessage, `Duplicated actions "NOP" in "INITIAL; ZZ; A0; NOP, NOP" at line 2
-Does not contain exactly one action that produces a return value in "INITIAL; ZZ; A0; NOP, NOP": Actions that produce value are "NOP", "NOP" at line 2
-Actions "NOP" and "NOP" use same component in "INITIAL; ZZ; A0; NOP, NOP" at line 2`);
+    assertEquals(errorMessage, [
+        `Duplicated actions "NOP" in "INITIAL; ZZ; A0; NOP, NOP" at line 2`,
+        `Does not contain exactly one action that produces a return value in "INITIAL; ZZ; A0; NOP, NOP": Actions that produce value are "NOP", "NOP" at line 2`,
+        `Actions "NOP" and "NOP" use same component in "INITIAL; ZZ; A0; NOP, NOP" at line 2`
+    ].join('\n'));
 });
 
 test('Program return one value: no return', () => {
