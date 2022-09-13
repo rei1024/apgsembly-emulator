@@ -4,7 +4,7 @@ self.addEventListener("install", function () {
 
 });
 
-const CACHE_VERSION = "2022-06-10";
+const CACHE_VERSION = "2022-09-14";
 
 self.addEventListener('activate', function (event) {
     async function deleteCache() {
@@ -62,32 +62,30 @@ self.addEventListener('fetch', function (event) {
         const request = event.request;
         const cache = await caches.open(CACHE_VERSION);
 
-        const cachedResponse = await getCachedResponse(cache, request);
-        if (cachedResponse !== "not found") {
-            return cachedResponse;
-        }
-
+        // network first
         try {
-            const response = await fetch(request.clone());
+            const response = await fetch(request, { credentials: "omit" });
             const url = new URL(request.url);
-            if (200 < response.status &&
+            if (200 <= response.status &&
                 response.status < 400 &&
                 url.protocol !== 'chrome-extension') {
                 cache.put(request, response.clone());
             }
             return response;
         } catch (e) {
-            "network error";
+            const cachedResponse = await getCachedResponse(cache, request.clone());
+            if (cachedResponse !== "not found") {
+                return cachedResponse;
+            }
             throw e;
         }
     }
 
     // 同期的に実行する必要がある
-    // TODO Firefoxでエラー
     // 'https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css'
     // の読み込みに失敗しました。
     // ServiceWorker が ‘cors’ FetchEvent のハンドル中に
     // opaque Response を FetchEvent.respondWith() へ渡しました
     // opaque Response オブジェクトは RequestMode が ‘no-cors’ である時のみ有効です。
-    // event.respondWith(getResponse());
+    event.respondWith(getResponse());
 });
