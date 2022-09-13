@@ -1,13 +1,19 @@
 // @ts-check
 
-self.addEventListener("install", function () {
-
+self.addEventListener("install", function (event) {
+    // https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerGlobalScope/skipWaiting
+    event.waitUntil(self.skipWaiting());
 });
 
 const CACHE_VERSION = "2022-09-14";
 
 self.addEventListener('activate', function (event) {
+    const _self = self;
     async function deleteCache() {
+        try {
+            await _self.clients.claim();
+        } catch (error) { /* nop */ }
+
         const oldCacheNames = (await caches.keys()).filter(x => x !== CACHE_VERSION);
         return Promise.all(oldCacheNames.map(name => caches.delete(name)));
     }
