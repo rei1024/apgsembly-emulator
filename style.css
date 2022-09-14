@@ -159,6 +159,10 @@ body[apge_dark="on"] #stats_modal .table > :not(caption) > * > * {
     border-color: #999999;
 }
 
+body[apge_dark="on"] {
+    --bs-link-color: #5892ea;
+}
+
 /**** speedy animation ****/
 .fade {
     transition: opacity .1s linear; /* 0.15s */
