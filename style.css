@@ -110,6 +110,15 @@ body[apge_dark="on"] #canvas {
     color: black;
 }
 
+/* 区切り線を付ける */
+#binary_register tr:first-child :is(th, td) {
+    border-top: 1px solid var(--bs-gray-300);
+}
+
+#binary_register :is(th, td) {
+    border-bottom: 1px solid var(--bs-gray-300);
+}
+
 body[apge_dark="on"],
 body[apge_dark="on"] :is(
     /* header for info */
