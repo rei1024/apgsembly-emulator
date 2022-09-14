@@ -109,6 +109,8 @@ $exampleCodes.forEach(e => {
         try {
             const response = await fetch(DATA_DIR + src);
             app.setInputAndReset(await response.text());
+            // スクロール
+            $input.scrollTop = 0;
         } catch (_) {
             console.error(`Fetch Error: ${src}`);
         } finally {
@@ -136,6 +138,8 @@ $unaryRegisterDetail.addEventListener('toggle', () => {
 // ファイルインポート
 importFileAsText($fileImport, result => {
     app.setInputAndReset(result);
+    // スクロール
+    $input.scrollTop = 0;
 });
 
 // ** Modal ** //
@@ -254,6 +258,8 @@ $input.addEventListener("drop", async (event) => {
     }
 
     app.setInputAndReset(await file.text());
+    // スクロール
+    $input.scrollTop = 0;
 });
 
 // ボタンの有効化
