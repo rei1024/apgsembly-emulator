@@ -139,7 +139,7 @@ body[apge_dark="on"] .btn-close {
     background-color: var(--dark-mode-color);
 }
 
-body[apge_dark="on"] #error {
+body[apge_dark="on"] .alert-danger {
     color: black;
     border-color: #CF6679;
     background-color: #CF6679;
