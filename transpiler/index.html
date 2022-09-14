@@ -3,6 +3,11 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- CSP -->
+    <!-- `data://*` is close button for modal -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' cdn.jsdelivr.net; script-src 'self' cdn.jsdelivr.net; img-src 'self' data://*; object-src 'none'">
+
     <title>Transpiler for APGsembly 1.0 to APGsembly 2.0</title>
 
     <meta name="robots" content="noindex">
