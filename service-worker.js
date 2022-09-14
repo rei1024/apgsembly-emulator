@@ -70,7 +70,7 @@ self.addEventListener('fetch', function (event) {
 
         // network first
         try {
-            const response = await fetch(request, { credentials: "omit" });
+            const response = await fetch(request, { mode: 'no-cors' });
             const url = new URL(request.url);
             if (200 <= response.status &&
                 response.status < 400 &&
