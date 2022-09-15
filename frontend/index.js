@@ -331,21 +331,21 @@ idle(() => {
 // PWA
 if ("serviceWorker" in navigator) {
     idle(async () => {
-        await navigator.serviceWorker.register("./service-worker.js?2022-09-14");
+        // await navigator.serviceWorker.register("./service-worker.js?2022-09-14");
 
-        // check for update
-        if (navigator.onLine) {
-            navigator.serviceWorker
-            .getRegistrations()
-            .then((registrations) => registrations.forEach((reg) => reg.update()));
-        }
+        // // check for update
+        // if (navigator.onLine) {
+        //     navigator.serviceWorker
+        //     .getRegistrations()
+        //     .then((registrations) => registrations.forEach((reg) => reg.update()));
+        // }
 
         // unregister all
-        // navigator.serviceWorker.getRegistrations().then(registrations => {
-        //     for (const registration of registrations) {
-        //         registration.unregister();
-        //     }
-        // });
+        navigator.serviceWorker.getRegistrations().then(registrations => {
+            for (const registration of registrations) {
+                registration.unregister();
+            }
+        });
     });
 }
 

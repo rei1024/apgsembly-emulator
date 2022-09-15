@@ -69,13 +69,14 @@ self.addEventListener('fetch', function (event) {
         const cache = await caches.open(CACHE_VERSION);
 
         // network first
+        // FIXME: no-corsの場合SRIが通らない no-corsでないとcross-originをキャッシュから取り出せない
         try {
-            const response = await fetch(request, { mode: 'no-cors' });
+            const response = await fetch(request, { credentials: "omit", mode: 'no-cors' });
             const url = new URL(request.url);
             if (200 <= response.status &&
                 response.status < 400 &&
                 url.protocol !== 'chrome-extension') {
-                cache.put(request, response.clone());
+                event.waitUntil(cache.put(request, response.clone()));
             }
             return response;
         } catch (e) {
