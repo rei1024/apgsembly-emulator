@@ -22,6 +22,7 @@ import { getSaveData } from "./util/save_data.js";
 import { idle } from "./util/idle.js";
 import { prefetch } from "./util/prefetch.js";
 import { localStorageSetItem } from "./util/local-storage-set-item.js";
+import { hasFocus } from "./util/has-focus.js";
 
 import {
     $input,
@@ -216,11 +217,8 @@ $darkMode.addEventListener('change', () => {
 // Enter: toggle Start and Stop
 // Space: Step
 document.addEventListener('keydown', e => {
-    const activeElementTagName =
-        document.activeElement?.tagName.toLowerCase() ?? "";
-    const tags = ["textarea", "input", "details", "button", "audio", "video", "select", "option"];
     // 入力中は無し
-    if (tags.includes(activeElementTagName)) {
+    if (hasFocus() || e.isComposing) {
         return;
     }
 
