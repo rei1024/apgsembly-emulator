@@ -218,11 +218,19 @@ export class Machine {
     }
 
     /**
-     * @param {boolean} [logStats=false] 記録する
+     * @private
+     */
+    log() {
+        const currentStateIndex = this.currentStateIndex;
+        const prevOutput = this.prevOutput;
+        this.stateStatsArray[currentStateIndex * 2 + prevOutput]++;
+    }
+
+    /**
      * @throws internal error
      * @returns {CompiledCommandWithNextState}
      */
-    getNextCompiledCommandWithNextState(logStats = false) {
+    getNextCompiledCommandWithNextState() {
         const currentStateIndex = this.currentStateIndex;
         const compiledCommand = this.lookup[currentStateIndex];
 
@@ -232,10 +240,6 @@ export class Machine {
         }
 
         const prevOutput = this.prevOutput;
-
-        if (logStats) {
-            this.stateStatsArray[currentStateIndex * 2 + prevOutput]++;
-        }
 
         if (prevOutput === 0) {
             const z = compiledCommand.z;
@@ -268,7 +272,7 @@ export class Machine {
         const start = performance.now();
 
         for (; i < n; i++) {
-            const compiledCommand = this.getNextCompiledCommandWithNextState(false);
+            const compiledCommand = this.getNextCompiledCommandWithNextState();
             const command = compiledCommand.command;
             if (command.input === "NZ" &&
                 compiledCommand.nextState === this.currentStateIndex &&
@@ -305,7 +309,7 @@ export class Machine {
              */
             let res = undefined;
             try {
-                res = this.execCommand();
+                res = this.execCommandFor(compiledCommand);
             } catch (error) {
                 if (error instanceof Error) {
                     this.throwError(error);
@@ -341,22 +345,19 @@ export class Machine {
      * @param {Error} error
      */
     throwError(error) {
-        const command = this.getNextCompiledCommandWithNextState(false).command;
+        const command = this.getNextCompiledCommandWithNextState().command;
         const line = addLineNumber(command);
         throw new Error(error.message + ` in "${command.pretty()}"` + line);
     }
 
     /**
-     * 次のコマンドを実行する
-     * エラーが発生した場合は例外を投げる
-     * -1はHALT_OUT
-     * voidは正常
+     * @private
+     * @param {import('./compile.js').CompiledCommandWithNextState} compiledCommand
      * @returns {-1 | void}
-     * @throws {Error} 実行時エラー
      */
-    execCommand() {
+    execCommandFor(compiledCommand) {
         this.stepCount += 1;
-        const compiledCommand = this.getNextCompiledCommandWithNextState(true);
+        this.log();
 
         /**
          * -1は返り値無し
@@ -397,5 +398,18 @@ export class Machine {
         // }
         this.currentStateIndex = nextStateIndex;
         this.prevOutput = result;
+    }
+
+    /**
+     * 次のコマンドを実行する
+     * エラーが発生した場合は例外を投げる
+     * -1はHALT_OUT
+     * voidは正常
+     * @returns {-1 | void}
+     * @throws {Error} 実行時エラー
+     */
+    execCommand() {
+        const compiledCommand = this.getNextCompiledCommandWithNextState();
+        return this.execCommandFor(compiledCommand);
     }
 }

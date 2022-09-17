@@ -274,7 +274,7 @@ export class App {
      * @private
      */
     renderCommand() {
-        const next = this.machine?.getNextCompiledCommandWithNextState(false);
+        const next = this.machine?.getNextCompiledCommandWithNextState();
         $command.textContent = next?.command.pretty() ?? "";
     }
 
