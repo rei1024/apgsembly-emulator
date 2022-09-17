@@ -261,6 +261,7 @@ A1; *; A1; HALT_OUT
             machine.exec(N, false, -1, 0);
         }
         assertEquals(machine.stepCount, 47);
+        assertEquals(machine.actionExecutor.getUReg(0)?.getValue(), 0);
         assertEquals(machine.actionExecutor.getUReg(1)?.getValue(), 43);
         assertEquals(machine.getStateStats()[2], { nz: 43, z: 1 });
     }
@@ -290,5 +291,4 @@ test('Machine PI Calculator', () => {
         assertEquals(machine.stepCount, N);
         assertEquals(machine.actionExecutor.output.getString(), "3.14");
     }
-
 });

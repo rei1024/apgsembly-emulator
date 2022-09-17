@@ -4,12 +4,12 @@
 import {} from "./util/selector.js";
 import {} from "./util/frequency.js";
 import {} from "./util/create.js";
+import {} from "./util/continuously-variable-emitter.js";
 import {} from "./components/renderB2D.js";
 import {} from "./components/unary_ui.js";
 import {} from "./components/binary_ui.js";
 import {} from "./components/stats_ui.js";
 import {} from "./components/breakpoint.js";
-import {} from "./util/continuously-variable-emitter.js";
 import {} from "./components/toggle.js";
 import {} from "./components/error.js";
 import {} from "./components/output.js";
@@ -109,6 +109,8 @@ $exampleCodes.forEach(e => {
         try {
             const response = await fetch(DATA_DIR + src);
             app.setInputAndReset(await response.text());
+            // スクロール
+            $input.scrollTop = 0;
         } catch (_) {
             console.error(`Fetch Error: ${src}`);
         } finally {
@@ -136,6 +138,8 @@ $unaryRegisterDetail.addEventListener('toggle', () => {
 // ファイルインポート
 importFileAsText($fileImport, result => {
     app.setInputAndReset(result);
+    // スクロール
+    $input.scrollTop = 0;
 });
 
 // ** Modal ** //
@@ -254,6 +258,8 @@ $input.addEventListener("drop", async (event) => {
     }
 
     app.setInputAndReset(await file.text());
+    // スクロール
+    $input.scrollTop = 0;
 });
 
 // ボタンの有効化
@@ -324,8 +330,17 @@ idle(() => {
 
 // PWA
 if ("serviceWorker" in navigator) {
-    idle(() => {
-        // navigator.serviceWorker.register("./service-worker.js?2022-06-10");
+    idle(async () => {
+        // await navigator.serviceWorker.register("./service-worker.js?2022-09-14");
+
+        // // check for update
+        // if (navigator.onLine) {
+        //     navigator.serviceWorker
+        //     .getRegistrations()
+        //     .then((registrations) => registrations.forEach((reg) => reg.update()));
+        // }
+
+        // unregister all
         navigator.serviceWorker.getRegistrations().then(registrations => {
             for (const registration of registrations) {
                 registration.unregister();

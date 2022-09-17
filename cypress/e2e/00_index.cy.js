@@ -148,7 +148,7 @@ describe('Error Steps', () => {
     });
 
     it('Run', () => {
-        setProgramSlow(`
+        setProgram(`
     INITIAL; ZZ; A0; NOP
     A0; ZZ; A1; SET B0, NOP
     A1; ZZ; A1; SET B0, NOP`);

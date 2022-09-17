@@ -20,15 +20,15 @@ export function validateAll(commands) {
     /**
      * @type {((_: Command) => string | undefined)[]}
      */
-    const singleValidators = [
+    const singleCommandValidators = [
         validateNoDuplicatedActionCommand,
         validateActionReturnOnceCommand,
         validateNoSameComponentCommand,
         validateNextStateIsNotINITIALCommand,
     ];
 
-    for (const validator of singleValidators) {
-        for (const command of commands) {
+    for (const command of commands) {
+        for (const validator of singleCommandValidators) {
             const errorOrUndefined = validator(command);
             if (typeof errorOrUndefined === "string") {
                 errors.push(errorOrUndefined);
@@ -51,5 +51,6 @@ export function validateAll(commands) {
     if (errors.length > 0) {
         return errors.join('\n');
     }
+
     return undefined;
 }

@@ -68,7 +68,7 @@
         <div id="error" class="d-none alert alert-danger" role="alert"></div>
         <div class="mb-3">
             <label for="input" class="visually-hidden form-label">APGsembly input</label>
-            <textarea class="code-mono form-control" name="input" id="input" cols="50" rows="8" placeholder="# Write APGsembly here!"></textarea>
+            <textarea spellcheck="false" class="code-mono form-control" name="input" id="input" cols="50" rows="8" placeholder="# Write APGsembly here!"></textarea>
         </div>
         <!-- Buttons -->
         <div data-test="control_buttons" class="btn-group" role="group" aria-label="Control">
@@ -89,6 +89,7 @@
                 <li><button class="dropdown-item js_example" data-src="unary_multiply.apg">Unary register multiplication</button></li>
                 <li><button class="dropdown-item js_example" data-src="binary_ruler.apg">Binary ruler</button></li>
                 <li><button class="dropdown-item js_example" data-src="integers.apg">Integers</button></li>
+                <li><button class="dropdown-item js_example" data-src="primes.apg">Primes</button></li>
                 <li><button class="dropdown-item js_example" data-src="sqrt_log_t.apg">O(sqrt(log(t)))</button></li>
                 <li><button class="dropdown-item js_example" data-src="rule90.apg">Rule 90</button></li>
                 <li><button class="dropdown-item js_example" data-src="rule110.apg">Rule 110</button></li>
@@ -125,7 +126,7 @@
                         <td class="vertical-align-middle code-mono" id="previous_output">
                             <!-- Z -->
                         </td>
-                        <td><code id="steps">0</code></td>
+                        <td><code id="steps"></code></td>
                     </tr>
                 </tbody>
             </table>
@@ -140,7 +141,7 @@
                     Output
                 </summary>
                 <label for="output" class="visually-hidden">Output</label>
-                <textarea class="code-mono form-control" name="output" id="output" cols="50" rows="1"></textarea>
+                <textarea spellcheck="false" class="code-mono form-control" name="output" id="output" cols="50" rows="1"></textarea>
             </details>
         </div>
         <div class="mb-2">
