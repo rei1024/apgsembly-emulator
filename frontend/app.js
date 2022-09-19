@@ -3,20 +3,22 @@
 import { Machine } from "../src/Machine.js";
 
 // Components
-import { renderB2D } from "./components/renderB2D.js";
-import { UnaryUI } from "./components/unary_ui.js";
-import { BinaryUI } from "./components/binary_ui.js";
-import { StatsUI } from "./components/stats_ui.js";
 import {
     startButton,
     startButtonDisabled,
     stopButton
 } from "./components/toggle.js";
-import { renderOutput } from "./components/output.js";
+
 import { renderErrorMessage } from "./components/error.js";
+import { renderOutput } from "./components/output.js";
+import { UnaryUI } from "./components/unary_ui.js";
+import { BinaryUI } from "./components/binary_ui.js";
+import { renderB2D } from "./components/renderB2D.js";
+import { StatsUI } from "./components/stats_ui.js";
 import { initializeBreakpointSelect, getBreakpointInput } from "./components/breakpoint.js";
 
 import { CVE, CVEEvent } from "./util/continuously-variable-emitter.js";
+import { getMessage } from "./util/get-message.js";
 
 import {
     $error,
@@ -53,7 +55,6 @@ import {
     $statsNumberOfStates,
     $statsButton,
 } from "./bind.js";
-import { getMessage } from "./util/get-message.js";
 
 /** index.htmlと同期すること */
 export const DEFUALT_FREQUENCY = 30;
