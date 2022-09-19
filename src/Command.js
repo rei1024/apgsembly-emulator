@@ -210,6 +210,7 @@ export class Command extends ProgramLine {
      * @param {string} str
      * @param {number} [line]
      * @returns {Command | RegistersHeader | ComponentsHeader | Comment | EmptyLine | string}
+     * @throws
      */
     static parse(str, line = undefined) {
         if (typeof str !== 'string') {
@@ -230,13 +231,13 @@ export class Command extends ProgramLine {
         }
         const array = trimmedStr.split(/\s*;\s*/u);
         if (array.length < 4) {
-            return `Invalid line "${str}"`;
+            return `Invalid line "${str}"${lineNumberMessage(line)}`;
         }
         if (array.length > 4) {
             if (array[4] === "") {
-                return `Extraneous semicolon "${str}"`;
+                return `Extraneous semicolon "${str}"${lineNumberMessage(line)}`;
             }
-            return `Invalid line "${str}"`;
+            return `Invalid line "${str}"${lineNumberMessage(line)}`;
         }
         // arrayの長さは4
         const state = array[0] ?? this.error();
@@ -251,14 +252,14 @@ export class Command extends ProgramLine {
         for (const actionsStr of actionStrs) {
             const result = parseAction(actionsStr);
             if (result === undefined) {
-                return `Unknown action "${actionsStr}" at "${str}"${lineNumberMessage(line)}`;
+                return `Unknown action "${actionsStr}" in "${str}"${lineNumberMessage(line)}`;
             }
             actions.push(result);
         }
 
         const input = parseInput(inputStr);
         if (input === undefined) {
-            return `Unknown input "${inputStr}" at "${str}". Expect "Z", "NZ", "ZZ", or "*"`;
+            return `Unknown input "${inputStr}" in "${str}"${lineNumberMessage(line)}. Expect "Z", "NZ", "ZZ", or "*"`;
         }
 
         return new Command({

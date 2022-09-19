@@ -53,6 +53,7 @@ import {
     $statsNumberOfStates,
     $statsButton,
 } from "./bind.js";
+import { getMessage } from "./util/get-message.js";
 
 /** index.htmlと同期すること */
 export const DEFUALT_FREQUENCY = 30;
@@ -206,14 +207,6 @@ export class App {
     }
 
     /**
-     * ブレークポイントの選択肢の設定
-     * @private
-     */
-    setUpBreakpointSelect() {
-        initializeBreakpointSelect($breakpointSelect, this.machine);
-    }
-
-    /**
      * machineがセットされた時のコールバック
      * @private
      */
@@ -221,7 +214,7 @@ export class App {
         this.setUpUnary();
         this.setUpBinary();
         this.setUpStats();
-        this.setUpBreakpointSelect();
+        initializeBreakpointSelect($breakpointSelect, this.machine);
     }
 
     /**
@@ -248,11 +241,7 @@ export class App {
             this.appState = "Stop";
         } catch (e) {
             this.appState = "ParseError";
-            if (e instanceof Error) {
-                this.errorMessage = e.message;
-            } else {
-                this.errorMessage = "Unknown error is occurred.";
-            }
+            this.errorMessage = getMessage(e);
         } finally {
             this.render();
         }
@@ -513,11 +502,7 @@ export class App {
             }
         } catch (error) {
             this.appState = "RuntimeError";
-            if (error instanceof Error) {
-                this.errorMessage = error.message;
-            } else {
-                this.errorMessage = "Unkown error is occurred.";
-            }
+            this.errorMessage = getMessage(error);
         }
 
         this.render();

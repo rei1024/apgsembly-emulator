@@ -5,6 +5,7 @@ import {} from "./util/selector.js";
 import {} from "./util/frequency.js";
 import {} from "./util/create.js";
 import {} from "./util/continuously-variable-emitter.js";
+import {} from "./util/get-message.js";
 import {} from "./components/renderB2D.js";
 import {} from "./components/unary_ui.js";
 import {} from "./components/binary_ui.js";
@@ -250,13 +251,11 @@ document.addEventListener('keydown', e => {
 $input.addEventListener("drop", async (event) => {
     event.preventDefault();
     const file = event.dataTransfer?.files.item(0);
-    if (file == undefined) {
-        return;
+    if (file != undefined) {
+        app.setInputAndReset(await file.text());
+        // スクロール
+        $input.scrollTop = 0;
     }
-
-    app.setInputAndReset(await file.text());
-    // スクロール
-    $input.scrollTop = 0;
 });
 
 // ボタンの有効化
