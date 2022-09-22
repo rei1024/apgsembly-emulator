@@ -6,6 +6,7 @@ import {} from "./util/frequency.js";
 import {} from "./util/create.js";
 import {} from "./util/continuously-variable-emitter.js";
 import {} from "./util/get-message.js";
+import {} from "./util/chunk.js";
 import {} from "./components/renderB2D.js";
 import {} from "./components/unary_ui.js";
 import {} from "./components/binary_ui.js";
