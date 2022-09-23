@@ -10,6 +10,10 @@ const app = Comlink.wrap(worker);
 const output = document.querySelector('#output');
 
 async function init() {
+    if (output == null) {
+        throw Error('error');
+    }
+
     // console.log('a');
     const text = await (await fetch('../../data/pi_calc.apg')).text();
     // console.log(text.slice(0, 20));

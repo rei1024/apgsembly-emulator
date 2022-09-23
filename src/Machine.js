@@ -44,13 +44,14 @@ export class Machine {
          */
         this.stepCount = 0;
 
+        const registerNumbers = program.extractRegisterNumbers();
         /**
          * @readonly
          */
         this.actionExecutor = new ActionExecutor({
-            binaryRegisterNumbers: program.extractBinaryRegisterNumbers(),
-            unaryRegisterNumbers: program.extractUnaryRegisterNumbers(),
-            legacyTRegisterNumbers: program.extractLegacyTRegisterNumbers(),
+            binaryRegisterNumbers: registerNumbers.binary,
+            unaryRegisterNumbers: registerNumbers.unary,
+            legacyTRegisterNumbers: registerNumbers.legacyT,
         });
 
         /** @type {0 | 1} */
