@@ -1,7 +1,6 @@
 // @ts-check
 
 import {
-    Command,
     ProgramLine,
     parseProgramLine,
 } from "./Command.js";

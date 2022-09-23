@@ -2,7 +2,6 @@
 
 // critical path
 import {} from "./util/selector.js";
-import {} from "./util/frequency.js";
 import {} from "./util/create.js";
 import {} from "./util/continuously-variable-emitter.js";
 import {} from "./util/get-message.js";
