@@ -1,7 +1,6 @@
 // @ts-check
 
 import { Command, ComponentsHeader, RegistersHeader } from "./Command.js";
-import { Action } from "./actions/Action.js";
 import { ProgramLines } from "./ProgramLines.js";
 import { validateAll } from "./validate.js";
 

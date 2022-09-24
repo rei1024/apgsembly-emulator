@@ -1,9 +1,6 @@
 // @ts-check
 
-import {
-    ProgramLine,
-    parseProgramLine,
-} from "./Command.js";
+import { ProgramLine, parseProgramLine } from "./Command.js";
 
 /**
  * プログラムの行の配列
