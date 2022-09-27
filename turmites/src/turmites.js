@@ -20,7 +20,7 @@ export const LEFT = "LEFT";
 export const RIGHT = "RIGHT";
 
 /**
- * @type {Dir[]}
+ * @type {ReadonlyArray<Dir>}
  */
 export const allDirs = [UP, DOWN, LEFT, RIGHT];
 
