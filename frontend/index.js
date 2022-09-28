@@ -202,10 +202,7 @@ document.addEventListener('keydown', e => {
 
     switch (e.code) {
         case "Enter": {
-            switch (app.appState) {
-                case "Running": return app.stop();
-                case "Stop": return app.start();
-            }
+            app.toggle();
             break;
         }
         case "Space": {
