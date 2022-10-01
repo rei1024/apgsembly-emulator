@@ -154,10 +154,6 @@ export class Turmites {
         this.array = array;
     }
 
-    static fromString() {
-
-    }
-
     /**
      *
      * @param {unknown[]} array

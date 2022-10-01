@@ -113,10 +113,6 @@ export class AbsTurmites {
         this.array = array;
     }
 
-    static fromString() {
-
-    }
-
     /**
      *
      * @param {unknown[]} array
