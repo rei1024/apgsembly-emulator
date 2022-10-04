@@ -102,9 +102,10 @@ export class App {
          * @readonly
          */
         this.cve = new CVE({ frequency: DEFUALT_FREQUENCY });
-        this.cve.addEventListener('emit', ev => {
+        const this_ = this;
+        this.cve.addEventListener('emit', function listener(ev) {
             if (ev instanceof CVEEvent) {
-                this.run(ev.value);
+                this_.run(ev.value);
             }
         });
 
