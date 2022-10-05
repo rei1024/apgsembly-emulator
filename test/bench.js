@@ -16,18 +16,17 @@ if (typeof program === 'string') {
 
 function run() {
     const machine = new Machine(program);
-    // for (let i = 0; i < N; i++) {
-    //     try {
-    //         const res = machine.execCommand();
-    //         if (res === -1) {
-    //             break;
-    //         }
-    //     } catch (e) {
-    //         console.log(e);
-    //         throw e;
-    //     }
-    // }
-    machine.exec(N, false, -1, 0);
+    for (let i = 0; i < N; i++) {
+        try {
+            const res = machine.execCommand();
+            if (res === -1) {
+                break;
+            }
+        } catch (e) {
+            console.log(e);
+            throw e;
+        }
+    }
 
     const exp = '3.141';
     const act = machine.actionExecutor.output.getString();
@@ -47,11 +46,11 @@ function run2() {
     }
 }
 
-Deno.bench('pi', { group: 'pi' }, () => {
+Deno.bench('pi normal', { group: 'pi' }, () => {
     run();
 });
 
-Deno.bench('pi2', { group: 'pi' }, () => {
+Deno.bench('pi exec', { group: 'pi' }, () => {
     run2();
 });
 

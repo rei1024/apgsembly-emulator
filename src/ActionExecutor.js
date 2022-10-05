@@ -207,6 +207,8 @@ export class ActionExecutor {
         } else if (action instanceof BRegAction) {
             const bReg = action.registerCache ?? this.bRegMap.get(action.regNumber) ?? throwNotFound("B", action.regNumber);
             return bReg.actionN(action, n);
+        } else if (action instanceof HaltOutAction) {
+            return -1;
         }
         throw Error(`execActionN: todo ${action.pretty()}`);
     }

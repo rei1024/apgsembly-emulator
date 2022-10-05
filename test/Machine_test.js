@@ -294,3 +294,42 @@ test('Machine PI Calculator', () => {
         assertEquals(machine.actionExecutor.output.getString(), "3.14");
     }
 });
+
+test('Machine exec opt', () => {
+    const program = Program.parse(`
+    #REGISTERS { "U0": 3 }
+INITIAL; ZZ; A_Z; INC B0, NOP
+A_Z; *; A0; TDEC B0
+A0; Z; A1; NOP
+A0; NZ; A0; TDEC U0, INC U1
+A1; *; END_0; NOP
+END_0; *; END_1; NOP
+END_1; *; END_1; HALT_OUT
+    `);
+    if (!(program instanceof Program)) {
+        throw Error('parse error');
+    }
+
+    const res = [];
+    for (let i = 1; i < 8; i++) {
+        const machine = new Machine(program);
+        const actionExecutor = machine.actionExecutor;
+        machine.exec(i, false, -1, 0);
+        res.push([
+            actionExecutor.getUReg(0)?.getValue(),
+            actionExecutor.getUReg(1)?.getValue(),
+            machine.stepCount,
+            machine.getStateStats()[machine.getStateMap().get('A0') ?? '']
+        ]);
+    }
+
+    assertEquals(res, [
+        [3, 0, 1, { nz: 0, z: 0 }],
+        [3, 0, 2, { nz: 0, z: 0 }],
+        [2, 1, 3, { nz: 1, z: 0 }],
+        [1, 2, 4, { nz: 2, z: 0 }],
+        [0, 3, 5, { nz: 3, z: 0 }],
+        [0, 4, 6, { nz: 4, z: 0 }],
+        [0, 4, 7, { nz: 4, z: 1 }],
+    ]);
+});

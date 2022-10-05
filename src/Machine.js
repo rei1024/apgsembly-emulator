@@ -275,35 +275,32 @@ export class Machine {
         for (let i = 0; i < n; i++) {
             const compiledCommand = this.getNextCompiledCommandWithNextState();
             const command = compiledCommand.command;
-            if (command.input === "NZ" &&
-                compiledCommand.nextState === this.currentStateIndex &&
-                command.actions.every(action =>
-                    action instanceof URegAction ||
-                    (action instanceof BRegAction && action.op === B_INC))
-                ) {
-                const tdec = command.actions.find(x => x instanceof URegAction && x.op === U_TDEC);
-                if (tdec && tdec instanceof URegAction) {
-                    const num = tdec.registerCache?.getValue();
-                    if (num !== undefined && num !== 0 && num < (n - i)) {
-                        for (const action of command.actions) {
-                            try {
-                                this.actionExecutor.execActionN(action, num);
-                            } catch (error) {
-                                if (error instanceof Error) {
-                                    this.throwError(error);
-                                } else {
-                                    throw error;
-                                }
+
+            // optimization
+            if (compiledCommand.tdecOptimize && compiledCommand.nextState === this.currentStateIndex) {
+                const tdec = compiledCommand.tdecOptimize.tdec;
+                const num = tdec.registerCache?.getValue();
+                if (num !== undefined && num !== 0 && num < (n - i)) {
+                    for (const action of command.actions) {
+                        try {
+                            // HALT_OUTは含まれないため停止しない
+                            this.actionExecutor.execActionN(action, num);
+                        } catch (error) {
+                            if (error instanceof Error) {
+                                this.throwError(error);
+                            } else {
+                                throw error;
                             }
                         }
-                        this.stateStatsArray[this.currentStateIndex * 2 + this.prevOutput] += num;
-                        i += num;
-                        this.stepCount += num;
-                        i--; // i++しているため減らす
-                        continue;
                     }
+
+                    this.stateStatsArray[this.currentStateIndex * 2 + this.prevOutput] += num;
+                    this.stepCount += num;
+                    i += num - 1; // i++しているため1減らす
+                    continue;
                 }
             }
+            // optimization end
 
             try {
                 const res = this.execCommandFor(compiledCommand);

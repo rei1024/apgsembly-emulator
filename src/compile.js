@@ -1,6 +1,10 @@
 // @ts-check
 
 import { Command, addLineNumber } from "./Command.js";
+import { Action } from "./actions/Action.js";
+import { BRegAction, B_INC } from "./actions/BRegAction.js";
+import { URegAction, U_TDEC } from "./actions/URegAction.js";
+import { HaltOutAction } from "./exports.js";
 
 /**
  * コマンドと次の状態
@@ -22,7 +26,38 @@ export class CompiledCommandWithNextState {
          * @readonly
          */
         this.nextState = nextState;
+
+        /**
+         * @type {undefined | { tdec: URegAction }}
+         */
+        let tdecOptimize = undefined;
+
+        // - 前の入力がNZであること
+        // - HALT_OUTを含まないこと
+        // - ActionはUまたはB_INCのみであること
+        if (command.input === "NZ" &&
+            command.actions.every(action => !(action instanceof HaltOutAction)) &&
+            command.actions.every(action =>
+            action instanceof URegAction ||
+            isOptimizableAction(action))
+        ) {
+            const tdec = command.actions.find(x => x instanceof URegAction && x.op === U_TDEC);
+            if (tdec && tdec instanceof URegAction) {
+                tdecOptimize = { tdec };
+            }
+        }
+
+        this.tdecOptimize = tdecOptimize;
     }
+}
+
+/**
+ *
+ * @param {Action} action
+ * @returns {boolean}
+ */
+function isOptimizableAction(action) {
+    return (action instanceof BRegAction && action.op === B_INC);
 }
 
 export class CompiledCommand {
