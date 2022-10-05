@@ -44,13 +44,14 @@ export class Machine {
          */
         this.stepCount = 0;
 
+        const registerNumbers = program.extractRegisterNumbers();
         /**
          * @readonly
          */
         this.actionExecutor = new ActionExecutor({
-            binaryRegisterNumbers: program.extractBinaryRegisterNumbers(),
-            unaryRegisterNumbers: program.extractUnaryRegisterNumbers(),
-            legacyTRegisterNumbers: program.extractLegacyTRegisterNumbers(),
+            binaryRegisterNumbers: registerNumbers.binary,
+            unaryRegisterNumbers: registerNumbers.unary,
+            legacyTRegisterNumbers: registerNumbers.legacyT,
         });
 
         /** @type {0 | 1} */
@@ -153,6 +154,7 @@ export class Machine {
     /**
      * @private
      * @param {RegistersHeader} regHeader
+     * @throws
      */
     setByRegistersHeader(regHeader) {
         /** @type {string} */
@@ -268,10 +270,9 @@ export class Machine {
      */
     exec(n, isRunning, breakpointIndex, breakpointInputValue) {
         const hasBreakpoint = breakpointIndex !== -1;
-        let i = 0;
         const start = performance.now();
 
-        for (; i < n; i++) {
+        for (let i = 0; i < n; i++) {
             const compiledCommand = this.getNextCompiledCommandWithNextState();
             const command = compiledCommand.command;
             if (command.input === "NZ" &&
@@ -304,22 +305,17 @@ export class Machine {
                 }
             }
 
-            /**
-             * @type {void | -1}
-             */
-            let res = undefined;
             try {
-                res = this.execCommandFor(compiledCommand);
+                const res = this.execCommandFor(compiledCommand);
+                if (res === -1) {
+                    return "Halted";
+                }
             } catch (error) {
                 if (error instanceof Error) {
                     this.throwError(error);
                 } else {
                     throw error;
                 }
-            }
-
-            if (res === -1) {
-                return "Halted";
             }
 
             // ブレークポイントの状態の場合、停止する

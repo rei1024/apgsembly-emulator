@@ -2,9 +2,11 @@
 
 // critical path
 import {} from "./util/selector.js";
-import {} from "./util/frequency.js";
 import {} from "./util/create.js";
 import {} from "./util/continuously-variable-emitter.js";
+import {} from "./util/get-message.js";
+import {} from "./util/chunk.js";
+import {} from "./util/spinner.js";
 import {} from "./components/renderB2D.js";
 import {} from "./components/unary_ui.js";
 import {} from "./components/binary_ui.js";
@@ -16,12 +18,12 @@ import {} from "./components/output.js";
 
 import { setupFrequencyInput } from "./components/frequency_input.js";
 import { setCustomError, removeCustomError } from "./util/validation_ui.js";
-import { makeSpinner } from "./util/spinner.js";
 import { importFileAsText } from "./util/import_file.js";
 import { getSaveData } from "./util/save_data.js";
 import { idle } from "./util/idle.js";
 import { prefetch } from "./util/prefetch.js";
 import { localStorageSetItem } from "./util/local-storage-set-item.js";
+import { hasFocus } from "./util/has-focus.js";
 
 import {
     $input,
@@ -53,10 +55,7 @@ import {
 import { App } from "./app.js";
 
 // データ
-// GitHub Pagesは1階層上になる
-const DATA_DIR = location.origin.includes('github') ?
-    "../apgsembly-emulator-2/data/" :
-    "../data/";
+const DATA_DIR = "./frontend/data/";
 
 /** instance */
 const app = new App();
@@ -68,35 +67,12 @@ $reset.addEventListener('click', () => {
 
 // Toggle button
 $toggle.addEventListener('click', () => {
-    if (app.appState === "Running") {
-        app.stop();
-    } else {
-        app.start();
-    }
+    app.toggle();
 });
 
 // Step button
 $step.addEventListener('click', () => {
-    // 時間がかかる時はスピナーを表示する
-    // show a spinner
-    if (app.stepConfig >= 5000000) {
-        const spinner = makeSpinner();
-
-        $step.append(spinner);
-        $step.disabled = true;
-
-        // 他のボタンも一時的に無効化する app.runで有効化される
-        $reset.disabled = true;
-        $toggle.disabled = true;
-
-        setTimeout(() => {
-            // $step.disabled = false; // app.runで更新されるため必要ない
-            app.run(app.stepConfig);
-            $step.removeChild(spinner);
-        }, 33); // 走らせるタイミングを遅らせることでスピナーの表示を確定させる
-    } else {
-        app.run(app.stepConfig);
-    }
+    app.doStep();
 });
 
 const SRC_KEY = 'src';
@@ -108,6 +84,9 @@ $exampleCodes.forEach(e => {
         const src = e.dataset[SRC_KEY];
         try {
             const response = await fetch(DATA_DIR + src);
+            if (!response.ok) {
+                throw Error('error');
+            }
             app.setInputAndReset(await response.text());
             // スクロール
             $input.scrollTop = 0;
@@ -217,20 +196,14 @@ $darkMode.addEventListener('change', () => {
 // Enter: toggle Start and Stop
 // Space: Step
 document.addEventListener('keydown', e => {
-    const activeElementTagName =
-        document.activeElement?.tagName.toLowerCase() ?? "";
-    const tags = ["textarea", "input", "details", "button", "audio", "video", "select", "option"];
     // 入力中は無し
-    if (tags.includes(activeElementTagName)) {
+    if (hasFocus() || e.isComposing) {
         return;
     }
 
     switch (e.code) {
         case "Enter": {
-            switch (app.appState) {
-                case "Running": return app.stop();
-                case "Stop": return app.start();
-            }
+            app.toggle();
             break;
         }
         case "Space": {
@@ -238,11 +211,7 @@ document.addEventListener('keydown', e => {
             if (!$step.disabled) {
                 // スペースで下に移動することを防ぐ
                 e.preventDefault();
-                // 実行中の場合は停止する
-                if (app.appState === "Running") {
-                    app.stop();
-                }
-                app.run(app.stepConfig);
+                app.doStep();
             }
             break;
         }
@@ -253,13 +222,11 @@ document.addEventListener('keydown', e => {
 $input.addEventListener("drop", async (event) => {
     event.preventDefault();
     const file = event.dataTransfer?.files.item(0);
-    if (file == undefined) {
-        return;
+    if (file != undefined) {
+        app.setInputAndReset(await file.text());
+        // スクロール
+        $input.scrollTop = 0;
     }
-
-    app.setInputAndReset(await file.text());
-    // スクロール
-    $input.scrollTop = 0;
 });
 
 // ボタンの有効化

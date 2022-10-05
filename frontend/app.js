@@ -3,20 +3,23 @@
 import { Machine } from "../src/Machine.js";
 
 // Components
-import { renderB2D } from "./components/renderB2D.js";
-import { UnaryUI } from "./components/unary_ui.js";
-import { BinaryUI } from "./components/binary_ui.js";
-import { StatsUI } from "./components/stats_ui.js";
 import {
     startButton,
     startButtonDisabled,
     stopButton
 } from "./components/toggle.js";
-import { renderOutput } from "./components/output.js";
+
 import { renderErrorMessage } from "./components/error.js";
+import { renderOutput } from "./components/output.js";
+import { UnaryUI } from "./components/unary_ui.js";
+import { BinaryUI } from "./components/binary_ui.js";
+import { renderB2D } from "./components/renderB2D.js";
+import { StatsUI } from "./components/stats_ui.js";
 import { initializeBreakpointSelect, getBreakpointInput } from "./components/breakpoint.js";
 
 import { CVE, CVEEvent } from "./util/continuously-variable-emitter.js";
+import { getMessage } from "./util/get-message.js";
+import { makeSpinner } from "./util/spinner.js";
 
 import {
     $error,
@@ -99,13 +102,11 @@ export class App {
          * @readonly
          */
         this.cve = new CVE({ frequency: DEFUALT_FREQUENCY });
-        this.cve.addEventListener('emit', e => {
-            /**
-             * @type {CVEEvent}
-             */
-            // @ts-ignore
-            const ev = e;
-            this.run(ev.value);
+        const this_ = this;
+        this.cve.addEventListener('emit', function listener(ev) {
+            if (ev instanceof CVEEvent) {
+                this_.run(ev.value);
+            }
         });
 
         /**
@@ -206,14 +207,6 @@ export class App {
     }
 
     /**
-     * ブレークポイントの選択肢の設定
-     * @private
-     */
-    setUpBreakpointSelect() {
-        initializeBreakpointSelect($breakpointSelect, this.machine);
-    }
-
-    /**
      * machineがセットされた時のコールバック
      * @private
      */
@@ -221,7 +214,7 @@ export class App {
         this.setUpUnary();
         this.setUpBinary();
         this.setUpStats();
-        this.setUpBreakpointSelect();
+        initializeBreakpointSelect($breakpointSelect, this.machine);
     }
 
     /**
@@ -231,6 +224,40 @@ export class App {
     setInputAndReset(text) {
         $input.value = text;
         this.reset();
+    }
+
+    toggle() {
+        if (this.appState === "Running") {
+            this.stop();
+        } else {
+            this.start();
+        }
+    }
+
+    doStep() {
+        // 実行中の場合は停止する
+        if (this.appState === "Running") {
+            this.stop();
+        }
+        // 時間がかかる時はスピナーを表示する
+        // show a spinner
+        if (this.stepConfig >= 5000000) {
+            const spinner = makeSpinner();
+
+            $step.append(spinner);
+            $step.disabled = true;
+
+            // 他のボタンも一時的に無効化する app.runで有効化される
+            $reset.disabled = true;
+            $toggle.disabled = true;
+
+            setTimeout(() => {
+                this.run(this.stepConfig);
+                $step.removeChild(spinner);
+            }, 33); // 走らせるタイミングを遅らせることでスピナーの表示を確定させる
+        } else {
+            this.run(this.stepConfig);
+        }
     }
 
     /**
@@ -248,11 +275,7 @@ export class App {
             this.appState = "Stop";
         } catch (e) {
             this.appState = "ParseError";
-            if (e instanceof Error) {
-                this.errorMessage = e.message;
-            } else {
-                this.errorMessage = "Unknown error is occurred.";
-            }
+            this.errorMessage = getMessage(e);
         } finally {
             this.render();
         }
@@ -386,7 +409,6 @@ export class App {
 
     /**
      * AppStateのみに依存する
-     * @private
      */
     renderButton() {
         // ボタンの有効無効
@@ -437,7 +459,8 @@ export class App {
         // cve
         this.cve.disabled = this.appState !== "Running";
 
-        if (this.prevAppState !== this.appState) {
+        // Stop状態はStepで変化する可能性がある
+        if (this.prevAppState !== this.appState || this.appState === "Stop") {
             this.renderButton();
 
             // ParseErrorのときにエラー表示
@@ -513,11 +536,7 @@ export class App {
             }
         } catch (error) {
             this.appState = "RuntimeError";
-            if (error instanceof Error) {
-                this.errorMessage = error.message;
-            } else {
-                this.errorMessage = "Unkown error is occurred.";
-            }
+            this.errorMessage = getMessage(error);
         }
 
         this.render();
