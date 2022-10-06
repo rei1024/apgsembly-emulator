@@ -418,7 +418,7 @@ D0; NZ; D0; TDEC U2, INC U0
     `;
     const program = Program.parse(source);
     if (!(program instanceof Program)) {
-        throw Error('parse error PI Calculator');
+        throw Error('parse error');
     }
 
     const machine = new Machine(program);
