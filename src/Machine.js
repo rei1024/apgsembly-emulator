@@ -297,13 +297,14 @@ export class Machine {
 
         for (let i = 0; i < n; i++) {
             const compiledCommand = this.getNextCompiledCommandWithNextState();
-            const command = compiledCommand.command;
 
             // optimization
             if (compiledCommand.tdecuOptimize) {
                 const tdec = compiledCommand.tdecuOptimize.tdecU;
-                const num = tdec.registerCache?.getValue();
-                if (num !== undefined && num !== 0 && num < (n - i)) {
+                let num = tdec.registerCache?.getValue();
+                if (num !== undefined && num !== 0) {
+                    num = Math.min(num, n - i);
+                    const command = compiledCommand.command;
                     this._internalExecActionN(command, num);
                     i += num - 1; // i++しているため1減らす
                     continue;

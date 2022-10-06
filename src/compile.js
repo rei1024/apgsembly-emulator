@@ -11,7 +11,7 @@ import { HaltOutAction } from "./exports.js";
  * @returns {boolean}
  */
 function isBINC(action) {
-    return (action instanceof BRegAction && action.op === B_INC);
+    return action instanceof BRegAction && action.op === B_INC;
 }
 
 /**

@@ -347,6 +347,7 @@ test('Machine PI Calculator steps', () => {
     function getStats(machine) {
         return [
             machine.stepCount,
+            machine.prevOutput,
             machine.getStateStats(),
             machine.actionExecutor.getBReg(0)?.getBits().slice(),
             machine.actionExecutor.getBReg(0)?.pointer,
