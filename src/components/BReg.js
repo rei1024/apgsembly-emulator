@@ -124,6 +124,10 @@ export class BReg {
                 this.extend();
                 break;
             }
+            case B_TDEC: {
+                this.pointer -= n;
+                break;
+            }
             default: {
                 throw Error('todo');
             }

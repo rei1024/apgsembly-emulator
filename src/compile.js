@@ -2,7 +2,7 @@
 
 import { Command, addLineNumber } from "./Command.js";
 import { Action } from "./actions/Action.js";
-import { BRegAction, B_INC } from "./actions/BRegAction.js";
+import { BRegAction, B_INC, B_TDEC } from "./actions/BRegAction.js";
 import { URegAction, U_TDEC } from "./actions/URegAction.js";
 import { HaltOutAction } from "./exports.js";
 
@@ -48,6 +48,31 @@ function getOptimizedTdecU(command) {
 }
 
 /**
+ * @param {Command} command
+ * @returns {undefined | { tdecB: BRegAction }}
+ */
+function getOptimizedtdecB(command) {
+    // - 前の入力がNZであること
+    // - 次の状態が自分自身であること
+    // - HALT_OUTを含まないこと
+    // - ActionはTDEC Bのみであること
+    if (command.input === "NZ" &&
+        command.state === command.nextState &&
+        command.actions.every(action => !(action instanceof HaltOutAction)) &&
+        command.actions.length === 1 &&
+        command.actions.every(action =>
+        action instanceof BRegAction)
+    ) {
+        const tdecB = command.actions.find(action => action instanceof BRegAction && action.op === B_TDEC);
+        if (tdecB && tdecB instanceof BRegAction) {
+            return { tdecB };
+        }
+    }
+
+    return undefined;
+}
+
+/**
  * コマンドと次の状態
  */
 export class CompiledCommandWithNextState {
@@ -69,6 +94,7 @@ export class CompiledCommandWithNextState {
         this.nextState = nextState;
 
         this.tdecuOptimize = getOptimizedTdecU(command);
+        this.tdecbOptimize = getOptimizedtdecB(command);
     }
 }
 

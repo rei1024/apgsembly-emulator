@@ -309,6 +309,16 @@ export class Machine {
                     i += num - 1; // i++しているため1減らす
                     continue;
                 }
+            } else if (compiledCommand.tdecbOptimize) {
+                const tdecb = compiledCommand.tdecbOptimize.tdecB;
+                let num = tdecb.registerCache?.pointer;
+                if (num !== undefined && num !== 0) {
+                    num = Math.min(num, n - i);
+                    const command = compiledCommand.command;
+                    this._internalExecActionN(command, num);
+                    i += num - 1; // i++しているため1減らす
+                    continue;
+                }
             }
             // optimization end
 
