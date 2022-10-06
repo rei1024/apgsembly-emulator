@@ -1,6 +1,51 @@
 // @ts-check
 
 import { Command, addLineNumber } from "./Command.js";
+import { Action } from "./actions/Action.js";
+import { BRegAction, B_INC } from "./actions/BRegAction.js";
+import { URegAction, U_TDEC } from "./actions/URegAction.js";
+import { HaltOutAction } from "./exports.js";
+
+/**
+ * @param {Action} action
+ * @returns {boolean}
+ */
+function isBInc(action) {
+    return action instanceof BRegAction && action.op === B_INC;
+}
+
+/**
+ * @param {Action} action
+ * @returns {boolean}
+ */
+function isUTdec(action) {
+    return action instanceof URegAction && action.op === U_TDEC;
+}
+
+/**
+ * @param {Command} command
+ * @returns {undefined | { tdecU: URegAction }}
+ */
+function getOptimizedTdecU(command) {
+    // - 前の入力がNZであること
+    // - 次の状態が自分自身であること
+    // - HALT_OUTを含まないこと
+    // - ActionはUまたはB_INCのみであること
+    if (command.input === "NZ" &&
+        command.state === command.nextState &&
+        command.actions.every(action => !(action instanceof HaltOutAction)) &&
+        command.actions.every(action =>
+        action instanceof URegAction ||
+        isBInc(action))
+    ) {
+        const tdecU = command.actions.find(isUTdec);
+        if (tdecU && tdecU instanceof URegAction) {
+            return { tdecU };
+        }
+    }
+
+    return undefined;
+}
 
 /**
  * コマンドと次の状態
@@ -22,6 +67,8 @@ export class CompiledCommandWithNextState {
          * @readonly
          */
         this.nextState = nextState;
+
+        this.tdecuOptimize = getOptimizedTdecU(command);
     }
 }
 
