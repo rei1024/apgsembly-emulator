@@ -7,6 +7,39 @@ import { URegAction, U_TDEC } from "./actions/URegAction.js";
 import { HaltOutAction } from "./exports.js";
 
 /**
+ *
+ * @param {Action} action
+ * @returns {boolean}
+ */
+ function isOptimizableAction(action) {
+    return (action instanceof BRegAction && action.op === B_INC);
+}
+
+/**
+ * @param {Command} command
+ * @returns {undefined | { tdec: URegAction }}
+ */
+function getOptimizedTdec(command) {
+    // - 前の入力がNZであること
+    // - 次の状態が自分自身であること
+    // - HALT_OUTを含まないこと
+    // - ActionはUまたはB_INCのみであること
+    if (command.input === "NZ" &&
+        command.state === command.nextState &&
+        command.actions.every(action => !(action instanceof HaltOutAction)) &&
+        command.actions.every(action =>
+        action instanceof URegAction ||
+        isOptimizableAction(action))
+    ) {
+        const tdec = command.actions.find(x => x instanceof URegAction && x.op === U_TDEC);
+        if (tdec && tdec instanceof URegAction) {
+            return { tdec };
+        }
+    }
+    return undefined;
+}
+
+/**
  * コマンドと次の状態
  */
 export class CompiledCommandWithNextState {
@@ -27,37 +60,8 @@ export class CompiledCommandWithNextState {
          */
         this.nextState = nextState;
 
-        /**
-         * @type {undefined | { tdec: URegAction }}
-         */
-        let tdecOptimize = undefined;
-
-        // - 前の入力がNZであること
-        // - HALT_OUTを含まないこと
-        // - ActionはUまたはB_INCのみであること
-        if (command.input === "NZ" &&
-            command.actions.every(action => !(action instanceof HaltOutAction)) &&
-            command.actions.every(action =>
-            action instanceof URegAction ||
-            isOptimizableAction(action))
-        ) {
-            const tdec = command.actions.find(x => x instanceof URegAction && x.op === U_TDEC);
-            if (tdec && tdec instanceof URegAction) {
-                tdecOptimize = { tdec };
-            }
-        }
-
-        this.tdecOptimize = tdecOptimize;
+        this.tdecOptimize = getOptimizedTdec(command);
     }
-}
-
-/**
- *
- * @param {Action} action
- * @returns {boolean}
- */
-function isOptimizableAction(action) {
-    return (action instanceof BRegAction && action.op === B_INC);
 }
 
 export class CompiledCommand {

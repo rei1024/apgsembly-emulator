@@ -7,10 +7,10 @@ import {
     CompiledCommandWithNextState
 } from "./compile.js";
 import { Program } from "./Program.js";
-import { INITIAL_STATE, RegistersHeader, addLineNumber } from "./Command.js";
+import { INITIAL_STATE, RegistersHeader, addLineNumber, Command } from "./Command.js";
 import { Action } from "./actions/Action.js";
-import { BRegAction, B_INC } from "./actions/BRegAction.js";
-import { URegAction, U_TDEC } from "./actions/URegAction.js";
+import { BRegAction } from "./actions/BRegAction.js";
+import { URegAction } from "./actions/URegAction.js";
 export { INITIAL_STATE };
 
 /**
@@ -260,6 +260,29 @@ export class Machine {
     }
 
     /**
+     * @private
+     * @param {Command} command
+     * @param {number} num
+     */
+    _internalExecActionN(command, num) {
+        try {
+            const actionExecutor = this.actionExecutor;
+            for (const action of command.actions) {
+                // HALT_OUTは含まれないため停止しない
+                actionExecutor.execActionN(action, num);
+            }
+        } catch (error) {
+            if (error instanceof Error) {
+                this.throwError(error);
+            } else {
+                throw error;
+            }
+        }
+        this.stateStatsArray[this.currentStateIndex * 2 + this.prevOutput] += num;
+        this.stepCount += num;
+    }
+
+    /**
      * nステップ進める
      * @param {number} n
      * @param {boolean} isRunning 実行中は重い場合途中で止める
@@ -277,25 +300,11 @@ export class Machine {
             const command = compiledCommand.command;
 
             // optimization
-            if (compiledCommand.tdecOptimize && compiledCommand.nextState === this.currentStateIndex) {
+            if (compiledCommand.tdecOptimize) {
                 const tdec = compiledCommand.tdecOptimize.tdec;
                 const num = tdec.registerCache?.getValue();
                 if (num !== undefined && num !== 0 && num < (n - i)) {
-                    for (const action of command.actions) {
-                        try {
-                            // HALT_OUTは含まれないため停止しない
-                            this.actionExecutor.execActionN(action, num);
-                        } catch (error) {
-                            if (error instanceof Error) {
-                                this.throwError(error);
-                            } else {
-                                throw error;
-                            }
-                        }
-                    }
-
-                    this.stateStatsArray[this.currentStateIndex * 2 + this.prevOutput] += num;
-                    this.stepCount += num;
+                    this._internalExecActionN(command, num);
                     i += num - 1; // i++しているため1減らす
                     continue;
                 }
