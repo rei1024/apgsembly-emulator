@@ -300,8 +300,8 @@ export class Machine {
             const command = compiledCommand.command;
 
             // optimization
-            if (compiledCommand.tdecOptimize) {
-                const tdec = compiledCommand.tdecOptimize.tdec;
+            if (compiledCommand.tdecuOptimize) {
+                const tdec = compiledCommand.tdecuOptimize.tdecU;
                 const num = tdec.registerCache?.getValue();
                 if (num !== undefined && num !== 0 && num < (n - i)) {
                     this._internalExecActionN(command, num);

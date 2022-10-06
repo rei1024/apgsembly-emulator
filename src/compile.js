@@ -7,19 +7,18 @@ import { URegAction, U_TDEC } from "./actions/URegAction.js";
 import { HaltOutAction } from "./exports.js";
 
 /**
- *
  * @param {Action} action
  * @returns {boolean}
  */
- function isOptimizableAction(action) {
+function isBINC(action) {
     return (action instanceof BRegAction && action.op === B_INC);
 }
 
 /**
  * @param {Command} command
- * @returns {undefined | { tdec: URegAction }}
+ * @returns {undefined | { tdecU: URegAction }}
  */
-function getOptimizedTdec(command) {
+function getOptimizedTdecU(command) {
     // - 前の入力がNZであること
     // - 次の状態が自分自身であること
     // - HALT_OUTを含まないこと
@@ -29,11 +28,11 @@ function getOptimizedTdec(command) {
         command.actions.every(action => !(action instanceof HaltOutAction)) &&
         command.actions.every(action =>
         action instanceof URegAction ||
-        isOptimizableAction(action))
+        isBINC(action))
     ) {
-        const tdec = command.actions.find(x => x instanceof URegAction && x.op === U_TDEC);
-        if (tdec && tdec instanceof URegAction) {
-            return { tdec };
+        const tdecU = command.actions.find(x => x instanceof URegAction && x.op === U_TDEC);
+        if (tdecU && tdecU instanceof URegAction) {
+            return { tdecU };
         }
     }
     return undefined;
@@ -60,7 +59,7 @@ export class CompiledCommandWithNextState {
          */
         this.nextState = nextState;
 
-        this.tdecOptimize = getOptimizedTdec(command);
+        this.tdecuOptimize = getOptimizedTdecU(command);
     }
 }
 
