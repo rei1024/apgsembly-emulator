@@ -333,3 +333,51 @@ END_1; *; END_1; HALT_OUT
         [0, 4, 7, { nz: 4, z: 1 }],
     ]);
 });
+
+
+test('Machine PI Calculator steps', () => {
+    const program = Program.parse(piCalculator);
+    if (!(program instanceof Program)) {
+        throw Error('parse error PI Calculator');
+    }
+
+    /**
+     *
+     * @param {Machine} machine
+     */
+    function getStats(machine) {
+        return [
+            machine.stepCount,
+            machine.getStateStats(),
+            machine.actionExecutor.getBReg(0)?.getBits().slice(),
+            machine.actionExecutor.getBReg(0)?.pointer,
+            machine.actionExecutor.getUReg(0)?.getValue(),
+        ];
+    }
+
+    const resNormal = [];
+    const resExec = [];
+    for (const cond of [true, false]) {
+        const N = 100;
+
+        if (cond) {
+            const machine = new Machine(program);
+
+            for (let i = 0; i < N; i++) {
+                const res = machine.execCommand();
+                if (res === -1) {
+                    break;
+                }
+                resNormal.push(getStats(machine));
+            }
+        } else {
+            for (let i = 1; i <= N; i++) {
+                const machine = new Machine(program);
+                machine.exec(i, false, -1, 0);
+                resExec.push(getStats(machine));
+            }
+        }
+    }
+
+    assertEquals(resNormal, resExec);
+});
