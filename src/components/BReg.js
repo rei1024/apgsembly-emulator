@@ -119,10 +119,6 @@ export class BReg {
      */
     actionN(act, n) {
         switch (act.op) {
-            // INC  3207502
-            // TDEC 3217502
-            // READ 3175344
-            // SET   406844
             case B_INC: {
                 this.pointer += n;
                 this.extend();

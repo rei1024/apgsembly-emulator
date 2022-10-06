@@ -10,8 +10,16 @@ import { HaltOutAction } from "./exports.js";
  * @param {Action} action
  * @returns {boolean}
  */
-function isBINC(action) {
+function isBInc(action) {
     return action instanceof BRegAction && action.op === B_INC;
+}
+
+/**
+ * @param {Action} action
+ * @returns {boolean}
+ */
+function isUTdec(action) {
+    return action instanceof URegAction && action.op === U_TDEC;
 }
 
 /**
@@ -28,13 +36,14 @@ function getOptimizedTdecU(command) {
         command.actions.every(action => !(action instanceof HaltOutAction)) &&
         command.actions.every(action =>
         action instanceof URegAction ||
-        isBINC(action))
+        isBInc(action))
     ) {
-        const tdecU = command.actions.find(x => x instanceof URegAction && x.op === U_TDEC);
+        const tdecU = command.actions.find(isUTdec);
         if (tdecU && tdecU instanceof URegAction) {
             return { tdecU };
         }
     }
+
     return undefined;
 }
 
