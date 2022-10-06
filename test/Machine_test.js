@@ -334,7 +334,6 @@ END_1; *; END_1; HALT_OUT
     ]);
 });
 
-
 test('Machine PI Calculator steps', () => {
     const program = Program.parse(piCalculator);
     if (!(program instanceof Program)) {
