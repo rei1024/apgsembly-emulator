@@ -13,6 +13,7 @@ import { renderErrorMessage } from "./components/error.js";
 import { renderOutput } from "./components/output.js";
 import { UnaryUI } from "./components/unary_ui.js";
 import { BinaryUI } from "./components/binary_ui.js";
+import { renderAddSubMul } from "./components/render_add_sub_mul.js";
 import { renderB2D } from "./components/renderB2D.js";
 import { StatsUI } from "./components/stats_ui.js";
 import { initializeBreakpointSelect, getBreakpointInput } from "./components/breakpoint.js";
@@ -361,22 +362,6 @@ export class App {
     /**
      * @private
      */
-    renderAddSubMul() {
-        if (this.machine === undefined) {
-            $addSubMul.textContent = "";
-            return;
-        }
-        const actionExecutor = this.machine.actionExecutor;
-        $addSubMul.textContent = `
-        ADD = ${actionExecutor.add.toStringDetail()},
-        SUB = ${actionExecutor.sub.toStringDetail()},
-        MUL = ${actionExecutor.mul.toString()}
-        `;
-    }
-
-    /**
-     * @private
-     */
     renderOutput() {
         const output = this.machine?.actionExecutor.output.getString();
         renderOutput($output, output);
@@ -485,7 +470,7 @@ export class App {
         this.renderOutput();
         this.renderUnary();
         this.renderBinary();
-        this.renderAddSubMul();
+        $addSubMul.textContent = renderAddSubMul(this.machine?.actionExecutor);
         this.renderB2D();
         this.renderStats();
 
