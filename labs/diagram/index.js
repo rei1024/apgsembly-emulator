@@ -6,10 +6,6 @@ document.querySelector('#close').addEventListener('click', () => {
     window.close();
 });
 
-mermaid.mermaidAPI.initialize({
-    startOnLoad: false,
-});
-
 const diagram = document.querySelector('#diagram');
 
 /**
@@ -26,13 +22,15 @@ const KEY = 'state-diagram-input';
 const string = localStorage.getItem(KEY);
 
 if (string == null) {
-    const a = document.createElement('a');
-    a.href = '../../index.html';
-    a.textContent = 'APGsembly Emulator';
-    diagram.textContent = '';
     const span = document.createElement('span');
     span.textContent = 'Go To ';
     span.style.marginRight = '4px';
+
+    const a = document.createElement('a');
+    a.href = '../../index.html';
+    a.textContent = 'APGsembly Emulator';
+
+    diagram.textContent = '';
     diagram.append(span);
     diagram.append(a);
 } else {
