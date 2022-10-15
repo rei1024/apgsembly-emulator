@@ -2,6 +2,7 @@
 
 import { chunk } from "../util/chunk.js";
 import { UReg } from "../../src/components/UReg.js";
+import { create } from "../util/create.js";
 
 /**
  * 列の数
@@ -31,9 +32,7 @@ function groupNumber(size) {
  * @param {number} key
  */
 function createHeaderCell(key) {
-    const th = document.createElement('th');
-    th.textContent = `U${key}`;
-    return th;
+    return create('th', `U${key}`);
 }
 
 /**
@@ -42,10 +41,12 @@ function createHeaderCell(key) {
  * @param {UReg} value
  */
 function createDataCell(key, value) {
-    const td = document.createElement('td');
-    td.textContent = value.getValue().toString();
-    td.dataset['test'] = `U${key}`; // for e2e
-    return td;
+    return create('td', {
+        text: value.getValue().toString(),
+        fn: td => {
+            td.dataset['test'] = `U${key}`;
+        }
+    });
 }
 
 /**

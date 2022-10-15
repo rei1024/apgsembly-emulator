@@ -110,6 +110,11 @@ body[apge_dark="on"] #canvas {
     color: black;
 }
 
+/* 長い場合に改行を入れる */
+.word-break-all {
+    word-break: break-all;
+}
+
 /* 区切り線を付ける */
 #binary_register tr:first-child :is(th, td) {
     border-top: 1px solid var(--bs-gray-300);

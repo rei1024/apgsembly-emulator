@@ -22,7 +22,7 @@ const KEY = 'state-diagram-input';
 const string = localStorage.getItem(KEY);
 
 if (string == null) {
-    diagram.textContent = '';
+    diagram.innerHTML = '';
 
     const span = document.createElement('span');
     span.textContent = 'Go To ';
@@ -48,7 +48,7 @@ input.addEventListener('input', () => {
     } catch (error) {
         if (error instanceof Error) {
             const lines = error.message.split("\n");
-            diagram.textContent = '';
+            diagram.innerHTML = '';
             diagram.append(...lines.flatMap(line => [line, document.createElement('br')]));
         }
         input.classList.add('is-invalid');
