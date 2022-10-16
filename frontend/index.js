@@ -174,6 +174,10 @@ $statsModal.addEventListener('shown.bs.modal', () => {
 });
 
 $viewStateDiagramButton.addEventListener('click', () => {
+    // 1MB以上は無し
+    if ($input.value.length >= 10 ** 6) {
+        return;
+    }
     localStorageSetItem('state-diagram-input', $input.value);
     window.open('./labs/diagram/index.html', undefined, 'noreferrer=yes,noopener=yes');
 });

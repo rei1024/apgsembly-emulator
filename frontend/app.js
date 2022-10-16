@@ -5,7 +5,6 @@ import { Machine } from "../src/Machine.js";
 // Components
 import {
     startButton,
-    startButtonDisabled,
     stopButton
 } from "./components/toggle.js";
 
@@ -298,8 +297,13 @@ export class App {
      * @private
      */
     renderCommand() {
-        const next = this.machine?.getNextCompiledCommandWithNextState();
-        $command.textContent = next?.command.pretty() ?? "";
+        try {
+            const next = this.machine?.getNextCompiledCommandWithNextState();
+            $command.textContent = next?.command.pretty() ?? "";
+        } catch (error) {
+            // internal error
+            console.error(error);
+        }
     }
 
     /**
@@ -421,14 +425,16 @@ export class App {
             }
             case "RuntimeError":
             case "ParseError": {
-                startButtonDisabled($toggle);
+                startButton($toggle);
+                $toggle.disabled = true; // disable
                 $step.disabled = true;
                 $reset.disabled = false;
                 $statsButton.disabled = true;
                 break;
             }
             case "Halted": {
-                startButtonDisabled($toggle);
+                startButton($toggle);
+                $toggle.disabled = true; // disable
                 $step.disabled = true;
                 $reset.disabled = false;
                 $statsButton.disabled = false;
@@ -460,11 +466,9 @@ export class App {
 
         this.renderFrequencyOutput();
 
-        $stepCount.textContent = this.machine?.stepCount.toLocaleString() ?? "";
-
-        // current state
         $currentState.textContent = this.machine?.getCurrentState() ?? "";
         $previousOutput.textContent = this.machine?.getPreviousOutput() ?? "";
+        $stepCount.textContent = this.machine?.stepCount.toLocaleString() ?? "";
 
         this.renderCommand();
         this.renderOutput();
@@ -522,8 +526,8 @@ export class App {
         } catch (error) {
             this.appState = "RuntimeError";
             this.errorMessage = getMessage(error);
+        } finally {
+            this.render();
         }
-
-        this.render();
     }
 }

@@ -1,3 +1,4 @@
+/**** Util ****/
 .vertical-align-middle {
     vertical-align: middle;
 }
@@ -17,6 +18,12 @@
     font-variant-numeric: tabular-nums;
 }
 
+/* 長い場合に改行を入れる */
+.word-break-all {
+    word-break: break-all;
+}
+
+/**** App ****/
 /* 広げる */
 #stats_modal .modal-dialog {
     max-width: 550px;
@@ -108,11 +115,6 @@ body[apge_dark="on"] #canvas {
 /* ライトモード */
 .binary_info {
     color: black;
-}
-
-/* 長い場合に改行を入れる */
-.word-break-all {
-    word-break: break-all;
 }
 
 /* 区切り線を付ける */
