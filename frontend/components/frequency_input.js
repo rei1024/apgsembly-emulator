@@ -6,7 +6,8 @@
 function createFrequencyArray() {
     /** @type {number[]} */
     const frequencyArray = [];
-    for (let i = 0; i < 7; i++) {
+    const maxOrder = 6;
+    for (let i = 0; i <= maxOrder; i++) {
         const base = 10 ** i;
         for (let j = 1; j <= 9; j++) {
             frequencyArray.push(base * j);
@@ -14,7 +15,9 @@ function createFrequencyArray() {
     }
 
     // 値を追加したらHTMLも変更すること
-    frequencyArray.push(10 * 10 ** 6, 15 * 10 ** 6);
+    frequencyArray.push(
+        ...[10, 15].map(x => x * 10 ** maxOrder)
+    );
 
     return frequencyArray;
 }

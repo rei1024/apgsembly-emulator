@@ -221,7 +221,7 @@ export class BReg {
      * @returns {string}
      */
     toBinaryString() {
-        return this.getBits().slice().reverse().join("");
+        return this.bits.slice().reverse().join("");
     }
 
     /**
