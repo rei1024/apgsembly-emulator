@@ -92,14 +92,14 @@ export class BinaryUI {
      */
     initialize(regs) {
         const cells = [];
-        const table = document.createElement('table');
+        const table = create('table');
         for (const key of regs.keys()) {
-            const td = document.createElement('td');
+            const td = create('td');
             td.dataset['test'] = `B${key}`; // for e2e
 
             // meta
             const { metaData, $decimal, $hex, $pointer } = createMetaElem();
-            td.append(metaData, document.createElement('br'));
+            td.append(metaData, create('br'));
 
             // binary
             const { binaryBits, $prefix, $head, $suffix } = createBinaryElem();
