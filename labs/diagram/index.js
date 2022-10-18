@@ -1,18 +1,29 @@
+// @ts-check
+
 /* eslint-disable no-undef */
 
 import { create } from "./create.js";
+import { $type } from "../../frontend/util/selector.js";
 
-document.querySelector('#close').addEventListener('click', () => {
+$type('#close', HTMLElement).addEventListener('click', () => {
     window.close();
 });
 
-const diagram = document.querySelector('#diagram');
+const diagram = $type('#diagram', HTMLElement);
 
 /**
  * @param {string} graphDefinition
  */
 function render(graphDefinition) {
-    mermaid.mermaidAPI.render('svg', graphDefinition, function (svgString) {
+    // @ts-ignore
+    mermaid.mermaidAPI.render(
+        'svg',
+        graphDefinition,
+        /**
+         *
+         * @param {string} svgString
+         */
+        function (svgString) {
         diagram.innerHTML = svgString;
     });
 }
@@ -39,7 +50,7 @@ if (string == null) {
     render(create(string));
 }
 
-const input = document.querySelector('#input');
+const input = $type('#input', HTMLTextAreaElement);
 
 input.addEventListener('input', () => {
     try {
@@ -56,6 +67,8 @@ input.addEventListener('input', () => {
 });
 
 function enableInput() {
-    input.parentElement.classList.remove('d-none');
+    input.parentElement?.classList.remove('d-none');
 }
+
+// @ts-ignore
 window.enableInput = enableInput;
