@@ -276,24 +276,30 @@ export class BReg {
      * @param {unknown} value
      */
     setByRegistersInit(key, value) {
+        /**
+         *
+         * @param {string} msg
+         */
+        const error = msg => {
+            throw Error(`Invalid #REGISTERS ${msg}`);
+        };
         const debugStr = `"${key}": ${JSON.stringify(value)}`;
         // 数字の場合の処理は数字をバイナリにして配置する TODO 必要か確認
         if (typeof value === 'number') {
             this.setBits(parseBits(value.toString(2)).reverse());
             this.extend();
-        } else if (!Array.isArray(value)) {
-            throw Error(`Invalid #REGISTERS ${debugStr}`);
-        } else if (value.length !== 2) {
-            throw Error(`Invalid #REGISTERS ${debugStr}`);
+        } else if (!Array.isArray(value) || value.length !== 2) {
+            error(debugStr);
         } else {
             /** @type {unknown} */
             const value0 = value[0];
             /** @type {unknown} */
             const value1 = value[1];
+
             if (typeof value0 !== 'number' || typeof value1 !== 'string') {
-                throw Error(`Invalid #REGISTERS ${debugStr}`);
+                error(debugStr);
             } else if (value0 < 0 || !Number.isInteger(value0)) {
-                throw Error(`Invalid #REGISTERS ${debugStr}`);
+                error(debugStr);
             } else {
                 this.pointer = value0;
                 this.setBits(parseBits(value1));

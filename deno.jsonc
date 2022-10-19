@@ -7,16 +7,17 @@
         "cy-run": "node ./node_modules/.bin/cypress run",
         "lint": "./node_modules/.bin/eslint .",
         "chore": "deno upgrade && npm audit && git gc",
-        "bench": "deno bench --unstable --no-check test/bench.js"
+        "bench": "deno bench --unstable --no-check test/bench.js",
+        "bundle": "deno run --allow-net=deno.land,registry.npmjs.org --allow-env --allow-read --allow-write=. --allow-run build.ts"
     },
     "lint": {
         "files": {
-            "exclude": ["node_modules/", "cypress_default/"]
+            "exclude": ["node_modules/", "cypress_default/", "frontend/index.dist.js"]
         }
     },
     "fmt": {
         "files": {
-            "exclude": ["node_modules/", "cypress_default/"]
+            "exclude": ["node_modules/", "cypress_default/", "frontend/index.dist.js"]
         }
     }
 }
