@@ -20,9 +20,7 @@ import {} from "./components/render_add_sub_mul.js";
 import { setupFrequencyInput } from "./components/frequency_input.js";
 import { setCustomError, removeCustomError } from "./util/validation_ui.js";
 import { importFileAsText } from "./util/import_file.js";
-import { getSaveData } from "./util/save_data.js";
 import { idle } from "./util/idle.js";
-import { prefetch } from "./util/prefetch.js";
 import { localStorageSetItem } from "./util/local-storage-set-item.js";
 import { hasFocus } from "./util/has-focus.js";
 
@@ -290,20 +288,6 @@ idle(() => {
         $darkModeLabel.textContent = "On";
     }
     app.render();
-});
-
-// サンプルコードをプレフェッチ
-idle(() => {
-    const saveData = getSaveData();
-    if (saveData) {
-        return;
-    }
-    $exampleCodes.forEach(e => {
-        const src = e.dataset[SRC_KEY];
-        if (src !== undefined) {
-            prefetch(DATA_DIR + src);
-        }
-    });
 });
 
 // PWA
