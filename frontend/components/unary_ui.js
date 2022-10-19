@@ -66,8 +66,8 @@ function createTable(regs) {
     const num = groupNumber(regs.size);
 
     for (const entries of chunk(regs.entries(), num)) {
-        const header = document.createElement('tr');
-        const data = document.createElement('tr');
+        const header = create('tr');
+        const data = create('tr');
         for (const [key, value] of entries) {
             header.appendChild(createHeaderCell(key));
 
@@ -79,7 +79,7 @@ function createTable(regs) {
         rows.push({ header, data });
     }
 
-    const table = document.createElement('table');
+    const table = create('table');
     for (const row of rows) {
         table.append(row.header, row.data);
     }

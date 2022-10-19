@@ -15,30 +15,6 @@ export class Action {
     }
 
     /**
-     * アクションに含まれるスライディングレジスタのレジスタ番号を返す。
-     * @returns {number[]}
-     */
-    extractUnaryRegisterNumbers() {
-        return [];
-    }
-
-    /**
-     * アクションに含まれるバイナリレジスタのレジスタ番号を返す。
-     * @returns {number[]}
-     */
-    extractBinaryRegisterNumbers() {
-        return [];
-    }
-
-    /**
-     * アクションに含まれるTレジスタのレジスタ番号を返す。
-     * @returns {number[]}
-     */
-    extractLegacyTRegisterNumbers() {
-        return [];
-    }
-
-    /**
      * Does this action return a value?
      * 値を返すかどうか
      * @returns {boolean} 値を返す場合true

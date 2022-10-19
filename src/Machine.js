@@ -62,27 +62,28 @@ export class Machine {
          */
         this.program = program;
 
-        const obj = commandsToLookupTable(program.commands);
+        const { states, stateMap, lookup } =
+            commandsToLookupTable(program.commands);
 
         /**
          * @readonly
          */
-        this.states = obj.states;
-
-        /**
-         * @readonly
-         * @private
-         */
-        this.stateMap = obj.stateMap;
+        this.states = states;
 
         /**
          * @readonly
          * @private
          */
-        this.lookup = obj.lookup;
+        this.stateMap = stateMap;
+
+        /**
+         * @readonly
+         * @private
+         */
+        this.lookup = lookup;
 
         // set cache
-        for (const compiledCommand of obj.lookup) {
+        for (const compiledCommand of lookup) {
             const actions = (compiledCommand.z?.command.actions ?? []).concat(
                 compiledCommand.nz?.command.actions ?? []
             );
@@ -127,7 +128,7 @@ export class Machine {
         const program = Program.parse(source);
 
         if (typeof program === "string") {
-            throw new Error(program);
+            throw Error(program);
         }
 
         return new Machine(program);
@@ -229,10 +230,11 @@ export class Machine {
     }
 
     /**
+     * 次に実行するコマンドを返す
      * @throws internal error
      * @returns {CompiledCommandWithNextState}
      */
-    getNextCompiledCommandWithNextState() {
+    getNextCommand() {
         const currentStateIndex = this.currentStateIndex;
         const compiledCommand = this.lookup[currentStateIndex];
 
@@ -296,7 +298,7 @@ export class Machine {
         const start = performance.now();
 
         for (let i = 0; i < n; i++) {
-            const compiledCommand = this.getNextCompiledCommandWithNextState();
+            const compiledCommand = this.getNextCommand();
 
             // optimization
             if (compiledCommand.tdecuOptimize) {
@@ -358,9 +360,9 @@ export class Machine {
      * @param {Error} error
      */
     throwError(error) {
-        const command = this.getNextCompiledCommandWithNextState().command;
+        const command = this.getNextCommand().command;
         const line = addLineNumber(command);
-        throw new Error(error.message + ` in "${command.pretty()}"` + line);
+        throw Error(error.message + ` in "${command.pretty()}"` + line);
     }
 
     /**
@@ -379,7 +381,8 @@ export class Machine {
         let result = -1;
 
         const actionExecutor = this.actionExecutor;
-        for (const action of compiledCommand.command.actions) {
+        const command = compiledCommand.command;
+        for (const action of command.actions) {
             const actionResult = actionExecutor.execAction(action);
             if (actionResult === -1) { // HALT_OUT
                 return -1;
@@ -388,17 +391,16 @@ export class Machine {
                 if (result === -1) {
                     result = actionResult;
                 } else {
-                    throw Error(`Return value twice: line = ${
-                        compiledCommand.command.pretty()
-                    }${addLineNumber(compiledCommand.command)}`);
+                    throw Error(`Return value twice: ` +
+                        `line = ${command.pretty()}${addLineNumber(command)}`);
                 }
             }
         }
 
         if (result === -1) {
             throw Error(`No return value: line = ${
-                compiledCommand.command.pretty()
-            }${addLineNumber(compiledCommand.command)}`);
+                command.pretty()
+            }${addLineNumber(command)}`);
         }
 
         const nextStateIndex = compiledCommand.nextState;
@@ -422,7 +424,7 @@ export class Machine {
      * @throws {Error} 実行時エラー
      */
     execCommand() {
-        const compiledCommand = this.getNextCompiledCommandWithNextState();
+        const compiledCommand = this.getNextCommand();
         return this.execCommandFor(compiledCommand);
     }
 }

@@ -3,7 +3,7 @@
 /**
  * @returns {number[]}
  */
-function createFrequencyArray() {
+function getFrequencies() {
     /** @type {number[]} */
     const frequencyArray = [];
     const maxOrder = 6;
@@ -35,14 +35,14 @@ function error() {
  * @param {import("../app.js").App} app
  */
 export function setupFrequencyInput($frequencyInput, app) {
-    const frequencyArray = createFrequencyArray();
+    const frequencies = getFrequencies();
 
     $frequencyInput.min = "0";
-    $frequencyInput.max = (frequencyArray.length - 1).toString();
+    $frequencyInput.max = (frequencies.length - 1).toString();
 
     $frequencyInput.addEventListener('input', () => {
         const value = parseInt($frequencyInput.value, 10);
-        const freq = frequencyArray[value] ?? error();
+        const freq = frequencies[value] ?? error();
         $frequencyInput.ariaValueText = `(${freq.toString()}Hz)`;
         app.setFrequency(freq);
         app.renderFrequencyOutput();

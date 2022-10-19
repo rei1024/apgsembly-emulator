@@ -154,10 +154,8 @@ export class App {
     start() {
         switch (this.appState) {
             case "Initial": {
-                this.reset();
                 // 初期化に成功していれば走らせる
-                // @ts-ignore
-                if (this.appState === "Stop") {
+                if (this.reset()) {
                     this.appState = "Running";
                 }
                 break;
@@ -262,6 +260,7 @@ export class App {
 
     /**
      * 状態をリセットし、パースする
+     * @returns {boolean} 成功
      */
     reset() {
         this.errorMessage = "";
@@ -276,9 +275,12 @@ export class App {
         } catch (e) {
             this.appState = "ParseError";
             this.errorMessage = getMessage(e);
-        } finally {
             this.render();
+            return false;
         }
+
+        this.render();
+        return true;
     }
 
     /**
@@ -298,7 +300,7 @@ export class App {
      */
     renderCommand() {
         try {
-            const next = this.machine?.getNextCompiledCommandWithNextState();
+            const next = this.machine?.getNextCommand();
             $command.textContent = next?.command.pretty() ?? "";
         } catch (error) {
             // internal error
@@ -486,18 +488,17 @@ export class App {
      * @param {number} steps
      */
     run(steps) {
-        switch (this.appState) {
+        const appState = this.appState;
+        switch (appState) {
             case "Initial": {
-                this.reset();
                 // エラーであれば走らせない
-                // @ts-ignore
-                if (this.appState !== "Stop") {
+                if (!this.reset()) {
                     return;
                 }
             }
         }
 
-        if (steps <= 0 || Number.isNaN(steps)) {
+        if (steps <= 0 || isNaN(steps)) {
             // no render
             return;
         }
@@ -507,7 +508,7 @@ export class App {
             return;
         }
 
-        const isRunning = this.appState === "Running";
+        const isRunning = appState === "Running";
 
         // ブレークポイントの処理
         const breakpointIndex = parseInt($breakpointSelect.value, 10);
