@@ -65,7 +65,7 @@ function createTable(regs) {
 
     const num = groupNumber(regs.size);
 
-    for (const entries of chunk(regs.entries(), num)) {
+    for (const entries of chunk(regs, num)) {
         const header = create('tr');
         const data = create('tr');
         for (const [key, value] of entries) {

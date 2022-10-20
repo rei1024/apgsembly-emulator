@@ -114,7 +114,7 @@ export class Machine {
         this.stateStatsArray = Array(lookup.length * 2).fill(0).map(() => 0);
 
         const regHeader = program.registersHeader;
-        if (regHeader !== undefined) {
+        if (regHeader) {
             this.setByRegistersHeader(regHeader);
         }
     }
