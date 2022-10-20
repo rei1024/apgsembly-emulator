@@ -69,11 +69,11 @@ function createTable(regs) {
         const header = create('tr');
         const data = create('tr');
         for (const [key, value] of entries) {
-            header.appendChild(createHeaderCell(key));
+            header.append(createHeaderCell(key));
 
             const td = createDataCell(key, value);
             cells.push(td);
-            data.appendChild(td);
+            data.append(td);
         }
 
         rows.push({ header, data });
@@ -128,7 +128,7 @@ export class UnaryUI {
     initialize(regs) {
         const { table, cells } = createTable(regs);
         this.root.innerHTML = "";
-        this.root.appendChild(table);
+        this.root.append(table);
         this.cells = cells;
     }
 

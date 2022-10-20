@@ -219,31 +219,10 @@ export class BReg {
 
     /**
      * @param {number} [base] default is 10
-     * @private
      */
-    toString(base = 10) {
-        const binString = "0b" + this.toBinaryString();
-        if (hasBigInt) {
-            return BigInt(binString).toString(base);
-        } else {
-            return Number(binString).toString(base);
-        }
-    }
-
-    /**
-     * 十進数
-     * @returns {string} "123"
-     */
-    toDecimalString() {
-        return this.toString();
-    }
-
-    /**
-     * 16進数
-     * @returns {string} "FF"
-     */
-    toHexString() {
-        return this.toString(16);
+    toNumberString(base = 10) {
+        return (hasBigInt ? BigInt : Number)("0b" + this.toBinaryString())
+            .toString(base);
     }
 
     /**

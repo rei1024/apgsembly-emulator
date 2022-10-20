@@ -167,13 +167,13 @@ export class BinaryUI {
             }
 
             if (showBinaryValueInDecimal) {
-                $decimal.textContent = "value = " + reg.toDecimalString() + ", ";
+                $decimal.textContent = "value = " + reg.toNumberString(10) + ", ";
             } else {
                 $decimal.innerHTML = "";
             }
 
             if (showBinaryValueInHex) {
-                $hex.textContent = "hex = " + reg.toHexString() + ", ";
+                $hex.textContent = "hex = " + reg.toNumberString(16) + ", ";
             } else {
                 $hex.innerHTML = "";
             }
