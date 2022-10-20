@@ -1,6 +1,13 @@
 // @ts-check
 
 /**
+ * @returns {never}
+ */
+export function internalError() {
+    throw Error('internal error');
+}
+
+/**
  * アクション
  * @abstract
  */

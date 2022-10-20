@@ -7,6 +7,7 @@ import {
     B_SET,
     B_READ
 } from "../actions/BRegAction.js";
+import { internalError } from "../actions/Action.js";
 
 /**
  * バイナリの文字列を0と1の配列に変換する
@@ -27,14 +28,6 @@ function parseBits(str) {
 }
 
 const hasBigInt = typeof BigInt !== 'undefined';
-
-/**
- * @private
- * @returns {never}
- */
-function error() {
-    throw Error('internal error');
-}
 
 /**
  * Bn: Binary Register
@@ -86,7 +79,7 @@ export class BReg {
                 const pointer = this.pointer;
                 const bits = this.bits;
                 if (pointer < bits.length) {
-                    const value = bits[pointer] ?? error();
+                    const value = bits[pointer] ?? internalError();
                     bits[pointer] = 0;
                     return value;
                 } else {
@@ -156,7 +149,7 @@ export class BReg {
     inc() {
         const value = this.action(new BRegAction(B_INC, 0)); // regNumberは仮
         if (value !== undefined) {
-            error();
+            internalError();
         }
         return value;
     }
@@ -168,7 +161,7 @@ export class BReg {
     tdec() {
         const value = this.action(new BRegAction(B_TDEC, 0)); // regNumberは仮
         if (value === undefined) {
-            error();
+            internalError();
         }
         return value;
     }
@@ -180,7 +173,7 @@ export class BReg {
     read() {
         const value = this.action(new BRegAction(B_READ, 0)); // regNumberは仮
         if (value === undefined) {
-            error();
+            internalError();
         }
         return value;
     }
@@ -192,7 +185,7 @@ export class BReg {
     set() {
         const value = this.action(new BRegAction(B_SET, 0)); // regNumberは仮
         if (value !== undefined) {
-            error();
+            internalError();
         }
         return value;
     }
@@ -265,7 +258,7 @@ export class BReg {
         this.extend();
         return {
             prefix: this.bits.slice(0, this.pointer),
-            head: this.bits[this.pointer] ?? error(),
+            head: this.bits[this.pointer] ?? internalError(),
             suffix: this.bits.slice(this.pointer + 1),
         };
     }

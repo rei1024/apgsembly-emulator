@@ -12,3 +12,16 @@ export function localStorageSetItem(key, value) {
         // do nothing
     }
 }
+
+/**
+ * Cookieを許可しない場合例外が発生する
+ * @param {string} key
+ * @returns {string | null}
+ */
+export function localStorageGetItem(key) {
+    try {
+        return localStorage.getItem(key);
+    } catch (_) {
+        return null;
+    }
+}

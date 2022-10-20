@@ -8,6 +8,7 @@ import {
     T_SET,
     T_RESET
 } from "../actions/LegacyTRegAction.js";
+import { internalError } from "../actions/Action.js";
 
 export class LegacyTReg {
     constructor() {
@@ -36,7 +37,7 @@ export class LegacyTReg {
             case T_DEC: return this.dec();
             case T_SET: return this.set();
             case T_RESET: return this.reset();
-            default: throw Error(`LegacyTReg action: ${act.op}`);
+            default: internalError();
         }
     }
 
@@ -95,7 +96,7 @@ export class LegacyTReg {
         } else if (bit === -1) {
             throw Error('Error: reading empty space of T register');
         } else {
-            throw Error('internal error');
+            internalError();
         }
     }
 

@@ -21,7 +21,7 @@ import { setupFrequencyInput } from "./components/frequency_input.js";
 import { setCustomError, removeCustomError } from "./util/validation_ui.js";
 import { importFileAsText } from "./util/import_file.js";
 import { idle } from "./util/idle.js";
-import { localStorageSetItem } from "./util/local-storage-set-item.js";
+import { localStorageSetItem, localStorageGetItem } from "./util/local-storage.js";
 import { hasFocus } from "./util/has-focus.js";
 
 import {
@@ -251,7 +251,7 @@ app.render();
 // 初期コード
 idle(() => {
     const INIT_CODE = "initial_code";
-    const initCode = localStorage.getItem(INIT_CODE);
+    const initCode = localStorageGetItem(INIT_CODE);
     if (initCode !== null && initCode !== "") {
         localStorage.removeItem(INIT_CODE);
         app.setInputAndReset(initCode);
@@ -261,7 +261,7 @@ idle(() => {
 // 実行時間が掛かる処理をまとめる
 idle(() => {
     // デフォルトはtrue
-    if (localStorage.getItem(SHOW_BINARY_IN_DECIMAL_KEY) === null) {
+    if (localStorageGetItem(SHOW_BINARY_IN_DECIMAL_KEY) === null) {
         localStorageSetItem(SHOW_BINARY_IN_DECIMAL_KEY, "true");
     }
 
@@ -277,14 +277,14 @@ idle(() => {
     ];
 
     for (const { key, checkbox } of items) {
-        if (localStorage.getItem(key) === "true") {
+        if (localStorageGetItem(key) === "true") {
             checkbox.checked = true;
         }
     }
 
     // ダークモードについてはbodyタグ直下でも設定する
     // チェックボタンはここで処理する
-    if (localStorage.getItem(DARK_MODE_KEY) === "on") {
+    if (localStorageGetItem(DARK_MODE_KEY) === "on") {
         document.body.setAttribute('apge_dark', "on");
         $darkMode.checked = true;
         $darkModeLabel.textContent = "On";
@@ -305,9 +305,8 @@ if ("serviceWorker" in navigator) {
         // }
 
         // unregister all
-        navigator.serviceWorker.getRegistrations().then(registrations => {
-            registrations.map(registration => registration.unregister());
-        });
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        registrations.map(registration => registration.unregister());
     });
 }
 
