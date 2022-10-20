@@ -145,8 +145,8 @@ export class UnaryUI {
         const cells = this.cells;
         for (const reg of regs.values()) {
             const item = cells[i];
-            if (item === undefined) {
-                throw Error('renderUnary: internal error');
+            if (!item) {
+                throw Error('internal error');
             }
             item.textContent = reg.getValue().toString();
             i++;

@@ -141,13 +141,6 @@ export class App {
     }
 
     /**
-     * 初期化
-     */
-    initializeApp() {
-        this.render();
-    }
-
-    /**
      * 実行を開始する
      * Start execution
      */

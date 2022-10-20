@@ -75,23 +75,21 @@ $step.addEventListener('click', () => {
     app.doStep();
 });
 
-const SRC_KEY = 'src';
-
 // サンプル
 $exampleCodes.forEach(e => {
     e.addEventListener('click', async () => {
         $examples.style.opacity = "0.5";
-        const src = e.dataset[SRC_KEY];
+        const src = e.dataset['src'];
         try {
             const response = await fetch(DATA_DIR + src);
             if (!response.ok) {
-                throw Error('error');
+                throw 'error';
             }
             app.setInputAndReset(await response.text());
             // スクロール
-            $input.scrollTop = 0;
-        } catch (_) {
-            console.error(`Fetch Error: ${src}`);
+            scrollToTop();
+        } catch (e) {
+            console.error(`Fetch: ${src}`);
         } finally {
             $examples.style.opacity = "1";
         }
@@ -114,11 +112,15 @@ $unaryRegisterDetail.addEventListener('toggle', () => {
     app.renderUnary();
 });
 
+const scrollToTop = () => {
+    $input.scrollTop = 0;
+};
+
 // ファイルインポート
 importFileAsText($fileImport, result => {
     app.setInputAndReset(result);
     // スクロール
-    $input.scrollTop = 0;
+    scrollToTop();
 });
 
 // ** Modal ** //
@@ -234,7 +236,7 @@ $input.addEventListener("drop", async (event) => {
     if (file != undefined) {
         app.setInputAndReset(await file.text());
         // スクロール
-        $input.scrollTop = 0;
+        scrollToTop();
     }
 });
 
@@ -244,7 +246,7 @@ $configButton.disabled = false;
 
 // 初回描画
 // first render
-app.initializeApp();
+app.render();
 
 // 初期コード
 idle(() => {
@@ -304,9 +306,7 @@ if ("serviceWorker" in navigator) {
 
         // unregister all
         navigator.serviceWorker.getRegistrations().then(registrations => {
-            for (const registration of registrations) {
-                registration.unregister();
-            }
+            registrations.map(registration => registration.unregister());
         });
     });
 }
