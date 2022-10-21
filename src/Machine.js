@@ -356,12 +356,12 @@ export class Machine {
 
     /**
      * @private
-     * @param {Error} error
+     * @param {Error} err
      */
-    throwError(error) {
+    throwError(err) {
         const command = this.getNextCommand().command;
         const line = addLineNumber(command);
-        throw Error(error.message + ` in "${command.pretty()}"` + line);
+        error(err.message + ` in "${command.pretty()}"` + line);
     }
 
     /**

@@ -252,7 +252,7 @@ app.render();
 idle(() => {
     const INIT_CODE = "initial_code";
     const initCode = localStorageGetItem(INIT_CODE);
-    if (initCode !== null && initCode !== "") {
+    if (initCode !== null) {
         localStorage.removeItem(INIT_CODE);
         app.setInputAndReset(initCode);
     }
