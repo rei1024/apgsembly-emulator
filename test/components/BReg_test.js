@@ -109,6 +109,7 @@ test("BReg toNumberString", () => {
     }
     x.set();
     assertEquals(x.toNumberString(), "1048576");
+    assertEquals(x.toNumberString(10), "1048576");
     assertEquals(x.toNumberString(16), "100000");
 });
 

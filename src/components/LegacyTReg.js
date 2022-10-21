@@ -86,12 +86,13 @@ export class LegacyTReg {
      * @returns {0 | 1}
      */
     read() {
-        const bit = this.bits[this.pointer];
+        const pointer = this.pointer;
+        const bit = this.bits[pointer];
         if (bit === 0) {
-            this.bits[this.pointer] = -1;
+            this.bits[pointer] = -1;
             return 0;
         } else if (bit === 1) {
-            this.bits[this.pointer] = -1;
+            this.bits[pointer] = -1;
             return 1;
         } else if (bit === -1) {
             throw Error('Error: reading empty space of T register');

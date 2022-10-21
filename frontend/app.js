@@ -461,15 +461,16 @@ export class App {
 
         this.renderFrequencyOutput();
 
-        $currentState.textContent = this.machine?.getCurrentState() ?? "";
-        $previousOutput.textContent = this.machine?.getPreviousOutput() ?? "";
-        $stepCount.textContent = this.machine?.stepCount.toLocaleString() ?? "";
+        const machine = this.machine;
+        $currentState.textContent = machine?.getCurrentState() ?? "";
+        $previousOutput.textContent = machine?.getPreviousOutput() ?? "";
+        $stepCount.textContent = machine?.stepCount.toLocaleString() ?? "";
 
         this.renderCommand();
         this.renderOutput();
         this.renderUnary();
         this.renderBinary();
-        $addSubMul.textContent = renderAddSubMul(this.machine?.actionExecutor);
+        $addSubMul.textContent = renderAddSubMul(machine?.actionExecutor);
         this.renderB2D();
         this.renderStats();
 
