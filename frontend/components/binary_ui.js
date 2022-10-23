@@ -117,8 +117,7 @@ export class BinaryUI {
             });
         }
 
-        this.root.innerHTML = "";
-        this.root.append(table);
+        this.root.replaceChildren(table);
 
         this.cells = cells;
     }

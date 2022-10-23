@@ -88,7 +88,7 @@ export class Machine {
                 compiledCommand.nz?.command.actions ?? []
             );
             for (const action of actions) {
-                this.setCache(action);
+                this.#setCache(action);
             }
         }
 
@@ -115,7 +115,7 @@ export class Machine {
 
         const regHeader = program.registersHeader;
         if (regHeader) {
-            this.setByRegistersHeader(regHeader);
+            this.#setByRegistersHeader(regHeader);
         }
     }
 
@@ -154,11 +154,10 @@ export class Machine {
     }
 
     /**
-     * @private
      * @param {RegistersHeader} regHeader
      * @throws
      */
-    setByRegistersHeader(regHeader) {
+    #setByRegistersHeader(regHeader) {
         /** @type {string} */
         const str = regHeader.content.replace(/'/ug, `"`);
 
@@ -178,10 +177,9 @@ export class Machine {
     }
 
     /**
-     * @private
      * @param {Action} action
      */
-    setCache(action) {
+    #setCache(action) {
         if (action instanceof BRegAction) {
             action.registerCache = this.actionExecutor.getBReg(action.regNumber);
         } else if (action instanceof URegAction) {

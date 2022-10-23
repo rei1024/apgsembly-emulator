@@ -69,75 +69,46 @@ export const DEFUALT_FREQUENCY = 30;
  * APGsembly 2.0 Emulator frontend application
  */
 export class App {
+    /** @type {AppState | undefined} */
+    #prevAppState;
+    /** エラーメッセージ */
+    #errorMessage = '';
+    /** @type {Machine | undefined} */
+    #machine;
+    /** @type {undefined | number} */
+    #prevFrequency;
+    /** @readonly */
+    #unaryUI = new UnaryUI($unaryRegister);
+    /** @readonly */
+    #binaryUI = new BinaryUI($binaryRegister);
+    /** @readonly */
+    #statsUI = new StatsUI($statsBody, $statsNumberOfStates);
+    /** @readonly */
+    #cve;
     constructor() {
-        /**
-         * @type {Machine | undefined}
-         * @private
-         */
-        this.machine = undefined;
-
         /**
          * アプリ状態
          * @type {AppState}
          */
         this.appState = "Initial";
 
-        /**
-         * @private
-         * @type {AppState | undefined}
-         */
-        this.prevAppState = undefined;
-
-        /**
-         * エラーメッセージ
-         * @private
-         */
-        this.errorMessage = "";
-
         /** ステップ数設定 */
         this.stepConfig = 1;
 
-        /**
-         * @private
-         * @readonly
-         */
-        this.cve = new CVE({ frequency: DEFUALT_FREQUENCY });
+        this.#cve = new CVE({ frequency: DEFUALT_FREQUENCY });
         const this_ = this;
-        this.cve.addEventListener('emit', function listener(ev) {
+        this.#cve.addEventListener('emit', function listener(ev) {
             if (ev instanceof CVEEvent) {
                 this_.run(ev.value);
             }
         });
-
-        /**
-         * @type {undefined | number}
-         */
-        this.prevFrequency = undefined;
-
-        /**
-         * @private
-         * @readonly
-         */
-        this.unaryUI = new UnaryUI($unaryRegister);
-
-        /**
-         * @private
-         * @readonly
-         */
-        this.binaryUI = new BinaryUI($binaryRegister);
-
-        /**
-         * @private
-         * @readonly
-         */
-        this.statsUI = new StatsUI($statsBody, $statsNumberOfStates);
     }
 
     /**
      * @param {number} freq
      */
     setFrequency(freq) {
-        this.cve.frequency = freq;
+        this.#cve.frequency = freq;
     }
 
     /**
@@ -175,37 +146,34 @@ export class App {
 
     /**
      * スライディングレジスタ表示の初期化
-     * @private
      */
-    setUpUnary() {
-        if (this.machine === undefined) {
-            this.unaryUI.clear();
+    #setUpUnary() {
+        if (this.#machine === undefined) {
+            this.#unaryUI.clear();
         } else {
-            this.unaryUI.initialize(this.machine.actionExecutor.uRegMap);
+            this.#unaryUI.initialize(this.#machine.actionExecutor.uRegMap);
         }
     }
 
     /**
      * バイナリレジスタの表示の初期化
-     * @private
      */
-    setUpBinary() {
-        if (this.machine === undefined) {
-            this.binaryUI.clear();
+    #setUpBinary() {
+        if (this.#machine === undefined) {
+            this.#binaryUI.clear();
         } else {
-            this.binaryUI.initialize(this.machine.actionExecutor.bRegMap);
+            this.#binaryUI.initialize(this.#machine.actionExecutor.bRegMap);
         }
     }
 
     /**
      * machineがセットされた時のコールバック
-     * @private
      */
-    onMachineSet() {
-        this.setUpUnary();
-        this.setUpBinary();
-        this.setUpStats();
-        initializeBreakpointSelect($breakpointSelect, this.machine);
+    #onMachineSet() {
+        this.#setUpUnary();
+        this.#setUpBinary();
+        this.#setUpStats();
+        initializeBreakpointSelect($breakpointSelect, this.#machine);
     }
 
     /**
@@ -256,18 +224,18 @@ export class App {
      * @returns {boolean} 成功
      */
     reset() {
-        this.errorMessage = "";
-        this.machine = undefined;
-        this.cve.reset();
+        this.#errorMessage = "";
+        this.#machine = undefined;
+        this.#cve.reset();
 
         // Parse success
         try {
-            this.machine = Machine.fromString($input.value);
-            this.onMachineSet();
+            this.#machine = Machine.fromString($input.value);
+            this.#onMachineSet();
             this.appState = "Stop";
         } catch (e) {
             this.appState = "ParseError";
-            this.errorMessage = getMessage(e);
+            this.#errorMessage = getMessage(e);
             this.render();
             return false;
         }
@@ -280,20 +248,19 @@ export class App {
      * 周波数の表示
      */
     renderFrequencyOutput() {
-        const currentFreqeucy = this.cve.frequency;
-        if (this.prevFrequency !== currentFreqeucy) {
+        const currentFreqeucy = this.#cve.frequency;
+        if (this.#prevFrequency !== currentFreqeucy) {
             $freqencyOutput.textContent = currentFreqeucy.toLocaleString();
         }
-        this.prevFrequency = currentFreqeucy;
+        this.#prevFrequency = currentFreqeucy;
     }
 
     /**
      * 次のコマンドの表示
-     * @private
      */
-    renderCommand() {
+    #renderCommand() {
         try {
-            const next = this.machine?.getNextCommand();
+            const next = this.#machine?.getNextCommand();
             $command.textContent = next?.command.pretty() ?? "";
         } catch (error) {
             // internal error
@@ -308,7 +275,7 @@ export class App {
         if (!$b2dDetail.open) {
             return;
         }
-        const machine = this.machine;
+        const machine = this.#machine;
         if (machine === undefined) {
             $b2dPos.x.textContent = "0";
             $b2dPos.y.textContent = "0";
@@ -338,8 +305,8 @@ export class App {
      * スライディングレジスタの表示
      */
     renderUnary() {
-        if (this.machine !== undefined && $unaryRegisterDetail.open) {
-            this.unaryUI.render(this.machine.actionExecutor.uRegMap);
+        if (this.#machine !== undefined && $unaryRegisterDetail.open) {
+            this.#unaryUI.render(this.#machine.actionExecutor.uRegMap);
         }
     }
 
@@ -347,9 +314,9 @@ export class App {
      * バイナリレジスタの表示
      */
     renderBinary() {
-        if (this.machine !== undefined && $binaryRegisterDetail.open) {
-            this.binaryUI.render(
-                this.machine.actionExecutor.bRegMap,
+        if (this.#machine !== undefined && $binaryRegisterDetail.open) {
+            this.#binaryUI.render(
+                this.#machine.actionExecutor.bRegMap,
                 binaryConfig.$hideBinary.checked,
                 binaryConfig.$reverseBinary.checked,
                 binaryConfig.$showBinaryValueInDecimal.checked,
@@ -358,22 +325,16 @@ export class App {
         }
     }
 
-    /**
-     * @private
-     */
-    renderOutput() {
-        const output = this.machine?.actionExecutor.output.getString();
+    #renderOutput() {
+        const output = this.#machine?.actionExecutor.output.getString();
         renderOutput($output, output);
     }
 
-    /**
-     * @private
-     */
-    setUpStats() {
-        if (this.machine === undefined) {
-            this.statsUI.clear();
+    #setUpStats() {
+        if (this.#machine === undefined) {
+            this.#statsUI.clear();
         } else {
-            this.statsUI.initialize(this.machine.getStateStats(), this.machine.states);
+            this.#statsUI.initialize(this.#machine.getStateStats(), this.#machine.states);
         }
     }
 
@@ -381,13 +342,13 @@ export class App {
         if (!$statsModal.classList.contains('show')) {
             return;
         }
-        if (this.machine === undefined) {
-            this.statsUI.clear();
+        if (this.#machine === undefined) {
+            this.#statsUI.clear();
             return;
         }
-        this.statsUI.render(
-            this.machine.getStateStats(),
-            this.machine.currentStateIndex
+        this.#statsUI.render(
+            this.#machine.getStateStats(),
+            this.#machine.currentStateIndex
         );
     }
 
@@ -443,10 +404,10 @@ export class App {
      */
     render() {
         // cve
-        this.cve.disabled = this.appState !== "Running";
+        this.#cve.disabled = this.appState !== "Running";
 
         // Stop状態はStepで変化する可能性がある
-        if (this.prevAppState !== this.appState || this.appState === "Stop") {
+        if (this.#prevAppState !== this.appState || this.appState === "Stop") {
             this.renderButton();
 
             // ParseErrorのときにエラー表示
@@ -457,24 +418,24 @@ export class App {
             }
         }
 
-        renderErrorMessage($error, this.appState, this.errorMessage);
+        renderErrorMessage($error, this.appState, this.#errorMessage);
 
         this.renderFrequencyOutput();
 
-        const machine = this.machine;
+        const machine = this.#machine;
         $currentState.textContent = machine?.getCurrentState() ?? "";
         $previousOutput.textContent = machine?.getPreviousOutput() ?? "";
         $stepCount.textContent = machine?.stepCount.toLocaleString() ?? "";
 
-        this.renderCommand();
-        this.renderOutput();
+        this.#renderCommand();
+        this.#renderOutput();
         this.renderUnary();
         this.renderBinary();
         $addSubMul.textContent = renderAddSubMul(machine?.actionExecutor);
         this.renderB2D();
         this.renderStats();
 
-        this.prevAppState = this.appState;
+        this.#prevAppState = this.appState;
     }
 
     /**
@@ -497,7 +458,7 @@ export class App {
             return;
         }
 
-        const machine = this.machine;
+        const machine = this.#machine;
         if (machine === undefined) {
             return;
         }
@@ -520,7 +481,7 @@ export class App {
             }
         } catch (error) {
             this.appState = "RuntimeError";
-            this.errorMessage = getMessage(error);
+            this.#errorMessage = getMessage(error);
         } finally {
             this.render();
         }
