@@ -3,11 +3,7 @@
 import { Machine } from "../src/Machine.js";
 
 // Components
-import {
-    startButton,
-    stopButton
-} from "./components/toggle.js";
-
+import { startButton, stopButton } from "./components/toggle.js";
 import { renderErrorMessage } from "./components/error.js";
 import { renderOutput } from "./components/output.js";
 import { UnaryUI } from "./components/unary_ui.js";
@@ -85,13 +81,12 @@ export class App {
     #statsUI = new StatsUI($statsBody, $statsNumberOfStates);
     /** @readonly */
     #cve;
+    /**
+     * アプリ状態
+     * @type {AppState}
+     */
+    #appState = "Initial";
     constructor() {
-        /**
-         * アプリ状態
-         * @type {AppState}
-         */
-        this.appState = "Initial";
-
         /** ステップ数設定 */
         this.stepConfig = 1;
 
@@ -109,6 +104,7 @@ export class App {
      */
     setFrequency(freq) {
         this.#cve.frequency = freq;
+        this.#renderFrequencyOutput();
     }
 
     /**
@@ -116,16 +112,16 @@ export class App {
      * Start execution
      */
     start() {
-        switch (this.appState) {
+        switch (this.#appState) {
             case "Initial": {
                 // 初期化に成功していれば走らせる
                 if (this.reset()) {
-                    this.appState = "Running";
+                    this.#appState = "Running";
                 }
                 break;
             }
             case "Stop": {
-                this.appState = "Running";
+                this.#appState = "Running";
                 break;
             }
             default: {
@@ -140,7 +136,7 @@ export class App {
      * Stop execution
      */
     stop() {
-        this.appState = "Stop";
+        this.#appState = "Stop";
         this.render();
     }
 
@@ -186,7 +182,7 @@ export class App {
     }
 
     toggle() {
-        if (this.appState === "Running") {
+        if (this.#appState === "Running") {
             this.stop();
         } else {
             this.start();
@@ -195,7 +191,7 @@ export class App {
 
     doStep() {
         // 実行中の場合は停止する
-        if (this.appState === "Running") {
+        if (this.#appState === "Running") {
             this.stop();
         }
         // 時間がかかる時はスピナーを表示する
@@ -232,9 +228,9 @@ export class App {
         try {
             this.#machine = Machine.fromString($input.value);
             this.#onMachineSet();
-            this.appState = "Stop";
+            this.#appState = "Stop";
         } catch (e) {
-            this.appState = "ParseError";
+            this.#appState = "ParseError";
             this.#errorMessage = getMessage(e);
             this.render();
             return false;
@@ -247,7 +243,7 @@ export class App {
     /**
      * 周波数の表示
      */
-    renderFrequencyOutput() {
+    #renderFrequencyOutput() {
         const currentFreqeucy = this.#cve.frequency;
         if (this.#prevFrequency !== currentFreqeucy) {
             $freqencyOutput.textContent = currentFreqeucy.toLocaleString();
@@ -296,7 +292,7 @@ export class App {
         );
 
         // 描画に時間がかかっている場合閉じる
-        if (this.appState === 'Running' && performance.now() - start >= 200) {
+        if (this.#appState === 'Running' && performance.now() - start >= 200) {
             $b2dDetail.open = false;
         }
     }
@@ -355,9 +351,9 @@ export class App {
     /**
      * AppStateのみに依存する
      */
-    renderButton() {
+    #renderButton() {
         // ボタンの有効無効
-        switch (this.appState) {
+        switch (this.#appState) {
             case "Initial": {
                 startButton($toggle);
                 $step.disabled = false;
@@ -404,23 +400,24 @@ export class App {
      */
     render() {
         // cve
-        this.#cve.disabled = this.appState !== "Running";
+        const appState = this.#appState;
+        this.#cve.disabled = appState !== "Running";
 
         // Stop状態はStepで変化する可能性がある
-        if (this.#prevAppState !== this.appState || this.appState === "Stop") {
-            this.renderButton();
+        if (this.#prevAppState !== appState || appState === "Stop") {
+            this.#renderButton();
 
             // ParseErrorのときにエラー表示
-            if (this.appState === "ParseError") {
+            if (appState === "ParseError") {
                 $input.classList.add('is-invalid');
             } else {
                 $input.classList.remove('is-invalid');
             }
         }
 
-        renderErrorMessage($error, this.appState, this.#errorMessage);
+        renderErrorMessage($error, appState, this.#errorMessage);
 
-        this.renderFrequencyOutput();
+        this.#renderFrequencyOutput();
 
         const machine = this.#machine;
         $currentState.textContent = machine?.getCurrentState() ?? "";
@@ -435,7 +432,7 @@ export class App {
         this.renderB2D();
         this.renderStats();
 
-        this.#prevAppState = this.appState;
+        this.#prevAppState = appState;
     }
 
     /**
@@ -443,7 +440,7 @@ export class App {
      * @param {number} steps
      */
     run(steps) {
-        const appState = this.appState;
+        const appState = this.#appState;
         switch (appState) {
             case "Initial": {
                 // エラーであれば走らせない
@@ -477,10 +474,10 @@ export class App {
                 breakpointInputValue
             );
             if (resultState !== undefined) {
-                this.appState = resultState;
+                this.#appState = resultState;
             }
         } catch (error) {
-            this.appState = "RuntimeError";
+            this.#appState = "RuntimeError";
             this.#errorMessage = getMessage(error);
         } finally {
             this.render();

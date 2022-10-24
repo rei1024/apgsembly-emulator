@@ -40,6 +40,5 @@ export function setupFrequencyInput($frequencyInput, app) {
         }
         $frequencyInput.ariaValueText = `(${freq.toString()}Hz)`;
         app.setFrequency(freq);
-        app.renderFrequencyOutput();
     });
 }
