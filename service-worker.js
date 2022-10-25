@@ -1,4 +1,5 @@
 // @ts-check
+/// <reference lib="webworker" />
 
 self.addEventListener("install", function (event) {
     // https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerGlobalScope/skipWaiting

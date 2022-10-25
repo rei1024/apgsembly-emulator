@@ -8,7 +8,7 @@
         "lint": "./node_modules/.bin/eslint .",
         "chore": "deno upgrade && npm audit && git gc",
         "bench": "deno bench --unstable --no-check test/bench.js",
-        "bundle": "deno run --allow-net=deno.land,registry.npmjs.org --allow-env --allow-read --allow-write=. --allow-run build.ts"
+        "bundle": "deno run --allow-net=deno.land,registry.npmjs.org --allow-env --allow-read --allow-write --allow-run build.ts"
     },
     "lint": {
         "files": {
