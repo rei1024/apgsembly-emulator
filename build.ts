@@ -22,5 +22,5 @@ esbuild.stop();
 const file = await Deno.readFile(outputPath);
 const compressed = await new Response(new Blob([file]).stream().pipeThrough(new CompressionStream('gzip'))).arrayBuffer()
 
-console.log(file.length.toLocaleString() + " bytes" +
+console.log(file.byteLength.toLocaleString() + " bytes" +
     `\n${compressed.byteLength.toLocaleString()} bytes (gzip)`);
