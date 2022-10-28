@@ -139,11 +139,12 @@ export class Machine {
      */
     getStateStats() {
         const array = this.stateStatsArray;
+        const len = array.length;
         /**
          * @type {{ z: number, nz: number }[]}
          */
         const result = [];
-        for (let i = 0; i < array.length; i += 2) {
+        for (let i = 0; i < len; i += 2) {
             result.push({
                 z: array[i] ?? error(),
                 nz: array[i + 1] ?? error()
@@ -212,11 +213,7 @@ export class Machine {
      * @returns {"Z" | "NZ"}
      */
     getPreviousOutput() {
-        if (this.prevOutput === 0) {
-            return "Z";
-        } else {
-            return "NZ";
-        }
+        return this.prevOutput === 0 ? "Z" : "NZ";
     }
 
     /**
