@@ -11,7 +11,7 @@ const CACHE_VERSION = CACHE_PREFIX + "2022-10-28";
 
 self.addEventListener('activate', function (event) {
     const _self = self;
-    async function deleteCache() {
+    async function handleCache() {
         try {
             await _self.clients.claim();
         } catch (error) { /* nop */ }
@@ -19,10 +19,9 @@ self.addEventListener('activate', function (event) {
         const oldCacheNames = (await caches.keys()).filter(x => x !== CACHE_VERSION);
         await Promise.all(oldCacheNames.map(name => caches.delete(name)));
 
-        const examples = [];
         const cache = await caches.open(CACHE_VERSION);
         // deno eval 'console.log([...Deno.readDirSync("./frontend/data")].map(x => x.name).filter(x => x.endsWith(".apg")).map(x => "./frontend/data/" + x ) )'
-        cache.addAll([
+        await cache.addAll([
             "./frontend/data/ant2.apg",
             "./frontend/data/koch.apg",
             "./frontend/data/wip_e_calc.apg",
@@ -39,7 +38,7 @@ self.addEventListener('activate', function (event) {
         ]);
     }
 
-    event.waitUntil(deleteCache());
+    event.waitUntil(handleCache());
 });
 
 /**
