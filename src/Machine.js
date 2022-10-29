@@ -8,9 +8,6 @@ import {
 } from "./compile.js";
 import { Program } from "./Program.js";
 import { INITIAL_STATE, RegistersHeader, addLineNumber, Command } from "./Command.js";
-import { Action } from "./actions/Action.js";
-import { BRegAction } from "./actions/BRegAction.js";
-import { URegAction } from "./actions/URegAction.js";
 export { INITIAL_STATE };
 
 /**
@@ -88,7 +85,7 @@ export class Machine {
                 compiledCommand.nz?.command.actions ?? []
             );
             for (const action of actions) {
-                this.#setCache(action);
+                this.actionExecutor.setCache(action);
             }
         }
 
@@ -175,17 +172,6 @@ export class Machine {
 
         // throw if error is occurred
         this.actionExecutor.setByRegistersInit(parsed);
-    }
-
-    /**
-     * @param {Action} action
-     */
-    #setCache(action) {
-        if (action instanceof BRegAction) {
-            action.registerCache = this.actionExecutor.getBReg(action.regNumber);
-        } else if (action instanceof URegAction) {
-            action.registerCache = this.actionExecutor.getUReg(action.regNumber);
-        }
     }
 
     /**
