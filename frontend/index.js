@@ -248,7 +248,7 @@ $configButton.disabled = false;
 // first render
 app.render();
 
-// 初期コード
+// APGMからの初期コード
 idle(() => {
     const INIT_CODE = "initial_code";
     const initCode = localStorageGetItem(INIT_CODE);
