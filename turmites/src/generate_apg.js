@@ -54,7 +54,8 @@ SET_X_2; NZ; SET_X_1; INC B2DX, NOP
 
 SET_Y_1; *;  SET_Y_2; TDEC U1
 SET_Y_2; Z;  ${initialDir}_0_1; NOP
-SET_Y_2; NZ; SET_Y_1; INC B2DY, NOP`
+SET_Y_2; NZ; SET_Y_1; INC B2DY, NOP
+`
     );
 
     for (const [state, colors] of turmites.array.entries()) {

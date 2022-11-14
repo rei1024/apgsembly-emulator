@@ -430,6 +430,12 @@ export class App {
         $previousOutput.textContent = machine?.getPreviousOutput() ?? "";
         $stepCount.textContent = machine?.stepCount.toLocaleString() ?? "";
 
+        if (this.stepConfig === 1) {
+            $stepText.textContent = 'Step';
+        } else {
+            $stepText.textContent = `${this.stepConfig.toLocaleString()} Steps`;
+        }
+
         this.#renderCommand();
         this.#renderOutput();
         this.renderUnary();

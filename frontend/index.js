@@ -133,6 +133,7 @@ $stepInput.addEventListener('input', () => {
         removeCustomError($stepInput);
         app.stepConfig = n;
     }
+    app.render();
 });
 
 /**
