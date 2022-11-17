@@ -18,8 +18,8 @@ await esbuild.build({
 });
 
 await esbuild.build({
-    entryPoints: ['./style.css'],
-    outfile: './style.min.css',
+    entryPoints: ['./frontend/style.css'],
+    outfile: './frontend/style.min.css',
     minify: true,
     target: ["chrome99", "firefox99", "safari15"],
 });
