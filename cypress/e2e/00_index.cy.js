@@ -19,6 +19,7 @@ import {
     assertRegister,
     assertCurrentState,
     assertOutput,
+    clickReset,
 } from "../common/common.js";
 
 describe('Load', () => {
@@ -134,7 +135,7 @@ describe('Start Stop Reset', () => {
     });
 
     it('Reset', () => {
-        cy.get('#reset').click();
+        clickReset();
         assertSteps(0);
 
         assertError('');
@@ -157,6 +158,41 @@ describe('Error Steps', () => {
         assertSteps(3);
 
         assertError('- The bit of the binary register B0 is already 1 in "A1; ZZ; A1; SET B0, NOP" at line 4');
+    });
+});
+
+describe('Error 2', () => {
+    it('should load', () => {
+        cy.visit(APGsemblyEmulatorURL);
+        cy.contains('APGsembly');
+    });
+
+    it('Run', () => {
+        setProgram(`
+    INITIAL; ZZ; A0; NOP
+    A0; ZZ; A1; SET B2D, NOP
+    A1; ZZ; A1; SET B2D, NOP`);
+        setStep(100);
+        clickStep();
+        assertSteps(3);
+
+        assertError('- SET B2D: Tried to set when it was already 1. x = 0, y = 0 in "A1; ZZ; A1; SET B2D, NOP" at line 4');
+    });
+});
+
+describe('Error validation', () => {
+    it('should load', () => {
+        cy.visit(APGsemblyEmulatorURL);
+        cy.contains('APGsembly');
+    });
+
+    it('Run', () => {
+        setProgram(`
+    INITIAL; ZZ; A0; NOP
+    A0; ZZ; A1; INC U1, TDEC U1
+    A1; ZZ; A1; HALT_OUT`);
+        clickReset();
+        assertError('- Actions "INC U1" and "TDEC U1" use same component in "A0; ZZ; A1; INC U1, TDEC U1" at line 3');
     });
 });
 
