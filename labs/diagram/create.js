@@ -1,3 +1,5 @@
+// @ts-check
+
 import { Program } from "../../src/exports.js";
 
 /**
