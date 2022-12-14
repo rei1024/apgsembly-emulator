@@ -30,7 +30,9 @@ describe('Load', () => {
 });
 
 describe('Run APGsembly', () => {
-    it('should load', () => {
+    it('go', () => {
+        cy.log('should load');
+        cy.visit(APGsemblyEmulatorURL);
         setProgram(`
         INITIAL; ZZ; A0; INC U0, NOP
         A0; ZZ; A0; HALT_OUT
@@ -40,9 +42,8 @@ describe('Run APGsembly', () => {
         assertCurrentState('INITIAL')
         assertRegister("U0", "0");
         assertError('');
-    });
 
-    it('shold run', () => {
+        cy.log('should run');
         toggle();
         cy.get('#step').should('be.disabled');
         assertCurrentState('A0');
@@ -62,16 +63,14 @@ describe('Error: empty program', () => {
 });
 
 describe('unary_multiply.apg', () => {
-    it('should load', () => {
+    it('should execute unary_multiply.apg', () => {
         cy.visit(APGsemblyEmulatorURL);
         cy.contains('APGsembly');
         loadProgram('unary_multiply.apg');
 
         assertRegister("U0", '7');
         assertRegister('U1', '5');
-    });
 
-    it('should execute unary_multiply.apg', () => {
         setStep(100);
         clickStep();
         assertSteps(93);
@@ -86,8 +85,7 @@ describe('Integers', () => {
         cy.visit(APGsemblyEmulatorURL);
         cy.contains('APGsembly');
         loadProgram('integers.apg');
-    });
-    it('should print integers', () => {
+
         setStep(1050);
         clickStep();
         assertOutput('1.2.3.4.5.6.7.8.9.10');
@@ -98,13 +96,11 @@ describe('Integers', () => {
 });
 
 describe('Rule 110', () => {
-    it('should load', () => {
+    it('Rule 110 should work', () => {
         cy.visit(APGsemblyEmulatorURL);
         cy.contains('APGsembly');
         loadProgram('rule110.apg');
-    });
 
-    it('Rule 110 should work', () => {
         setStep(1000);
         clickStep();
 
@@ -121,9 +117,7 @@ describe('Start Stop Reset', () => {
         cy.visit(APGsemblyEmulatorURL);
         cy.contains('APGsembly');
         loadProgram('rule110.apg');
-    });
 
-    it('Start and Stop', () => {
         assertToggleStart();
         toggle();
         assertToggleStop();
@@ -132,9 +126,7 @@ describe('Start Stop Reset', () => {
         assertStepsNot(0);
 
         assertError('');
-    });
 
-    it('Reset', () => {
         clickReset();
         assertSteps(0);
 
@@ -146,9 +138,7 @@ describe('Error Steps', () => {
     it('should load', () => {
         cy.visit(APGsemblyEmulatorURL);
         cy.contains('APGsembly');
-    });
 
-    it('Run', () => {
         setProgram(`
     INITIAL; ZZ; A0; NOP
     A0; ZZ; A1; SET B0, NOP
@@ -165,9 +155,6 @@ describe('Error 2', () => {
     it('should load', () => {
         cy.visit(APGsemblyEmulatorURL);
         cy.contains('APGsembly');
-    });
-
-    it('Run', () => {
         setProgram(`
     INITIAL; ZZ; A0; NOP
     A0; ZZ; A1; SET B2D, NOP
@@ -184,9 +171,6 @@ describe('Error validation', () => {
     it('should load', () => {
         cy.visit(APGsemblyEmulatorURL);
         cy.contains('APGsembly');
-    });
-
-    it('Run', () => {
         setProgram(`
     INITIAL; ZZ; A0; NOP
     A0; ZZ; A1; INC U1, TDEC U1
@@ -208,9 +192,6 @@ describe('π calculator', () => {
         cy.contains('B3');
 
         // assertNumberOfStates(131);
-    });
-
-    it('should print pi', () => {
         setStep(1000000);
         clickStep();
         assertOutput('3.141');
@@ -229,9 +210,7 @@ describe('Step', () => {
         cy.visit(APGsemblyEmulatorURL);
         cy.contains('APGsembly');
         loadProgram('binary_ruler.apg');
-    });
 
-    it('should step twice', () => {
         setStep(5000000);
         clickStep();
         assertSteps(5000000);
