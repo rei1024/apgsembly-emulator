@@ -53,7 +53,7 @@ function getOptimizedTdecU(command) {
  * @param {Command} command
  * @returns {undefined | { tdecB: BRegAction }}
  */
-function getOptimizedtdecB(command) {
+function getOptimizedTdecB(command) {
     // - 前の入力がNZであること
     // - 次の状態が自分自身であること
     // - HALT_OUTを含まないこと
@@ -97,7 +97,7 @@ export class CompiledCommandWithNextState {
         this.nextState = nextState;
 
         this.tdecuOptimize = getOptimizedTdecU(command);
-        this.tdecbOptimize = getOptimizedtdecB(command);
+        this.tdecbOptimize = getOptimizedTdecB(command);
     }
 }
 
@@ -141,7 +141,10 @@ function throwDuplicated(oldCommand, command) {
  * }}
  */
 export function commandsToLookupTable(commands) {
-    /** @type {Map<string, number>} */
+    /**
+     * 状態名から添字へのMap
+     * @type {Map<string, number>}
+     */
     const stateMap = new Map();
 
     /** @type {CompiledCommand[]} */

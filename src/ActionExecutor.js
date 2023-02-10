@@ -22,7 +22,7 @@ import { UReg } from "./components/UReg.js";
 import { LegacyTReg } from "./components/LegacyTReg.js";
 
 /**
- * @param {string} type
+ * @param {"B" | "U" | "T"} type
  * @param {number} regNum
  * @returns {never}
  */
@@ -140,7 +140,7 @@ export class ActionExecutor {
         if (key.startsWith("U")) {
             const n = parseNum(key.slice(1), 10);
             if (isNaNLocal(n)) {
-                initError(key, value);
+                throwInitError(key, value);
             }
             const reg = this.getUReg(n);
             if (reg === undefined) {
@@ -152,7 +152,7 @@ export class ActionExecutor {
         } else if (key.startsWith("B")) {
             const n = parseNum(key.slice(1), 10);
             if (isNaNLocal(n)) {
-                initError(key, value);
+                throwInitError(key, value);
             }
             const reg = this.getBReg(n);
             if (reg === undefined) {
@@ -162,7 +162,7 @@ export class ActionExecutor {
             }
             reg.setByRegistersInit(key, value);
         } else {
-            initError(key, value);
+            throwInitError(key, value);
         }
     }
 
@@ -268,7 +268,7 @@ export class ActionExecutor {
  * @param {unknown} value
  * @returns {never}
  */
-function initError(key, value) {
+function throwInitError(key, value) {
     const debugStr = `"${key}": ${JSON.stringify(value)}`;
     throw Error(`Invalid #REGISTERS ${debugStr}`);
 }

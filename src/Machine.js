@@ -125,6 +125,7 @@ export class Machine {
      * 文字列から作成する
      * @param {string} source
      * @returns {Machine}
+     * @throws エラー
      */
     static fromString(source) {
         const program = Program.parse(source);
@@ -283,7 +284,8 @@ export class Machine {
      * @param {boolean} isRunning 実行中は重い場合途中で止める
      * @param {number} breakpointIndex -1はブレークポイントなし
      * @param {-1 | 0 | 1} breakpointInputValue -1はZとNZ両方
-     * @returns {"Halted" | "Stop" | undefined} HALT_OUTによる停止は"Halted"、ブレークポイントによる停止は"Stop"
+     * @returns {"Halted" | "Stop" | undefined}
+     *   HALT_OUTによる停止は"Halted"、ブレークポイントによる停止は"Stop"、実行途中はundefined
      * @throws {Error} 実行時エラー
      */
     exec(n, isRunning, breakpointIndex, breakpointInputValue) {
@@ -357,7 +359,7 @@ export class Machine {
     throwError(err) {
         const command = this.getNextCommand().command;
         const line = addLineNumber(command);
-        error(err.message + ` in "${command.pretty()}"` + line);
+        return error(err.message + ` in "${command.pretty()}"` + line);
     }
 
     /**
@@ -419,9 +421,9 @@ export class Machine {
     /**
      * 次のコマンドを実行する
      * エラーが発生した場合は例外を投げる
-     * -1はHALT_OUT
-     * voidは正常
      * @returns {-1 | void}
+     * - -1はHALT_OUT
+     * - voidは正常
      * @throws {Error} 実行時エラー
      */
     execCommand() {

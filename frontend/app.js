@@ -225,7 +225,6 @@ export class App {
         this.#machine = undefined;
         this.#valve.reset();
 
-        // Parse success
         try {
             this.#machine = Machine.fromString($input.value);
             this.#onMachineSet();
