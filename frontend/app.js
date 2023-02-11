@@ -451,8 +451,7 @@ export class App {
      * @param {number} steps
      */
     run(steps) {
-        const appState = this.#appState;
-        switch (appState) {
+        switch (this.#appState) {
             case "Initial": {
                 // エラーであれば走らせない
                 if (!this.reset()) {
@@ -471,7 +470,7 @@ export class App {
             return;
         }
 
-        const isRunning = appState === "Running";
+        const isRunning = this.#appState === "Running";
 
         // ブレークポイントの処理
         const breakpointIndex = parseInt($breakpointSelect.value, 10);
