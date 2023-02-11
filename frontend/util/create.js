@@ -3,10 +3,10 @@
 /**
  * @template {keyof HTMLElementTagNameMap} T
  * @typedef {{
- * fn?: ((_: HTMLElementTagNameMap[T]) => void) | undefined;
+ * fn?: ((element: HTMLElementTagNameMap[T]) => void) | undefined;
  * text?: string;
  * classes?: string[];
- * children?: Element[];
+ * children?: (string | Node)[];
  * style?: Record<string, string>;
  * }} CreateOptions<T>
  */

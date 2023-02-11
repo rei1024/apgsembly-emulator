@@ -1,28 +1,16 @@
 // @ts-check
+/**
+ * Transpiler
+ * @packageDocumentation
+ */
 
+import { $type } from "../frontend/util/selector.js";
 import { transpile } from "./transpile.js";
 
-// Transpiler
-
-const $input = document.querySelector("#input");
-if (!($input instanceof HTMLTextAreaElement)) {
-    throw Error("input is not a HTMLTextAreaElement");
-}
-
-const $output = document.querySelector("#output");
-if (!($output instanceof HTMLTextAreaElement)) {
-    throw Error("output is not a HTMLTextAreaElement");
-}
-
-const $transpile = document.querySelector("#transpile");
-if (!($transpile instanceof HTMLElement)) {
-    throw Error("transpile is not a HTMLElement");
-}
-
-const $copy = document.querySelector("#copy");
-if (!($copy instanceof HTMLButtonElement)) {
-    throw Error("copy is not a HTMLButtonElement");
-}
+const $input = $type("#input", HTMLTextAreaElement);
+const $output = $type("#output", HTMLTextAreaElement);
+const $transpile = $type("#transpile", HTMLElement);
+const $copy = $type("#copy", HTMLButtonElement);
 
 $transpile.addEventListener("click", () => {
     const result = transpile($input.value);
@@ -37,15 +25,15 @@ $transpile.addEventListener("click", () => {
     }
 });
 
-$copy.addEventListener("click", () => {
-    navigator.clipboard.writeText($output.value.trim()).then(() => {
-        $copy.textContent = "Copied";
-        $copy.classList.add("btn-success");
-        $copy.classList.remove("btn-primary");
-        setTimeout(() => {
-            $copy.textContent = "Copy";
-            $copy.classList.remove("btn-success");
-            $copy.classList.add("btn-primary");
-        }, 1000);
-    });
+$copy.addEventListener("click", async () => {
+    await navigator.clipboard.writeText($output.value.trim());
+
+    $copy.textContent = "Copied";
+    $copy.classList.add("btn-success");
+    $copy.classList.remove("btn-primary");
+    setTimeout(() => {
+        $copy.textContent = "Copy";
+        $copy.classList.remove("btn-success");
+        $copy.classList.add("btn-primary");
+    }, 1000);
 });
