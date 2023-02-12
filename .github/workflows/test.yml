@@ -7,7 +7,6 @@ on:
       - "src/**"
       - "test/**"
       - "tools/**"
-      - "turmites/**"
       - "labs/fast_emulator/**"
   pull_request:
     branches: [main]
@@ -15,7 +14,6 @@ on:
       - "src/**"
       - "test/**"
       - "tools/**"
-      - "turmites/**"
       - "labs/fast_emulator/**"
 jobs:
   test:
