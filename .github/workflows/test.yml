@@ -6,21 +6,17 @@ on:
     paths:
       - "src/**"
       - "test/**"
-      - "tm_to_apg/**"
+      - "tools/**"
       - "turmites/**"
-      - "transpiler/**"
       - "labs/fast_emulator/**"
-      - "generator/**"
   pull_request:
     branches: [main]
     paths:
       - "src/**"
       - "test/**"
-      - "tm_to_apg/**"
+      - "tools/**"
       - "turmites/**"
-      - "transpiler/**"
       - "labs/fast_emulator/**"
-      - "generator/**"
 jobs:
   test:
     runs-on: ubuntu-latest

@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 
-import { $type } from "../frontend/util/selector.js";
+import { $type } from "../../frontend/util/selector.js";
 import { transpile } from "./transpile.js";
 
 const $input = $type("#input", HTMLTextAreaElement);

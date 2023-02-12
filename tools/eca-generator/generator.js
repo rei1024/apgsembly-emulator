@@ -1,6 +1,6 @@
 // @ts-check
 
-import { $type } from "../frontend/util/selector.js";
+import { $type } from "../../frontend/util/selector.js";
 import { generate } from "./rule.js";
 
 const rule = $type("#rule", HTMLInputElement);
