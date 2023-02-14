@@ -14,10 +14,11 @@ export const INITIAL_STATE = "INITIAL";
  */
 export class ProgramLine {
     /**
+     * @abstract
      * @returns {string}
      */
     pretty() {
-        return `unimplemented`;
+        return ``;
     }
 }
 
@@ -228,7 +229,7 @@ function error() {
 /**
  * CommandまたはCommentまたは空行またはエラーメッセージ
  * @param {string} str
- * @param {number} [line]
+ * @param {number | undefined} [line]
  * @returns {Command | RegistersHeader | ComponentsHeader | Comment | EmptyLine | string}
  */
 export function parseProgramLine(str, line) {
@@ -302,7 +303,7 @@ export function parseProgramLine(str, line) {
  * @returns {string}
  */
 function lineNumberMessage(line) {
-    if (line !== null && line !== undefined) {
+    if (line !== undefined) {
         return ` at line ${line}`;
     } else {
         return "";
