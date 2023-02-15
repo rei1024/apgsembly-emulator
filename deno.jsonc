@@ -6,6 +6,7 @@
         "cy": "node ./node_modules/.bin/cypress open",
         "cy-run": "node ./node_modules/.bin/cypress run",
         "lint": "deno lint",
+        "fmt": "deno fmt",
         "chore": "deno upgrade && npm audit && git gc",
         "bench": "deno bench --no-check test/bench.js",
         "bundle": "deno run --allow-net=deno.land,registry.npmjs.org --allow-env --allow-read --allow-write --allow-run build.ts",
