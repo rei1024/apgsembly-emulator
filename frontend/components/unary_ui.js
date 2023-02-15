@@ -6,25 +6,29 @@ import { create } from "../util/create.js";
 
 /**
  * 列の数
- * @param {number} size
+ * @param {number} numberOfRegister
  * @returns {number}
  */
-function getNumberOfCols(size) {
+function getNumberOfCols(numberOfRegister) {
     const width = window.innerWidth;
     if (width < 768) {
-        const num = 8;
+        // 画面幅狭い場合は8個ごと
+        const chunkSize = 8;
         // 1個だけの列は作らない
-        if (num + 1 === size) {
-            return size;
+        if (chunkSize + 1 === numberOfRegister) {
+            return numberOfRegister;
         }
-        return num;
+        return chunkSize;
     }
 
-    const num = 12;
-    if (num + 1 <= size && size <= num + 2) {
-        return size;
+    // 12個ごと
+    const chunkSize = 12;
+    if (
+        chunkSize + 1 <= numberOfRegister && numberOfRegister <= chunkSize + 2
+    ) {
+        return numberOfRegister;
     }
-    return num;
+    return chunkSize;
 }
 
 /**

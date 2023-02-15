@@ -270,8 +270,9 @@ export class BReg {
             } else if (value0 < 0 || !Number.isInteger(value0)) {
                 error(debugStr);
             } else {
+                const bits = parseBits(value1);
                 this.pointer = value0;
-                this.setBits(parseBits(value1));
+                this.setBits(bits);
                 this.extend();
             }
         }
