@@ -133,6 +133,7 @@ function sortNub(array) {
 }
 
 /**
+ * プログラムから使用されているレジスタ番号を抽出
  * @param {Program} program
  * @returns {{ unary: number[], binary: number[], legacyT: number[] }}
  */

@@ -162,6 +162,7 @@ export class Machine {
      * @throws
      */
     #setByRegistersHeader(regHeader) {
+        // Pythonのevalと合わせるためシングルクォーテーションを変換
         /** @type {string} */
         const str = regHeader.content.replace(/'/ug, `"`);
 

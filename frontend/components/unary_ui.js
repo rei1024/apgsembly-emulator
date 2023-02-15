@@ -7,9 +7,9 @@ import { create } from "../util/create.js";
 /**
  * 列の数
  * @param {number} size
- * @returns
+ * @returns {number}
  */
-function groupNumber(size) {
+function getNumberOfCols(size) {
     const width = window.innerWidth;
     if (width < 768) {
         const num = 8;
@@ -60,9 +60,9 @@ function createTable(regs) {
     /** @type {{ header: HTMLTableRowElement, data: HTMLTableRowElement }[]} */
     const rows = [];
 
-    const num = groupNumber(regs.size);
+    const numberOfCols = getNumberOfCols(regs.size);
 
-    for (const entries of chunk(regs, num)) {
+    for (const entries of chunk(regs, numberOfCols)) {
         const header = create("tr");
         const data = create("tr");
         for (const [key, value] of entries) {

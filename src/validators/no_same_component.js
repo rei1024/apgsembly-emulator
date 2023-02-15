@@ -17,12 +17,14 @@ function internalError() {
  * @returns {string | undefined}
  */
 export function validateNoSameComponentCommand(command) {
+    const actions = command.actions;
+
     // HALT_OUTの場合は一旦無視
     // FIXME
-    if (command.actions.find((x) => x instanceof HaltOutAction) !== undefined) {
+    if (actions.find((x) => x instanceof HaltOutAction) !== undefined) {
         return undefined;
     }
-    const actions = command.actions;
+
     const len = actions.length;
 
     if (len <= 1) {
