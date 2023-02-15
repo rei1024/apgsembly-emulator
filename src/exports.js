@@ -33,15 +33,12 @@ import {} from "./ActionExecutor.js";
 import {} from "./Command.js";
 import {} from "./compile.js";
 import { Machine } from "./Machine.js";
-import { Program } from "./Program.js";
+import {} from "./Program.js";
 import {} from "./ProgramLines.js";
 import {} from "./validate.js";
 
 // for APGM
 export { Action, HaltOutAction, NopAction, parseAction };
-
-// for tools/diagram
-export { Program };
 
 /**
  * used by APGM testing
