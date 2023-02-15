@@ -23,6 +23,6 @@ An emulator for APGsembly 2.0
 
 ### Structure
 
-- `src/` Emulator for APGsembly
-- `frontend/` UI for Emulator
+- `src/` an emulator for APGsembly
+- `frontend/` UI of the emulator
 - `cypress/` E2E testing
