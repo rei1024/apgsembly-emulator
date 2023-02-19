@@ -92,7 +92,7 @@ $exampleCodes.forEach((e) => {
         } catch (e) {
             console.error(`Fetch: ${src}`);
         } finally {
-            $examples.style.opacity = "1";
+            $examples.removeAttribute("style");
         }
     });
 });
