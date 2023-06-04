@@ -6,6 +6,8 @@ import { denoPlugins } from "https://deno.land/x/esbuild_deno_loader@0.7.0/mod.t
 const entryPoint = "./frontend/index.js";
 const outputPath = "./frontend/index.dist.js";
 
+const target = ["chrome99", "firefox99", "safari15"];
+
 await esbuild.build({
     plugins: [...denoPlugins()],
     entryPoints: [entryPoint],
@@ -13,7 +15,7 @@ await esbuild.build({
     bundle: true,
     format: "esm",
     minify: true,
-    target: ["chrome99", "firefox99", "safari15"],
+    target: target,
     treeShaking: true,
 });
 
@@ -21,7 +23,7 @@ await esbuild.build({
     entryPoints: ["./frontend/style.css"],
     outfile: "./frontend/style.min.css",
     minify: true,
-    target: ["chrome99", "firefox99", "safari15"],
+    target: target,
 });
 
 esbuild.stop();
