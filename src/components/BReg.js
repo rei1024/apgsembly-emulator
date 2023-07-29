@@ -211,7 +211,13 @@ export class BReg {
      * @returns {string}
      */
     toBinaryString() {
-        return this.bits.slice().reverse().join("");
+        // faster than `this.bits.slice().reverse().join("")`
+        let str = "";
+        const bits = this.bits;
+        for (let i = bits.length - 1; i >= 0; i--) {
+            str += bits[i] === 0 ? "0" : "1";
+        }
+        return str;
     }
 
     /**
@@ -225,10 +231,10 @@ export class BReg {
     /**
      * prefixとsuffixがsliceされていることは保証する
      * @returns {{
-        prefix: (0 | 1)[];
-        head: 0 | 1;
-        suffix: (0 | 1)[];
-    }}
+     *   prefix: (0 | 1)[];
+     *   head: 0 | 1;
+     *   suffix: (0 | 1)[];
+     * }}
      */
     toObject() {
         this.extend();
