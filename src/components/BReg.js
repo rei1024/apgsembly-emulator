@@ -30,6 +30,35 @@ function parseBits(str) {
 const hasBigInt = typeof BigInt !== "undefined";
 
 /**
+ * @param {ReadonlyArray<0 | 1>} bits
+ * @returns {string}
+ * @example
+ * > toBinaryStringReverse([0, 1])
+ * "10"
+ */
+export function toBinaryStringReverse(bits) {
+    // faster than `bits.slice().reverse().join("")`
+    let str = "";
+    for (let i = bits.length - 1; i >= 0; i--) {
+        str += bits[i] === 0 ? "0" : "1";
+    }
+    return str;
+}
+
+/**
+ * @param {(0 | 1)[]} bits
+ * @returns {string}
+ */
+export function toBinaryString(bits) {
+    let str = "";
+    const len = bits.length;
+    for (let i = 0; i < len; i++) {
+        str += bits[i] === 0 ? "0" : "1";
+    }
+    return str;
+}
+
+/**
  * Bn: Binary Register
  */
 export class BReg {
@@ -211,13 +240,7 @@ export class BReg {
      * @returns {string}
      */
     toBinaryString() {
-        // faster than `this.bits.slice().reverse().join("")`
-        let str = "";
-        const bits = this.bits;
-        for (let i = bits.length - 1; i >= 0; i--) {
-            str += bits[i] === 0 ? "0" : "1";
-        }
-        return str;
+        return toBinaryStringReverse(this.bits);
     }
 
     /**
