@@ -27,14 +27,14 @@ import { create } from "../util/create.js";
 /**
  * @returns {never}
  */
-function error() {
+const error = () => {
     throw Error("error");
-}
+};
 
 /**
  * value = ..., hex = ..., pointer = ...
  */
-function createMetaElem() {
+const createMetaElem = () => {
     const $decimal = create("span", { classes: ["decimal"] });
     const $hex = create("span", { classes: ["hex"] });
     const $maxPointer = create("span", { classes: ["max_pointer"] });
@@ -46,12 +46,12 @@ function createMetaElem() {
     });
 
     return { metaData, $decimal, $hex, $maxPointer, $pointer };
-}
+};
 
 /**
  * バイナリ表示
  */
-function createBinaryElem() {
+const createBinaryElem = () => {
     const $prefix = create("span", { classes: ["prefix"] });
     const $head = create("span", { classes: ["binary-head"] });
     const $suffix = create("span", { classes: ["suffix"] });
@@ -62,7 +62,7 @@ function createBinaryElem() {
     });
 
     return { binaryBits, $prefix, $head, $suffix };
-}
+};
 
 /**
  * UI for binary registers
