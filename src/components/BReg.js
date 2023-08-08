@@ -1,12 +1,7 @@
 // @ts-check
 
-import {
-    B_INC,
-    B_READ,
-    B_SET,
-    B_TDEC,
-    BRegAction,
-} from "../actions/BRegAction.js";
+import { BRegAction } from "../actions/BRegAction.js";
+import { B_INC, B_READ, B_SET, B_TDEC } from "../action_consts/BReg_consts.js";
 import { internalError } from "../actions/Action.js";
 
 /**

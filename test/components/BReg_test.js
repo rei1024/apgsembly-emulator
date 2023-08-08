@@ -1,12 +1,12 @@
 // @ts-check
 
+import { BRegAction } from "../../src/actions/BRegAction.js";
 import {
     B_INC,
     B_READ,
     B_SET,
     B_TDEC,
-    BRegAction,
-} from "../../src/actions/BRegAction.js";
+} from "../../src/action_consts/BReg_consts.js";
 import { BReg } from "../../src/components/BReg.js";
 import { assertEquals, assertThrows, test } from "../deps.js";
 

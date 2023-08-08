@@ -1,15 +1,15 @@
 // @ts-check
 
 import { ActionExecutor } from "../src/ActionExecutor.js";
+import { BRegAction } from "../src/actions/BRegAction.js";
 import {
     B_INC,
     B_READ,
     B_SET,
     B_TDEC,
-    BRegAction,
-} from "../src/actions/BRegAction.js";
-import { U_INC, U_TDEC, URegAction } from "../src/actions/URegAction.js";
-
+} from "../src/action_consts/BReg_consts.js";
+import { URegAction } from "../src/actions/URegAction.js";
+import { U_INC, U_TDEC } from "../src/action_consts/UReg_consts.js";
 import { assertEquals, assertThrows, test } from "./deps.js";
 
 test("ActionExecutor output", () => {

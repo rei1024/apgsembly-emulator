@@ -2,8 +2,10 @@
 
 import { addLineNumber, Command } from "./Command.js";
 import { Action } from "./actions/Action.js";
-import { B_INC, B_TDEC, BRegAction } from "./actions/BRegAction.js";
-import { U_TDEC, URegAction } from "./actions/URegAction.js";
+import { BRegAction } from "./actions/BRegAction.js";
+import { B_INC, B_TDEC } from "./action_consts/BReg_consts.js";
+import { URegAction } from "./actions/URegAction.js";
+import { U_TDEC } from "./action_consts/UReg_consts.js";
 import { HaltOutAction } from "./exports.js";
 
 /**

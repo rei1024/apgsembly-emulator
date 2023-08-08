@@ -129,6 +129,16 @@ test("Machine program9_1 new Machine", () => {
     assertEquals(machine.getCurrentState(), "INITIAL");
 });
 
+test("Machine NOP", () => {
+    const machine = Machine.fromString(`
+INITIAL; ZZ; A0; NOP
+A0; Z; A0; OUTPUT 0, HALT_OUT
+A0; NZ; A0; OUTPUT 1, HALT_OUT`);
+    machine.execCommand();
+    machine.execCommand();
+    assertEquals(machine.actionExecutor.output.getString(), "0");
+});
+
 test("Machine program9_1 fromString", () => {
     const machine = Machine.fromString(program9_1);
     assertEquals(machine.getCurrentState(), "INITIAL");
