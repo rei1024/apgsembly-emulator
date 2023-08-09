@@ -232,17 +232,12 @@ export class BReg {
     }
 
     /**
-     * @returns {string}
-     */
-    toBinaryString() {
-        return toBinaryStringReverse(this.bits);
-    }
-
-    /**
      * @param {number} [base] default is 10
      */
     toNumberString(base = 10) {
-        return (hasBigInt ? BigInt : Number)("0b" + this.toBinaryString())
+        return (hasBigInt ? BigInt : Number)(
+            "0b" + toBinaryStringReverse(this.bits),
+        )
             .toString(base);
     }
 

@@ -84,7 +84,7 @@ $exampleCodes.forEach((e) => {
         try {
             const response = await fetch(DATA_DIR + src);
             if (!response.ok) {
-                throw new Error("error");
+                throw Error("error");
             }
             app.setInputAndReset(await response.text());
             // スクロール
