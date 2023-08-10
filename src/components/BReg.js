@@ -217,10 +217,11 @@ export class BReg {
      */
     extend() {
         const pointer = this.pointer;
-        const len = this.bits.length;
+        const bits = this.bits;
+        const len = bits.length;
         if (pointer >= len) {
             if (pointer === len) {
-                this.bits.push(0);
+                bits.push(0);
             } else {
                 /**
                  * @type {0[]}
