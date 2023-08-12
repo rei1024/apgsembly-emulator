@@ -42,6 +42,7 @@ const getOptimizedTdecU = (command) => {
             isBInc(action)
         )
     ) {
+        // TDECは2つ以上入らないため最初を取得でよい
         const tdecU = command.actions.find(isUTdec);
         if (tdecU && tdecU instanceof URegAction) {
             return { tdecU };
@@ -67,6 +68,7 @@ const getOptimizedTdecB = (command) => {
         command.actions.length === 1 &&
         command.actions.every((action) => action instanceof BRegAction)
     ) {
+        // TDECは2つ以上入らないため最初を取得でよい
         const tdecB = command.actions.find((action) =>
             action instanceof BRegAction && action.op === B_TDEC
         );
