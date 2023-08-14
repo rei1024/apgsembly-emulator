@@ -169,16 +169,15 @@ export class BinaryUI {
                 $prefix.innerHTML = "";
                 $head.innerHTML = "";
                 $suffix.innerHTML = "";
-            } else if (reverseBits) {
-                const obj = reg.toObject();
-                $prefix.textContent = toBinaryStringReverse(obj.suffix);
-                $head.textContent = obj.head.toString();
-                $suffix.textContent = toBinaryStringReverse(obj.prefix);
             } else {
                 const obj = reg.toObject();
-                $prefix.textContent = toBinaryString(obj.prefix);
+                $prefix.textContent = reverseBits
+                    ? toBinaryStringReverse(obj.suffix)
+                    : toBinaryString(obj.prefix);
                 $head.textContent = obj.head.toString();
-                $suffix.textContent = toBinaryString(obj.suffix);
+                $suffix.textContent = reverseBits
+                    ? toBinaryStringReverse(obj.prefix)
+                    : toBinaryString(obj.suffix);
             }
 
             if (showBinaryValueInDecimal) {
