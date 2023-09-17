@@ -190,3 +190,10 @@ footer {
     contain: content;
     content-visibility: auto;
 }
+
+@media (pointer: coarse) {
+    footer li a {
+        /* タッチ端末で少し間隔空けて押しやすくする */
+        margin-bottom: 0.5rem;
+    }
+}
