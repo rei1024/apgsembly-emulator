@@ -3,8 +3,7 @@
         "up": "deno run --allow-net --allow-read https://deno.land/std@0.204.0/http/file_server.ts . -p 1123",
         "t": "deno test --parallel src/ test/ tools/ labs/fast_emulator",
         "w": "deno test --watch src/ test/ tools/ labs/fast_emulator/",
-        "cy": "node ./node_modules/.bin/cypress open",
-        "cy-run": "node ./node_modules/.bin/cypress run",
+        "e2e": "npx playwright test && npx playwright show-report",
         "lint": "deno lint",
         "fmt": "deno fmt",
         "chore": "deno upgrade && npm audit && git gc",
@@ -15,7 +14,6 @@
     },
     "exclude": [
         "node_modules/",
-        "cypress_default/",
         "frontend/index.dist.js"
     ],
     "lint": {
