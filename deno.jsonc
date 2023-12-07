@@ -10,7 +10,7 @@
         "bench": "deno bench --no-check test/bench.js",
         "bundle": "deno run --allow-net=deno.land,registry.npmjs.org --allow-env --allow-read --allow-write --allow-run build.ts",
         "pre-commit": "deno fmt --check && deno task lint && deno task t && deno task tsc",
-        "tsc": "deno run --allow-read npm:typescript@5.2.2/tsc --noEmit"
+        "tsc": "deno run --allow-read npm:typescript@5.3.3/tsc --noEmit"
     },
     "exclude": [
         "node_modules/",

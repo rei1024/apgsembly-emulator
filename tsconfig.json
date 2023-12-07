@@ -21,7 +21,8 @@
         "useUnknownInCatchVariables": true,
         "noPropertyAccessFromIndexSignature": true,
         "noUncheckedIndexedAccess": true,
-        "noUnusedLocals": true
+        "noUnusedLocals": true,
+        "skipLibCheck": true
     },
     "include": [
         "src/**/*.js",
