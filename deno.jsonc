@@ -27,7 +27,8 @@
                 "ban-ts-comment",
                 "no-unused-vars",
                 "no-this-alias",
-                "no-inferrable-types"
+                "no-inferrable-types",
+                "no-window"
             ]
         }
     },
