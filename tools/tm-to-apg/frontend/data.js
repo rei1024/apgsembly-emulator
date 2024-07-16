@@ -2,7 +2,8 @@
 
 // https://en.wikipedia.org/wiki/Busy_beaver#Examples
 
-export const bb3 = `0 _ 1 r 1
+export const bb3 = `; 3-state busy beaver
+0 _ 1 r 1
 0 1 1 r halt
 1 _ _ r 2
 1 1 1 r 1
@@ -27,7 +28,8 @@ d 1 _ r a`;
 /**
  * https://discuss.bbchallenge.org/t/july-2nd-2024-we-have-proved-bb-5-47-176-870/237
  */
-export const bb5 = `0 _ 1 r 1
+export const bb5 = `; 5-state busy beaver
+0 _ 1 r 1
 0 1 1 l 2
 1 _ 1 r 2
 1 1 1 r 1
@@ -38,7 +40,8 @@ export const bb5 = `0 _ 1 r 1
 4 _ 1 r halt
 4 1 _ l 0`;
 
-export const maybeBB6 = `0 _ 1 r 1
+export const maybeBB6 = `; 6-state busy beaver?
+0 _ 1 r 1
 0 1 1 l 4
 1 _ 1 r 2
 1 1 1 r 5
