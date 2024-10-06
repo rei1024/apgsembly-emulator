@@ -262,8 +262,9 @@ export class Machine {
                 throw error;
             }
         }
-        this.stateStatsArray[this.currentStateIndex * 2 + this.prevOutput] +=
-            num;
+        const statIndex = this.currentStateIndex * 2 + this.prevOutput;
+        this.stateStatsArray[statIndex] =
+            (this.stateStatsArray[statIndex] ?? 0) + num;
         this.stepCount += num;
     }
 
@@ -361,7 +362,9 @@ export class Machine {
         {
             const currentStateIndex = this.currentStateIndex;
             const prevOutput = this.prevOutput;
-            this.stateStatsArray[currentStateIndex * 2 + prevOutput]++;
+            const statIndex = currentStateIndex * 2 + prevOutput;
+            this.stateStatsArray[statIndex] =
+                (this.stateStatsArray[statIndex] ?? 0) + 1;
         }
 
         /**
