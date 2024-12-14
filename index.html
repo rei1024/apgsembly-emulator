@@ -8,7 +8,7 @@
         <!-- `data://*` is close button for modal -->
         <meta
             http-equiv="Content-Security-Policy"
-            content="default-src 'self'; style-src 'self' cdn.jsdelivr.net; script-src 'self' cdn.jsdelivr.net 'sha256-XgSuI+ouCZFnUnMiuXyyjkBDGwBQtt1Lb700zhlq3yQ='; img-src 'self' data://*; object-src 'none'"
+            content="default-src 'self'; style-src 'self' cdn.jsdelivr.net; script-src 'self' cdn.jsdelivr.net 'sha256-fa3eqx2X2Kx8krLqgR/MzWA2SDdrnMcU5MEDUu6eA08='; img-src 'self' data://*; object-src 'none'"
         />
 
         <title>APGsembly 2.0 Emulator</title>
@@ -90,8 +90,13 @@
             "use strict";
             // Fix Dark mode flashing
             try {
-                if (localStorage.getItem("dark_mode") === "on") {
-                    document.body.setAttribute("apge_dark", "on");
+                if (
+                    localStorage.getItem("dark_mode") === "on"
+                ) {
+                    document.body.setAttribute(
+                        "apge_dark",
+                        "on",
+                    );
                 }
             } catch (_) {}
         </script>
@@ -346,6 +351,34 @@
                     </svg>
                     Import
                 </label>
+                <button
+                    id="library_file_button"
+                    data-test="library_file_button"
+                    type="button"
+                    class="btn btn-primary"
+                    data-bs-toggle="modal"
+                    data-bs-target="#library_modal"
+                >
+                    <!-- https://icons.getbootstrap.com/icons/plus-circle/ -->
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        fill="currentColor"
+                        class="bi bi-plus-circle"
+                        viewBox="0 0 16 16"
+                    >
+                        <path
+                            stroke-width="1"
+                            d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"
+                        />
+                        <path
+                            stroke-width="1"
+                            d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"
+                        />
+                    </svg>
+                    Library file
+                </button>
             </div>
             <!-- End Buttons -->
 
@@ -712,6 +745,59 @@
             </div>
         </div>
         <!-- End Stats Modal -->
+
+        <!-- Library file Modal -->
+        <div
+            class="modal fade"
+            id="library_modal"
+            tabindex="-1"
+            aria-labelledby="library_modal_label"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog">
+                <div class="modal-content tabular-nums">
+                    <div class="modal-header">
+                        <h2 class="modal-title fs-5" id="library_modal_label">
+                            Library
+                        </h2>
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                        >
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <button
+                            id="add-library-file"
+                            type="button"
+                            class="btn btn-primary"
+                        >
+                            Select file
+                        </button>
+                        <button
+                            id="add-binary-library-file"
+                            type="button"
+                            class="btn btn-outline-primary"
+                        >
+                            Add "binary.apglib"
+                        </button>
+                        <sup><a
+                                target="_blank"
+                                rel="noopener"
+                                href="https://conwaylife.com/forums/viewtopic.php?f=2&t=4196&start=100#p199807"
+                            >ref</a></sup>
+                        <div
+                            class="d-flex justify-content-between align-items-center mb-2"
+                        >
+                            <table id="library-list"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Library Modal -->
 
         <footer class="mt-3 container">
             <section>
