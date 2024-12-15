@@ -116,6 +116,10 @@ export class ProgramLines {
             }
         }
 
+        if (activeTemplateName != null) {
+            errors.push(`#DEFINE needs #ENDDEF.`)
+        }
+
         if (errors.length > 0) {
             return errors.join("\n");
         }
