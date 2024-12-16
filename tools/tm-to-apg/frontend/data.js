@@ -59,6 +59,8 @@ export const maybeBB6 = `; 6-state busy beaver?
 5 1 1 r 2
 `;
 
+export const bb5Std = `1RB1LC_1RC1RB_1RD0LE_1LA1LD_1RZ0LA`;
+
 /**
  * @type {{
     name: string;
@@ -81,5 +83,9 @@ export const list = [
     {
         name: "maybe BB(6)",
         prog: maybeBB6,
+    },
+    {
+        name: "BB(5) Standard text format",
+        prog: bb5Std,
     },
 ];
