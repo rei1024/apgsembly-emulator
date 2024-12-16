@@ -41,6 +41,11 @@ export function parseStdFormat(src) {
         return res;
     });
 
+    // Zもエラー
+    if (array.length >= 26) {
+        throw new Error('too many states')
+    }
+
     const ZERO = "0".codePointAt(0) ?? internalError();
     const A = "A".codePointAt(0) ?? internalError();
     return new Map(array.map((nextList, i) => {

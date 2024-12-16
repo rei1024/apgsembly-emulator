@@ -90,7 +90,7 @@ export function convertStd(map) {
     }
     for (const [state, nextMap] of map) {
         // TODO: 正確にする
-        if (state === "Z" || state === "H") {
+        if (isHaltState(state)) {
             array.push(
                 `${state}__CHECK_SYMBOL_1; *;  ${state}__CHECK_SYMBOL_1; HALT_OUT`,
             );
