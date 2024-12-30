@@ -8,11 +8,21 @@ import { Action } from "./Action.js";
 const HALT_OUT_STRING = `HALT_OUT`;
 
 /**
+ * @type {string}
+ */
+const HALT_STRING = `HALT`;
+
+/**
  * `HALT_OUT` action
  */
 export class HaltOutAction extends Action {
-    constructor() {
+    /**
+     *
+     * @param {boolean} output
+     */
+    constructor(output = true) {
         super();
+        this.output = output;
     }
 
     /**
@@ -20,7 +30,7 @@ export class HaltOutAction extends Action {
      * @returns {string}
      */
     pretty() {
-        return HALT_OUT_STRING;
+        return this.output ? HALT_OUT_STRING : HALT_STRING;
     }
 
     /**
@@ -33,10 +43,13 @@ export class HaltOutAction extends Action {
             return undefined;
         }
         const [haltOut] = array;
-        if (haltOut !== HALT_OUT_STRING) {
-            return undefined;
+        if (haltOut === HALT_OUT_STRING) {
+            return new HaltOutAction(true);
         }
-        return new HaltOutAction();
+        if (haltOut === HALT_STRING) {
+            return new HaltOutAction(false)
+        }
+        return undefined;
     }
 
     /**
