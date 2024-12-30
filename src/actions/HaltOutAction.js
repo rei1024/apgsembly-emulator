@@ -17,7 +17,6 @@ const HALT_STRING = `HALT`;
  */
 export class HaltOutAction extends Action {
     /**
-     *
      * @param {boolean} output
      */
     constructor(output = true) {
@@ -47,7 +46,7 @@ export class HaltOutAction extends Action {
             return new HaltOutAction(true);
         }
         if (haltOut === HALT_STRING) {
-            return new HaltOutAction(false)
+            return new HaltOutAction(false);
         }
         return undefined;
     }

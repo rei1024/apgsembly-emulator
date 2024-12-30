@@ -43,7 +43,7 @@ function integration(input) {
     const tm = TM.parse(input);
     if (tm instanceof Error) {
         const inputTrim = input.trim();
-        if (inputTrim.includes('\n')) {
+        if (inputTrim.includes("\n")) {
             return tm;
         }
 

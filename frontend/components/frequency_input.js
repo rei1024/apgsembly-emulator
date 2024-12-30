@@ -37,7 +37,7 @@ export function setupFrequencyInput($frequencyInput, app) {
     $frequencyInput.max = (frequencies.length - 1).toString();
 
     function update() {
-        console.log($frequencyInput.value)
+        console.log($frequencyInput.value);
         const value = parseInt($frequencyInput.value, 10);
         const freq = frequencies[value] ?? internalError();
         $frequencyInput.ariaValueText = `(${freq.toString()}Hz)`;
@@ -51,5 +51,5 @@ export function setupFrequencyInput($frequencyInput, app) {
     // タブの複製で設定されることがあるため。
     setTimeout(() => {
         update();
-    }, 1)
+    }, 1);
 }
