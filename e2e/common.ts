@@ -1,7 +1,7 @@
 import { expect, type Page } from "@playwright/test";
 
 export const baseURL = "http://localhost:1123";
-// export const baseURL = 'https://rei1024.github.io/proj/apgsembly-emulator-2';
+// export const baseURL = 'https://rei1024.github.io/apgsembly-emulator';
 
 export const APGsemblyEmulatorURL = baseURL + "/";
 
