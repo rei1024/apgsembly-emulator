@@ -16,6 +16,7 @@ An emulator for [APGsembly](https://conwaylife.com/wiki/APGsembly) 2.0
 
 - `$ deno task up` Local server
   - access to [http://localhost:1123/](http://localhost:1123/)
+  - exec `deno task bundle` after code edit.
 - `$ deno task t` Unit tests
 - `$ deno task w` Unit tests with file watcher
 - `$ deno task lint` Linting

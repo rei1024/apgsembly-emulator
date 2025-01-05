@@ -91,10 +91,11 @@ export class BReg {
                 }
             }
             case B_INC: {
-                this.pointer++;
+                const newPointer = this.pointer + 1;
+                this.pointer = newPointer;
                 // using invariant
                 const bits = this.bits;
-                if (this.pointer === bits.length) {
+                if (newPointer === bits.length) {
                     bits.push(0);
                 }
                 break;

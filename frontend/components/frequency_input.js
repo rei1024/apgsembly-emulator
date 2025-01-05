@@ -22,7 +22,8 @@ const getFrequencies = () => {
         20 * 10 ** maxOrder,
     );
 
-    return frequencyArray;
+    // Math.floor ensures element kind is PACKED_SMI_ELEMENTS
+    return frequencyArray.map((x) => Math.floor(x));
 };
 
 /**
