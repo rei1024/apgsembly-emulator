@@ -49,6 +49,8 @@ module.exports = {
         "apgjson",
         "APGC",
         "divmod",
+        'apglib',
+        'ENDDEF',
 
         // uml
         "plantuml",

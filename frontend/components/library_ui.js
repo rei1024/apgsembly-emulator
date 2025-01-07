@@ -45,7 +45,7 @@ export class LibraryUI {
     constructor() {
         /**
          * @private
-         * @type {{ name: string; content: string, buildin?: true }[]}
+         * @type {{ name: string; content: string, builtin?: boolean }[]}
          */
         this.files = [];
     }

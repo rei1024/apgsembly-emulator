@@ -9,7 +9,7 @@
         "fmt": "deno fmt",
         "chore": "deno upgrade && npm audit && git gc",
         "bench": "deno bench --no-check test/bench.js",
-        "bundle": "deno run --allow-env --allow-read --allow-write --allow-run build.ts",
+        "build": "deno run --allow-env --allow-read --allow-write --allow-run build.ts",
         "pre-commit": "deno fmt --check && deno task lint && deno task t && deno task tsc",
         "tsc": "deno run --allow-read --allow-env npm:typescript@5.7.2/tsc --noEmit",
         "spell": "npx cspell ."
