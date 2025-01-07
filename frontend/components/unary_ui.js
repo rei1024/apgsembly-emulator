@@ -146,6 +146,7 @@ export class UnaryUI {
         for (const reg of regs.values()) {
             const item = cells[i] ?? internalError();
             item.textContent = reg.getValue().toString();
+            item.style.color = reg.mark ? 'red' : '' // TODO: better UI
             i++;
         }
     }

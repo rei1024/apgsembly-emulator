@@ -67,6 +67,12 @@ export class BReg {
          * @type {(0 | 1)[]}
          */
         this.bits = [0];
+
+        /**
+         * for UI
+         * @type {0 | 1}
+         */
+        this.mark = 0;
     }
 
     /**
@@ -74,6 +80,7 @@ export class BReg {
      * @returns {0 | 1 | void}
      */
     action(act) {
+        this.mark = 1;
         // if (this.pointer >= this.bits.length) {
         //     throw Error('failed');
         // }
@@ -138,6 +145,7 @@ export class BReg {
      * @param {number} n
      */
     actionN(act, n) {
+        this.mark = 1;
         switch (act.op) {
             case B_INC: {
                 this.pointer += n;

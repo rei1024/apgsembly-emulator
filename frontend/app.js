@@ -497,6 +497,15 @@ export class App {
             return;
         }
 
+
+        for (const u of machine.actionExecutor.uRegMap.values()) {
+            u.mark = 0;
+        }
+
+        for (const b of machine.actionExecutor.bRegMap.values()) {
+            b.mark = 0;
+        }
+
         const isRunning = this.#appState === "Running";
 
         // ブレークポイントの処理

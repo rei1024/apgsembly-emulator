@@ -13,6 +13,12 @@ export class UReg {
          * @private
          */
         this.value = 0;
+
+        /**
+         * for UI
+         * @type {0 | 1}
+         */
+        this.mark = 0;
     }
 
     /**
@@ -20,6 +26,7 @@ export class UReg {
      * @returns {0 | 1 | void}
      */
     action(act) {
+        this.mark = 1;
         switch (act.op) {
             // INC  12414041
             // TDEC 12437599
@@ -43,6 +50,7 @@ export class UReg {
      * @returns {0 | 1 | void}
      */
     actionN(act, n) {
+        this.mark = 1;
         switch (act.op) {
             case U_TDEC: {
                 this.value -= n;
