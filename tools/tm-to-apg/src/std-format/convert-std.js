@@ -92,7 +92,7 @@ export function convertStd(map) {
         // TODO: 正確にする
         if (isHaltState(state)) {
             array.push(
-                `${state}__CHECK_SYMBOL_1; *;  ${state}__CHECK_SYMBOL_1; HALT_OUT`,
+                `${state}__CHECK_SYMBOL_1; *;  ${state}__CHECK_SYMBOL_1; HALT`,
             );
             continue;
         }
@@ -188,7 +188,7 @@ export function convertStd(map) {
         }
     }
 
-    array.push(`${HALT_STATE}; *; _HALT_; HALT_OUT`);
+    array.push(`${HALT_STATE}; *; _HALT_; HALT`);
 
     return formatAPGsembly(array.join("\n"));
 }

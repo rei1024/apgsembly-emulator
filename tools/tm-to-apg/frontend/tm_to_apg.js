@@ -84,7 +84,7 @@ $generate.addEventListener("click", () => {
 
     $copy.disabled = false;
     const header = [
-        `#COMPONENTS NOP,HALT_OUT,U0-2,B0-2`,
+        `#COMPONENTS NOP,HALT,U0-1,B0-1`,
         `# State    Input    Next state    Actions`,
         `# ---------------------------------------`,
     ];

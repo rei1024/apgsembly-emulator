@@ -89,7 +89,7 @@ export function convert(tmMap) {
     for (const state of tmMap.states) {
         if (isHaltState(state)) {
             array.push(
-                `${state}__CHECK_SYMBOL_1; *;  ${state}__CHECK_SYMBOL_1; HALT_OUT`,
+                `${state}__CHECK_SYMBOL_1; *;  ${state}__CHECK_SYMBOL_1; HALT`,
             );
             continue;
         }
@@ -121,7 +121,7 @@ export function convert(tmMap) {
             // 書き込み
             if (blankLine === undefined) {
                 array.push(
-                    `${state}__Z_WRITE_SYMBOL_1; Z;  ${state}__Z_WRITE_SYMBOL_1; HALT_OUT`,
+                    `${state}__Z_WRITE_SYMBOL_1; Z;  ${state}__Z_WRITE_SYMBOL_1; HALT`,
                 );
                 continue;
             }
@@ -163,7 +163,7 @@ export function convert(tmMap) {
             const otherLine = tmMap.getLine(state, otherSymbol);
             if (otherLine === undefined) {
                 array.push(
-                    `${state}__NZ_WRITE_SYMBOL_1; *;  ${state}__NZ_WRITE_SYMBOL_1; HALT_OUT`,
+                    `${state}__NZ_WRITE_SYMBOL_1; *;  ${state}__NZ_WRITE_SYMBOL_1; HALT`,
                 );
                 continue;
             }
