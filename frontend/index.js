@@ -22,6 +22,7 @@ import { importFileAsText } from "./util/import_file.js";
 import { idle } from "./util/idle.js";
 import {
     localStorageGetItem,
+    localStorageMigrate,
     localStorageRemoveItem,
     localStorageSetItem,
 } from "./util/local-storage.js";
@@ -150,19 +151,19 @@ const setupCheckbox = ($checkbox, key) => {
 };
 
 // バイナリを非表示にする
-const HIDE_BITS_KEY = "hide_binary";
+const HIDE_BITS_KEY = "apge_hide_binary";
 setupCheckbox(binaryConfig.$hideBits, HIDE_BITS_KEY);
 
-const REVERSE_BITS_KEY = "reverse_binary";
+const REVERSE_BITS_KEY = "apge_reverse_binary";
 setupCheckbox(binaryConfig.$reverseBits, REVERSE_BITS_KEY);
 
-const SHOW_BINARY_IN_DECIMAL_KEY = "show_binary_in_decimal";
+const SHOW_BINARY_IN_DECIMAL_KEY = "apge_show_binary_in_decimal";
 setupCheckbox(
     binaryConfig.$showBinaryValueInDecimal,
     SHOW_BINARY_IN_DECIMAL_KEY,
 );
 
-const SHOW_BINARY_IN_HEX_KEY = "show_binary_in_hex";
+const SHOW_BINARY_IN_HEX_KEY = "apge_show_binary_in_hex";
 setupCheckbox(binaryConfig.$showBinaryValueInHex, SHOW_BINARY_IN_HEX_KEY);
 
 // B2D
@@ -170,7 +171,7 @@ $b2dHidePointer.addEventListener("change", () => {
     app.renderB2D();
 });
 
-const B2D_FLIP_UPSIDE_DOWN_KEY = "b2d_flip_upside_down";
+const B2D_FLIP_UPSIDE_DOWN_KEY = "apge_b2d_flip_upside_down";
 setupCheckbox($b2dFlipUpsideDown, B2D_FLIP_UPSIDE_DOWN_KEY);
 
 // showの場合クラスが追加されない
@@ -276,6 +277,13 @@ idle(() => {
 
 // 実行時間が掛かる処理をまとめる
 idle(() => {
+    // 2025-01-18
+    localStorageMigrate("hide_binary", HIDE_BITS_KEY);
+    localStorageMigrate("show_binary_in_decimal", SHOW_BINARY_IN_DECIMAL_KEY);
+    localStorageMigrate("reverse_binary", REVERSE_BITS_KEY);
+    localStorageMigrate("b2d_flip_upside_down", B2D_FLIP_UPSIDE_DOWN_KEY);
+    localStorageMigrate("show_binary_in_hex", SHOW_BINARY_IN_HEX_KEY);
+
     // デフォルトはtrue
     if (localStorageGetItem(SHOW_BINARY_IN_DECIMAL_KEY) === null) {
         localStorageSetItem(SHOW_BINARY_IN_DECIMAL_KEY, "true");

@@ -43,3 +43,18 @@ export function localStorageGetItem(key) {
         return null;
     }
 }
+
+/**
+ * @param {string} old
+ * @param {string} new_
+ */
+export function localStorageMigrate(old, new_) {
+    try {
+        const current = localStorageGetItem(old);
+        if (current != null) {
+            localStorageRemoveItem(old);
+            localStorageSetItem(new_, current);
+        }
+    } catch (_) {
+    }
+}
