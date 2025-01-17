@@ -56,5 +56,6 @@ export function localStorageMigrate(old, new_) {
             localStorageSetItem(new_, current);
         }
     } catch (_) {
+        // nop
     }
 }
