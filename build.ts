@@ -1,12 +1,15 @@
 import * as esbuild from "esbuild";
 import { denoPlugins } from "jsr:@luca/esbuild-deno-loader@0.11.1";
+import { serveDir } from "jsr:@std/http@^1/file-server";
 
 // deno run --allow-env --allow-read --allow-write=. --allow-run build.ts
 
 const entryPoint = "./frontend/index.js";
-const outputPath = "./frontend/index.dist.js";
+const outputPath = "./dist/index.dist.js";
 
 const target = ["chrome99", "firefox99", "safari15"];
+
+const isDev = Deno.args.includes("dev");
 
 await esbuild.build({
     plugins: [...denoPlugins()],
@@ -17,11 +20,12 @@ await esbuild.build({
     minify: true,
     target: target,
     treeShaking: true,
+    sourcemap: isDev ? "linked" : false,
 });
 
 await esbuild.build({
     entryPoints: ["./frontend/style.css"],
-    outfile: "./frontend/style.min.css",
+    outfile: "./dist/style.min.css",
     minify: true,
     target: target,
 });
@@ -39,3 +43,7 @@ console.log(
     fileInfo.size.toLocaleString() + " bytes" +
         `\n${compressed.byteLength.toLocaleString()} bytes (gzip)`,
 );
+
+if (isDev) {
+    Deno.serve({ port: 1123 }, (req) => serveDir(req, { fsRoot: "./" }));
+}

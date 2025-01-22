@@ -16,3 +16,5 @@ deno.lock
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+dist/index.dist.js.map

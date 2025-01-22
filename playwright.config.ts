@@ -69,7 +69,7 @@ export default defineConfig({
     ],
     /* Run your local dev server before starting the tests */
     webServer: {
-        command: "deno task up",
+        command: "deno task dev",
         url: "http://localhost:1123/",
         reuseExistingServer: !process.env.CI,
     },

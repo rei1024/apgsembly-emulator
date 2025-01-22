@@ -1,6 +1,7 @@
 {
     "tasks": {
-        "up": "deno run --allow-net --allow-read --allow-sys jsr:@std/http@^1.0.7/file-server . -p 1123",
+        "dev": "deno run --watch=./frontend,./src --allow-env --allow-read --allow-write --allow-run --allow-net build.ts dev",
+        "build": "deno run --allow-env --allow-read --allow-write --allow-run build.ts",
         "t": "deno test --allow-import --parallel src/ test/ tools/ labs/fast_emulator",
         "w": "deno test --allow-import --watch src/ test/ tools/ labs/fast_emulator/",
         "e2e-update": "npx playwright install",
@@ -9,15 +10,14 @@
         "fmt": "deno fmt",
         "chore": "deno upgrade && npm audit && git gc",
         "bench": "deno bench --no-check test/bench.js",
-        "build": "deno run --allow-env --allow-read --allow-write --allow-run build.ts",
         "pre-commit": "deno fmt --check && deno task lint && deno task t && deno task tsc",
         "tsc": "deno run --allow-read --allow-env npm:typescript@5.7.2/tsc --noEmit",
         "spell": "npx cspell ."
     },
     "exclude": [
         "node_modules/",
-        "frontend/index.dist.js",
-        "frontend/style.min.css"
+        "dist/index.dist.js",
+        "dist/style.min.css"
     ],
     "lint": {
         "exclude": [
