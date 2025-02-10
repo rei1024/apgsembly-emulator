@@ -1,5 +1,4 @@
 // @ts-check
-// deno-lint-ignore-file no-unused-vars
 
 import { Action } from "./actions/Action.js";
 import { internalError } from "./internalError.js";
@@ -397,10 +396,11 @@ export const parseProgramLine = (str, line) => {
             let name;
             /** @type {{ needle: string; replacement: string }[]} */
             let replacements = [];
-            if (content.includes("{")) {
-                name = content.slice(0, content.indexOf("{")).trim();
+            const indexOfOpenBrace = content.indexOf("{");
+            if (indexOfOpenBrace !== -1) {
+                name = content.slice(0, indexOfOpenBrace).trim();
                 const replacements_ = parseReplacements(
-                    content.slice(content.indexOf("{")),
+                    content.slice(indexOfOpenBrace),
                     line,
                     str,
                     "#DEFINE",
@@ -426,10 +426,11 @@ export const parseProgramLine = (str, line) => {
             let name;
             /** @type {{ needle: string; replacement: string }[]} */
             let replacements = [];
-            if (content.includes("{")) {
-                name = content.slice(0, content.indexOf("{")).trim();
+            const indexOfOpenBrace = content.indexOf("{");
+            if (indexOfOpenBrace !== -1) {
+                name = content.slice(0, indexOfOpenBrace).trim();
                 const replacements_ = parseReplacements(
-                    content.slice(content.indexOf("{")),
+                    content.slice(indexOfOpenBrace),
                     line,
                     str,
                     "#INSERT",

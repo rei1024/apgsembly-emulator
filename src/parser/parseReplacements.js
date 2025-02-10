@@ -11,13 +11,13 @@ import { lineNumberMessage } from "./message.js";
  * @returns {{ needle: string; replacement: string }[] | string} replacements or error message
  */
 export function parseReplacements(replacementsMapString, line, src, key) {
-    const trimmedStr = replacementsMapString.trim();
-    if (!trimmedStr.startsWith("{")) {
+    replacementsMapString = replacementsMapString.trim();
+    if (!replacementsMapString.startsWith("{")) {
         return `Invalid line "${src}"${
             lineNumberMessage(line)
         }. ${key} replacements does not start with "{"`;
     }
-    if (!trimmedStr.endsWith("}")) {
+    if (!replacementsMapString.endsWith("}")) {
         return `Invalid line "${src}"${
             lineNumberMessage(line)
         }. ${key} replacements does not end with "}"`;
@@ -31,7 +31,7 @@ export function parseReplacements(replacementsMapString, line, src, key) {
                 );
                 if (keyValue.length != 2) {
                     throw new Error(
-                        `Invalid line "${replacementsMapString}"${
+                        `Invalid line "${src}"${
                             lineNumberMessage(line)
                         }. #DEFINE invalid replacements`,
                     );

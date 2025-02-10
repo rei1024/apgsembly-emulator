@@ -12,6 +12,16 @@ test("parseReplacements 1", () => {
 
 test("parseReplacements 2", () => {
     assertEquals(
+        parseReplacements("  { x = 2 }  ", undefined, "_", "#DEFINE"),
+        [{
+            needle: "x",
+            replacement: "2",
+        }],
+    );
+});
+
+test("parseReplacements 3", () => {
+    assertEquals(
         parseReplacements("{ x = 2; y = 4 }", undefined, "_", "#DEFINE"),
         [{
             needle: "x",

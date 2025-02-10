@@ -1,7 +1,7 @@
 // @ts-check
 
 /* eslint-disable camelcase */
-import { Program } from "../src/Program.js";
+import { generateComponentsHeader, Program } from "../src/Program.js";
 import { assertEquals, test } from "./deps.js";
 
 export const program9_1 = `
@@ -375,4 +375,20 @@ test("Program parse 9.2", () => {
     } else {
         throw Error("parse error");
     }
+});
+
+test("generateComponentsHeader", () => {
+    assertEquals(
+        generateComponentsHeader({
+            unary: [0, 1],
+            binary: [0, 1, 2],
+            legacyT: [],
+            hasAdd: false,
+            hasSub: false,
+            hasMul: false,
+            hasB2D: false,
+            hasOutput: false,
+        }),
+        "B0-2, U0-1",
+    );
 });

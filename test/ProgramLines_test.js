@@ -50,3 +50,10 @@ ID2;     NZ; ID1; TDEC U0
 `,
     );
 });
+
+// TODO
+// test("ProgramLines parse pi", () => {
+//     parsePrettyTest(`#DEFINE name { x = 2; y = 4 }
+// STATE_x; *; STATE_y; NOP
+// #ENDDEF`);
+// });

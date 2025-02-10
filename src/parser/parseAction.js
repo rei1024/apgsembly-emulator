@@ -13,27 +13,27 @@ import { URegAction } from "../actions/URegAction.js";
 import { LegacyTRegAction } from "../actions/LegacyTRegAction.js";
 
 /**
+ * @type {((str: string) => Action | undefined)[]}
+ */
+const parsers = [
+    BRegAction.parse,
+    URegAction.parse,
+    B2DAction.parse,
+    NopAction.parse,
+    AddAction.parse,
+    MulAction.parse,
+    SubAction.parse,
+    OutputAction.parse,
+    HaltOutAction.parse,
+    LegacyTRegAction.parse,
+];
+
+/**
  * アクションをパースする
  * @param {string} str
  * @returns {Action | undefined}
  */
 export const parseAction = (str) => {
-    /**
-     * @type {((str: string) => Action | undefined)[]}
-     */
-    const parsers = [
-        BRegAction.parse,
-        URegAction.parse,
-        B2DAction.parse,
-        NopAction.parse,
-        AddAction.parse,
-        MulAction.parse,
-        SubAction.parse,
-        OutputAction.parse,
-        HaltOutAction.parse,
-        LegacyTRegAction.parse,
-    ];
-
     for (const parser of parsers) {
         const result = parser(str);
         if (result !== undefined) {

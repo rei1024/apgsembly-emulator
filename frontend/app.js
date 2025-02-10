@@ -57,7 +57,7 @@ import { toLocaleString } from "./util/toLocaleString.js";
 import { LibraryUI } from "./components/library_ui.js";
 
 /** index.htmlと同期すること */
-export const DEFAULT_FREQUENCY = 30;
+const DEFAULT_FREQUENCY = 30;
 
 /**
  * @typedef {"Initial" | "Running" | "Stop" | "ParseError" |

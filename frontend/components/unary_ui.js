@@ -38,7 +38,7 @@ const getNumberOfCols = (numberOfRegister) => {
 const createHeaderCell = (key) => {
     return create("th", {
         text: `U${key}`,
-        classes: ['text-end'],
+        classes: ["text-end"],
     });
 };
 
@@ -52,7 +52,7 @@ const createDataCell = (key, value) => {
         fn: (td) => {
             td.dataset["test"] = `U${key}`;
         },
-        classes: ['text-end']
+        classes: ["text-end"],
     });
 };
 

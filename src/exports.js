@@ -78,6 +78,7 @@ export function formatAPGsembly(src) {
 }
 
 /**
+ * used by APGM
  * @param {string} src
  * @returns {string}
  */
