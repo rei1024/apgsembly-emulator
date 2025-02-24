@@ -10,7 +10,7 @@ const getFrequencies = () => {
     const frequencyArray = [];
     const maxOrder = 6;
     for (let i = 0; i <= maxOrder; i++) {
-        for (let j = 1; j <= 9; j++) {
+        for (const j of [1, ...i === 0 ? [] : [1.5], 2, 3, 5, 8]) {
             frequencyArray.push(j * (10 ** i));
         }
     }

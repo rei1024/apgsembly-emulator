@@ -35,7 +35,8 @@ export const renderB2D = (context, b2d, hidePointer, flipUpsideDown) => {
     const n = Math.max(maxX, maxY) + 1;
     const cellSize = width / n;
 
-    if (flipUpsideDown) {
+    // default is math coordinates
+    if (!flipUpsideDown) {
         context.scale(1, -1);
         context.translate(0, -width);
     }
