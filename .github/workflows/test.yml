@@ -30,3 +30,13 @@ jobs:
               run: deno task t
             - name: Run Type Check
               run: deno task tsc
+            - name: Install Playwright Browsers
+              run: npx playwright install --with-deps
+            - name: Run E2E Test
+              run: deno task e2e
+            - uses: actions/upload-artifact@v4
+              if: ${{ !cancelled() }}
+              with:
+                name: playwright-report
+                path: playwright-report/
+                retention-days: 7
