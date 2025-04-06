@@ -1,7 +1,7 @@
 // @ts-check
 
 // @ts-ignore
-import * as Comlink from "https://unpkg.com/comlink@4.4.1/dist/esm/comlink.mjs";
+import * as Comlink from "https://cdn.jsdelivr.net/npm/comlink@4.4.2/dist/esm/comlink.mjs";
 
 const worker = new Worker("./worker.js", { type: "module" });
 
@@ -14,8 +14,15 @@ async function init() {
         throw Error("error");
     }
 
+    output.textContent = "Initializing...";
+
     // console.log('a');
-    const text = await (await fetch("../../frontend/data/pi_calc.apg")).text();
+    const response = await fetch("../../frontend/data/pi_calc.apg");
+    if (!response.ok) {
+        output.textContent = "Error loading pi_calc.apg";
+        throw new Error("Network response was not ok");
+    }
+    const text = await response.text();
     // console.log(text.slice(0, 20));
     await app.initialize(text);
     // console.log(JSON.stringify(await app.getOutput()));

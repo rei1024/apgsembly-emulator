@@ -1,7 +1,7 @@
 // @ts-check
 
 // @ts-ignore
-import * as Comlink from "https://unpkg.com/comlink@4.4.1/dist/esm/comlink.mjs";
+import * as Comlink from "https://cdn.jsdelivr.net/npm/comlink@4.4.2/dist/esm/comlink.mjs";
 import { Machine } from "../../src/Machine.js";
 
 export const App = {
