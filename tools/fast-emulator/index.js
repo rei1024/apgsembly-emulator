@@ -35,10 +35,7 @@ async function init() {
             (await app.getOutput());
     }
 
-    /**
-     * @param {number} time
-     */
-    const update = async (time) => {
+    const update = async () => {
         // console.log(time);
         await app.run(2000000);
         await render();
