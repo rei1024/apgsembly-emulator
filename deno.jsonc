@@ -2,8 +2,8 @@
     "tasks": {
         "dev": "deno run --watch=./frontend,./src --allow-env --allow-read --allow-write --allow-run --allow-net build.ts dev",
         "build": "deno run --allow-env --allow-read --allow-write --allow-run build.ts",
-        "t": "deno test --allow-import --parallel src/ test/ tools/ labs/fast_emulator",
-        "w": "deno test --allow-import --watch src/ test/ tools/ labs/fast_emulator/",
+        "t": "deno test --allow-import --parallel src/ test/ tools/",
+        "w": "deno test --allow-import --watch src/ test/ tools/",
         "e2e-update": "npx playwright install",
         "e2e": "npx playwright test && npx playwright show-report",
         "lint": "deno lint",
@@ -16,8 +16,7 @@
     },
     "exclude": [
         "node_modules/",
-        "dist/index.dist.js",
-        "dist/style.min.css"
+        "dist/"
     ],
     "lint": {
         "exclude": [
