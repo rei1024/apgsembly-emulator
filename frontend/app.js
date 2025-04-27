@@ -350,13 +350,14 @@ export class App {
         if (!$statsModal.classList.contains("show")) {
             return;
         }
-        if (this.#machine === undefined) {
+        const machine = this.#machine;
+        if (machine === undefined) {
             this.#statsUI.clear();
             return;
         }
         this.#statsUI.render(
-            this.#machine.getStateStats(),
-            this.#machine.currentStateIndex,
+            machine.getStateStats(),
+            machine.currentStateIndex,
         );
     }
 
@@ -411,6 +412,7 @@ export class App {
      * 全体を描画する
      */
     render() {
+        const machine = this.#machine;
         const appState = this.#appState;
         // set valve
         this.#valve.disabled = appState !== "Running";
@@ -426,7 +428,7 @@ export class App {
                 $input.classList.remove("is-invalid");
             }
 
-            const analyzeResult = this.#machine?.analyzeResult;
+            const analyzeResult = machine?.analyzeResult;
             $unaryRegisterDetail.style.display =
                 analyzeResult == null || analyzeResult.unary.length === 0
                     ? "none"
@@ -450,7 +452,6 @@ export class App {
 
         this.#renderFrequencyOutput();
 
-        const machine = this.#machine;
         $currentState.textContent = machine?.getCurrentState() ?? "";
         $previousOutput.textContent = machine?.getPreviousOutput() ?? "";
         $stepCount.textContent = machine?.stepCount.toLocaleString() ?? "";
