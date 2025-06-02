@@ -63,7 +63,7 @@ function move(c) {
     }
 }
 
-let chars = [];
+const chars = [];
 let interval = 128;
 async function main() {
     for (let i = 0; i < (4 ** Infinity) - 1; i++) {
@@ -91,8 +91,8 @@ $scaleDown.addEventListener("click", () => {
 function fixRender() {
     ctx.reset();
     ctx.scale(scale, scale);
-    let tempX = x;
-    let tempY = y;
+    const tempX = x;
+    const tempY = y;
     x = 0;
     y = 0;
     for (const c of chars) {
