@@ -155,7 +155,7 @@ function getKthMoveIterative(patternType, order, k) {
 export function* infiniteHilbertWordGenerator() {
     let globalK = 0; // Current index of the character to generate.
 
-    let prevOrder = undefined;
+    // let prevOrder = undefined;
     // Loop indefinitely to generate the infinite word.
     while (true) {
         // Determine the minimum order `n` such that H_n contains `globalK`.
