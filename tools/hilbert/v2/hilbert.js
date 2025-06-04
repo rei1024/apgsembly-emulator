@@ -92,6 +92,7 @@ function getKthMoveIterative(patternType, order, k) {
     let currentK = k;
 
     while (true) { // Loop indefinitely until a base case (move) is returned
+        // optimization
         if (currentOrder === 1) {
             return basePatternMoves[currentPatternType][currentK];
         }
@@ -154,15 +155,26 @@ function getKthMoveIterative(patternType, order, k) {
 export function* infiniteHilbertWordGenerator() {
     let globalK = 0; // Current index of the character to generate.
 
+    let prevOrder = undefined;
     // Loop indefinitely to generate the infinite word.
     while (true) {
         // Determine the minimum order `n` such that H_n contains `globalK`.
         // The length of H_n is 4^n - 1 moves.
-        let order = 1;
         // We need an odd `order` such that `(1 << (2 * order)) - 1` covers `globalK`.
-        while (((1 << (2 * order)) - 1) <= globalK) {
-            order += 2;
+        let order = (globalK + 1).toString(4).length + 1;
+        if (order % 2 == 0) {
+            order -= 1;
         }
+
+        // if (prevOrder !== order) {
+        //     // 0 1
+        //     // 3 3
+        //     // 63 5
+        //     // 1023 7
+        //     // 16383 9
+        //     console.log(globalK, order);
+        //     prevOrder = order;
+        // }
 
         // Use the iterative function to get the character at the current global index.
         // The canonical Hilbert curve usually starts with pattern 'A'.
