@@ -3,7 +3,7 @@
 /* eslint-disable camelcase */
 import { Machine } from "../src/Machine.js";
 import { Program } from "../src/Program.js";
-import { toBinaryStringReverse } from "../src/components/BReg.js";
+import { toBinaryStringReverse } from "../src/components/util.js";
 import {
     program9_1,
     program9_2,
