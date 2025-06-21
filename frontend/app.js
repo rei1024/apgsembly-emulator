@@ -1,7 +1,5 @@
 // @ts-check
 
-import { Machine } from "../src/Machine.js";
-
 // Components
 import { startButton, stopButton } from "./components/toggle.js";
 import { renderErrorMessage } from "./components/error.js";
@@ -55,6 +53,8 @@ import {
 } from "./bind.js";
 import { toLocaleString } from "./util/toLocaleString.js";
 import { LibraryUI } from "./components/library_ui.js";
+import { MachineWorker } from "./machine-worker.js";
+import { Comlink } from "./deps.js";
 
 /** index.htmlと同期すること */
 const DEFAULT_FREQUENCY = 30;
@@ -72,7 +72,7 @@ export class App {
     #prevAppState;
     /** エラーメッセージ */
     #errorMessage = "";
-    /** @type {Machine | undefined} */
+    /** @type {MachineWorker | undefined} */
     #machine;
     /** @type {undefined | number} */
     #prevFrequency;
@@ -114,11 +114,11 @@ export class App {
      * 実行を開始する
      * Start execution
      */
-    start() {
+    async start() {
         switch (this.#appState) {
             case "Initial": {
                 // 初期化に成功していれば走らせる
-                if (this.reset()) {
+                if (await this.reset()) {
                     this.#appState = "Running";
                 }
                 break;
@@ -131,56 +131,59 @@ export class App {
                 throw Error("start: unreachable");
             }
         }
-        this.render();
+        await this.render();
     }
 
     /**
      * 停止する
      * Stop execution
      */
-    stop() {
+    async stop() {
         this.#appState = "Stop";
-        this.render();
+        await this.render();
     }
 
-    toggle() {
+    async toggle() {
         if (this.#appState === "Running") {
             this.stop();
         } else {
-            this.start();
+            await this.start();
         }
     }
 
     /**
      * スライディングレジスタ表示の初期化
      */
-    #setUpUnary() {
+    async #setUpUnary() {
         if (this.#machine === undefined) {
             this.#unaryUI.clear();
         } else {
-            this.#unaryUI.initialize(this.#machine.actionExecutor.uRegMap);
+            this.#unaryUI.initialize(await this.#machine.getURegMap());
         }
     }
 
     /**
      * バイナリレジスタの表示の初期化
      */
-    #setUpBinary() {
+    async #setUpBinary() {
         if (this.#machine === undefined) {
             this.#binaryUI.clear();
         } else {
-            this.#binaryUI.initialize(this.#machine.actionExecutor.bRegMap);
+            this.#binaryUI.initialize(await this.#machine.getBRegMap());
         }
     }
 
     /**
      * machineがセットされた時のコールバック
      */
-    #onMachineSet() {
-        this.#setUpUnary();
-        this.#setUpBinary();
-        this.#setUpStats();
-        initializeBreakpointSelect($breakpointSelect, this.#machine);
+    async #onMachineSet() {
+        await this.#setUpUnary();
+        await this.#setUpBinary();
+        await this.#setUpStats();
+        initializeBreakpointSelect(
+            $breakpointSelect,
+            await this.#machine?.getStateMap(),
+        );
     }
 
     doStep() {
@@ -226,22 +229,33 @@ export class App {
 
     /**
      * 状態をリセットし、パースする
-     * @returns {boolean} 成功
+     * @returns {Promise<boolean>} 成功
      */
-    reset() {
+    async reset() {
         this.#errorMessage = "";
+        if (this.#machine) {
+            try {
+                await this.#machine.terminate();
+            } catch (error) {
+                console.error(error);
+            }
+        }
         this.#machine = undefined;
         this.#valve.reset();
 
         try {
             const libraryFiles = this.$libraryUI.getFiles();
-            this.#machine = Machine.fromString($input.value, libraryFiles);
-            this.#onMachineSet();
+            this.#machine = Comlink.wrap(
+                new Worker("./dist/machine-worker.js", { type: "module" }),
+            );
+            await this.#machine?.init($input.value, libraryFiles);
+            //  Machine.fromString($input.value, libraryFiles);
+            await this.#onMachineSet();
             this.#appState = "Stop";
         } catch (e) {
             this.#appState = "ParseError";
             this.#errorMessage = getMessageFromError(e);
-            this.render();
+            await this.render();
             return false;
         }
 
@@ -263,10 +277,10 @@ export class App {
     /**
      * 次のコマンドの表示
      */
-    #renderCommand() {
+    async #renderCommand() {
         try {
-            const next = this.#machine?.getNextCommand();
-            $command.textContent = next?.command.pretty() ?? "";
+            $command.textContent =
+                (await this.#machine?.getNextCommandText()) ?? "";
         } catch (error) {
             // internal error
             console.error(error);
@@ -276,7 +290,7 @@ export class App {
     /**
      * B2Dの表示
      */
-    renderB2D() {
+    async renderB2D() {
         if (!$b2dDetail.open) {
             return;
         }
@@ -288,7 +302,7 @@ export class App {
             context.resetTransform();
             return;
         }
-        const b2d = machine.actionExecutor.b2d;
+        const b2d = await machine.getB2D();
         $b2dPos.x.textContent = b2d.x.toString();
         $b2dPos.y.textContent = b2d.y.toString();
 
@@ -309,19 +323,19 @@ export class App {
     /**
      * スライディングレジスタの表示
      */
-    renderUnary() {
+    async renderUnary() {
         if (this.#machine !== undefined && $unaryRegisterDetail.open) {
-            this.#unaryUI.render(this.#machine.actionExecutor.uRegMap);
+            this.#unaryUI.render(await this.#machine.getURegMap());
         }
     }
 
     /**
      * バイナリレジスタの表示
      */
-    renderBinary() {
+    async renderBinary() {
         if (this.#machine !== undefined && $binaryRegisterDetail.open) {
             this.#binaryUI.render(
-                this.#machine.actionExecutor.bRegMap,
+                await this.#machine.getBRegMap(),
                 binaryConfig.$hideBits.checked,
                 binaryConfig.$reverseBits.checked,
                 binaryConfig.$showBinaryValueInDecimal.checked,
@@ -330,23 +344,23 @@ export class App {
         }
     }
 
-    #renderOutput() {
-        const output = this.#machine?.actionExecutor.output.getString();
+    async #renderOutput() {
+        const output = await this.#machine?.getOutput();
         renderOutput($output, output);
     }
 
-    #setUpStats() {
+    async #setUpStats() {
         if (this.#machine === undefined) {
             this.#statsUI.clear();
         } else {
             this.#statsUI.initialize(
-                this.#machine.getStateStats(),
-                this.#machine.states,
+                await this.#machine.getStateStats(),
+                await this.#machine.getStates(),
             );
         }
     }
 
-    renderStats() {
+    async renderStats() {
         if (!$statsModal.classList.contains("show")) {
             return;
         }
@@ -356,8 +370,8 @@ export class App {
             return;
         }
         this.#statsUI.render(
-            machine.getStateStats(),
-            machine.currentStateIndex,
+            await machine.getStateStats(),
+            await machine.getCurrentStateIndex(),
         );
     }
 
@@ -411,7 +425,7 @@ export class App {
     /**
      * 全体を描画する
      */
-    render() {
+    async render() {
         const machine = this.#machine;
         const appState = this.#appState;
         // set valve
@@ -428,7 +442,7 @@ export class App {
                 $input.classList.remove("is-invalid");
             }
 
-            const analyzeResult = machine?.analyzeResult;
+            const analyzeResult = await machine?.getAnalyzeResult();
             $unaryRegisterDetail.style.display =
                 analyzeResult == null || analyzeResult.unary.length === 0
                     ? "none"
@@ -452,24 +466,24 @@ export class App {
 
         this.#renderFrequencyOutput();
 
-        $currentState.textContent = machine?.getCurrentState() ?? "";
-        $previousOutput.textContent = machine?.getPreviousOutput() ?? "";
-        $stepCount.textContent = machine?.stepCount.toLocaleString() ?? "";
+        const info = await machine?.getInfo();
+        $currentState.textContent = info?.currentState ?? "";
+        $previousOutput.textContent = info?.previousOutput ?? "";
+        $stepCount.textContent = info?.stepCount.toLocaleString() ?? "";
 
         const stepConfig = this.stepConfig;
         $stepText.textContent = stepConfig === 1
             ? "Step"
             : `${toLocaleString(stepConfig)} Steps`;
 
-        this.#renderCommand();
-        this.#renderOutput();
-        this.renderUnary();
-        this.renderBinary();
-        $addSubMul.textContent =
-            machine?.actionExecutor.addSubMulToUIString() ??
-                "";
-        this.renderB2D();
-        this.renderStats();
+        await this.#renderCommand();
+        await this.#renderOutput();
+        await this.renderUnary();
+        await this.renderBinary();
+        $addSubMul.textContent = await machine?.getAddSubMulToUIString() ??
+            "";
+        await this.renderB2D();
+        await this.renderStats();
 
         this.#prevAppState = appState;
     }
@@ -478,7 +492,7 @@ export class App {
      * `steps`ステップ走らせる
      * @param {number} steps
      */
-    run(steps) {
+    async run(steps) {
         switch (this.#appState) {
             case "Initial": {
                 // エラーであれば走らせない
@@ -505,7 +519,7 @@ export class App {
         const breakpointInputValue = getBreakpointInput($breakpointInputSelect);
 
         try {
-            const resultState = machine.exec(
+            const resultState = await machine.exec(
                 steps,
                 isRunning,
                 breakpointIndex,
@@ -518,7 +532,7 @@ export class App {
             this.#appState = "RuntimeError";
             this.#errorMessage = getMessageFromError(error);
         } finally {
-            this.render();
+            await this.render();
         }
     }
 }

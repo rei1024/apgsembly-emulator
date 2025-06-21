@@ -5,7 +5,9 @@ import { serveDir } from "jsr:@std/http@^1/file-server";
 // deno run --allow-env --allow-read --allow-write=. --allow-run build.ts
 
 const entryPoint = "./frontend/index.js";
+const workerEntryPoint = "./frontend/machine-worker.js";
 const outputPath = "./dist/index.dist.js";
+const workerOutputPath = "./dist/machine-worker.js";
 
 const target = ["chrome99", "firefox99", "safari15"];
 
@@ -15,6 +17,18 @@ await esbuild.build({
     plugins: [...denoPlugins()],
     entryPoints: [entryPoint],
     outfile: outputPath,
+    bundle: true,
+    format: "esm",
+    minify: true,
+    target: target,
+    treeShaking: true,
+    sourcemap: isDev ? "linked" : false,
+});
+
+await esbuild.build({
+    plugins: [...denoPlugins()],
+    entryPoints: [workerEntryPoint],
+    outfile: workerOutputPath,
     bundle: true,
     format: "esm",
     minify: true,

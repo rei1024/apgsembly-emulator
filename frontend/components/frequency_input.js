@@ -20,6 +20,7 @@ const getFrequencies = () => {
         10 * 10 ** maxOrder,
         15 * 10 ** maxOrder,
         20 * 10 ** maxOrder,
+        100 * 10 ** maxOrder,
     );
 
     // Math.floor ensures element kind is PACKED_SMI_ELEMENTS
