@@ -144,7 +144,7 @@ export class App {
 
     async toggle() {
         if (this.#appState === "Running") {
-            this.stop();
+            await this.stop();
         } else {
             await this.start();
         }
@@ -185,7 +185,7 @@ export class App {
         );
     }
 
-    doStep() {
+    async doStep() {
         // 実行中の場合は停止する
         if (this.#appState === "Running") {
             this.stop();
@@ -204,16 +204,16 @@ export class App {
             $reset.disabled = true;
             $toggle.disabled = true;
 
-            setTimeout(() => {
-                try {
-                    this.run(this.stepConfig);
-                } finally {
-                    $stepText.style.color = "";
-                    spinner.remove();
-                }
-            }, 33); // 走らせるタイミングを遅らせることでスピナーの表示を確定させる
+            // 走らせるタイミングを遅らせることでスピナーの表示を確定させる
+            await new Promise((r) => setTimeout(r, 33));
+            try {
+                await this.run(this.stepConfig);
+            } finally {
+                $stepText.style.color = "";
+                spinner.remove();
+            }
         } else {
-            this.run(this.stepConfig);
+            await this.run(this.stepConfig);
         }
     }
 
@@ -221,9 +221,9 @@ export class App {
      * コードを変更してリセットする
      * @param {string} text
      */
-    setInputAndReset(text) {
+    async setInputAndReset(text) {
         $input.value = text;
-        this.reset();
+        await this.reset();
     }
 
     /**
@@ -248,7 +248,6 @@ export class App {
                 new Worker("./dist/machine-worker.js", { type: "module" }),
             );
             await this.#machine?.init($input.value, libraryFiles);
-            //  Machine.fromString($input.value, libraryFiles);
             await this.#onMachineSet();
             this.#appState = "Stop";
         } catch (e) {
@@ -258,7 +257,7 @@ export class App {
             return false;
         }
 
-        this.render();
+        await this.render();
         return true;
     }
 
@@ -475,14 +474,17 @@ export class App {
             ? "Step"
             : `${toLocaleString(stepConfig)} Steps`;
 
-        await this.#renderCommand();
-        await this.#renderOutput();
-        await this.renderUnary();
-        await this.renderBinary();
+        await Promise.all([
+            await this.#renderCommand(),
+            await this.#renderOutput(),
+            await this.renderUnary(),
+            await this.renderBinary(),
+            await this.renderB2D(),
+            await this.renderStats(),
+        ]);
+
         $addSubMul.textContent = await machine?.getAddSubMulToUIString() ??
             "";
-        await this.renderB2D();
-        await this.renderStats();
 
         this.#prevAppState = appState;
     }
