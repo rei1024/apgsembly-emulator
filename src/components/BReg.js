@@ -4,6 +4,7 @@ import { BRegAction } from "../actions/BRegAction.js";
 import { B_INC, B_READ, B_SET, B_TDEC } from "../action_consts/BReg_consts.js";
 import { internalError } from "../internalError.js";
 import { throwRegisterInitError } from "./UReg.js";
+import { toNumberString } from "./util.js";
 
 /**
  * バイナリの文字列を0と1の配列に変換する
@@ -203,6 +204,13 @@ export class BReg {
                 this.bits = this.bits.concat(rest);
             }
         }
+    }
+
+    /**
+     * @param {number} [base] default is 10
+     */
+    toNumberString(base = 10) {
+        return toNumberString(this.bits, base);
     }
 
     /**

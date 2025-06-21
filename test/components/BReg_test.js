@@ -7,12 +7,12 @@ import {
     B_SET,
     B_TDEC,
 } from "../../src/action_consts/BReg_consts.js";
+import { BReg } from "../../src/components/BReg.js";
+import { assertEquals, assertThrows, test } from "../deps.js";
 import {
-    BReg,
     toBinaryString,
     toBinaryStringReverse,
-} from "../../src/components/BReg.js";
-import { assertEquals, assertThrows, test } from "../deps.js";
+} from "../../src/components/util.js";
 
 test("BReg read initial", () => {
     const x = new BReg();
