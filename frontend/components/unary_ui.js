@@ -1,7 +1,6 @@
 // @ts-check
 
 import { chunk } from "../util/chunk.js";
-import { UReg } from "../../src/components/UReg.js";
 import { create } from "../util/create.js";
 import { internalError } from "../../src/internalError.js";
 
@@ -44,11 +43,11 @@ const createHeaderCell = (key) => {
 
 /**
  * @param {number} key
- * @param {UReg} value
+ * @param {number} value
  */
 const createDataCell = (key, value) => {
     return create("td", {
-        text: value.getValue().toString(),
+        text: value.toString(),
         fn: (td) => {
             td.dataset["test"] = `U${key}`;
         },
@@ -57,7 +56,7 @@ const createDataCell = (key, value) => {
 };
 
 /**
- * @param {ReadonlyMap<number, UReg>} regs
+ * @param {ReadonlyMap<number, number>} regs
  * @returns {{ table: HTMLTableElement, cells: HTMLElement[] }}
  */
 const createTable = (regs) => {
@@ -128,7 +127,7 @@ export class UnaryUI {
 
     /**
      * initialize DOM
-     * @param {ReadonlyMap<number, UReg>} regs
+     * @param {ReadonlyMap<number, number>} regs
      */
     initialize(regs) {
         const { table, cells } = createTable(regs);
@@ -142,14 +141,14 @@ export class UnaryUI {
     }
 
     /**
-     * @param {ReadonlyMap<number, UReg>} regs
+     * @param {ReadonlyMap<number, number>} regs
      */
     render(regs) {
         let i = 0;
         const cells = this.cells;
         for (const reg of regs.values()) {
             const item = cells[i] ?? internalError();
-            item.textContent = reg.getValue().toString();
+            item.textContent = reg.toString();
             i++;
         }
     }

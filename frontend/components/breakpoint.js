@@ -5,11 +5,11 @@ import { create } from "../util/create.js";
 /**
  * ブレークポイント初期化
  * @param {HTMLSelectElement} $breakpointSelect
- * @param {import('../../src/Machine.js').Machine | undefined} machine
+ * @param {Map<string, number> | undefined} stateMap
  */
-export function initializeBreakpointSelect($breakpointSelect, machine) {
+export function initializeBreakpointSelect($breakpointSelect, stateMap) {
     $breakpointSelect.innerHTML = "";
-    if (machine === undefined) {
+    if (stateMap === undefined) {
         return;
     }
 
@@ -18,7 +18,7 @@ export function initializeBreakpointSelect($breakpointSelect, machine) {
     none.selected = true;
     $breakpointSelect.append(none);
 
-    for (const [state, stateIndex] of machine.getStateMap()) {
+    for (const [state, stateIndex] of stateMap) {
         const option = create("option", state);
         option.value = stateIndex.toString();
         $breakpointSelect.append(option);

@@ -4,6 +4,7 @@ import { BRegAction } from "../actions/BRegAction.js";
 import { B_INC, B_READ, B_SET, B_TDEC } from "../action_consts/BReg_consts.js";
 import { internalError } from "../internalError.js";
 import { throwRegisterInitError } from "./UReg.js";
+import { toNumberString } from "./util.js";
 
 /**
  * バイナリの文字列を0と1の配列に変換する
@@ -21,37 +22,6 @@ const parseBits = (str) => {
             throw Error(`Invalid #REGISTERS: "${str}"`);
         }
     });
-};
-
-const hasBigInt = typeof BigInt !== "undefined";
-
-/**
- * @param {ReadonlyArray<0 | 1>} bits
- * @returns {string}
- * @example
- * > toBinaryStringReverse([0, 1])
- * "10"
- */
-export const toBinaryStringReverse = (bits) => {
-    // faster than `bits.slice().reverse().join("")`
-    let str = "";
-    for (let i = bits.length - 1; i >= 0; i--) {
-        str += bits[i] === 0 ? "0" : "1";
-    }
-    return str;
-};
-
-/**
- * @param {(0 | 1)[]} bits
- * @returns {string}
- */
-export const toBinaryString = (bits) => {
-    let str = "";
-    const len = bits.length;
-    for (let i = 0; i < len; i++) {
-        str += bits[i] === 0 ? "0" : "1";
-    }
-    return str;
 };
 
 /**
@@ -240,10 +210,7 @@ export class BReg {
      * @param {number} [base] default is 10
      */
     toNumberString(base = 10) {
-        return (hasBigInt ? BigInt : Number)(
-            "0b" + toBinaryStringReverse(this.bits),
-        )
-            .toString(base);
+        return toNumberString(this.bits, base);
     }
 
     /**

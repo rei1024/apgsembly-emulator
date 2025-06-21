@@ -1,10 +1,10 @@
 // @ts-check
 
 import {
-    BReg,
     toBinaryString,
     toBinaryStringReverse,
-} from "../../src/components/BReg.js";
+    toNumberString,
+} from "../../src/components/util.js";
 import { internalError } from "../../src/internalError.js";
 import { create } from "../util/create.js";
 
@@ -88,7 +88,7 @@ export class BinaryUI {
 
     /**
      * initialize DOM
-     * @param {ReadonlyMap<number, BReg>} regs
+     * @param {ReadonlyMap<number, { bits: (0 | 1)[]; pointer: number }>} regs
      */
     initialize(regs) {
         this.clear();
@@ -133,7 +133,7 @@ export class BinaryUI {
     }
 
     /**
-     * @param {ReadonlyMap<number, BReg>} regs
+     * @param {ReadonlyMap<number, { bits: (0 | 1)[]; pointer: number }>} regs
      * @param {boolean} hideBits
      * @param {boolean} reverseBits
      * @param {boolean} showBinaryValueInDecimal
@@ -164,7 +164,7 @@ export class BinaryUI {
                 $head.innerHTML = "";
                 $suffix.innerHTML = "";
             } else {
-                const obj = reg.toObject();
+                const obj = toObject(reg);
                 $prefix.textContent = reverseBits
                     ? toBinaryStringReverse(obj.suffix)
                     : toBinaryString(obj.prefix);
@@ -175,24 +175,40 @@ export class BinaryUI {
             }
 
             if (showBinaryValueInDecimal) {
-                $decimal.textContent = "value = " + reg.toNumberString(10) +
+                $decimal.textContent = "value = " +
+                    toNumberString(reg.bits, 10) +
                     ", ";
             } else {
                 $decimal.innerHTML = "";
             }
 
             if (showBinaryValueInHex) {
-                $hex.textContent = "hex = " + reg.toNumberString(16) + ", ";
+                $hex.textContent = "hex = " + toNumberString(reg.bits, 16) +
+                    ", ";
             } else {
                 $hex.innerHTML = "";
             }
 
             $maxPointer.textContent = "max_pointer = " +
-                (reg.getBits().length - 1) +
+                (reg.bits.length - 1) +
                 ", ";
 
             $pointer.textContent = "pointer = " + reg.pointer.toString();
             i++;
         }
     }
+}
+
+/**
+ * @param {{ bits: (0 | 1)[]; pointer: number }} breg
+ * @returns
+ */
+function toObject(breg) {
+    const bits = breg.bits;
+    const pointer = breg.pointer;
+    return {
+        prefix: bits.slice(0, pointer),
+        head: bits[pointer] ?? internalError(),
+        suffix: bits.slice(pointer + 1),
+    };
 }

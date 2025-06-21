@@ -8,10 +8,10 @@ import {
     B_SET,
     B_TDEC,
 } from "../src/action_consts/BReg_consts.js";
-import { toBinaryString } from "../src/components/BReg.js";
 import { URegAction } from "../src/actions/URegAction.js";
 import { U_INC, U_TDEC } from "../src/action_consts/UReg_consts.js";
 import { assertEquals, assertThrows, test } from "./deps.js";
+import { toBinaryString } from "../src/components/util.js";
 
 test("ActionExecutor output", () => {
     const x = new ActionExecutor({

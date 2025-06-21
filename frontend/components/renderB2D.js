@@ -1,13 +1,12 @@
 // @ts-check
 
-import { B2D } from "../../src/components/B2D.js";
 import { internalError } from "../../src/internalError.js";
 
 /**
  * B2Dをcanvasに描画する
  * render B2D to canvas
  * @param {CanvasRenderingContext2D} context
- * @param {B2D} b2d
+ * @param {{ x: number; y: number; maxX: number, maxY: number; data: (0 | 1)[][]; }} b2d
  * @param {boolean} hidePointer ポインタを非表示にする
  * @param {boolean} flipUpsideDown 上下逆にする
  */
@@ -29,8 +28,8 @@ export const renderB2D = (context, b2d, hidePointer, flipUpsideDown) => {
         context.beginPath();
     }
 
-    const maxX = b2d.getMaxX();
-    const maxY = b2d.getMaxY();
+    const maxX = b2d.maxX;
+    const maxY = b2d.maxY;
 
     const n = Math.max(maxX, maxY) + 1;
     const cellSize = width / n;
@@ -41,7 +40,7 @@ export const renderB2D = (context, b2d, hidePointer, flipUpsideDown) => {
         context.translate(0, -width);
     }
 
-    const array = b2d.getArray();
+    const array = b2d.data;
     // context.rotate(Math.PI / 4);
     context.fillStyle = "#212529";
     for (let j = 0; j <= maxY; j++) {

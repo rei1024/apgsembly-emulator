@@ -18,3 +18,4 @@ deno.lock
 /playwright/.cache/
 
 dist/index.dist.js.map
+dist/machine-worker.js.map
