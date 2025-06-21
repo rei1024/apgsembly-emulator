@@ -53,7 +53,6 @@ import {
 } from "./bind.js";
 import { toLocaleString } from "./util/toLocaleString.js";
 import { LibraryUI } from "./components/library_ui.js";
-import { MachineWorker } from "./machine-worker.js";
 import { Comlink } from "./deps.js";
 
 /** index.htmlと同期すること */
@@ -72,7 +71,7 @@ export class App {
     #prevAppState;
     /** エラーメッセージ */
     #errorMessage = "";
-    /** @type {MachineWorker | undefined} */
+    /** @type {import('./machine-worker.js').MachineWorker | undefined} */
     #machine;
     /** @type {undefined | number} */
     #prevFrequency;

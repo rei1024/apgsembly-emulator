@@ -13,4 +13,3 @@ var fr=Object.defineProperty;var mr=(e,t)=>{for(var r in t)fr(e,r,{get:t[r],enum
  * Copyright 2019 Google LLC
  * SPDX-License-Identifier: Apache-2.0
  */
-//# sourceMappingURL=machine-worker.js.map
