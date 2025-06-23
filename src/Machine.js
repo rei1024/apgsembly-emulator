@@ -300,14 +300,15 @@ export class Machine {
      */
     exec(n, isRunning, breakpointIndex, breakpointInputValue) {
         const hasBreakpoint = breakpointIndex !== -1;
-        const start = performance.now();
+        const start = isRunning && performance.now();
 
         for (let i = 0; i < n; i++) {
             const compiledCommand = this.getNextCommand();
 
             // optimization
-            if (compiledCommand.tdecuOptimize) {
-                const tdec = compiledCommand.tdecuOptimize.tdecU;
+            const tdecuOptimize = compiledCommand.tdecuOptimize;
+            if (tdecuOptimize) {
+                const tdec = tdecuOptimize.tdecU;
                 let num = tdec.registerCache?.getValue();
                 if (num !== undefined && num !== 0) {
                     num = Math.min(num, n - i);
@@ -352,7 +353,7 @@ export class Machine {
 
             // 1フレームに50ms以上時間が掛かっていたら、残りはスキップする
             if (
-                isRunning && (i + 1) % 500000 === 0 &&
+                isRunning && (i + 1) % 500000 === 0 && start !== false &&
                 (performance.now() - start >= 50)
             ) {
                 return undefined;
@@ -373,7 +374,7 @@ export class Machine {
     /**
      * @private
      * @param {import('./compile.js').CompiledCommandWithNextState} compiledCommand
-     * @returns {-1 | void}
+     * @returns {-1 | void} -1 is HALT_OUT
      */
     execCommandFor(compiledCommand) {
         this.stepCount += 1;

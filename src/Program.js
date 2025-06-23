@@ -182,44 +182,31 @@ export const validateComponentsHeader = (componentsHeaders, analyzeResult) => {
         componentsHeaders.flatMap((c) => parseComponentsHeader(c.content)),
     );
 
-    if (analyzeResult.hasAdd) {
-        if (!components.has("ADD")) {
-            errors.push(
-                "Program uses ADD component but the #COMPONENTS header does not include it.",
-            );
-        }
+    /**
+     * @param {string} comp
+     * @returns {string}
+     */
+    const errorMessage = (comp) =>
+        `Program uses ${comp} component but the #COMPONENTS header does not include it.`;
+
+    if (analyzeResult.hasAdd && !components.has("ADD")) {
+        errors.push(errorMessage("ADD"));
     }
 
-    if (analyzeResult.hasSub) {
-        if (!components.has("SUB")) {
-            errors.push(
-                "Program uses SUB component but the #COMPONENTS header does not include it.",
-            );
-        }
+    if (analyzeResult.hasSub && !components.has("SUB")) {
+        errors.push(errorMessage("SUB"));
     }
 
-    if (analyzeResult.hasMul) {
-        if (!components.has("MUL")) {
-            errors.push(
-                "Program uses MUL component but the #COMPONENTS header does not include it.",
-            );
-        }
+    if (analyzeResult.hasMul && !components.has("MUL")) {
+        errors.push(errorMessage("MUL"));
     }
 
-    if (analyzeResult.hasB2D) {
-        if (!components.has("B2D")) {
-            errors.push(
-                "Program uses B2D component but the #COMPONENTS header does not include it.",
-            );
-        }
+    if (analyzeResult.hasB2D && !components.has("B2D")) {
+        errors.push(errorMessage("B2D"));
     }
 
-    if (analyzeResult.hasOutput) {
-        if (!components.has("OUTPUT")) {
-            errors.push(
-                "Program uses OUTPUT component but the #COMPONENTS header does not include it.",
-            );
-        }
+    if (analyzeResult.hasOutput && !components.has("OUTPUT")) {
+        errors.push(errorMessage("OUTPUT"));
     }
 
     /** @type {number[]} */
@@ -236,7 +223,9 @@ export const validateComponentsHeader = (componentsHeaders, analyzeResult) => {
                 neededUnary.map((u) => "U" + u).join(", ")
             } component${
                 neededUnary.length === 1 ? "" : "s"
-            } but the #COMPONENTS header does not include it.`,
+            } but the #COMPONENTS header does not include ${
+                neededUnary.length === 1 ? "it" : "them"
+            }.`,
         );
     }
 
@@ -254,7 +243,9 @@ export const validateComponentsHeader = (componentsHeaders, analyzeResult) => {
                 neededBinary.map((u) => "B" + u).join(", ")
             } component${
                 neededBinary.length === 1 ? "" : "s"
-            } but the #COMPONENTS header does not include it.`,
+            } but the #COMPONENTS header does not include ${
+                neededBinary.length === 1 ? "it" : "them"
+            }.`,
         );
     }
 
@@ -268,13 +259,13 @@ export const validateComponentsHeader = (componentsHeaders, analyzeResult) => {
  * @returns {string[]}
  */
 function compactRanges(arr) {
-    if (arr.length === 0) {
+    const len = arr.length;
+    if (len === 0) {
         return [];
     }
     const result = [];
     let start = arr[0];
     let end = arr[0] ?? internalError();
-    const len = arr.length;
 
     for (let i = 1; i < len; i++) {
         const item = arr[i] ?? internalError();
@@ -294,7 +285,7 @@ function compactRanges(arr) {
 /**
  * Generate #COMPONENTS header content
  * @param {AnalyzeProgramResult} analyzeResult
- * @returns {string}
+ * @returns {string} `"U0-2,ADD"`
  */
 export const generateComponentsHeader = (analyzeResult) => {
     /** @type {string[]} */
