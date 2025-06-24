@@ -8,16 +8,10 @@ import { ProgramLines } from "./ProgramLines.js";
  *
  * @param {string} templateLine
  * @param {{
-    defaultReplacements: {
-        needle: string;
-        replacement: string;
-    }[];
+    defaultReplacements: import("./ProgramLines.js").ReplacementItem[];
     lines: string[];
 }} template
- * @param {{
-        needle: string;
-        replacement: string;
-    }[]} insertReplacements
+ * @param {import("./ProgramLines.js").ReplacementItem[]} insertReplacements
  * @returns {string}
  */
 function replaceTemplate(templateLine, template, insertReplacements) {

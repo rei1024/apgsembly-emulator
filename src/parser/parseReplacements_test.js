@@ -8,6 +8,11 @@ test("parseReplacements 1", () => {
         needle: "x",
         replacement: "2",
     }]);
+
+    assertEquals(parseReplacements("{x=2}", undefined, "_", "#DEFINE"), [{
+        needle: "x",
+        replacement: "2",
+    }]);
 });
 
 test("parseReplacements 2", () => {

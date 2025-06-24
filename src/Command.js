@@ -91,7 +91,7 @@ export class RegistersHeader extends ProgramLine {
 }
 
 /**
- * @param {{ needle: string; replacement: string; }[]} reps
+ * @param {import("./ProgramLines.js").ReplacementItem[]} reps
  */
 function prettyTemplateReplacement(reps) {
     return ("{ " +
@@ -104,7 +104,7 @@ function prettyTemplateReplacement(reps) {
 export class Define extends ProgramLine {
     /**
      * @param {string} name
-     * @param {{ needle: string; replacement: string }[]} defaultReplacements
+     * @param {import("./ProgramLines.js").ReplacementItem[]} defaultReplacements
      */
     constructor(name, defaultReplacements) {
         super();
@@ -167,7 +167,7 @@ export class Enddef extends ProgramLine {
 export class Insert extends ProgramLine {
     /**
      * @param {string} templateName
-     * @param {{ needle: string; replacement: string }[]} replacements
+     * @param {import("./ProgramLines.js").ReplacementItem[]} replacements
      */
     constructor(templateName, replacements) {
         super();
@@ -394,7 +394,7 @@ export const parseProgramLine = (str, line) => {
             }
             /** @type {string} */
             let name;
-            /** @type {{ needle: string; replacement: string }[]} */
+            /** @type {import("./ProgramLines.js").ReplacementItem[]} */
             let replacements = [];
             const indexOfOpenBrace = content.indexOf("{");
             if (indexOfOpenBrace !== -1) {
@@ -424,7 +424,7 @@ export const parseProgramLine = (str, line) => {
             }
             /** @type {string} */
             let name;
-            /** @type {{ needle: string; replacement: string }[]} */
+            /** @type {import("./ProgramLines.js").ReplacementItem[]} */
             let replacements = [];
             const indexOfOpenBrace = content.indexOf("{");
             if (indexOfOpenBrace !== -1) {

@@ -15,7 +15,7 @@ export const validateNoSameComponentCommand = (command) => {
 
     // HALT_OUTの場合は一旦無視
     // FIXME
-    if (actions.find((x) => x instanceof HaltOutAction) !== undefined) {
+    if (actions.some((x) => x instanceof HaltOutAction)) {
         return undefined;
     }
 

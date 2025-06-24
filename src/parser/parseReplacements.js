@@ -8,7 +8,7 @@ import { lineNumberMessage } from "./message.js";
  * @param {number | undefined} line
  * @param {string} src original line
  * @param {'#DEFINE' | '#INSERT'} key
- * @returns {{ needle: string; replacement: string }[] | string} replacements or error message
+ * @returns {import("../ProgramLines.js").ReplacementItem[] | string} replacements or error message
  */
 export function parseReplacements(replacementsMapString, line, src, key) {
     replacementsMapString = replacementsMapString.trim();

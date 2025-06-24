@@ -24,15 +24,15 @@ export function parseComponentsHeader(content) {
             components.push(str);
         } else if (str.startsWith(CLOCK_PREFIX)) {
             const _clockPeriod = Number(str.slice(CLOCK_PREFIX.length));
-        } else if (str.startsWith("B")) {
-            const numList = parseRange(str.slice(1));
-            for (const x of numList.map((x) => `B${x}`)) {
-                components.push(x);
-            }
-        } else if (str.startsWith("U")) {
-            const numList = parseRange(str.slice(1));
-            for (const x of numList.map((x) => `U${x}`)) {
-                components.push(x);
+        } else {
+            const register = str.startsWith("B")
+                ? "B"
+                : (str.startsWith("U") ? "U" : null);
+            if (register) {
+                const numList = parseRange(str.slice(1));
+                for (const x of numList.map((x) => `${register}${x}`)) {
+                    components.push(x);
+                }
             }
         }
     }
@@ -47,10 +47,11 @@ export function parseComponentsHeader(content) {
 function parseRange(rangeStr) {
     const range = rangeStr.split("-");
     if (range.length === 1) {
-        if (range[0]?.length === 0) {
+        const numStr = range[0];
+        if (numStr?.length === 0) {
             throw new Error("Invalid #COMPONENTS");
         }
-        const num = Number(range[0]);
+        const num = Number(numStr);
         if (Number.isNaN(num)) {
             throw new Error("Invalid #COMPONENTS");
         }

@@ -10,12 +10,16 @@ import {
 import { internalError } from "./internalError.js";
 
 /**
+ * @typedef {{ needle: string; replacement: string }} ReplacementItem
+ */
+
+/**
  * プログラムの行の配列
  */
 export class ProgramLines {
     /**
      * @param {ReadonlyArray<ProgramLine>} array
-     * @param {ReadonlyMap<string, { defaultReplacements: { needle: string; replacement: string }[]; lines: string[] }>} templates
+     * @param {ReadonlyMap<string, { defaultReplacements: ReplacementItem[]; lines: string[] }>} templates
      */
     constructor(array, templates = new Map()) {
         /**
@@ -38,7 +42,7 @@ export class ProgramLines {
     }
 
     /**
-     * @returns {ReadonlyMap<string, { defaultReplacements: { needle: string; replacement: string }[]; lines: string[] }>}
+     * @returns {ReadonlyMap<string, { defaultReplacements: ReplacementItem[]; lines: string[] }>}
      */
     getTemplates() {
         return this.templates;
@@ -69,7 +73,7 @@ export class ProgramLines {
         const programLines = [];
 
         /**
-         * @type {Map<string, { defaultReplacements: { needle: string; replacement: string }[]; lines: string[] }>}
+         * @type {Map<string, { defaultReplacements: ReplacementItem[]; lines: string[] }>}
          */
         const templates = new Map();
 
