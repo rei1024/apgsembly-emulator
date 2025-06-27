@@ -19,7 +19,11 @@ test("B2DAction pretty", () => {
 test("B2DAction parse INC", () => {
     parsePretty("INC B2DX", "INC B2DX");
     parsePretty("INC B2DY", "INC B2DY");
-    parsePretty("  INC   B2DX  ", "INC B2DX");
+    parsePretty("  INC B2DX  ", "INC B2DX");
+});
+
+test("B2DAction parse spaces", () => {
+    parsePretty("INC   B2DX", undefined);
 });
 
 test("B2DAction parse APGsembly 1.0", () => {

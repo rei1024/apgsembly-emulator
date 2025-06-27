@@ -1,3 +1,5 @@
+// @ts-check
+
 export const T_INC = 0;
 export const T_DEC = 1;
 export const T_READ = 2;

@@ -60,3 +60,17 @@ test("parseComponentsHeader Error B", () => {
         parse("B-3");
     });
 });
+
+test("parseComponentsHeader Error large range value", () => {
+    assertThrows(() => {
+        parse("B100-102");
+    });
+
+    assertThrows(() => {
+        parse("B98-102");
+    });
+
+    assertThrows(() => {
+        parse("U100-102");
+    });
+});

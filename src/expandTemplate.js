@@ -16,13 +16,9 @@ import { ProgramLines } from "./ProgramLines.js";
  */
 function replaceTemplate(templateLine, template, insertReplacements) {
     let replacedStr = templateLine;
-    for (const reps of insertReplacements) {
-        replacedStr = replacedStr.replaceAll(
-            reps.needle,
-            reps.replacement,
-        );
-    }
-    for (const reps of template.defaultReplacements) {
+    for (
+        const reps of insertReplacements.concat(template.defaultReplacements)
+    ) {
         replacedStr = replacedStr.replaceAll(
             reps.needle,
             reps.replacement,

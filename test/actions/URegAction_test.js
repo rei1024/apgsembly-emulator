@@ -10,13 +10,16 @@ test("URegAction parse", () => {
 
     assertEquals(URegAction.parse(" INC U0"), new URegAction(U_INC, 0));
     assertEquals(URegAction.parse("INC U0 "), new URegAction(U_INC, 0));
-    assertEquals(URegAction.parse("INC     U0"), new URegAction(U_INC, 0));
 
     assertEquals(URegAction.parse("TDEC U0"), new URegAction(U_TDEC, 0));
 
     assertEquals(URegAction.parse("TDEC U5"), new URegAction(U_TDEC, 5));
 
     assertEquals(URegAction.parse("TDEC U12"), new URegAction(U_TDEC, 12));
+});
+
+test("URegAction parse fail", () => {
+    assertEquals(URegAction.parse("INC     U0"), undefined);
 });
 
 test("URegAction APGsembly 1.0", () => {

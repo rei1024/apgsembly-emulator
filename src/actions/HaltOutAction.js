@@ -37,7 +37,7 @@ export class HaltOutAction extends Action {
      * @returns {HaltOutAction | undefined}
      */
     static parse(str) {
-        const array = str.trim().split(/\s+/u);
+        const array = str.trim().split(" ");
         if (array.length !== 1) {
             return undefined;
         }

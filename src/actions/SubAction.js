@@ -76,7 +76,7 @@ export class SubAction extends Action {
      * @returns {SubAction | undefined}
      */
     static parse(str) {
-        const array = str.trim().split(/\s+/u);
+        const array = str.trim().split(" ");
         if (array.length !== 2) {
             return undefined;
         }

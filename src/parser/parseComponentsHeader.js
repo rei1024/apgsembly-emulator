@@ -67,6 +67,13 @@ function parseRange(rangeStr) {
         ) {
             throw new Error("Invalid #COMPONENTS");
         }
+
+        if (start >= 100 || end >= 100) {
+            throw new Error(
+                "Invalid #COMPONENTS: range declaration must be less than 100",
+            );
+        }
+
         const res = [];
         for (let i = start; i < end + 1; i++) {
             res.push(i);

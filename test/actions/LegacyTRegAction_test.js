@@ -33,14 +33,8 @@ test("LegacyTRegAction parse success", () => {
     );
 });
 
-test("LegacyTRegAction parse whitespace", () => {
-    assertEquals(
-        LegacyTRegAction.parse("  INC   T2  "),
-        new LegacyTRegAction(T_INC, 2),
-    );
-});
-
 test("LegacyTRegAction parse fail", () => {
+    assertEquals(LegacyTRegAction.parse("  INC   T2  "), undefined);
     assertEquals(LegacyTRegAction.parse(""), undefined);
     assertEquals(LegacyTRegAction.parse("a b c"), undefined);
     assertEquals(LegacyTRegAction.parse("INC"), undefined);

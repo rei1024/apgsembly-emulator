@@ -22,10 +22,10 @@ test("BRegAction parse success", () => {
 test("BRegAction parse whitespace", () => {
     assertEquals(BRegAction.parse(" INC B2"), new BRegAction(B_INC, 2));
     assertEquals(BRegAction.parse("INC B2   "), new BRegAction(B_INC, 2));
-    assertEquals(BRegAction.parse("INC    B2"), new BRegAction(B_INC, 2));
 });
 
 test("BRegAction parse fail", () => {
+    assertEquals(BRegAction.parse("INC    B2"), undefined);
     assertEquals(BRegAction.parse(""), undefined);
     assertEquals(BRegAction.parse("a b c"), undefined);
     assertEquals(BRegAction.parse("INC"), undefined);
@@ -35,7 +35,6 @@ test("BRegAction parse fail", () => {
 
 test("BRegAction pretty", () => {
     assertEquals(BRegAction.parse("INC B2")?.pretty(), "INC B2");
-    assertEquals(BRegAction.parse("INC  B2")?.pretty(), "INC B2");
 });
 
 test("BRegAction isSameComponent", () => {

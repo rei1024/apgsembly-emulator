@@ -13,7 +13,12 @@ function parsePretty(str, str2) {
 
 test("ADD parse ADD B0", () => {
     parsePretty("ADD B0", "ADD B0");
-    parsePretty("ADD    B0", "ADD B0");
+});
+
+test("ADD parse spaces", () => {
+    parsePretty("ADDB0", undefined);
+    parsePretty("ADD  B0", undefined);
+    parsePretty("ADD    B0", undefined);
 });
 
 test("ADD parse ADD A1", () => {

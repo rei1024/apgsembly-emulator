@@ -25,7 +25,7 @@ export class NopAction extends Action {
      * @returns {NopAction | undefined}
      */
     static parse(str) {
-        const array = str.trim().split(/\s+/u);
+        const array = str.trim().split(" ");
         if (array.length !== 1) {
             return undefined;
         }

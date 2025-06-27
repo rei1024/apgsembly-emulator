@@ -139,7 +139,7 @@ export class B2DAction extends Action {
      * @param {string} str
      */
     static parse(str) {
-        const array = str.trim().split(/\s+/u);
+        const array = str.trim().split(" ");
         if (array.length !== 2) {
             return undefined;
         }

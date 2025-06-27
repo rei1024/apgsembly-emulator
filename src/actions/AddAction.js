@@ -77,7 +77,8 @@ export class AddAction extends Action {
      * @returns {AddAction | undefined}
      */
     static parse(str) {
-        const array = str.trim().split(/\s+/u);
+        // no extra space
+        const array = str.trim().split(" ");
         if (array.length !== 2) {
             return undefined;
         }
