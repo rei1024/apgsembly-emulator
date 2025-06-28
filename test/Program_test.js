@@ -380,8 +380,8 @@ test("Program parse 9.2", () => {
 test("generateComponentsHeader", () => {
     assertEquals(
         generateComponentsHeader({
-            unary: [0, 1],
-            binary: [0, 1, 2],
+            unary: ["0", "1"],
+            binary: ["0", "1", "2"],
             legacyT: [],
             hasAdd: false,
             hasSub: false,

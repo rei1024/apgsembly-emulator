@@ -33,7 +33,7 @@ const getNumberOfCols = (numberOfRegister) => {
 };
 
 /**
- * @param {number} key
+ * @param {string} key
  */
 const createHeaderCell = (key) => {
     return create("th", {
@@ -43,7 +43,7 @@ const createHeaderCell = (key) => {
 };
 
 /**
- * @param {number} key
+ * @param {string} key
  * @param {UReg} value
  */
 const createDataCell = (key, value) => {
@@ -57,7 +57,7 @@ const createDataCell = (key, value) => {
 };
 
 /**
- * @param {ReadonlyMap<number, UReg>} regs
+ * @param {ReadonlyMap<string, UReg>} regs
  * @returns {{ table: HTMLTableElement, cells: HTMLElement[] }}
  */
 const createTable = (regs) => {
@@ -128,7 +128,7 @@ export class UnaryUI {
 
     /**
      * initialize DOM
-     * @param {ReadonlyMap<number, UReg>} regs
+     * @param {ReadonlyMap<string, UReg>} regs
      */
     initialize(regs) {
         const { table, cells } = createTable(regs);
@@ -142,7 +142,7 @@ export class UnaryUI {
     }
 
     /**
-     * @param {ReadonlyMap<number, UReg>} regs
+     * @param {ReadonlyMap<string, UReg>} regs
      */
     render(regs) {
         let i = 0;

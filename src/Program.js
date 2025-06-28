@@ -109,8 +109,8 @@ const sortNub = (array) => {
 
 /**
  * @typedef {{
- * unary: number[],
- * binary: number[],
+ * unary: string[],
+ * binary: string[],
  * legacyT: number[],
  * hasAdd: boolean,
  * hasSub: boolean,
@@ -139,6 +139,18 @@ export const analyzeProgram = (program) => {
         ));
     };
 
+    /**
+     * @template {Action & { regNumber: string }} T
+     * @param {new (...args: any[]) => T} klass
+     * @returns {string[]}
+     */
+    const getStrings = (klass) => {
+        const all = actions.flatMap(
+            (action) => action instanceof klass ? [action.regNumber] : [],
+        );
+        return numberOrStringSort([...new Set(all)]);
+    };
+
     let hasAdd = false;
     let hasSub = false;
     let hasMul = false;
@@ -160,8 +172,8 @@ export const analyzeProgram = (program) => {
     }
 
     return {
-        unary: getNumbers(URegAction),
-        binary: getNumbers(BRegAction),
+        unary: getStrings(URegAction),
+        binary: getStrings(BRegAction),
         legacyT: getNumbers(LegacyTRegAction),
         hasAdd,
         hasSub,
@@ -170,6 +182,34 @@ export const analyzeProgram = (program) => {
         hasOutput,
     };
 };
+
+/**
+ * @param {string[]} array
+ * @returns {string[]}
+ */
+function numberOrStringSort(array) {
+    return array.sort((a, b) => {
+        // 数字([0-9]+)であれば先にソートする
+        const aIsNumber = /[0-9]+/.test(a);
+        const bIsNumber = /[0-9]+/.test(b);
+        if (aIsNumber && bIsNumber) {
+            return Number(a) - Number(b); // 数字同士は数値として比較
+        }
+        if (aIsNumber) {
+            return -1; // 数字は文字列より先に来る
+        }
+        if (bIsNumber) {
+            return 1; // 文字列は数字の後に来る
+        }
+        if (a < b) {
+            return -1; // 文字列同士はアルファベット順
+        }
+        if (a > b) {
+            return 1; // 文字列同士はアルファベット順
+        }
+        return 0; // 同じ場合は等しい
+    });
+}
 
 /**
  * @param {ComponentsHeader[]} componentsHeaders
@@ -209,7 +249,7 @@ export const validateComponentsHeader = (componentsHeaders, analyzeResult) => {
         errors.push(errorMessage("OUTPUT"));
     }
 
-    /** @type {number[]} */
+    /** @type {string[]} */
     const neededUnary = [];
     for (const u of analyzeResult.unary) {
         if (!components.has("U" + u)) {
@@ -229,7 +269,7 @@ export const validateComponentsHeader = (componentsHeaders, analyzeResult) => {
         );
     }
 
-    /** @type {number[]} */
+    /** @type {string[]} */
     const neededBinary = [];
     for (const b of analyzeResult.binary) {
         if (!components.has("B" + b)) {
@@ -253,6 +293,18 @@ export const validateComponentsHeader = (componentsHeaders, analyzeResult) => {
         throw new Error(errors.join("\n"));
     }
 };
+
+/**
+ * @param {string[]} arr sorted
+ * @returns {string[]}
+ */
+function compactRangesString(arr) {
+    const onlyNumbers = arr.filter((x) => /^[0-9]+$/.test(x)).map((x) =>
+        parseInt(x, 10)
+    );
+    const notNumbers = arr.filter((x) => !/^[0-9]+$/.test(x));
+    return compactRanges(onlyNumbers).concat(notNumbers);
+}
 
 /**
  * @param {number[]} arr sorted
@@ -295,11 +347,15 @@ export const generateComponentsHeader = (analyzeResult) => {
         components.push("B2D");
     }
 
-    const binary = analyzeResult.binary.slice().sort((a, b) => a - b);
-    components = components.concat(compactRanges(binary).map((x) => "B" + x));
+    const binary = numberOrStringSort(analyzeResult.binary.slice());
+    components = components.concat(
+        compactRangesString(binary).map((x) => "B" + x),
+    );
 
-    const unary = analyzeResult.unary.slice().sort((a, b) => a - b);
-    components = components.concat(compactRanges(unary).map((x) => "U" + x));
+    const unary = numberOrStringSort(analyzeResult.unary.slice());
+    components = components.concat(
+        compactRangesString(unary).map((x) => "U" + x),
+    );
 
     if (analyzeResult.hasAdd) {
         components.push("ADD");

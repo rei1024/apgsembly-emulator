@@ -59,7 +59,7 @@ const parseOp = (op) => {
 export class BRegAction extends Action {
     /**
      * @param {BOp} op
-     * @param {number} regNumber
+     * @param {string} regNumber
      */
     constructor(op, regNumber) {
         super();
@@ -107,8 +107,8 @@ export class BRegAction extends Action {
         ) {
             if (reg.startsWith(B_STRING)) {
                 const str = reg.slice(1);
-                if (/^[0-9]+$/u.test(str)) {
-                    return new BRegAction(parseOp(op), parseInt(str, 10));
+                if (/^[a-zA-Z0-9]+$/u.test(str)) {
+                    return new BRegAction(parseOp(op), str);
                 }
             }
         }

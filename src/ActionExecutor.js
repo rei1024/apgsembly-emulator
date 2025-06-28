@@ -23,7 +23,7 @@ import { LegacyTReg } from "./components/LegacyTReg.js";
 
 /**
  * @param {"B" | "U" | "T"} type
- * @param {number} regNum
+ * @param {string} regNum
  * @returns {never}
  */
 const throwNotFound = (type, regNum) => {
@@ -48,8 +48,8 @@ export class ActionExecutor {
     /**
      * 使用するレジスタ番号を引数に取る
      * @param {{
-     *    unary: ReadonlyArray<number>;
-     *    binary: ReadonlyArray<number>;
+     *    unary: ReadonlyArray<string>;
+     *    binary: ReadonlyArray<string>;
      *    legacyT: ReadonlyArray<number>;
      * }} param0
      */
@@ -137,10 +137,7 @@ export class ActionExecutor {
      */
     #setKeyValue(key, value) {
         if (key.startsWith("U")) {
-            const n = parseNum(key.slice(1), 10);
-            if (isNaNLocal(n)) {
-                throwRegisterInitError(key, value);
-            }
+            const n = key.slice(1);
             const reg = this.getUReg(n);
             if (reg === undefined) {
                 throw Error(
@@ -149,10 +146,7 @@ export class ActionExecutor {
             }
             reg.setByRegistersInit(key, value);
         } else if (key.startsWith("B")) {
-            const n = parseNum(key.slice(1), 10);
-            if (isNaNLocal(n)) {
-                throwRegisterInitError(key, value);
-            }
+            const n = key.slice(1);
             const reg = this.getBReg(n);
             if (reg === undefined) {
                 throw Error(
@@ -206,7 +200,7 @@ export class ActionExecutor {
             return -1;
         } else if (action instanceof LegacyTRegAction) {
             const tReg = this.legacyTRegMap.get(action.regNumber) ??
-                throwNotFound("T", action.regNumber);
+                throwNotFound("T", action.regNumber.toString());
             return tReg.action(action);
         }
         throw Error(`execAction: unknown action ${action.pretty()}`);
@@ -239,7 +233,7 @@ export class ActionExecutor {
 
     /**
      * Get unary register
-     * @param {number} n
+     * @param {string} n
      * @returns {UReg | undefined}
      */
     getUReg(n) {
@@ -248,7 +242,7 @@ export class ActionExecutor {
 
     /**
      * Get binary register
-     * @param {number} n
+     * @param {string} n
      * @returns {BReg | undefined}
      */
     getBReg(n) {

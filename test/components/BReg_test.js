@@ -147,14 +147,14 @@ test("BReg set error", () => {
 
 test("BReg action", () => {
     const x = new BReg();
-    assertEquals(x.action(new BRegAction(B_INC, 0)), undefined);
+    assertEquals(x.action(new BRegAction(B_INC, "0")), undefined);
     assertEquals(x.pointer, 1);
-    assertEquals(x.action(new BRegAction(B_TDEC, 0)), 1);
+    assertEquals(x.action(new BRegAction(B_TDEC, "0")), 1);
 
-    assertEquals(x.action(new BRegAction(B_SET, 0)), undefined);
+    assertEquals(x.action(new BRegAction(B_SET, "0")), undefined);
 
-    assertEquals(x.action(new BRegAction(B_READ, 0)), 1);
-    assertEquals(x.action(new BRegAction(B_READ, 0)), 0);
+    assertEquals(x.action(new BRegAction(B_READ, "0")), 1);
+    assertEquals(x.action(new BRegAction(B_READ, "0")), 0);
 });
 
 test("BReg setBy", () => {
