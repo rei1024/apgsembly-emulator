@@ -74,7 +74,7 @@ export class UReg {
      * @returns {void}
      */
     inc() {
-        this.action(new URegAction(U_INC, 0)); // regNumberは仮
+        this.action(new URegAction(U_INC, "0")); // regNumberは仮
     }
 
     /**
@@ -82,7 +82,7 @@ export class UReg {
      * @returns {0 | 1}
      */
     tdec() {
-        const res = this.action(new URegAction(U_TDEC, 0)); // regNumberは仮
+        const res = this.action(new URegAction(U_TDEC, "0")); // regNumberは仮
         if (res === undefined) {
             internalError();
         }

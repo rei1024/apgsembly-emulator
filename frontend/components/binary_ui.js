@@ -88,7 +88,7 @@ export class BinaryUI {
 
     /**
      * initialize DOM
-     * @param {ReadonlyMap<number, BReg>} regs
+     * @param {ReadonlyMap<string, BReg>} regs
      */
     initialize(regs) {
         this.clear();
@@ -133,7 +133,7 @@ export class BinaryUI {
     }
 
     /**
-     * @param {ReadonlyMap<number, BReg>} regs
+     * @param {ReadonlyMap<string, BReg>} regs
      * @param {boolean} hideBits
      * @param {boolean} reverseBits
      * @param {boolean} showBinaryValueInDecimal

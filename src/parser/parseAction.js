@@ -16,9 +16,10 @@ import { LegacyTRegAction } from "../actions/LegacyTRegAction.js";
  * @type {((str: string) => Action | undefined)[]}
  */
 const parsers = [
+    // NOTE: B2DはBと被っているためB2Dを先にパースする必要がある
+    B2DAction.parse,
     BRegAction.parse,
     URegAction.parse,
-    B2DAction.parse,
     NopAction.parse,
     AddAction.parse,
     MulAction.parse,

@@ -42,20 +42,26 @@ export function parseComponentsHeader(content) {
 
 /**
  * @param {string} rangeStr `0`, `0-6`
- * @returns {number[]}
+ * @returns {string[]}
  */
 function parseRange(rangeStr) {
     const range = rangeStr.split("-");
     if (range.length === 1) {
-        const numStr = range[0];
-        if (numStr?.length === 0) {
+        const singleValue = range[0];
+        if (singleValue === undefined || singleValue.length === 0) {
             throw new Error("Invalid #COMPONENTS");
         }
-        const num = Number(numStr);
-        if (Number.isNaN(num)) {
-            throw new Error("Invalid #COMPONENTS");
+
+        const isNumber = /[0-9]+/u.test(singleValue);
+        if (isNumber) {
+            const num = Number(singleValue);
+            if (Number.isNaN(num)) {
+                throw new Error("Invalid #COMPONENTS");
+            }
+            return [num.toString()];
+        } else {
+            return [singleValue];
         }
-        return [num];
     } else if (range.length === 2) {
         if (range.some((x) => x.length === 0)) {
             throw new Error("Invalid #COMPONENTS");
@@ -74,9 +80,12 @@ function parseRange(rangeStr) {
             );
         }
 
+        /**
+         * @type {string[]}
+         */
         const res = [];
         for (let i = start; i < end + 1; i++) {
-            res.push(i);
+            res.push(i.toString());
         }
         return res;
     }

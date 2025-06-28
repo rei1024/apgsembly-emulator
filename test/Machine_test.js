@@ -83,7 +83,7 @@ A0; *; A0; NOP
         throw Error("parse error " + str);
     }
     const machine = new Machine(program);
-    assertEquals(machine.actionExecutor.getUReg(3)?.getValue(), 2);
+    assertEquals(machine.actionExecutor.getUReg("3")?.getValue(), 2);
 });
 
 test("Machine register header: single quotation support for binary", () => {
@@ -97,7 +97,7 @@ A0; *; A0; NOP
         throw Error("parse error " + str);
     }
     const machine = new Machine(program);
-    assertEquals(machine.actionExecutor.getBReg(0)?.getBits(), [1, 1, 0]);
+    assertEquals(machine.actionExecutor.getBReg("0")?.getBits(), [1, 1, 0]);
 });
 
 test("Machine register header error: register is not exist", () => {
@@ -169,9 +169,9 @@ test("Machine program9_2", () => {
      * @param {number} n
      */
     function getUReg(n) {
-        return machine.actionExecutor.getUReg(n)?.getValue();
+        return machine.actionExecutor.getUReg(n.toString())?.getValue();
     }
-    assertEquals([...machine.actionExecutor.uRegMap.keys()], [0, 1]);
+    assertEquals([...machine.actionExecutor.uRegMap.keys()], ["0", "1"]);
     assertEquals(getUReg(0), 7);
     assertEquals(getUReg(1), 5);
 
@@ -202,19 +202,24 @@ test("Machine program9_3", () => {
         throw Error("parse error program9_3");
     }
     const machine = new Machine(program);
-    assertEquals([...machine.actionExecutor.uRegMap.keys()], [0, 1, 2, 3]);
-    assertEquals(machine.actionExecutor.getUReg(0)?.getValue(), 7);
-    assertEquals(machine.actionExecutor.getUReg(1)?.getValue(), 5);
+    assertEquals([...machine.actionExecutor.uRegMap.keys()], [
+        "0",
+        "1",
+        "2",
+        "3",
+    ]);
+    assertEquals(machine.actionExecutor.getUReg("0")?.getValue(), 7);
+    assertEquals(machine.actionExecutor.getUReg("1")?.getValue(), 5);
     for (let i = 0; i < 100; i++) {
         const res = machine.execCommand();
         if (res === -1) {
             break;
         }
     }
-    assertEquals(machine.actionExecutor.getUReg(0)?.getValue(), 0);
-    assertEquals(machine.actionExecutor.getUReg(1)?.getValue(), 5);
-    assertEquals(machine.actionExecutor.getUReg(2)?.getValue(), 35);
-    assertEquals(machine.actionExecutor.getUReg(3)?.getValue(), 0);
+    assertEquals(machine.actionExecutor.getUReg("0")?.getValue(), 0);
+    assertEquals(machine.actionExecutor.getUReg("1")?.getValue(), 5);
+    assertEquals(machine.actionExecutor.getUReg("2")?.getValue(), 35);
+    assertEquals(machine.actionExecutor.getUReg("3")?.getValue(), 0);
 
     assertEquals(machine.getStateStats(), [
         {
@@ -244,7 +249,7 @@ test("Machine program9_4", () => {
     const machine = new Machine(program);
     assertEquals(
         toBinaryStringReverse(
-            machine.actionExecutor.getBReg(0)?.getBits() ?? [],
+            machine.actionExecutor.getBReg("0")?.getBits() ?? [],
         ),
         "0",
     );
@@ -257,7 +262,7 @@ test("Machine program9_4", () => {
     }
     assertEquals(
         toBinaryStringReverse(
-            machine.actionExecutor.getBReg(0)?.getBits() ?? [],
+            machine.actionExecutor.getBReg("0")?.getBits() ?? [],
         ),
         "10001011",
     );
@@ -271,7 +276,7 @@ test("Machine program9_4 exec", () => {
     const machine = new Machine(program);
     assertEquals(
         toBinaryStringReverse(
-            machine.actionExecutor.getBReg(0)?.getBits() ?? [],
+            machine.actionExecutor.getBReg("0")?.getBits() ?? [],
         ),
         "0",
     );
@@ -280,7 +285,7 @@ test("Machine program9_4 exec", () => {
 
     assertEquals(
         toBinaryStringReverse(
-            machine.actionExecutor.getBReg(0)?.getBits() ?? [],
+            machine.actionExecutor.getBReg("0")?.getBits() ?? [],
         ),
         "10001011",
     );
@@ -314,8 +319,8 @@ A1; *; A1; HALT_OUT
             assertEquals(result, "Halted");
         }
         assertEquals(machine.stepCount, 47);
-        assertEquals(machine.actionExecutor.getUReg(0)?.getValue(), 0);
-        assertEquals(machine.actionExecutor.getUReg(1)?.getValue(), 43);
+        assertEquals(machine.actionExecutor.getUReg("0")?.getValue(), 0);
+        assertEquals(machine.actionExecutor.getUReg("1")?.getValue(), 43);
         assertEquals(machine.getStateStats()[2], { nz: 43, z: 1 });
     }
 });
@@ -431,8 +436,8 @@ END_1; *; END_1; HALT_OUT
         const actionExecutor = machine.actionExecutor;
         machine.exec(i, false, -1, 0);
         res.push([
-            actionExecutor.getUReg(0)?.getValue(),
-            actionExecutor.getUReg(1)?.getValue(),
+            actionExecutor.getUReg("0")?.getValue(),
+            actionExecutor.getUReg("1")?.getValue(),
             machine.stepCount,
             machine
                 .getStateStats()[
@@ -466,9 +471,9 @@ test("Machine PI Calculator steps", () => {
             machine.stepCount,
             machine.prevOutput,
             machine.getStateStats(),
-            machine.actionExecutor.getBReg(0)?.getBits().slice(),
-            machine.actionExecutor.getBReg(0)?.pointer,
-            machine.actionExecutor.getUReg(0)?.getValue(),
+            machine.actionExecutor.getBReg("0")?.getBits().slice(),
+            machine.actionExecutor.getBReg("0")?.pointer,
+            machine.actionExecutor.getUReg("0")?.getValue(),
         ];
     }
 
@@ -529,6 +534,6 @@ D0; NZ; D0; TDEC U2, INC U0
     const N = 250000;
 
     machine.exec(N, false, -1, 0);
-    assertEquals(machine.actionExecutor.getUReg(0)?.getValue(), 0);
-    assertEquals(machine.actionExecutor.getUReg(1)?.getValue(), 118896);
+    assertEquals(machine.actionExecutor.getUReg("0")?.getValue(), 0);
+    assertEquals(machine.actionExecutor.getUReg("1")?.getValue(), 118896);
 });

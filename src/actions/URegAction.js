@@ -49,7 +49,7 @@ const parseOp = (op) => {
 export class URegAction extends Action {
     /**
      * @param {UOp} op
-     * @param {number} regNumber
+     * @param {string} regNumber
      */
     constructor(op, regNumber) {
         super();
@@ -97,8 +97,8 @@ export class URegAction extends Action {
             // R for APGsembly 1.0
             if (reg.startsWith(U_STRING) || reg.startsWith(R_STRING)) {
                 const str = reg.slice(1);
-                if (/^[0-9]+$/u.test(str)) {
-                    return new URegAction(parseOp(op), parseInt(str, 10));
+                if (/^[a-zA-Z0-9]+$/u.test(str)) {
+                    return new URegAction(parseOp(op), str);
                 }
             }
         }
