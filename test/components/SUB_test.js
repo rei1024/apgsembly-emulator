@@ -7,7 +7,7 @@ import { assertEquals, test, throwError } from "../deps.js";
 test("SUB a1", () => {
     const x = new SUB();
     x.a1();
-    assertEquals(x.getValue(), 3);
+    assertEquals(x.getValue(), 1);
 });
 
 test("SUB b0", () => {
@@ -19,14 +19,14 @@ test("SUB b0", () => {
 test("SUB b1", () => {
     const x = new SUB();
     x.b1();
-    assertEquals(x.getValue(), 17);
+    assertEquals(x.getValue(), 3);
 });
 
 // action
 test("SUB action a1", () => {
     const x = new SUB();
     x.action(SubAction.parse("SUB A1") ?? throwError());
-    assertEquals(x.getValue(), 3);
+    assertEquals(x.getValue(), 1);
 });
 
 test("SUB action b0", () => {
@@ -38,5 +38,5 @@ test("SUB action b0", () => {
 test("SUB action b1", () => {
     const x = new SUB();
     x.action(SubAction.parse("SUB B1") ?? throwError());
-    assertEquals(x.getValue(), 17);
+    assertEquals(x.getValue(), 3);
 });
