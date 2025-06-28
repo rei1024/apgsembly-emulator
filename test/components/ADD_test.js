@@ -8,26 +8,26 @@ import { assertEquals, test, throwError } from "../deps.js";
 test("ADD a1", () => {
     const x = new ADD();
     assertEquals(x.a1(), undefined);
-    assertEquals(x.getValue(), 5);
+    assertEquals(x.getValue(), 1);
 });
 
 test("ADD a1 toString", () => {
     const x = new ADD();
     assertEquals(x.a1(), undefined);
-    assertEquals(x.toString(), "0101");
+    assertEquals(x.toString(), "01");
 });
 
 test("ADD a1 toStringDetail", () => {
     const x = new ADD();
     assertEquals(x.a1(), undefined);
-    assertEquals(x.toStringDetail(), "010 bit1");
+    assertEquals(x.toStringDetail(), "01");
 });
 
 test("ADD a1 twice", () => {
     const x = new ADD();
     x.a1();
     x.a1();
-    assertEquals(x.getValue(), 0);
+    assertEquals(x.getValue(), 2);
 });
 
 test("ADD b0", () => {
@@ -45,10 +45,10 @@ test("ADD b1", () => {
 test("ADD complex", () => {
     const x = new ADD();
     x.a1();
-    assertEquals(x.getValue(), 5);
+    assertEquals(x.getValue(), 1);
     x.b1();
     x.a1();
-    assertEquals(x.getValue(), 12);
+    assertEquals(x.getValue(), 2);
 });
 
 // action
@@ -64,31 +64,31 @@ test("ADD action", () => {
 
     x.action(act);
 
-    assertEquals(x.getValue(), 5);
+    assertEquals(x.getValue(), 1);
     x.action(AddAction.parse("ADD B1") ?? throwError());
     x.action(AddAction.parse("ADD A1") ?? throwError());
 
-    assertEquals(x.getValue(), 12);
+    assertEquals(x.getValue(), 2);
 });
 
 test("ADD test", () => {
     const x = new ADD();
     x.a1();
-    assertEquals(x.getValue(), 5);
+    assertEquals(x.getValue(), 1);
     x.b0();
     assertEquals(x.getValue(), 0);
     x.b1();
     assertEquals(x.getValue(), 0);
     x.a1();
-    assertEquals(x.getValue(), 5);
+    assertEquals(x.getValue(), 1);
     x.a1();
+    assertEquals(x.getValue(), 2);
+    x.a1();
+    assertEquals(x.getValue(), 3);
+    x.b1();
     assertEquals(x.getValue(), 0);
     x.a1();
-    assertEquals(x.getValue(), 5);
-    x.b1();
-    assertEquals(x.getValue(), 9);
+    assertEquals(x.getValue(), 1);
     x.a1();
-    assertEquals(x.getValue(), 12);
-    x.a1();
-    assertEquals(x.getValue(), 9);
+    assertEquals(x.getValue(), 2);
 });
