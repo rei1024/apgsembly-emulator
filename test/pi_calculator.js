@@ -304,6 +304,9 @@ OUTD3; ZZ; ITER1; INC U3, NOP
 
 export const piCalculator = [part1, part2, part3, part4].join("");
 
+/**
+ * Code by branoc <https://conwaylife.com/forums/viewtopic.php?p=199807#p199807>
+ */
 export const piCalculatorTemplate = `
 ## Code templates for using binary numbers
 

@@ -10,7 +10,7 @@ import { internalError } from "../internalError.js";
 export class SUB {
     constructor() {
         /**
-         * 0 ~ 31
+         * 0 ~ 3
          * @private
          */
         this.value = 0;
@@ -47,20 +47,7 @@ export class SUB {
      * @returns {void}
      */
     a1() {
-        /**
-         * `-1` is `"FAILURE"`
-         */
-        // deno-fmt-ignore
-        const subLookupA1 =
-            [
-                3, 2, -1, -1, 7, 6, -1, -1, 11, 10, -1, -1, 15, 14, -1, -1,
-                19, 18, -1, -1, 23, 22, -1, -1, 27, 26, -1, -1, 31, 30, -1, -1
-            ];
-        const x = subLookupA1[this.value] ?? internalError();
-        if (x === -1) {
-            throw Error("SUB error: A1");
-        }
-        this.value = x;
+        this.value = (this.value + 1) % 4;
     }
 
     /**
@@ -68,14 +55,9 @@ export class SUB {
      * @returns {0 | 1}
      */
     b0() {
-        const t = this.value % 2;
-        // deno-fmt-ignore
-        const subLookupB0 =
-            [
-                0, 0, 0, 0, 17, 17, 0, 0, 0, 0, 0, 0, 0, 0, 17, 17,
-                17, 17, 0, 0, 17, 17, 17, 17, 0, 0, 17, 17, 17, 17, 17, 17
-            ];
-        this.value = subLookupB0[this.value] ?? internalError();
+        const value = this.value;
+        const t = value % 2;
+        this.value = value >= 2 ? 3 : 0;
         // @ts-ignore
         return t;
     }
@@ -85,14 +67,9 @@ export class SUB {
      * @returns {0 | 1}
      */
     b1() {
-        const t = 1 - this.value % 2;
-        // deno-fmt-ignore
-        const subLookupB1 =
-            [
-                17, 17, 0, 0, 0, 0, 0, 0, 0, 0, 17, 17, 0, 0, 0, 0,
-                17, 17, 17, 17, 17, 17, 0, 0, 17, 17, 17, 17, 0, 0, 17, 17
-            ];
-        this.value = subLookupB1[this.value] ?? internalError();
+        const value = this.value;
+        const t = 1 - value % 2;
+        this.value = value === 0 || value === 3 ? 3 : 0;
         // @ts-ignore
         return t;
     }
@@ -101,15 +78,13 @@ export class SUB {
      * @returns {string}
      */
     toString() {
-        return this.value.toString(2).padStart(5, "0");
+        return this.value.toString(2).padStart(2, "0");
     }
 
     /**
      * @returns {string}
      */
     toStringDetail() {
-        const str = this.toString();
-        return str.slice(0, 3) + " stopper" + str.slice(3, 4) +
-            " bit" + str.slice(4);
+        return this.toString();
     }
 }

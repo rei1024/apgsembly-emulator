@@ -10,7 +10,7 @@ import { internalError } from "../internalError.js";
 export class ADD {
     constructor() {
         /**
-         * 0 ~ 15
+         * 0 ~ 3
          * @type {number}
          * @private
          */
@@ -29,31 +29,21 @@ export class ADD {
             case ADD_B0: {
                 const value = this.value;
                 const t = value % 2;
-                // deno-fmt-ignore
-                this.value = [
-                    0b0000, 0b0000, 0b0000, 0b0000, 0b0000, 0b0000, 0b1001, 0b1001,
-                    0b0000, 0b0000, 0b1001, 0b1001, 0b1001, 0b1001, 0b1001, 0b1001
-                ][value] ?? internalError();
+
+                this.value = value >>> 1;
                 // @ts-ignore
                 return t;
             }
             case ADD_B1: {
                 const value = this.value;
                 const t = 1 - value % 2;
-                // deno-fmt-ignore
-                this.value = [
-                    0b0000, 0b0000, 0b0000, 0b0000, 0b1001, 0b1001, 0b0000, 0b0000,
-                    0b1001, 0b1001, 0b0000, 0b0000, 0b1001, 0b1001, 0b1001, 0b1001
-                ][value] ?? internalError();
+
+                this.value = value === 1 || value === 2 ? 1 : 0;
                 // @ts-ignore
                 return t;
             }
             case ADD_A1: {
-                // deno-fmt-ignore
-                this.value = [
-                    0b0101, 0b0100, 0b0111, 0b0110, 0b0001, 0b0000, 0b0011, 0b0010,
-                    0b1101, 0b1100, 0b1111, 0b1110, 0b1001, 0b1000, 0b1011, 0b1010
-                ][this.value] ?? internalError();
+                this.value = (this.value + 1) % 4;
                 return undefined;
             }
             default:
@@ -105,14 +95,13 @@ export class ADD {
      * @returns {string}
      */
     toString() {
-        return this.value.toString(2).padStart(4, "0");
+        return this.value.toString(2).padStart(2, "0");
     }
 
     /**
      * @returns {string}
      */
     toStringDetail() {
-        const str = this.toString();
-        return `${str.slice(0, 3)} bit${str.slice(3)}`;
+        return this.toString();
     }
 }
