@@ -7,7 +7,7 @@ import { serveDir } from "jsr:@std/http@^1/file-server";
 const entryPoint = "./frontend/index.js";
 const outputPath = "./dist/index.dist.js";
 
-const target = ["chrome99", "firefox99", "safari15"];
+const target = ["chrome100", "firefox100", "safari16"];
 
 const isDev = Deno.args.includes("dev");
 

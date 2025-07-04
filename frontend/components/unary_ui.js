@@ -110,20 +110,19 @@ const createTable = (regs) => {
  */
 export class UnaryUI {
     /**
+     * @type {HTMLElement}
+     */
+    #root;
+    /**
+     * @type {HTMLElement[]}
+     */
+    #cells;
+    /**
      * @param {HTMLElement} root
      */
     constructor(root) {
-        /**
-         * @type {HTMLElement}
-         * @private
-         */
-        this.root = root;
-
-        /**
-         * @type {HTMLElement[]}
-         * @private
-         */
-        this.cells = [];
+        this.#root = root;
+        this.#cells = [];
     }
 
     /**
@@ -132,13 +131,13 @@ export class UnaryUI {
      */
     initialize(regs) {
         const { table, cells } = createTable(regs);
-        this.root.replaceChildren(table);
-        this.cells = cells;
+        this.#root.replaceChildren(table);
+        this.#cells = cells;
     }
 
     clear() {
-        this.cells = [];
-        this.root.innerHTML = "";
+        this.#cells = [];
+        this.#root.innerHTML = "";
     }
 
     /**
@@ -146,7 +145,7 @@ export class UnaryUI {
      */
     render(regs) {
         let i = 0;
-        const cells = this.cells;
+        const cells = this.#cells;
         for (const reg of regs.values()) {
             const item = cells[i] ?? internalError();
             item.textContent = reg.getValue().toString();

@@ -336,12 +336,13 @@ export class App {
     }
 
     #setUpStats() {
-        if (this.#machine === undefined) {
+        const machine = this.#machine;
+        if (machine === undefined) {
             this.#statsUI.clear();
         } else {
             this.#statsUI.initialize(
-                this.#machine.getStateStats(),
-                this.#machine.states,
+                machine.getStateStats(),
+                machine.states,
             );
         }
     }

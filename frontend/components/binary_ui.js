@@ -63,27 +63,27 @@ const createBinaryElem = () => {
  */
 export class BinaryUI {
     /**
+     * @type {HTMLElement}
+     */
+    #root;
+    /**
+     * @type {{
+     * $decimal: HTMLElement,
+     * $hex: HTMLElement,
+     * $maxPointer: HTMLElement,
+     * $pointer: HTMLElement,
+     * $prefix: HTMLElement,
+     * $head: HTMLElement,
+     * $suffix: HTMLElement
+     * }[]}
+     */
+    #cells;
+    /**
      * @param {HTMLElement} root
      */
     constructor(root) {
-        /**
-         * @private
-         */
-        this.root = root;
-
-        /**
-         * @type {{
-         * $decimal: HTMLElement,
-         * $hex: HTMLElement,
-         * $maxPointer: HTMLElement,
-         * $pointer: HTMLElement,
-         * $prefix: HTMLElement,
-         * $head: HTMLElement,
-         * $suffix: HTMLElement
-         * }[]}
-         * @private
-         */
-        this.cells = [];
+        this.#root = root;
+        this.#cells = [];
     }
 
     /**
@@ -123,13 +123,13 @@ export class BinaryUI {
             });
         }
 
-        this.root.append(table);
-        this.cells = cells;
+        this.#root.append(table);
+        this.#cells = cells;
     }
 
     clear() {
-        this.cells = [];
-        this.root.innerHTML = "";
+        this.#cells = [];
+        this.#root.innerHTML = "";
     }
 
     /**
@@ -147,7 +147,7 @@ export class BinaryUI {
         showBinaryValueInHex,
     ) {
         let i = 0;
-        const cells = this.cells;
+        const cells = this.#cells;
         for (const reg of regs.values()) {
             const {
                 $prefix,

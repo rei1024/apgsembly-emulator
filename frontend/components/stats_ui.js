@@ -65,9 +65,6 @@ export class StatsUI {
          */
         this.root = root;
 
-        /**
-         * @private
-         */
         this.#statsNumberOfStates = statsNumberOfStates;
 
         /**
