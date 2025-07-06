@@ -116,8 +116,9 @@ export class B2D {
                 }
                 break;
             }
-            default:
+            default: {
                 internalError();
+            }
         }
     }
 

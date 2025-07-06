@@ -24,14 +24,18 @@ export class SUB {
             // A1  176960
             // B0 1902824
             // B1  172184
-            case SUB_B0:
+            case SUB_B0: {
                 return this.b0();
-            case SUB_A1:
+            }
+            case SUB_A1: {
                 return this.a1();
-            case SUB_B1:
+            }
+            case SUB_B1: {
                 return this.b1();
-            default:
+            }
+            default: {
                 internalError();
+            }
         }
     }
 

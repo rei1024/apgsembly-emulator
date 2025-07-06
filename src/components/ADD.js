@@ -46,8 +46,9 @@ export class ADD {
                 this.value = (this.value + 1) % 4;
                 return undefined;
             }
-            default:
+            default: {
                 internalError();
+            }
         }
     }
 

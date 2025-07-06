@@ -270,7 +270,7 @@ export class BReg {
      * @param {unknown} value
      */
     setByRegistersInit(key, value) {
-        // 数字の場合の処理は数字をバイナリにして配置する TODO 必要か確認
+        // 数字の場合の処理は数字をバイナリにして配置する
         if (typeof value === "number") {
             this.setBits(parseBits(value.toString(2)).reverse());
             this.extend();
