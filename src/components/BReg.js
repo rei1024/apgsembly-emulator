@@ -119,13 +119,10 @@ export class BReg {
             case B_READ: {
                 const pointer = this.pointer;
                 if (pointer < this.length) {
-                    /**
-                     * @type {0 | 1}
-                     */
-                    // @ts-expect-error FIXME
-                    const value = this.bits[pointer] ?? internalError();
-                    this.bits[pointer] = 0;
-                    return value;
+                    const bits = this.bits;
+                    const value = bits[pointer] ?? internalError();
+                    bits[pointer] = 0;
+                    return /** @type {0 | 1} */ (value);
                 } else {
                     return 0;
                 }
@@ -135,13 +132,14 @@ export class BReg {
                 if (pointer >= this.length) {
                     this.extend();
                 }
-                const value = this.bits[pointer];
+                const bits = this.bits;
+                const value = bits[pointer];
                 if (value === 1) {
                     throw Error(
                         `The bit of the binary register B${act.regNumber} is already 1`,
                     );
                 }
-                this.bits[pointer] = 1;
+                bits[pointer] = 1;
                 return undefined;
             }
             default: {
@@ -180,19 +178,23 @@ export class BReg {
      * @returns {(0 | 1)[]}
      */
     getBits() {
-        // @ts-expect-error FIXME
-        return Array.from(this.bits.slice(0, this.length));
+        return /** @type {(0 | 1)[]} */ (Array.from(
+            this.bits.slice(0, this.length),
+        ));
     }
 
     /**
      * @param {(0 | 1)[]} bits
+     * @private
      */
     setBits(bits) {
         this.length = bits.length;
         this.bits = new Uint8Array(Math.max(1, bits.length));
         for (let i = 0; i < bits.length; i++) {
-            // @ts-ignore FIXME
-            this.bits[i] = bits[i];
+            const value = bits[i];
+            if (value !== undefined) {
+                this.bits[i] = value;
+            }
         }
     }
 
@@ -284,11 +286,9 @@ export class BReg {
      */
     toObject() {
         this.extend();
-        /**
-         * @type {(0 | 1)[]}
-         */
-        // @ts-ignore
-        const bitsArray = Array.from(this.bits.slice(0, this.length));
+        const bitsArray = /** @type {(0 | 1)[]} */ (Array.from(
+            this.bits.slice(0, this.length),
+        ));
         const pointer = this.pointer;
         return {
             prefix: bitsArray.slice(0, pointer),
