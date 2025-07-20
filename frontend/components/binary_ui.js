@@ -188,7 +188,7 @@ export class BinaryUI {
             }
 
             $maxPointer.textContent = "max_pointer = " +
-                (reg.getBits().length - 1) +
+                (reg.getLength() - 1) +
                 ", ";
 
             $pointer.textContent = "pointer = " + reg.pointer.toString();

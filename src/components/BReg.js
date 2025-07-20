@@ -183,6 +183,10 @@ export class BReg {
         ));
     }
 
+    getLength() {
+        return this.length;
+    }
+
     /**
      * @param {(0 | 1)[]} bits
      * @private
