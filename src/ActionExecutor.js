@@ -169,7 +169,7 @@ export class ActionExecutor {
      * `-1`が正常終了
      * `-1` is HALT_OUT
      * @param {Action} action
-     * @returns {0 | 1 | -1 | void}
+     * @returns {0 | 1 | -1 | undefined}
      * @throws
      */
     execAction(action) {
@@ -217,7 +217,7 @@ export class ActionExecutor {
      * `-1` is HALT_OUT
      * @param {Action} action
      * @param {number} n
-     * @returns {0 | 1 | -1 | void}
+     * @returns {0 | 1 | -1 | undefined}
      * @throws `action` not `URegAction`, `BRegAction`, or `HaltOutAction`
      */
     execActionN(action, n) {

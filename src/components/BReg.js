@@ -71,7 +71,7 @@ export class BReg {
 
     /**
      * @param {BRegAction} act
-     * @returns {0 | 1 | void}
+     * @returns {0 | 1 | undefined}
      */
     action(act) {
         // if (this.pointer >= this.bits.length) {
@@ -98,7 +98,7 @@ export class BReg {
                 if (newPointer === bits.length) {
                     bits.push(0);
                 }
-                break;
+                return undefined;
             }
             case B_READ: {
                 const pointer = this.pointer;
@@ -124,11 +124,12 @@ export class BReg {
                     );
                 }
                 bits[pointer] = 1;
-                break;
+                return undefined;
             }
             default: {
                 /** @type {never} */
                 const _ = act.op;
+                return undefined; // unreachable
             }
         }
     }
@@ -136,6 +137,7 @@ export class BReg {
     /**
      * @param {BRegAction} act
      * @param {number} n
+     * @returns {undefined}
      */
     actionN(act, n) {
         switch (act.op) {
@@ -170,14 +172,13 @@ export class BReg {
 
     /**
      * `INC Bn`
-     * @returns {void}
+     * @returns {undefined}
      */
     inc() {
         const value = this.action(new BRegAction(B_INC, 0)); // regNumberは仮
         if (value !== undefined) {
             internalError();
         }
-        return value;
     }
 
     /**
@@ -206,14 +207,13 @@ export class BReg {
 
     /**
      * `SET Bn`
-     * @returns {void}
+     * @returns {undefined}
      */
     set() {
         const value = this.action(new BRegAction(B_SET, 0)); // regNumberは仮
         if (value !== undefined) {
-            internalError();
+            return internalError();
         }
-        return value;
     }
 
     /**

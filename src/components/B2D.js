@@ -72,7 +72,7 @@ export class B2D {
 
     /**
      * @param {B2DAction} act
-     * @returns {0 | 1 | void}
+     * @returns {0 | 1 | undefined}
      */
     action(act) {
         switch (act.op) {
@@ -124,7 +124,7 @@ export class B2D {
 
     /**
      * `INC B2DX`
-     * @returns {void}
+     * @returns {undefined}
      */
     incB2DX() {
         this.x++;
@@ -134,11 +134,13 @@ export class B2D {
             }
             this.maxX = this.x;
         }
+
+        return undefined;
     }
 
     /**
      * `INC B2DY`
-     * @returns {void}
+     * @returns {undefined}
      */
     incB2DY() {
         this.y++;
@@ -193,7 +195,7 @@ export class B2D {
 
     /**
      * `SET B2D`
-     * @returns {void}
+     * @returns {undefined}
      */
     set() {
         const arrayY = this.array[this.y] ?? internalError();

@@ -48,7 +48,7 @@ export class SUB {
 
     /**
      * `SUB A1`
-     * @returns {void}
+     * @returns {undefined}
      */
     a1() {
         this.value = (this.value + 1) % 4;

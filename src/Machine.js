@@ -300,7 +300,10 @@ export class Machine {
      */
     exec(n, isRunning, breakpointIndex, breakpointInputValue) {
         const hasBreakpoint = breakpointIndex !== -1;
-        const start = isRunning && performance.now();
+        /**
+         * @type {number | null}
+         */
+        const start = isRunning ? null : performance.now();
 
         for (let i = 0; i < n; i++) {
             const compiledCommand = this.getNextCommand();
@@ -353,7 +356,7 @@ export class Machine {
 
             // 1フレームに50ms以上時間が掛かっていたら、残りはスキップする
             if (
-                isRunning && (i + 1) % 500000 === 0 && start !== false &&
+                isRunning && (i + 1) % 500000 === 0 && start !== null &&
                 (performance.now() - start >= 50)
             ) {
                 return undefined;
@@ -374,7 +377,7 @@ export class Machine {
     /**
      * @private
      * @param {import('./compile.js').CompiledCommandWithNextState} compiledCommand
-     * @returns {-1 | void} -1 is HALT_OUT
+     * @returns {-1 | undefined} -1 is HALT_OUT
      */
     execCommandFor(compiledCommand) {
         this.stepCount += 1;
@@ -429,12 +432,14 @@ export class Machine {
         // }
         this.currentStateIndex = nextStateIndex;
         this.prevOutput = result;
+
+        return undefined;
     }
 
     /**
      * 次のコマンドを実行する
      * エラーが発生した場合は例外を投げる
-     * @returns {-1 | void}
+     * @returns {-1 | undefined}
      * - -1はHALT_OUT
      * - voidは正常
      * @throws {Error} 実行時エラー

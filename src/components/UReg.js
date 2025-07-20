@@ -17,7 +17,7 @@ export class UReg {
 
     /**
      * @param {URegAction} act
-     * @returns {0 | 1 | void}
+     * @returns {0 | 1 | undefined}
      */
     action(act) {
         switch (act.op) {
@@ -33,6 +33,7 @@ export class UReg {
             }
             case U_INC: {
                 this.value++;
+                return undefined;
             }
         }
     }
@@ -40,7 +41,7 @@ export class UReg {
     /**
      * @param {URegAction} act
      * @param {number} n
-     * @returns {0 | 1 | void}
+     * @returns {undefined}
      */
     actionN(act, n) {
         switch (act.op) {
