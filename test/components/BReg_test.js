@@ -24,16 +24,31 @@ test("BReg read initial", () => {
 test("BReg set inc", () => {
     const x = new BReg();
     assertEquals(x.getBits(), [0]);
+    assertEquals(x.toObject(), {
+        prefix: [],
+        head: 0,
+        suffix: [],
+    });
     assertEquals(x.pointer, 0);
     const setRes = x.set();
     assertEquals(setRes, undefined);
     assertEquals(x.getBits(), [1]);
     assertEquals(x.pointer, 0);
+    assertEquals(x.toObject(), {
+        prefix: [],
+        head: 1,
+        suffix: [],
+    });
     const res = x.inc();
     assertEquals(res, undefined);
     assertEquals(x.getBits(), [1, 0]);
     assertEquals(x.toNumberString(), "1");
     assertEquals(x.pointer, 1);
+    assertEquals(x.toObject(), {
+        prefix: [1],
+        head: 0,
+        suffix: [],
+    });
 });
 
 test("BReg extend", () => {

@@ -42,6 +42,22 @@ export const toBinaryStringReverse = (bits) => {
 };
 
 /**
+ * @param {Uint8Array} bits
+ * @returns {string}
+ * @example
+ * > toBinaryStringReverse([0, 1])
+ * "10"
+ */
+const toBinaryStringReverseUint8 = (bits) => {
+    // faster than `bits.slice().reverse().join("")`
+    let str = "";
+    for (let i = bits.length - 1; i >= 0; i--) {
+        str += bits[i] === 0 ? "0" : "1";
+    }
+    return str;
+};
+
+/**
  * @param {(0 | 1)[]} bits
  * @returns {string}
  */
@@ -59,14 +75,19 @@ export const toBinaryString = (bits) => {
  */
 export class BReg {
     constructor() {
-        // invariant: this.pointer < this.bits.length
         this.pointer = 0;
-
         /**
          * @private
-         * @type {(0 | 1)[]}
+         * @type {Uint8Array}
          */
-        this.bits = [0];
+        this.bits = new Uint8Array(1);
+
+        /**
+         * 有効なビット数
+         * @private
+         * @type {number}
+         */
+        this.length = 1;
     }
 
     /**
@@ -74,9 +95,6 @@ export class BReg {
      * @returns {0 | 1 | undefined}
      */
     action(act) {
-        // if (this.pointer >= this.bits.length) {
-        //     throw Error('failed');
-        // }
         switch (act.op) {
             // INC  3207502
             // TDEC 3217502
@@ -93,30 +111,28 @@ export class BReg {
             case B_INC: {
                 const newPointer = this.pointer + 1;
                 this.pointer = newPointer;
-                // using invariant
-                const bits = this.bits;
-                if (newPointer === bits.length) {
-                    bits.push(0);
+                if (newPointer >= this.length) {
+                    this.extend();
                 }
                 return undefined;
             }
             case B_READ: {
                 const pointer = this.pointer;
-                const bits = this.bits;
-                if (pointer < bits.length) {
+                if (pointer < this.length) {
+                    const bits = this.bits;
                     const value = bits[pointer] ?? internalError();
                     bits[pointer] = 0;
-                    return value;
+                    return /** @type {0 | 1} */ (value);
                 } else {
                     return 0;
                 }
             }
             case B_SET: {
-                const bits = this.bits;
                 const pointer = this.pointer;
-                if (pointer >= bits.length) {
+                if (pointer >= this.length) {
                     this.extend();
                 }
+                const bits = this.bits;
                 const value = bits[pointer];
                 if (value === 1) {
                     throw Error(
@@ -143,7 +159,9 @@ export class BReg {
         switch (act.op) {
             case B_INC: {
                 this.pointer += n;
-                this.extend();
+                if (this.pointer >= this.length) {
+                    this.extend();
+                }
                 break;
             }
             case B_TDEC: {
@@ -160,14 +178,28 @@ export class BReg {
      * @returns {(0 | 1)[]}
      */
     getBits() {
-        return this.bits;
+        return /** @type {(0 | 1)[]} */ (Array.from(
+            this.bits.slice(0, this.length),
+        ));
+    }
+
+    getLength() {
+        return this.length;
     }
 
     /**
      * @param {(0 | 1)[]} bits
+     * @private
      */
     setBits(bits) {
-        this.bits = bits;
+        this.length = bits.length;
+        this.bits = new Uint8Array(Math.max(1, bits.length));
+        for (let i = 0; i < bits.length; i++) {
+            const value = bits[i];
+            if (value !== undefined) {
+                this.bits[i] = value;
+            }
+        }
     }
 
     /**
@@ -222,17 +254,20 @@ export class BReg {
     extend() {
         const pointer = this.pointer;
         const bits = this.bits;
-        const len = bits.length;
-        if (pointer >= len) {
-            if (pointer === len) {
-                bits.push(0);
-            } else {
-                /**
-                 * @type {0[]}
-                 */
-                const rest = Array(pointer - len + 1).fill(0).map(() => 0);
-                this.bits = this.bits.concat(rest);
+        const bitsLength = bits.length;
+        // pointerが容量を超えた場合、2倍で再アロケート
+        if (pointer >= bitsLength) {
+            let newCapacity = bitsLength * 2;
+            while (pointer >= newCapacity) {
+                newCapacity *= 2;
             }
+            const newBits = new Uint8Array(newCapacity);
+            newBits.set(this.bits);
+            this.bits = newBits;
+        }
+        // 有効なビット数(length)も更新
+        if (pointer >= this.length) {
+            this.length = pointer + 1;
         }
     }
 
@@ -241,9 +276,8 @@ export class BReg {
      */
     toNumberString(base = 10) {
         return (hasBigInt ? BigInt : Number)(
-            "0b" + toBinaryStringReverse(this.bits),
-        )
-            .toString(base);
+            "0b" + toBinaryStringReverseUint8(this.bits.slice(0, this.length)),
+        ).toString(base);
     }
 
     /**
@@ -256,12 +290,14 @@ export class BReg {
      */
     toObject() {
         this.extend();
-        const bits = this.bits;
+        const bitsArray = /** @type {(0 | 1)[]} */ (Array.from(
+            this.bits.slice(0, this.length),
+        ));
         const pointer = this.pointer;
         return {
-            prefix: bits.slice(0, pointer),
-            head: bits[pointer] ?? internalError(),
-            suffix: bits.slice(pointer + 1),
+            prefix: bitsArray.slice(0, pointer),
+            head: bitsArray[pointer] ?? internalError(),
+            suffix: bitsArray.slice(pointer + 1),
         };
     }
 
