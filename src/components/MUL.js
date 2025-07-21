@@ -47,9 +47,8 @@ export class MUL {
      */
     mul0() {
         const value = this.value;
-        const r = value % 2;
+        const r = /** @type {0 | 1} */ (value % 2);
         this.value = value >> 1;
-        // @ts-ignore
         return r;
     }
 
@@ -58,7 +57,7 @@ export class MUL {
      */
     mul1() {
         const value = this.value;
-        const r = value % 2;
+        const r = /** @type {0 | 1} */ (value % 2);
         if (value <= 21) {
             // (x / 2) + 5
             // (x + 10) / 2
@@ -66,7 +65,6 @@ export class MUL {
         } else {
             this.value = (value - 22) >> 1;
         }
-        // @ts-ignore
         return r;
     }
 

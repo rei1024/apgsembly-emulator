@@ -28,18 +28,16 @@ export class ADD {
             // B0 4135003
             case ADD_B0: {
                 const value = this.value;
-                const t = value % 2;
+                const t = /** @type {0 | 1} */ (value % 2);
 
                 this.value = value >>> 1;
-                // @ts-ignore
                 return t;
             }
             case ADD_B1: {
                 const value = this.value;
-                const t = 1 - value % 2;
+                const t = /** @type {0 | 1} */ (1 - value % 2);
 
                 this.value = value === 1 || value === 2 ? 1 : 0;
-                // @ts-ignore
                 return t;
             }
             case ADD_A1: {

@@ -25,12 +25,14 @@ function setupFilePicker(button, onFilePicked) {
     });
 
     // ファイルが選択されたときの処理
-    fileInput.addEventListener("change", (event) => {
-        // @ts-ignore
-        const files = event.target.files; // 選択されたファイルを取得
-        if (files.length > 0) {
+    fileInput.addEventListener("change", () => {
+        // 選択されたファイルを取得
+        const files = fileInput.files;
+        if (files != null && files.length > 0) {
             const file = files[0];
-            onFilePicked(file); // コールバックを呼び出す
+            if (file != null) {
+                onFilePicked(file); // コールバックを呼び出す
+            }
         }
     });
 

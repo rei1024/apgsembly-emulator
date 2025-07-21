@@ -40,10 +40,13 @@ test("B2D incB2DX", () => {
 
 test("B2D incB2DY", () => {
     const x = new B2D();
+    assertEquals(x.getMaxX(), 0);
+    assertEquals(x.getMaxY(), 0);
     assertEquals(x.incB2DY(), undefined);
     assertEquals(x.x, 0);
     assertEquals(x.y, 1);
-
+    assertEquals(x.getMaxX(), 0);
+    assertEquals(x.getMaxY(), 1);
     assertEquals(x.getArray(), [[0], [0]]);
 });
 
@@ -52,9 +55,12 @@ test("B2D tdec X", () => {
     assertEquals(x.incB2DX(), undefined);
     assertEquals(x.x, 1);
     assertEquals(x.y, 0);
+    assertEquals(x.getMaxX(), 1);
+
     assertEquals(x.tdecB2DX(), 1);
     assertEquals(x.x, 0);
     assertEquals(x.y, 0);
+    assertEquals(x.getMaxX(), 1);
 });
 
 test("B2D tdec Y", () => {

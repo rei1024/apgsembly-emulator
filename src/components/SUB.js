@@ -60,9 +60,8 @@ export class SUB {
      */
     b0() {
         const value = this.value;
-        const t = value % 2;
+        const t = /** @type {0 | 1} */ (value % 2);
         this.value = value >= 2 ? 3 : 0;
-        // @ts-ignore
         return t;
     }
 
@@ -72,9 +71,8 @@ export class SUB {
      */
     b1() {
         const value = this.value;
-        const t = 1 - value % 2;
+        const t = /** @type {0 | 1} */ (1 - value % 2);
         this.value = value === 0 || value === 3 ? 3 : 0;
-        // @ts-ignore
         return t;
     }
 
