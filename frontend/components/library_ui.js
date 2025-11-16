@@ -15,7 +15,7 @@ import { create } from "../util/create.js";
  */
 function setupFilePicker(button, onFilePicked) {
     // 非表示の<input type="file">を作成
-    const fileInput = document.createElement("input");
+    const fileInput = create("input");
     fileInput.type = "file";
     fileInput.style.display = "none";
 
@@ -37,23 +37,27 @@ function setupFilePicker(button, onFilePicked) {
     });
 
     // DOMにfileInputを追加（必要に応じて）
-    document.body.appendChild(fileInput);
+    document.body.append(fileInput);
 }
 
 /**
  * UI for library files
  */
 export class LibraryUI {
+    /**
+     * @type {{ name: string; content: string, builtin?: boolean }[]}
+     */
+    #files;
     constructor() {
         /**
          * @private
          * @type {{ name: string; content: string, builtin?: boolean }[]}
          */
-        this.files = [];
+        this.#files = [];
     }
 
     getFiles() {
-        return this.files.slice();
+        return this.#files.slice();
     }
 
     initialize() {
@@ -62,7 +66,12 @@ export class LibraryUI {
             this.addFile({
                 name: "binary.apglib",
                 content: await (fetch("./frontend/data/" + "binary.apglib"))
-                    .then((r) => r.text()),
+                    .then((r) => {
+                        if (!r.ok) {
+                            throw new Error(`Failed to load`);
+                        }
+                        return r.text();
+                    }),
                 builtin: true,
             });
             await new Promise((resolve) => setTimeout(resolve, 500));
@@ -80,7 +89,7 @@ export class LibraryUI {
      * @param {{ name: string; content: string, builtin?: boolean }} file
      */
     addFile(file) {
-        this.files.push(file);
+        this.#files.push(file);
 
         const $name = create("td");
         $name.textContent = file.name;
@@ -90,7 +99,7 @@ export class LibraryUI {
             if (file.builtin) {
                 $addBinaryLibraryFile.disabled = false;
             }
-            this.files = this.files.filter((x) => x.name !== file.name);
+            this.#files = this.#files.filter((x) => x.name !== file.name);
             $row.remove();
         });
         const $deleteCell = create("td", { children: [$deleteButton] });

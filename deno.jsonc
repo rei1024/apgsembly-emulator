@@ -29,7 +29,8 @@
                 "no-unused-vars",
                 "no-this-alias",
                 "no-inferrable-types",
-                "no-window"
+                "no-window",
+                "no-import-prefix"
             ]
         }
     },
