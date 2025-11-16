@@ -64,20 +64,22 @@ export const context = $canvas.getContext("2d") ?? (() => {
     throw Error("context is null");
 })();
 
+const HTMLDetailsElement_ = HTMLDetailsElement;
+
 export const $b2dPos = {
     x: $type("#b2dx", HTMLElement_),
     y: $type("#b2dy", HTMLElement_),
 };
 
 // B2Dの開閉
-export const $b2dDetail = $type("#b2d_detail", HTMLDetailsElement);
+export const $b2dDetail = $type("#b2d_detail", HTMLDetailsElement_);
 
 // スライディングレジスタ
 export const $unaryRegister = $type("#unary_register", HTMLElement_);
 
 export const $unaryRegisterDetail = $type(
     "#unary_register_detail",
-    HTMLDetailsElement,
+    HTMLDetailsElement_,
 );
 
 // バイナリレジスタ
@@ -86,7 +88,7 @@ export const $binaryRegister = $type("#binary_register", HTMLElement_);
 // バイナリレジスタの開閉
 export const $binaryRegisterDetail = $type(
     "#binary_register_detail",
-    HTMLDetailsElement,
+    HTMLDetailsElement_,
 );
 
 // ADD SUB MULの表示

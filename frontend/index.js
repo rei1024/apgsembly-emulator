@@ -1,24 +1,8 @@
 // @ts-check
 
-// critical path
-import {} from "./util/selector.js";
-import {} from "./util/create.js";
-import {} from "./util/valve.js";
-import {} from "./util/get-message-from-error.js";
-import {} from "./util/chunk.js";
-import {} from "./util/spinner.js";
-import {} from "./components/renderB2D.js";
-import {} from "./components/unary_ui.js";
-import {} from "./components/binary_ui.js";
-import {} from "./components/stats_ui.js";
-import {} from "./components/breakpoint.js";
-import {} from "./components/toggle.js";
-import {} from "./components/error.js";
-import {} from "./components/output.js";
-
 import { setupFrequencyInput } from "./components/frequency_input.js";
 import { removeCustomError, setCustomError } from "./util/validation_ui.js";
-import { importFileAsText } from "./util/import_file.js";
+import { setupOnInputFileText } from "./util/input-file.js";
 import { idle } from "./util/idle.js";
 import {
     localStorageGetItem,
@@ -119,7 +103,7 @@ const scrollToTop = () => {
 };
 
 // ファイルインポート
-importFileAsText($fileImport, (result) => {
+setupOnInputFileText($fileImport, (result) => {
     app.setInputAndReset(result);
     // スクロール
     scrollToTop();
