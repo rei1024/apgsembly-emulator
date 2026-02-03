@@ -75,6 +75,8 @@ test("B2DAction PRINTER", () => {
     parsePretty("TDEC PRNY", "TDEC PRNY");
     parsePretty("INC PRN", undefined);
     parsePretty("TDEC PRN", undefined);
+    parsePretty("READ PRN", undefined);
+    parsePretty("SET PRN", undefined);
 });
 
 test("B2DAction isSameComponent", () => {
@@ -100,4 +102,17 @@ test("B2DAction isSameComponent", () => {
     same("INC B2DY", "INC B2DX", false);
     same("TDEC B2DX", "INC B2DY", false);
     same("TDEC B2DY", "INC B2DX", false);
+
+    // PRINTER
+    same("INC PRNX", "SET B2D", false);
+    same("INC PRNX", "INC B2DX", false);
+    same("INC B2DX", "INC PRNX", false);
+    same("INC PRNX", "INC PRNY", false);
+    same("INC PRNY", "INC PRNY", true);
+    same("INC PRNY", "TDEC PRNY", true);
+    same("INC PRNX", "TDEC PRNX", true);
+    same("INC PRNX", "INC PRNX", true);
+    same("INC PRNY", "INC PRNX", false);
+    same("TDEC PRNX", "INC PRNY", false);
+    same("TDEC PRNY", "INC PRNX", false);
 });

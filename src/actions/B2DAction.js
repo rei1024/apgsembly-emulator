@@ -145,15 +145,17 @@ export class B2DAction extends Action {
      * @override
      */
     pretty() {
+        const op = this.op;
         if (this.kind === B2D_KIND_PRINTER) {
-            if (this.op === B2D_SET && this.axis === B2D_B2D) {
+            if (op === B2D_READ) {
+                throw new Error("PRINTER component cannot READ");
+            }
+            if (op === B2D_SET && this.axis === B2D_B2D) {
                 return "PRINT";
             }
-            return `${prettyOp(this.op)} PRN${
-                this.axis === B2D_B2DX ? "X" : "Y"
-            }`;
+            return `${prettyOp(op)} PRN${this.axis === B2D_B2DX ? "X" : "Y"}`;
         }
-        return `${prettyOp(this.op)} ${prettyAxis(this.axis)}`;
+        return `${prettyOp(op)} ${prettyAxis(this.axis)}`;
     }
 
     /**
