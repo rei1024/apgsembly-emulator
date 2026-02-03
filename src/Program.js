@@ -121,6 +121,26 @@ const sortNub = (array) => {
  * hasOutput: boolean, }} AnalyzeProgramResult
  */
 
+export const singleComponents = /** @type {const} */ ([{
+    key: "hasAdd",
+    component: "ADD",
+}, {
+    key: "hasSub",
+    component: "SUB",
+}, {
+    key: "hasMul",
+    component: "MUL",
+}, {
+    key: "hasB2D",
+    component: "B2D",
+}, {
+    key: "hasPrinter",
+    component: "PRINTER",
+}, {
+    key: "hasOutput",
+    component: "OUTPUT",
+}]);
+
 /**
  * プログラムから使用されているレジスタ番号を抽出
  * @param {Program} program
@@ -197,28 +217,10 @@ export const validateComponentsHeader = (componentsHeaders, analyzeResult) => {
     const errorMessage = (comp) =>
         `Program uses ${comp} component but the #COMPONENTS header does not include it.`;
 
-    if (analyzeResult.hasAdd && !components.has("ADD")) {
-        errors.push(errorMessage("ADD"));
-    }
-
-    if (analyzeResult.hasSub && !components.has("SUB")) {
-        errors.push(errorMessage("SUB"));
-    }
-
-    if (analyzeResult.hasMul && !components.has("MUL")) {
-        errors.push(errorMessage("MUL"));
-    }
-
-    if (analyzeResult.hasB2D && !components.has("B2D")) {
-        errors.push(errorMessage("B2D"));
-    }
-
-    if (analyzeResult.hasPrinter && !components.has("PRINTER")) {
-        errors.push(errorMessage("PRINTER"));
-    }
-
-    if (analyzeResult.hasOutput && !components.has("OUTPUT")) {
-        errors.push(errorMessage("OUTPUT"));
+    for (const { key, component } of singleComponents) {
+        if (analyzeResult[key] && !components.has(component)) {
+            errors.push(errorMessage(component));
+        }
     }
 
     /** @type {number[]} */
@@ -303,34 +305,16 @@ export const generateComponentsHeader = (analyzeResult) => {
     /** @type {string[]} */
     let components = [];
 
-    if (analyzeResult.hasB2D) {
-        components.push("B2D");
-    }
-
-    if (analyzeResult.hasPrinter) {
-        components.push("PRINTER");
-    }
-
     const binary = analyzeResult.binary.slice().sort((a, b) => a - b);
     components = components.concat(compactRanges(binary).map((x) => "B" + x));
 
     const unary = analyzeResult.unary.slice().sort((a, b) => a - b);
     components = components.concat(compactRanges(unary).map((x) => "U" + x));
 
-    if (analyzeResult.hasAdd) {
-        components.push("ADD");
-    }
-
-    if (analyzeResult.hasSub) {
-        components.push("SUB");
-    }
-
-    if (analyzeResult.hasMul) {
-        components.push("MUL");
-    }
-
-    if (analyzeResult.hasOutput) {
-        components.push("OUTPUT");
+    for (const { key, component } of singleComponents) {
+        if (analyzeResult[key]) {
+            components.push(component);
+        }
     }
 
     return components.join(", ");
