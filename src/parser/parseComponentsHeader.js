@@ -18,7 +18,8 @@ export function parseComponentsHeader(content) {
             continue;
         }
         if (
-            str === "OUTPUT" || str === "B2D" || str === "ADD" ||
+            str === "OUTPUT" || str === "B2D" || str === "PRINTER" ||
+            str === "ADD" ||
             str === "SUB" || str === "MUL"
         ) {
             components.push(str);

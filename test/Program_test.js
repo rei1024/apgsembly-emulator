@@ -387,8 +387,24 @@ test("generateComponentsHeader", () => {
             hasSub: false,
             hasMul: false,
             hasB2D: false,
+            hasPrinter: false,
             hasOutput: false,
         }),
         "B0-2, U0-1",
+    );
+
+    assertEquals(
+        generateComponentsHeader({
+            unary: [],
+            binary: [],
+            legacyT: [],
+            hasAdd: false,
+            hasSub: false,
+            hasMul: false,
+            hasB2D: true,
+            hasPrinter: true,
+            hasOutput: false,
+        }),
+        "B2D, PRINTER",
     );
 });

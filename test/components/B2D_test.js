@@ -171,3 +171,10 @@ test("B2D action SET B2D", () => {
     assertEquals(res, undefined);
     assertEquals(x.read(), 1);
 });
+
+test("B2D action PRINT", () => {
+    const x = new B2D();
+    const res = x.action(B2DAction.parse("PRINT") ?? throwError());
+    assertEquals(res, undefined);
+    assertEquals(x.read(), 1);
+});

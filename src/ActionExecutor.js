@@ -20,6 +20,7 @@ import { OUTPUT } from "./components/OUTPUT.js";
 import { SUB } from "./components/SUB.js";
 import { throwRegisterInitError, UReg } from "./components/UReg.js";
 import { LegacyTReg } from "./components/LegacyTReg.js";
+import { B2D_KIND_PRINTER, B2D_READ } from "./action_consts/B2D_consts.js";
 
 /**
  * @param {"B" | "U" | "T"} type
@@ -96,6 +97,11 @@ export class ActionExecutor {
          * @readonly
          */
         this.b2d = new B2D();
+
+        /**
+         * @readonly
+         */
+        this.matrixPrinter = new B2D();
 
         /**
          * @readonly
@@ -199,7 +205,14 @@ export class ActionExecutor {
         } else if (action instanceof MulAction) {
             return this.mul.action(action);
         } else if (action instanceof B2DAction) {
-            return this.b2d.action(action);
+            if (action.kind === B2D_KIND_PRINTER) {
+                if (action.op === B2D_READ) {
+                    throw Error("PRINTER component cannot READ");
+                }
+                return this.matrixPrinter.action(action);
+            } else {
+                return this.b2d.action(action);
+            }
         } else if (action instanceof OutputAction) {
             return this.output.action(action);
         } else if (action instanceof HaltOutAction) {

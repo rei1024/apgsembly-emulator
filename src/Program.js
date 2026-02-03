@@ -15,6 +15,7 @@ import { B2DAction } from "./actions/B2DAction.js";
 import { OutputAction } from "./actions/OutputAction.js";
 import { parseComponentsHeader } from "./parser/parseComponentsHeader.js";
 import { internalError } from "./internalError.js";
+import { B2D_KIND_PRINTER } from "./action_consts/B2D_consts.js";
 
 /**
  * APGsembly program
@@ -116,6 +117,7 @@ const sortNub = (array) => {
  * hasSub: boolean,
  * hasMul: boolean,
  * hasB2D: boolean,
+ * hasPrinter: boolean,
  * hasOutput: boolean, }} AnalyzeProgramResult
  */
 
@@ -143,6 +145,7 @@ export const analyzeProgram = (program) => {
     let hasSub = false;
     let hasMul = false;
     let hasB2D = false;
+    let hasPrinter = false;
     let hasOutput = false;
 
     for (const action of actions) {
@@ -153,7 +156,11 @@ export const analyzeProgram = (program) => {
         } else if (action instanceof MulAction) {
             hasMul = true;
         } else if (action instanceof B2DAction) {
-            hasB2D = true;
+            if (action.kind === B2D_KIND_PRINTER) {
+                hasPrinter = true;
+            } else {
+                hasB2D = true;
+            }
         } else if (action instanceof OutputAction) {
             hasOutput = true;
         }
@@ -167,6 +174,7 @@ export const analyzeProgram = (program) => {
         hasSub,
         hasMul,
         hasB2D,
+        hasPrinter,
         hasOutput,
     };
 };
@@ -203,6 +211,10 @@ export const validateComponentsHeader = (componentsHeaders, analyzeResult) => {
 
     if (analyzeResult.hasB2D && !components.has("B2D")) {
         errors.push(errorMessage("B2D"));
+    }
+
+    if (analyzeResult.hasPrinter && !components.has("PRINTER")) {
+        errors.push(errorMessage("PRINTER"));
     }
 
     if (analyzeResult.hasOutput && !components.has("OUTPUT")) {
@@ -293,6 +305,10 @@ export const generateComponentsHeader = (analyzeResult) => {
 
     if (analyzeResult.hasB2D) {
         components.push("B2D");
+    }
+
+    if (analyzeResult.hasPrinter) {
+        components.push("PRINTER");
     }
 
     const binary = analyzeResult.binary.slice().sort((a, b) => a - b);

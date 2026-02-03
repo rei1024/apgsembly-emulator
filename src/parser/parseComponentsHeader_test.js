@@ -12,7 +12,7 @@ function parse(str) {
 
 test("parseComponentsHeader", () => {
     assertEquals(
-        parse("B0-5, U0-5, U8-9, ADD, SUB, MUL, OUTPUT"),
+        parse("B0-5, U0-5, U8-9, ADD, SUB, MUL, OUTPUT, PRINTER"),
         {
             components: [
                 "B0",
@@ -33,6 +33,7 @@ test("parseComponentsHeader", () => {
                 "SUB",
                 "MUL",
                 "OUTPUT",
+                "PRINTER",
             ],
         },
     );

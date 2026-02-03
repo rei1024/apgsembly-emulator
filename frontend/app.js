@@ -39,6 +39,9 @@ import {
     $output,
     $outputDetail,
     $previousOutput,
+    $printerCanvas,
+    $printerDetail,
+    $printerPos,
     $reset,
     $statsBody,
     $statsButton,
@@ -52,6 +55,7 @@ import {
     $unaryRegisterDetail,
     binaryConfig,
     context,
+    printerContext,
 } from "./bind.js";
 import { toLocaleString } from "./util/toLocaleString.js";
 import { LibraryUI } from "./components/library_ui.js";
@@ -306,6 +310,42 @@ export class App {
         }
     }
 
+    renderPrinter() {
+        if (!$printerDetail.open) {
+            return;
+        }
+        const machine = this.#machine;
+        if (machine === undefined) {
+            $printerPos.x.textContent = "0";
+            $printerPos.y.textContent = "0";
+            printerContext.clearRect(
+                0,
+                0,
+                $printerCanvas.width,
+                $printerCanvas.height,
+            );
+            printerContext.resetTransform();
+            return;
+        }
+        const printer = machine.actionExecutor.matrixPrinter;
+
+        $printerPos.x.textContent = printer.x.toString();
+        $printerPos.y.textContent = printer.y.toString();
+
+        const start = performance.now();
+        renderB2D(
+            printerContext,
+            printer,
+            $b2dHidePointer.checked,
+            $b2dFlipUpsideDown.checked,
+        );
+
+        // 描画に時間がかかっている場合閉じる
+        if (this.#appState === "Running" && performance.now() - start >= 200) {
+            $printerDetail.open = false;
+        }
+    }
+
     /**
      * スライディングレジスタの表示
      */
@@ -444,6 +484,9 @@ export class App {
                     ? ""
                     : "none";
             $b2dDetail.style.display = analyzeResult?.hasB2D ? "" : "none";
+            $printerDetail.style.display = analyzeResult?.hasPrinter
+                ? ""
+                : "none";
             $outputDetail.style.display = analyzeResult?.hasOutput
                 ? ""
                 : "none";
@@ -470,6 +513,7 @@ export class App {
             machine?.actionExecutor.addSubMulToUIString() ??
                 "";
         this.renderB2D();
+        this.renderPrinter();
         this.renderStats();
 
         this.#prevAppState = appState;

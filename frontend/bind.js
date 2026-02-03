@@ -74,6 +74,24 @@ export const $b2dPos = {
 // B2Dの開閉
 export const $b2dDetail = $type("#b2d_detail", HTMLDetailsElement_);
 
+// Printer
+export const $printerCanvas = $type("#printer_canvas", HTMLCanvasElement);
+
+/**
+ * @type {CanvasRenderingContext2D}
+ */
+export const printerContext = $printerCanvas.getContext("2d") ?? (() => {
+    throw Error("context is null");
+})();
+
+export const $printerPos = {
+    x: $type("#printer_x", HTMLElement_),
+    y: $type("#printer_y", HTMLElement_),
+};
+
+// Printerの開閉
+export const $printerDetail = $type("#printer_detail", HTMLDetailsElement_);
+
 // スライディングレジスタ
 export const $unaryRegister = $type("#unary_register", HTMLElement_);
 

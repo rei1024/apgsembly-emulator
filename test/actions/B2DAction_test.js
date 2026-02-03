@@ -67,6 +67,16 @@ test("B2DAction parse fail", () => {
     parsePretty("a b c", undefined);
 });
 
+test("B2DAction PRINTER", () => {
+    parsePretty("PRINT", "PRINT");
+    parsePretty("INC PRNX", "INC PRNX");
+    parsePretty("INC PRNY", "INC PRNY");
+    parsePretty("TDEC PRNX", "TDEC PRNX");
+    parsePretty("TDEC PRNY", "TDEC PRNY");
+    parsePretty("INC PRN", undefined);
+    parsePretty("TDEC PRN", undefined);
+});
+
 test("B2DAction isSameComponent", () => {
     /**
      * @param {string} str1
