@@ -264,6 +264,11 @@ export const validateComponentsHeader = (componentsHeaders, analyzeResult) => {
     }
 
     if (errors.length !== 0) {
+        const suggestedHeader = generateComponentsHeader(analyzeResult);
+        errors.push(
+            `Suggested header: #COMPONENTS ${suggestedHeader}`,
+        );
+
         throw new Error(errors.join("\n"));
     }
 };

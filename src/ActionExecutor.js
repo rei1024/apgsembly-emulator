@@ -48,11 +48,7 @@ const isNaNLocal = Number.isNaN;
 export class ActionExecutor {
     /**
      * 使用するレジスタ番号を引数に取る
-     * @param {{
-     *    unary: ReadonlyArray<number>;
-     *    binary: ReadonlyArray<number>;
-     *    legacyT: ReadonlyArray<number>;
-     * }} param0
+     * @param {Pick<import("./Program.js").AnalyzeProgramResult, 'unary' | 'binary' | 'legacyT'>} param0
      */
     constructor(
         { unary, binary, legacyT },

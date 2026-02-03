@@ -43,7 +43,7 @@ ID0; ZZ; ID0; NOP
     assertNewMachineThrows(
         str,
         Error,
-        "Program uses OUTPUT component but the #COMPONENTS header does not include it.",
+        "Program uses OUTPUT component but the #COMPONENTS header does not include it.\nSuggested header: #COMPONENTS OUTPUT",
     );
 });
 
