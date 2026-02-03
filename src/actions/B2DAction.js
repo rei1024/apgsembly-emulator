@@ -5,6 +5,8 @@ import {
     B2D_B2DX,
     B2D_B2DY,
     B2D_INC,
+    B2D_KIND_NORMAL,
+    B2D_KIND_PRINTER,
     B2D_READ,
     B2D_SET,
     B2D_TDEC,
@@ -18,6 +20,10 @@ import { Action } from "./Action.js";
 
 /**
  * @typedef {B2D_B2DX_STRING | B2D_B2DY_STRING | B2D_B2D_STRING} B2DAxisString
+ */
+
+/**
+ * @typedef {B2D_KIND_NORMAL | B2D_KIND_PRINTER} B2DKind
  */
 
 const B2D_INC_STRING = "INC";
@@ -111,8 +117,9 @@ export class B2DAction extends Action {
     /**
      * @param {B2DOp} op
      * @param {B2DAxis} axis
+     * @param {B2DKind} kind
      */
-    constructor(op, axis) {
+    constructor(op, axis, kind = B2D_KIND_NORMAL) {
         super();
 
         /**
@@ -126,13 +133,29 @@ export class B2DAction extends Action {
          * @readonly
          */
         this.axis = axis;
+
+        /**
+         * @type {B2DKind}
+         * @readonly
+         */
+        this.kind = kind;
     }
 
     /**
      * @override
      */
     pretty() {
-        return `${prettyOp(this.op)} ${prettyAxis(this.axis)}`;
+        const op = this.op;
+        if (this.kind === B2D_KIND_PRINTER) {
+            if (op === B2D_READ) {
+                throw new Error("PRINTER component cannot READ");
+            }
+            if (op === B2D_SET && this.axis === B2D_B2D) {
+                return "PRINT";
+            }
+            return `${prettyOp(op)} PRN${this.axis === B2D_B2DX ? "X" : "Y"}`;
+        }
+        return `${prettyOp(op)} ${prettyAxis(this.axis)}`;
     }
 
     /**
@@ -140,7 +163,30 @@ export class B2DAction extends Action {
      */
     static parse(str) {
         const array = str.trim().split(" ");
-        if (array.length !== 2) {
+        const arrayLength = array.length;
+        // PRINTER
+        // PRINT, INC PRNX, INC PRNY, TDEC PRNX, TDEC PRNY
+        if (array.length === 1 && array[0] === "PRINT") {
+            return new B2DAction(B2D_SET, B2D_B2D, B2D_KIND_PRINTER);
+        }
+
+        if (arrayLength === 2) {
+            const [op, axis] = array;
+            if (
+                (op === B2D_INC_STRING || op === B2D_TDEC_STRING) &&
+                (axis === "PRNX" || axis === "PRNY")
+            ) {
+                const axisValue = axis === "PRNX" ? B2D_B2DX : B2D_B2DY;
+                return new B2DAction(
+                    parseOp(op),
+                    axisValue,
+                    B2D_KIND_PRINTER,
+                );
+            }
+        }
+
+        // Normal B2D
+        if (arrayLength !== 2) {
             return undefined;
         }
         const [op, axis] = array;
@@ -221,6 +267,10 @@ export class B2DAction extends Action {
      */
     isSameComponent(action) {
         if (action instanceof B2DAction) {
+            if (action.kind !== this.kind) {
+                return false;
+            }
+
             const thisAxis = this.axis;
             const otherAxis = action.axis;
             if (thisAxis === B2D_B2DX && otherAxis === B2D_B2DY) {

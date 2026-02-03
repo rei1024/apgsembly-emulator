@@ -27,6 +27,7 @@ import {
     $fileImport,
     $frequencyInput,
     $input,
+    $printerDetail,
     $reset,
     // Stats
     $statsModal,
@@ -88,6 +89,10 @@ setupFrequencyInput($frequencyInput, app);
 // 開閉で描画
 $b2dDetail.addEventListener("toggle", () => {
     app.renderB2D();
+});
+
+$printerDetail.addEventListener("toggle", () => {
+    app.renderPrinter();
 });
 
 $binaryRegisterDetail.addEventListener("toggle", () => {
@@ -153,6 +158,7 @@ setupCheckbox(binaryConfig.$showBinaryValueInHex, SHOW_BINARY_IN_HEX_KEY);
 // B2D
 $b2dHidePointer.addEventListener("change", () => {
     app.renderB2D();
+    app.renderPrinter();
 });
 
 const B2D_FLIP_UPSIDE_DOWN_KEY = "apge_b2d_flip_upside_down";
