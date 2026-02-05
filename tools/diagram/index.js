@@ -5,7 +5,7 @@
 import { create } from "./create.js";
 import { $type } from "../../frontend/util/selector.js";
 // @ts-ignore
-import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.7.0/dist/mermaid.esm.min.mjs";
+import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.2/dist/mermaid.esm.min.mjs";
 
 // 500 -> 2000
 mermaid.initialize({ maxEdges: 2000 });
