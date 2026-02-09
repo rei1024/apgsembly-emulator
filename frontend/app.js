@@ -59,6 +59,7 @@ import {
 } from "./bind.js";
 import { toLocaleString } from "./util/toLocaleString.js";
 import { LibraryUI } from "./components/library_ui.js";
+import { clearCanvas } from "./util/clear-canvas.js";
 
 /** index.htmlと同期すること */
 const DEFAULT_FREQUENCY = 30;
@@ -288,8 +289,7 @@ export class App {
         if (machine === undefined) {
             $b2dPos.x.textContent = "0";
             $b2dPos.y.textContent = "0";
-            context.clearRect(0, 0, $canvas.width, $canvas.height);
-            context.resetTransform();
+            clearCanvas(context);
             return;
         }
         const b2d = machine.actionExecutor.b2d;
@@ -318,13 +318,7 @@ export class App {
         if (machine === undefined) {
             $printerPos.x.textContent = "0";
             $printerPos.y.textContent = "0";
-            printerContext.clearRect(
-                0,
-                0,
-                $printerCanvas.width,
-                $printerCanvas.height,
-            );
-            printerContext.resetTransform();
+            clearCanvas(printerContext);
             return;
         }
         const printer = machine.actionExecutor.matrixPrinter;

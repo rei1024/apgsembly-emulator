@@ -2,6 +2,7 @@
 
 import { B2D } from "../../src/components/B2D.js";
 import { internalError } from "../../src/internalError.js";
+import { clearCanvas } from "../util/clear-canvas.js";
 
 /**
  * B2Dをcanvasに描画する
@@ -28,13 +29,7 @@ export const renderB2D = (context, b2d, hidePointer, flipUpsideDown) => {
     }
 
     // reset canvas
-    if (context.reset) {
-        context.reset();
-    } else {
-        context.clearRect(0, 0, SIZE, SIZE);
-        context.resetTransform();
-        context.beginPath();
-    }
+    clearCanvas(context);
 
     const maxX = b2d.getMaxX();
     const maxY = b2d.getMaxY();

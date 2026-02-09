@@ -4,7 +4,7 @@ import { Machine } from "../src/Machine.js";
 import { Program } from "../src/Program.js";
 import { piCalculator } from "./pi_calculator.js";
 
-// deno run --allow-hrtime test/benchmark.js
+// deno run test/benchmark.js
 // node test/benchmark.js
 
 const N = 10000000;
