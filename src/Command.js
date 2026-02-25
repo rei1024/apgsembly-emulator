@@ -7,9 +7,9 @@ import { lineNumberMessage } from "./parser/message.js";
 import { parseReplacements } from "./parser/parseReplacements.js";
 
 /**
- * Name of initial state
+ * Name of the initial state
  */
-export const INITIAL_STATE = "INITIAL";
+export const INITIAL_STATE_NAME = "INITIAL";
 
 /**
  * Represents a line of source code
