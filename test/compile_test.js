@@ -8,7 +8,12 @@ import { program9_2, program9_3 } from "./Program_test.js";
 
 test("Compile empty", () => {
     const obj = commandsToLookupTable([]);
-    assertEquals(obj, { lookup: [], stateMap: new Map(), states: [] });
+    assertEquals(obj, {
+        lookup: [],
+        stateNameToIndexMap: new Map(),
+        stateNames: [],
+        reverseStateList: [],
+    });
 });
 
 test("Compile program9_2", () => {
@@ -28,6 +33,8 @@ test("Compile program9_2", () => {
     assertEquals(obj.stateNameToIndexMap.size, 2);
     assertEquals(obj.stateNameToIndexMap.get("INITIAL"), 0);
     assertEquals(obj.stateNameToIndexMap.get("ID1"), 1);
+
+    assertEquals(obj.reverseStateList, [new Set(), new Set([0, 1])]);
 });
 
 test("Compile program9_3", () => {
