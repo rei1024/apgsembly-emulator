@@ -376,7 +376,7 @@ export class App {
         } else {
             this.#statsUI.initialize(
                 machine.getStateStats(),
-                machine.states,
+                machine.stateNames,
             );
         }
     }

@@ -436,7 +436,7 @@ END_1; *; END_1; HALT_OUT
             machine.stepCount,
             machine
                 .getStateStats()[
-                    machine.getStateMap().get("A0") ?? throwError()
+                    machine.getStateNameToIndexMap().get("A0") ?? throwError()
                 ],
         ]);
     }

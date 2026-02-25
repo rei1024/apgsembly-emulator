@@ -18,7 +18,7 @@ export function initializeBreakpointSelect($breakpointSelect, machine) {
     none.selected = true;
     $breakpointSelect.append(none);
 
-    for (const [state, stateIndex] of machine.getStateMap()) {
+    for (const [state, stateIndex] of machine.getStateNameToIndexMap()) {
         const option = create("option", state);
         option.value = stateIndex.toString();
         $breakpointSelect.append(option);

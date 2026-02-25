@@ -14,10 +14,10 @@ import {
 import {
     Command,
     commandWithLineNumber,
-    INITIAL_STATE,
+    INITIAL_STATE_NAME,
     RegistersHeader,
 } from "./Command.js";
-export { INITIAL_STATE };
+export { INITIAL_STATE_NAME as INITIAL_STATE };
 
 /**
  * @returns {never}
@@ -56,9 +56,10 @@ export class Machine {
         /** @type {0 | 1} */
         this.prevOutput = 0;
 
-        const { states, stateMap, lookup } = commandsToLookupTable(
-            program.commands,
-        );
+        const { stateNames, stateNameToIndexMap, lookup } =
+            commandsToLookupTable(
+                program.commands,
+            );
 
         /**
          * @readonly
@@ -79,8 +80,8 @@ export class Machine {
         /**
          * 現在の状態の添字
          */
-        this.currentStateIndex = stateMap.get(INITIAL_STATE) ??
-            error(`${INITIAL_STATE} state is not present`);
+        this.currentStateIndex = stateNameToIndexMap.get(INITIAL_STATE_NAME) ??
+            error(`${INITIAL_STATE_NAME} state is not present`);
 
         // /**
         //  * @type {number}
@@ -101,13 +102,13 @@ export class Machine {
         /**
          * @readonly
          */
-        this.states = states;
+        this.stateNames = stateNames;
 
         /**
          * @readonly
          * @private
          */
-        this.stateMap = stateMap;
+        this.stateNameToIndexMap = stateNameToIndexMap;
 
         /**
          * @readonly
@@ -203,7 +204,7 @@ export class Machine {
      * @returns {string}
      */
     getCurrentState() {
-        const name = this.states[this.currentStateIndex];
+        const name = this.stateNames[this.currentStateIndex];
         if (name === undefined) {
             error("State name is not found");
         }
@@ -214,8 +215,8 @@ export class Machine {
      * 状態の名前から添字へのマップを取得する
      * @returns {Map<string, number>}
      */
-    getStateMap() {
-        return this.stateMap;
+    getStateNameToIndexMap() {
+        return this.stateNameToIndexMap;
     }
 
     /**
