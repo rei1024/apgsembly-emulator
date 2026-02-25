@@ -19,15 +19,15 @@ test("Compile program9_2", () => {
     }
 
     const obj = commandsToLookupTable(program.commands);
-    assertEquals(obj.states, ["INITIAL", "ID1"]);
+    assertEquals(obj.stateNames, ["INITIAL", "ID1"]);
     assertEquals(obj.lookup.length, 2);
 
     assertEquals(obj.lookup[0]?.nz, undefined);
     assertEquals(obj.lookup[0]?.z?.nextState, 1);
 
-    assertEquals(obj.stateMap.size, 2);
-    assertEquals(obj.stateMap.get("INITIAL"), 0);
-    assertEquals(obj.stateMap.get("ID1"), 1);
+    assertEquals(obj.stateNameToIndexMap.size, 2);
+    assertEquals(obj.stateNameToIndexMap.get("INITIAL"), 0);
+    assertEquals(obj.stateNameToIndexMap.get("ID1"), 1);
 });
 
 test("Compile program9_3", () => {
@@ -38,5 +38,5 @@ test("Compile program9_3", () => {
     }
 
     const obj = commandsToLookupTable(program.commands);
-    assertEquals(obj.states, ["INITIAL", "ID1", "ID2", "ID3"]);
+    assertEquals(obj.stateNames, ["INITIAL", "ID1", "ID2", "ID3"]);
 });
