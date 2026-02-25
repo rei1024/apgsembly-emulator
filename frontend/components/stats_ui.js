@@ -76,16 +76,18 @@ export class StatsUI {
 
     /**
      * @param {StatsItem[]} stateStats
-     * @param {string[]} states
+     * @param {string[]} stateNames
      */
-    initialize(stateStats, states) {
-        this.#statsNumberOfStates.textContent = toLocaleString(states.length);
+    initialize(stateStats, stateNames) {
+        this.#statsNumberOfStates.textContent = toLocaleString(
+            stateNames.length,
+        );
 
         this.cells = [];
         this.root.innerHTML = "";
 
         for (const [i, stat] of stateStats.entries()) {
-            const name = states[i] ?? "";
+            const name = stateNames[i] ?? "";
             const { $tr, $sum, $z, $nz } = createRow(name, stat);
             this.root.append($tr);
             this.cells.push({ $sum, $z, $nz, $tr });
