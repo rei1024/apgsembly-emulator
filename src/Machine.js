@@ -94,6 +94,9 @@ export class Machine {
          * Statistics
          * 統計
          * NとNZが交互に並ぶ
+         *
+         * index = this.currentStateIndex * 2 + this.prevOutput
+         *
          * @type {number[]}
          * @private
          */
@@ -284,8 +287,8 @@ export class Machine {
             }
         }
         const statIndex = this.currentStateIndex * 2 + this.prevOutput;
-        this.stateStatsArray[statIndex] =
-            (this.stateStatsArray[statIndex] ?? 0) + num;
+        const stateStatsArray = this.stateStatsArray;
+        stateStatsArray[statIndex] = (stateStatsArray[statIndex] ?? 0) + num;
         this.stepCount += num;
     }
 
@@ -388,8 +391,8 @@ export class Machine {
             const currentStateIndex = this.currentStateIndex;
             const prevOutput = this.prevOutput;
             const statIndex = currentStateIndex * 2 + prevOutput;
-            this.stateStatsArray[statIndex] =
-                (this.stateStatsArray[statIndex] ?? 0) + 1;
+            const stateStatsArray = this.stateStatsArray;
+            stateStatsArray[statIndex] = (stateStatsArray[statIndex] ?? 0) + 1;
         }
 
         /**
