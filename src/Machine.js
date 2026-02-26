@@ -17,6 +17,7 @@ import {
     INITIAL_STATE_NAME,
     RegistersHeader,
 } from "./Command.js";
+import { internalError } from "./internalError.js";
 export { INITIAL_STATE_NAME as INITIAL_STATE };
 
 /**
@@ -308,14 +309,77 @@ export class Machine {
             return { type: "cant-execute" };
         }
 
-        let stepCount = 0;
-
-        for (let i = 0; i < num; i++) {
-            // TODO
+        const allocUReg = this.actionExecutor.getUReg(
+            optimizeResult.allocNumUReg,
+        );
+        if (allocUReg === undefined) {
+            internalError();
         }
 
-        // TODO: set correct count
-        return { type: "executed", count: stepCount };
+        const allocURegValue = allocUReg.getValue();
+
+        if (allocURegValue < num * 4) { // 4 is state0, state1, state2, state3
+            // fully executing the optimized command requires more registers than available, so do normal execution to stop at the breakpoint if needed
+            return { type: "cant-execute" };
+        }
+
+        const outputBReg = this.actionExecutor.getBReg(
+            optimizeResult.outputBReg,
+        );
+        const inputBReg = this.actionExecutor.getBReg(optimizeResult.inputBReg);
+        if (outputBReg === undefined || inputBReg === undefined) {
+            internalError();
+        }
+
+        // TODO optimize if ouputBReg.pointer is not zero
+        if (outputBReg.pointer !== 0 || inputBReg.pointer !== 0) {
+            // fully executing the optimized command requires non-zero pointer, so do normal execution to stop at the breakpoint if needed
+            return { type: "cant-execute" };
+        }
+
+        // binary bits has 0 or 1 as values
+        const outputBRegUint8Array = outputBReg.getInternalUint8Array();
+        const inputBRegUint8Array = inputBReg.getInternalUint8Array();
+
+        // outputBReg += inputBReg;
+
+        outputBReg.pointer = allocURegValue;
+        outputBReg.extend();
+        inputBReg.pointer = allocURegValue;
+        inputBReg.extend();
+
+        let carry = 0;
+        for (let i = 0; i < allocURegValue; i++) {
+            const sum = (outputBRegUint8Array[i] ?? internalError()) +
+                (inputBRegUint8Array[i] ?? internalError()) +
+                carry;
+            outputBRegUint8Array[i] = sum % 2;
+            carry = sum >= 2 ? 1 : 0;
+        }
+        // if there is overflow, the result is truncated, so we can ignore the carry
+
+        // TODO: This is wrong. depending on state should change the value of execution count.
+        // for (
+        //     const statState of [
+        //         optimizeResult.state0,
+        //         optimizeResult.state1,
+        //         optimizeResult.state2,
+        //         optimizeResult.state3,
+        //     ]
+        // ) {
+        //     const statIndex = statState * 2 + this.prevOutput;
+        //     const stateStatsArray = this.stateStatsArray;
+        //     stateStatsArray[statIndex] = (stateStatsArray[statIndex] ?? 0) +
+        //         allocURegValue;
+        // }
+
+        this.stepCount += 0; // TODO this is wrong.
+
+        this.prevOutput = 0;
+        this.currentStateIndex = optimizeResult.outputState;
+
+        // FIXME count is wrong
+        return { type: "executed", count: allocURegValue * 4 };
     }
 
     /**
@@ -358,10 +422,10 @@ export class Machine {
                     i += num - 1; // i++しているため1減らす
                     continue;
                 }
-            } else if (compiledCommand.binaryaAdOptimization) {
+            } else if (compiledCommand.binaryaAddOptimization) {
                 const num = n - i;
                 const result = this._internalExecBinaryAdd(
-                    compiledCommand.binaryaAdOptimization,
+                    compiledCommand.binaryaAddOptimization,
                     breakpointIndex,
                     num,
                 );

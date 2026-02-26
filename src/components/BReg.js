@@ -328,4 +328,8 @@ export class BReg {
             }
         }
     }
+
+    getInternalUint8Array() {
+        return this.bits;
+    }
 }

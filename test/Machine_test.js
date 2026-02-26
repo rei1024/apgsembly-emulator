@@ -459,23 +459,36 @@ test("Machine PI Calculator steps", () => {
     }
 
     /**
+     * @param {number} index
      * @param {Machine} machine
      */
-    function getStats(machine) {
-        return [
-            machine.stepCount,
-            machine.prevOutput,
-            machine.getStateStats(),
-            machine.actionExecutor.getBReg(0)?.getBits().slice(),
-            machine.actionExecutor.getBReg(0)?.pointer,
-            machine.actionExecutor.getUReg(0)?.getValue(),
-        ];
+    function getStats(index, machine) {
+        return {
+            index,
+            stepCount: machine.stepCount,
+            prevOutput: machine.prevOutput,
+            // FIXME: if large causes out of memory
+            // stateStats: machine.getStateStats(),
+            b0Bits: machine.actionExecutor.getBReg(0)?.getBits().slice(),
+            b0Pointer: machine.actionExecutor.getBReg(0)?.pointer,
+            u0Value: machine.actionExecutor.getUReg(0)?.getValue(),
+        };
+        // return [
+        //     index,
+        //     machine.stepCount,
+        //     machine.prevOutput,
+        //     // TODO: implement correct stats
+        //     // machine.getStateStats(),
+        //     machine.actionExecutor.getBReg(0)?.getBits().slice(),
+        //     machine.actionExecutor.getBReg(0)?.pointer,
+        //     machine.actionExecutor.getUReg(0)?.getValue(),
+        // ];
     }
 
     const resNormal = [];
     const resExec = [];
     for (const cond of [true, false]) {
-        const N = 100;
+        const N = 1200;
 
         if (cond) {
             const machine = new Machine(program);
@@ -485,13 +498,13 @@ test("Machine PI Calculator steps", () => {
                 if (res === -1) {
                     break;
                 }
-                resNormal.push(getStats(machine));
+                resNormal.push(getStats(i, machine));
             }
         } else {
             for (let i = 1; i <= N; i++) {
                 const machine = new Machine(program);
                 machine.exec(i, false, -1, 0);
-                resExec.push(getStats(machine));
+                resExec.push(getStats(i, machine));
             }
         }
     }

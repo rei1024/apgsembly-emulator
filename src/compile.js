@@ -112,7 +112,7 @@ export class CompiledCommandWithNextState {
          *
          * @type {undefined | BinaryAddOptimizeResult}
          */
-        this.binaryaAdOptimization = undefined;
+        this.binaryaAddOptimization = undefined;
     }
 }
 
@@ -438,7 +438,7 @@ export const commandsToLookupTable = (commands) => {
         if (c === undefined || c.nz === undefined) {
             internalError();
         }
-        c.nz.binaryaAdOptimization = r;
+        c.nz.binaryaAddOptimization = r;
     }
 
     const stateNames = [...stateMap.keys()];
