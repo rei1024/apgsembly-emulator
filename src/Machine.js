@@ -291,7 +291,7 @@ export class Machine {
     }
 
     /**
-     * @param {import("./compile.js").BinaryAddOptimizeResult} optimizeResult
+     * @param {import("./optimize/binary-optimize.js").BinaryAddOptimizeResult} optimizeResult
      * @param {number} breakpointIndex
      * @param {number} num
      * @returns {{ type: 'cant-execute' } | { type: 'executed', count: number }}
