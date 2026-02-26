@@ -106,6 +106,13 @@ export class CompiledCommandWithNextState {
 
         this.tdecuOptimize = getOptimizedTdecU(command);
         this.tdecbOptimize = getOptimizedTdecB(command);
+
+        /**
+         * should be defined on NZ
+         *
+         * @type {undefined | BinaryAddOptimizeResult}
+         */
+        this.binaryaAdOptimization = undefined;
     }
 }
 
@@ -425,8 +432,14 @@ export const commandsToLookupTable = (commands) => {
         }
     }
 
-    // TODO: save optimization
-    // console.log(optimizeBinaryAddPass(lookup));
+    const binaryAddOptimizeResults = optimizeBinaryAddPass(lookup);
+    for (const r of binaryAddOptimizeResults) {
+        const c = lookup[r.inputState];
+        if (c === undefined || c.nz === undefined) {
+            internalError();
+        }
+        c.nz.binaryaAdOptimization = r;
+    }
 
     const stateNames = [...stateMap.keys()];
 

@@ -290,6 +290,35 @@ export class Machine {
     }
 
     /**
+     * @param {import("./compile.js").BinaryAddOptimizeResult} optimizeResult
+     * @param {number} breakpointIndex
+     * @param {number} num
+     * @returns {{ type: 'cant-execute' } | { type: 'executed', count: number }}
+     */
+    _internalExecBinaryAdd(optimizeResult, breakpointIndex, num) {
+        if (
+            breakpointIndex !== -1 &&
+            (
+                optimizeResult.state0 === breakpointIndex ||
+                optimizeResult.state1 === breakpointIndex ||
+                optimizeResult.state2 === breakpointIndex ||
+                optimizeResult.state3 === breakpointIndex
+            )
+        ) {
+            return { type: "cant-execute" };
+        }
+
+        let stepCount = 0;
+
+        for (let i = 0; i < num; i++) {
+            // TODO
+        }
+
+        // TODO: set correct count
+        return { type: "executed", count: stepCount };
+    }
+
+    /**
      * nステップ進める
      * @param {number} n
      * @param {boolean} isRunning 実行中は重い場合途中で止める
@@ -329,6 +358,18 @@ export class Machine {
                     i += num - 1; // i++しているため1減らす
                     continue;
                 }
+            } else if (compiledCommand.binaryaAdOptimization) {
+                const num = n - i;
+                const result = this._internalExecBinaryAdd(
+                    compiledCommand.binaryaAdOptimization,
+                    breakpointIndex,
+                    num,
+                );
+                if (result.type === "executed") {
+                    i += result.count - 1; // i++しているため1減らす
+                    continue;
+                }
+                // for "cant-execute", do normal execution, and it will stop at the breakpoint if needed
             }
             // optimization end
 
