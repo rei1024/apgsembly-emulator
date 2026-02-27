@@ -180,12 +180,17 @@ export class App {
 
     /**
      * machineがセットされた時のコールバック
+     * @param {{ prevBreakpointName: string | undefined }} param0
      */
-    #onMachineSet() {
+    #onMachineSet({ prevBreakpointName }) {
         this.#setUpUnary();
         this.#setUpBinary();
         this.#setUpStats();
-        initializeBreakpointSelect($breakpointSelect, this.#machine);
+        initializeBreakpointSelect(
+            $breakpointSelect,
+            this.#machine,
+            prevBreakpointName,
+        );
     }
 
     doStep() {
@@ -234,6 +239,11 @@ export class App {
      * @returns {boolean} 成功
      */
     reset() {
+        const prevBreakpointStateName =
+            $breakpointSelect.value !== "-1" && this.#machine != null
+                ? this.#machine?.stateNames[Number($breakpointSelect.value)]
+                : undefined;
+
         this.#errorMessage = "";
         this.#machine = undefined;
         this.#valve.reset();
@@ -241,7 +251,7 @@ export class App {
         try {
             const libraryFiles = this.$libraryUI.getFiles();
             this.#machine = Machine.fromString($input.value, libraryFiles);
-            this.#onMachineSet();
+            this.#onMachineSet({ prevBreakpointName: prevBreakpointStateName });
             this.#appState = "Stop";
         } catch (e) {
             this.#appState = "ParseError";

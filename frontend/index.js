@@ -17,18 +17,22 @@ import {
     $b2dFlipUpsideDown,
     $b2dHidePointer,
     $binaryRegisterDetail,
+    $breakpointConfig,
+    $breakpointInputSelect,
+    $breakpointSelect,
+    $clearBreakpointButton,
     $configButton,
     // Modal
     $configModalContent,
     $darkMode,
     $darkModeLabel,
-    $exampleCodes,
     $examples,
     $fileImport,
     $frequencyInput,
     $input,
     $printerDetail,
     $reset,
+    $showBreakpointConfig,
     // Stats
     $statsModal,
     $step,
@@ -40,9 +44,8 @@ import {
 } from "./bind.js";
 
 import { App } from "./app.js";
-
-// データ
-const DATA_DIR = "./frontend/data/";
+import { scrollToTop } from "./util/scroll-to-top.js";
+import { setupExamples } from "./components/examples.js";
 
 /** instance */
 const app = new App();
@@ -63,25 +66,7 @@ $step.addEventListener("click", () => {
 });
 
 // サンプル
-$exampleCodes.forEach((e) => {
-    e.addEventListener("click", async () => {
-        $examples.style.opacity = "0.5";
-        const src = e.dataset["src"];
-        try {
-            const response = await fetch(DATA_DIR + src);
-            if (!response.ok) {
-                throw Error("error");
-            }
-            app.setInputAndReset(await response.text());
-            // スクロール
-            scrollToTop();
-        } catch (e) {
-            throw e;
-        } finally {
-            $examples.removeAttribute("style");
-        }
-    });
-});
+setupExamples(app);
 
 // 周波数の設定
 setupFrequencyInput($frequencyInput, app);
@@ -102,10 +87,6 @@ $binaryRegisterDetail.addEventListener("toggle", () => {
 $unaryRegisterDetail.addEventListener("toggle", () => {
     app.renderUnary();
 });
-
-const scrollToTop = () => {
-    $input.scrollTop = 0;
-};
 
 // ファイルインポート
 setupOnInputFileText($fileImport, (result) => {
@@ -167,6 +148,23 @@ setupCheckbox($b2dFlipUpsideDown, B2D_FLIP_UPSIDE_DOWN_KEY);
 // showの場合クラスが追加されない
 $statsModal.addEventListener("shown.bs.modal", () => {
     app.renderStats();
+});
+
+$clearBreakpointButton.addEventListener("click", () => {
+    $breakpointSelect.value = "-1";
+    $breakpointInputSelect.value = "*";
+});
+
+$showBreakpointConfig.addEventListener("change", () => {
+    if ($showBreakpointConfig.checked) {
+        $breakpointConfig.classList.remove("d-none");
+        $breakpointConfig.classList.add("d-flex");
+    } else {
+        $breakpointConfig.classList.remove("d-flex");
+        $breakpointConfig.classList.add("d-none");
+        $breakpointSelect.value = "-1";
+        $breakpointInputSelect.value = "*";
+    }
 });
 
 $viewStateDiagramButton.addEventListener("click", () => {
