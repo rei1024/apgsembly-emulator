@@ -1,13 +1,13 @@
 // @ts-check
 
-import { ADD_A1, ADD_B0, ADD_B1 } from "../action_consts/Add_consts";
-import { B_INC, B_READ, B_SET, B_TDEC } from "../action_consts/BReg_consts";
-import { U_TDEC } from "../action_consts/UReg_consts";
-import { AddAction } from "../actions/AddAction";
-import { BRegAction } from "../actions/BRegAction";
-import { URegAction } from "../actions/URegAction";
-import { CompiledCommand } from "../compile";
-import { NopAction } from "../exports";
+import { ADD_A1, ADD_B0, ADD_B1 } from "../action_consts/Add_consts.js";
+import { B_INC, B_READ, B_SET, B_TDEC } from "../action_consts/BReg_consts.js";
+import { U_TDEC } from "../action_consts/UReg_consts.js";
+import { AddAction } from "../actions/AddAction.js";
+import { BRegAction } from "../actions/BRegAction.js";
+import { URegAction } from "../actions/URegAction.js";
+import { CompiledCommand } from "../compile.js";
+import { NopAction } from "../exports.js";
 
 // binary addition
 // MULA16 is input state and MULA20 is output state
