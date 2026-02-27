@@ -30,22 +30,22 @@ import {
     $binaryRegisterDetail,
     $breakpointInputSelect,
     $breakpointSelect,
-    $canvas,
     $command,
     $currentState,
+    $enableBinaryOptimization,
     $error,
     $frequencyOutput,
     $input,
     $output,
     $outputDetail,
     $previousOutput,
-    $printerCanvas,
     $printerDetail,
     $printerPos,
     $reset,
     $statsBody,
     $statsButton,
     $statsModal,
+    $statsModalMessage,
     $statsNumberOfStates,
     $step,
     $stepCount,
@@ -86,7 +86,11 @@ export class App {
     /** @readonly */
     #binaryUI = new BinaryUI($binaryRegister);
     /** @readonly */
-    #statsUI = new StatsUI($statsBody, $statsNumberOfStates);
+    #statsUI = new StatsUI(
+        $statsBody,
+        $statsNumberOfStates,
+        $statsModalMessage,
+    );
     /** @readonly */
     $libraryUI = new LibraryUI();
     /** @readonly */
@@ -250,7 +254,9 @@ export class App {
 
         try {
             const libraryFiles = this.$libraryUI.getFiles();
-            this.#machine = Machine.fromString($input.value, libraryFiles);
+            this.#machine = Machine.fromString($input.value, libraryFiles, {
+                enableBinaryOptimization: $enableBinaryOptimization.checked,
+            });
             this.#onMachineSet({ prevBreakpointName: prevBreakpointStateName });
             this.#appState = "Stop";
         } catch (e) {
@@ -387,6 +393,7 @@ export class App {
             this.#statsUI.initialize(
                 machine.getStateStats(),
                 machine.stateNames,
+                $enableBinaryOptimization.checked,
             );
         }
     }

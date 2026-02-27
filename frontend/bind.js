@@ -177,10 +177,15 @@ export const $b2dFlipUpsideDown = $type(
     HTMLInputElement_,
 );
 
+export const $enableBinaryOptimization = $type(
+    "#enable_binary_optimization",
+    HTMLInputElement_,
+);
+
 // Stats Modal
 
 export const $statsModal = $type("#stats_modal", HTMLElement_);
-
+export const $statsModalMessage = $type("#stats_modal_message", HTMLElement_);
 export const $statsBody = $type("#stats_body", HTMLElement_);
 
 export const $statsNumberOfStates = $type(

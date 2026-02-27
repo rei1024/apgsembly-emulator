@@ -147,10 +147,15 @@ export class Machine {
      * 文字列から作成する
      * @param {string} source
      * @param {{ name: string; content: string }[]} [libraryFiles]
+     * @param {{ enableBinaryOptimization?: boolean }} [options]
      * @returns {Machine}
      * @throws エラー
      */
-    static fromString(source, libraryFiles) {
+    static fromString(
+        source,
+        libraryFiles,
+        { enableBinaryOptimization = false } = {},
+    ) {
         const program = Program.parse(source, {
             libraryFiles: libraryFiles ?? [],
         });
@@ -159,8 +164,9 @@ export class Machine {
             throw Error(program);
         }
 
-        // TODO: introduce option for binary optimization
-        return new Machine(program, { enableBinaryOptimization: false });
+        return new Machine(program, {
+            enableBinaryOptimization: enableBinaryOptimization,
+        });
     }
 
     /**
