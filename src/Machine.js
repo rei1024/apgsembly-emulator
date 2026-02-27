@@ -298,6 +298,7 @@ export class Machine {
      * @param {number} breakpointIndex
      * @param {number} num
      * @returns {{ type: 'cant-execute' } | { type: 'executed', count: number }}
+     * @private
      */
     _internalExecBinaryAdd(optimizeResult, breakpointIndex, num) {
         if (num <= 5) {
