@@ -8,6 +8,7 @@ import { URegAction } from "./actions/URegAction.js";
 import { U_TDEC } from "./action_consts/UReg_consts.js";
 import { HaltOutAction } from "./exports.js";
 import { internalError } from "./internalError.js";
+import { optimizeBinaryAddPass } from "./optimize/binary-optimize.js";
 
 /**
  * @param {Action} action
@@ -103,6 +104,13 @@ export class CompiledCommandWithNextState {
 
         this.tdecuOptimize = getOptimizedTdecU(command);
         this.tdecbOptimize = getOptimizedTdecB(command);
+
+        /**
+         * should be defined on NZ
+         *
+         * @type {undefined | import("./optimize/binary-optimize.js").BinaryAddOptimizeResult}
+         */
+        this.binaryaAddOptimization = undefined;
     }
 }
 
@@ -246,6 +254,15 @@ export const commandsToLookupTable = (commands) => {
         }
     }
 
+    const binaryAddOptimizeResults = optimizeBinaryAddPass(lookup);
+    for (const r of binaryAddOptimizeResults) {
+        const c = lookup[r.inputState];
+        if (c === undefined || c.nz === undefined) {
+            internalError();
+        }
+        c.nz.binaryaAddOptimization = r;
+    }
+
     const stateNames = [...stateMap.keys()];
 
     /**
@@ -273,7 +290,7 @@ export const commandsToLookupTable = (commands) => {
     }
 
     return {
-        stateNames: [...stateMap.keys()],
+        stateNames,
         stateNameToIndexMap: stateMap,
         lookup,
         reverseStateList,

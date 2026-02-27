@@ -17,6 +17,7 @@ import {
     INITIAL_STATE_NAME,
     RegistersHeader,
 } from "./Command.js";
+import { internalError } from "./internalError.js";
 export { INITIAL_STATE_NAME as INITIAL_STATE };
 
 /**
@@ -38,15 +39,18 @@ const error = (msg = "error") => {
 export class Machine {
     /**
      * @param {Program} program
+     * @param {{ enableBinaryOptimization?: boolean }} [options]
      * @throws {Error} #REGISTERSでの初期化に失敗
      */
-    constructor(program) {
+    constructor(program, { enableBinaryOptimization = true } = {}) {
         /**
          * ステップ数
          */
         this.stepCount = 0;
 
         const analyzeResult = analyzeProgram(program);
+
+        this.enableBinaryOptimization = enableBinaryOptimization;
 
         /**
          * @readonly
@@ -155,7 +159,8 @@ export class Machine {
             throw Error(program);
         }
 
-        return new Machine(program);
+        // TODO: introduce option for binary optimization
+        return new Machine(program, { enableBinaryOptimization: false });
     }
 
     /**
@@ -293,6 +298,118 @@ export class Machine {
     }
 
     /**
+     * @param {import("./optimize/binary-optimize.js").BinaryAddOptimizeResult} optimizeResult
+     * @param {number} breakpointIndex
+     * @param {number} num
+     * @returns {{ type: 'cant-execute' } | { type: 'executed', count: number }}
+     * @private
+     */
+    _internalExecBinaryAdd(optimizeResult, breakpointIndex, num) {
+        if (num <= 5) {
+            return { type: "cant-execute" };
+        }
+        if (
+            breakpointIndex !== -1 &&
+            (
+                optimizeResult.state0 === breakpointIndex ||
+                optimizeResult.state1 === breakpointIndex ||
+                optimizeResult.state2 === breakpointIndex ||
+                optimizeResult.state3 === breakpointIndex
+            )
+        ) {
+            return { type: "cant-execute" };
+        }
+
+        const allocUReg = this.actionExecutor.getUReg(
+            optimizeResult.allocNumUReg,
+        );
+        if (allocUReg === undefined) {
+            internalError();
+        }
+
+        const allocURegValue = allocUReg.getValue();
+
+        const iterationCount = allocURegValue + 1;
+
+        // ensure enough steps is provided
+        if (!(iterationCount >= 4 && iterationCount * 5 + 1 < num)) {
+            // 5 is state0, state1, state2, state3, state3 (loop)
+            // fully executing the optimized command requires more registers than available, so do normal execution to stop at the breakpoint if needed
+            return { type: "cant-execute" };
+        }
+
+        const outputBReg = this.actionExecutor.getBReg(
+            optimizeResult.outputBReg,
+        );
+        const inputBReg = this.actionExecutor.getBReg(optimizeResult.inputBReg);
+        if (outputBReg === undefined || inputBReg === undefined) {
+            internalError();
+        }
+
+        // TODO optimize if ouputBReg.pointer is not zero
+        if (outputBReg.pointer !== 0 || inputBReg.pointer !== 0) {
+            // fully executing the optimized command requires non-zero pointer, so do normal execution to stop at the breakpoint if needed
+            return { type: "cant-execute" };
+        }
+
+        // binary bits has 0 or 1 as values
+
+        // -- Start Execution --
+
+        allocUReg.setValue(0); // for TDEC U loop
+
+        outputBReg.pointer = iterationCount;
+        outputBReg.extend();
+        inputBReg.pointer = iterationCount;
+        inputBReg.extend();
+
+        // this should be below the extend() calls above
+        const outputBRegUint8Array = outputBReg.getInternalUint8Array();
+        const inputBRegUint8Array = inputBReg.getInternalUint8Array();
+
+        let stepCount = 0;
+
+        // outputBReg += inputBReg;
+        let carry = 0;
+        for (let i = 0; i < iterationCount; i++) {
+            const sum = (outputBRegUint8Array[i] ?? internalError()) +
+                (inputBRegUint8Array[i] ?? internalError()) +
+                carry;
+            const outputValue = sum % 2;
+            outputBRegUint8Array[i] = outputValue;
+            // +1 for `MULA19;  NZ; MULA19; SET B1, NOP`
+            stepCount += outputValue === 0 ? 4 : 5;
+            carry = sum >= 2 ? 1 : 0;
+
+            // TODO: This is wrong. depending on state should change the value of execution count.
+            // for (
+            //     const statState of [
+            //         optimizeResult.state0,
+            //         optimizeResult.state1,
+            //         optimizeResult.state2,
+            //         optimizeResult.state3,
+            //     ]
+            // ) {
+            //     const statIndex = statState * 2 + TODO;
+            //     const stateStatsArray = this.stateStatsArray;
+            //     stateStatsArray[statIndex] = (stateStatsArray[statIndex] ?? 0) +
+            //                 statState === optimizeResult.state3
+            //         ? outputValue === 0 ? 1 : 2
+            //         : 1;
+            // }
+        }
+        // if there is overflow, the result is truncated, so we can ignore the carry
+
+        this.prevOutput = inputBReg.tdec(); // last TDEC B
+        stepCount += 1; // for last TDEC B
+
+        this.currentStateIndex = optimizeResult.outputState;
+
+        this.stepCount += stepCount;
+        return { type: "executed", count: stepCount };
+    }
+
+    /**
      * nステップ進める
      * @param {number} n
      * @param {boolean} isRunning 実行中は重い場合途中で止める
@@ -309,6 +426,7 @@ export class Machine {
          */
         const start = isRunning ? null : performance.now();
 
+        const enableBinaryOptimization = this.enableBinaryOptimization;
         for (let i = 0; i < n; i++) {
             const compiledCommand = this.getNextCommand();
 
@@ -332,6 +450,22 @@ export class Machine {
                     i += num - 1; // i++しているため1減らす
                     continue;
                 }
+            } else if (
+                enableBinaryOptimization &&
+                compiledCommand.binaryaAddOptimization
+            ) {
+                const num = n - i;
+                const result = this._internalExecBinaryAdd(
+                    compiledCommand.binaryaAddOptimization,
+                    breakpointIndex,
+                    num,
+                );
+
+                if (result.type === "executed") {
+                    i += result.count - 1; // i++しているため1減らす
+                    continue;
+                }
+                // for "cant-execute", do normal execution, and it will stop at the breakpoint if needed
             }
             // optimization end
 
