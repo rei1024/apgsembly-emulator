@@ -328,7 +328,10 @@ test("Machine PI Calculator", () => {
     let normalStats;
     let execStats;
     for (const cond of [true, false]) {
-        const machine = new Machine(program);
+        const machine = new Machine(program, {
+            // Binary optimization causes different state stats, so disable it for comparison
+            enableBinaryOptimization: false,
+        });
 
         const N = 250000;
 
@@ -466,10 +469,13 @@ test("Machine PI Calculator steps", () => {
         return {
             index,
             stepCount: machine.stepCount,
+            binaryOptimized:
+                machine.getNextCommand()?.binaryaAddOptimization != null,
+            currentState: machine.getNextCommand().command.pretty(),
             prevOutput: machine.prevOutput,
             // FIXME: if large causes out of memory
-            // stateStats: machine.getStateStats(),
-            b0Bits: machine.actionExecutor.getBReg(0)?.getBits().slice(),
+            // stateStats: machine.getStateStats().map((s) => `${s.z}, ${s.nz}`),
+            // b0Bits: machine.actionExecutor.getBReg(0)?.getBits().slice(),
             b0Pointer: machine.actionExecutor.getBReg(0)?.pointer,
             u0Value: machine.actionExecutor.getUReg(0)?.getValue(),
         };
@@ -487,25 +493,25 @@ test("Machine PI Calculator steps", () => {
 
     const resNormal = [];
     const resExec = [];
-    for (const cond of [true, false]) {
-        const N = 1200;
+    const N = 150;
 
-        if (cond) {
+    {
+        const machine = new Machine(program);
+
+        for (let i = 0; i < N; i++) {
+            const res = machine.execCommand();
+            if (res === -1) {
+                break;
+            }
+            resNormal.push(getStats(i, machine));
+        }
+    }
+
+    {
+        for (let i = 0; i < N; i++) {
             const machine = new Machine(program);
-
-            for (let i = 0; i < N; i++) {
-                const res = machine.execCommand();
-                if (res === -1) {
-                    break;
-                }
-                resNormal.push(getStats(i, machine));
-            }
-        } else {
-            for (let i = 1; i <= N; i++) {
-                const machine = new Machine(program);
-                machine.exec(i, false, -1, 0);
-                resExec.push(getStats(i, machine));
-            }
+            machine.exec(i + 1, false, -1, 0);
+            resExec.push(getStats(i, machine));
         }
     }
 

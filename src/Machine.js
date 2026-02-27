@@ -39,15 +39,18 @@ const error = (msg = "error") => {
 export class Machine {
     /**
      * @param {Program} program
+     * @param {{ enableBinaryOptimization?: boolean }} [options]
      * @throws {Error} #REGISTERSでの初期化に失敗
      */
-    constructor(program) {
+    constructor(program, { enableBinaryOptimization = true } = {}) {
         /**
          * ステップ数
          */
         this.stepCount = 0;
 
         const analyzeResult = analyzeProgram(program);
+
+        this.enableBinaryOptimization = enableBinaryOptimization;
 
         /**
          * @readonly
@@ -297,6 +300,9 @@ export class Machine {
      * @returns {{ type: 'cant-execute' } | { type: 'executed', count: number }}
      */
     _internalExecBinaryAdd(optimizeResult, breakpointIndex, num) {
+        if (num <= 5) {
+            return { type: "cant-execute" };
+        }
         if (
             breakpointIndex !== -1 &&
             (
@@ -318,7 +324,11 @@ export class Machine {
 
         const allocURegValue = allocUReg.getValue();
 
-        if (allocURegValue < num * 4) { // 4 is state0, state1, state2, state3
+        const iterationCount = allocURegValue + 1;
+
+        // ensure enough steps is provided
+        if (!(iterationCount >= 4 && iterationCount * 5 + 1 < num)) {
+            // 5 is state0, state1, state2, state3, state3 (loop)
             // fully executing the optimized command requires more registers than available, so do normal execution to stop at the breakpoint if needed
             return { type: "cant-execute" };
         }
@@ -338,48 +348,60 @@ export class Machine {
         }
 
         // binary bits has 0 or 1 as values
+
+        // -- Start Execution --
+
+        allocUReg.setValue(0); // for TDEC U loop
+
+        outputBReg.pointer = iterationCount;
+        outputBReg.extend();
+        inputBReg.pointer = iterationCount;
+        inputBReg.extend();
+
+        // this should be below the extend() calls above
         const outputBRegUint8Array = outputBReg.getInternalUint8Array();
         const inputBRegUint8Array = inputBReg.getInternalUint8Array();
 
+        let stepCount = 0;
+
         // outputBReg += inputBReg;
-
-        outputBReg.pointer = allocURegValue;
-        outputBReg.extend();
-        inputBReg.pointer = allocURegValue;
-        inputBReg.extend();
-
         let carry = 0;
-        for (let i = 0; i < allocURegValue; i++) {
+        for (let i = 0; i < iterationCount; i++) {
             const sum = (outputBRegUint8Array[i] ?? internalError()) +
                 (inputBRegUint8Array[i] ?? internalError()) +
                 carry;
-            outputBRegUint8Array[i] = sum % 2;
+            const outputValue = sum % 2;
+            outputBRegUint8Array[i] = outputValue;
+            // +1 for `MULA19;  NZ; MULA19; SET B1, NOP`
+            stepCount += outputValue === 0 ? 4 : 5;
             carry = sum >= 2 ? 1 : 0;
+
+            // TODO: This is wrong. depending on state should change the value of execution count.
+            // for (
+            //     const statState of [
+            //         optimizeResult.state0,
+            //         optimizeResult.state1,
+            //         optimizeResult.state2,
+            //         optimizeResult.state3,
+            //     ]
+            // ) {
+            //     const statIndex = statState * 2 + TODO;
+            //     const stateStatsArray = this.stateStatsArray;
+            //     stateStatsArray[statIndex] = (stateStatsArray[statIndex] ?? 0) +
+            //                 statState === optimizeResult.state3
+            //         ? outputValue === 0 ? 1 : 2
+            //         : 1;
+            // }
         }
         // if there is overflow, the result is truncated, so we can ignore the carry
 
-        // TODO: This is wrong. depending on state should change the value of execution count.
-        // for (
-        //     const statState of [
-        //         optimizeResult.state0,
-        //         optimizeResult.state1,
-        //         optimizeResult.state2,
-        //         optimizeResult.state3,
-        //     ]
-        // ) {
-        //     const statIndex = statState * 2 + this.prevOutput;
-        //     const stateStatsArray = this.stateStatsArray;
-        //     stateStatsArray[statIndex] = (stateStatsArray[statIndex] ?? 0) +
-        //         allocURegValue;
-        // }
+        this.prevOutput = inputBReg.tdec(); // last TDEC B
+        stepCount += 1; // for last TDEC B
 
-        this.stepCount += 0; // TODO this is wrong.
-
-        this.prevOutput = 0;
         this.currentStateIndex = optimizeResult.outputState;
 
-        // FIXME count is wrong
-        return { type: "executed", count: allocURegValue * 4 };
+        this.stepCount += stepCount;
+        return { type: "executed", count: stepCount };
     }
 
     /**
@@ -399,6 +421,7 @@ export class Machine {
          */
         const start = isRunning ? null : performance.now();
 
+        const enableBinaryOptimization = this.enableBinaryOptimization;
         for (let i = 0; i < n; i++) {
             const compiledCommand = this.getNextCommand();
 
@@ -422,13 +445,17 @@ export class Machine {
                     i += num - 1; // i++しているため1減らす
                     continue;
                 }
-            } else if (compiledCommand.binaryaAddOptimization) {
+            } else if (
+                enableBinaryOptimization &&
+                compiledCommand.binaryaAddOptimization
+            ) {
                 const num = n - i;
                 const result = this._internalExecBinaryAdd(
                     compiledCommand.binaryaAddOptimization,
                     breakpointIndex,
                     num,
                 );
+
                 if (result.type === "executed") {
                     i += result.count - 1; // i++しているため1減らす
                     continue;
