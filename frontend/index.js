@@ -151,7 +151,7 @@ $statsModal.addEventListener("shown.bs.modal", () => {
 });
 
 $clearBreakpointButton.addEventListener("click", () => {
-    $breakpointSelect.value = "";
+    $breakpointSelect.value = "-1";
     $breakpointInputSelect.value = "*";
 });
 
@@ -162,7 +162,7 @@ $showBreakpointConfig.addEventListener("change", () => {
     } else {
         $breakpointConfig.classList.remove("d-flex");
         $breakpointConfig.classList.add("d-none");
-        $breakpointSelect.value = "";
+        $breakpointSelect.value = "-1";
         $breakpointInputSelect.value = "*";
     }
 });
