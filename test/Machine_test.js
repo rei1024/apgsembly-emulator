@@ -478,6 +478,7 @@ test("Machine PI Calculator steps", () => {
             // b0Bits: machine.actionExecutor.getBReg(0)?.getBits().slice(),
             b0Pointer: machine.actionExecutor.getBReg(0)?.pointer,
             u0Value: machine.actionExecutor.getUReg(0)?.getValue(),
+            u9Value: machine.actionExecutor.getUReg(9)?.getValue(),
         };
         // return [
         //     index,
@@ -493,7 +494,7 @@ test("Machine PI Calculator steps", () => {
 
     const resNormal = [];
     const resExec = [];
-    const N = 150;
+    const N = 500;
 
     {
         const machine = new Machine(program);
