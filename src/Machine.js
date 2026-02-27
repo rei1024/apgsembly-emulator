@@ -156,7 +156,8 @@ export class Machine {
             throw Error(program);
         }
 
-        return new Machine(program);
+        // TODO: introduce option for binary optimization
+        return new Machine(program, { enableBinaryOptimization: false });
     }
 
     /**

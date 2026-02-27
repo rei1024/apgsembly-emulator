@@ -74,5 +74,4 @@ FINAL2; *; FINAL; HALT_OUT
     }
 
     assertEquals(resNormal.length, resExec.length);
-    //    assertEquals(resNormal, resExec);
 });
