@@ -120,6 +120,44 @@
                     placeholder="# Write APGsembly here!"
                 ></textarea>
             </div>
+
+            <div
+                class="js-breakpoint-config d-none justify-content-center align-items-center flex-wrap gap-3 my-2"
+            >
+                <div class="">
+                    <label for="breakpoint_select" class="form-label"
+                    >Breakpoint state</label>
+                    <select
+                        name="breakpoint_select"
+                        class="form-select"
+                        id="breakpoint_select"
+                    >
+                    </select>
+                </div>
+                <div>
+                    <label
+                        for="breakpoint_input_select"
+                        class="form-label"
+                    >Breakpoint input</label>
+                    <select
+                        name="breakpoint_input_select"
+                        class="form-select"
+                        id="breakpoint_input_select"
+                    >
+                        <option value="*" selected>*</option>
+                        <option value="Z">Z</option>
+                        <option value="NZ">NZ</option>
+                    </select>
+                </div>
+                <button
+                    id="clear-breakpoint"
+                    type="button"
+                    class="btn btn-secondary align-self-end"
+                >
+                    Clear breakpoint
+                </button>
+            </div>
+
             <!-- Buttons -->
             <div
                 data-test="control_buttons"
@@ -237,103 +275,11 @@
                 >
                     Example
                 </button>
-                <ul class="dropdown-menu" aria-labelledby="examples">
-                    <li>
-                        <button
-                            class="dropdown-item js_example"
-                            data-src="unary_multiply.apg"
-                        >
-                            Unary register multiplication
-                        </button>
-                    </li>
-                    <li>
-                        <button
-                            class="dropdown-item js_example"
-                            data-src="binary_ruler.apg"
-                        >
-                            Binary ruler
-                        </button>
-                    </li>
-                    <li>
-                        <button
-                            class="dropdown-item js_example"
-                            data-src="integers.apg"
-                        >
-                            Integers
-                        </button>
-                    </li>
-                    <li>
-                        <button
-                            class="dropdown-item js_example"
-                            data-src="primes.apg"
-                        >
-                            Primes
-                        </button>
-                    </li>
-                    <li>
-                        <button
-                            class="dropdown-item js_example"
-                            data-src="sqrt_log_t.apg"
-                        >
-                            O(sqrt(log(t)))
-                        </button>
-                    </li>
-                    <li>
-                        <button
-                            class="dropdown-item js_example"
-                            data-src="rule90.apg"
-                        >
-                            Rule 90
-                        </button>
-                    </li>
-                    <li>
-                        <button
-                            class="dropdown-item js_example"
-                            data-src="rule110.apg"
-                        >
-                            Rule 110
-                        </button>
-                    </li>
-                    <li>
-                        <button
-                            class="dropdown-item js_example"
-                            data-src="ant2.apg"
-                        >
-                            Langton's ant
-                        </button>
-                    </li>
-                    <li>
-                        <button
-                            class="dropdown-item js_example"
-                            data-src="alien_counter.apg"
-                        >
-                            Alien Counter
-                        </button>
-                    </li>
-                    <li>
-                        <button
-                            class="dropdown-item js_example"
-                            data-src="koch.apg"
-                        >
-                            Koch snowflake
-                        </button>
-                    </li>
-                    <li>
-                        <button
-                            class="dropdown-item js_example"
-                            data-src="99.apg"
-                        >
-                            99 Bottles of Beer
-                        </button>
-                    </li>
-                    <li>
-                        <button
-                            class="dropdown-item js_example"
-                            data-src="pi_calc.apg"
-                        >
-                            π Calculator
-                        </button>
-                    </li>
+                <ul
+                    class="dropdown-menu"
+                    aria-labelledby="examples"
+                    id="examples_dropdown"
+                >
                 </ul>
                 <input id="import_file" type="file" class="d-none" />
                 <label for="import_file" class="btn btn-primary">
@@ -568,29 +514,18 @@
                             />
                         </div>
                         <div class="mt-3">
-                            <label for="breakpoint_select" class="form-label"
-                            >Breakpoint state</label>
-                            <select
-                                name="breakpoint_select"
-                                class="form-select"
-                                id="breakpoint_select"
-                            >
-                            </select>
-                        </div>
-                        <div>
+                            <div>
+                                Breakpoint:
+                            </div>
+                            <input
+                                type="checkbox"
+                                id="show-breakpoint-config"
+                                class="form-check-input"
+                            />
                             <label
-                                for="breakpoint_input_select"
+                                for="show-breakpoint-config"
                                 class="form-label"
-                            >Breakpoint input</label>
-                            <select
-                                name="breakpoint_input_select"
-                                class="form-select"
-                                id="breakpoint_input_select"
-                            >
-                                <option value="*" selected>*</option>
-                                <option value="Z">Z</option>
-                                <option value="NZ">NZ</option>
-                            </select>
+                            >Show breakpoint config</label>
                         </div>
                         <div class="mt-3">
                             <div>

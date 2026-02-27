@@ -118,11 +118,7 @@ export const $fileImport = $type("#import_file", HTMLInputElement_);
 
 export const $examples = $type("#examples", HTMLButtonElement_);
 
-// サンプルコード
-/**
- * @type {NodeListOf<HTMLElement>}
- */
-export const $exampleCodes = document.querySelectorAll(".js_example");
+export const $examplesDropdown = $type("#examples_dropdown", HTMLElement_);
 
 // --------- Modal --------- //
 
@@ -149,6 +145,13 @@ export const binaryConfig = {
     ),
 };
 
+export const $showBreakpointConfig = $type(
+    "#show-breakpoint-config",
+    HTMLInputElement_,
+);
+
+export const $breakpointConfig = $type(".js-breakpoint-config", HTMLElement_);
+
 // ブレークポイント
 export const $breakpointSelect = $type("#breakpoint_select", HTMLSelectElement);
 
@@ -156,6 +159,11 @@ export const $breakpointSelect = $type("#breakpoint_select", HTMLSelectElement);
 export const $breakpointInputSelect = $type(
     "#breakpoint_input_select",
     HTMLSelectElement,
+);
+
+export const $clearBreakpointButton = $type(
+    "#clear-breakpoint",
+    HTMLButtonElement_,
 );
 
 // ダークモード
