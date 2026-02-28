@@ -178,6 +178,11 @@ body[apge_dark="on"] .alert-danger {
 }
 
 /* Statsの現在の状態 renderStats.jsで使用 */
+#history_body .current_state td {
+    background-color: #e1f5fe;
+}
+
+/* Statsの現在の状態 renderStats.jsで使用 */
 #stats_table .stats_current_state td {
     background-color: #e1f5fe;
 }

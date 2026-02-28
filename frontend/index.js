@@ -89,8 +89,19 @@ $unaryRegisterDetail.addEventListener("toggle", () => {
     app.renderUnary();
 });
 
+const HISTORY_OPEN_KEY = "apge_history_open";
+
+if (localStorageGetItem(HISTORY_OPEN_KEY)) {
+    $historyDetail.open = true;
+}
+
 $historyDetail.addEventListener("toggle", () => {
     app.renderHistory();
+    if ($historyDetail.open) {
+        localStorageSetItem(HISTORY_OPEN_KEY, "1");
+    } else {
+        localStorageRemoveItem(HISTORY_OPEN_KEY);
+    }
 });
 
 // ファイルインポート

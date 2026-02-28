@@ -651,6 +651,9 @@ export class Machine {
         return undefined;
     }
 
+    /**
+     * WARN: Do not reuse returned object of the array
+     */
     *getStateHistory() {
         const stateHistory = this.stateHistory;
         const stateHistoryHead = this.stateHistoryHead;
@@ -661,6 +664,13 @@ export class Machine {
                 stateHistoryMax;
             yield stateHistory[index];
         }
+    }
+
+    getStateHistoryInternal() {
+        return {
+            items: this.stateHistory,
+            head: this.stateHistoryHead,
+        };
     }
 
     /**
