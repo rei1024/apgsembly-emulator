@@ -25,8 +25,6 @@ import { NopAction } from "../exports.js";
  * @typedef {{ state0: number, state1: number, state2: number, state3: number, inputBReg: number, outputBReg: number, allocNumUReg: number, inputState: number, outputState: number }} BinaryAddOptimizeResult
  */
 
-// TODO: 他の状態から途中の状態への遷移がないことを確認する。
-
 /**
  * @param {CompiledCommand[]} compiledCommands
  * @returns {BinaryAddOptimizeResult[]}
