@@ -92,6 +92,9 @@ export const $printerPos = {
 // Printerの開閉
 export const $printerDetail = $type("#printer_detail", HTMLDetailsElement_);
 
+export const $historyDetail = $type("#history_detail", HTMLDetailsElement_);
+export const $historyBody = $type("#history_body", HTMLElement_);
+
 // スライディングレジスタ
 export const $unaryRegister = $type("#unary_register", HTMLElement_);
 

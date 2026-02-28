@@ -35,6 +35,8 @@ import {
     $enableBinaryOptimization,
     $error,
     $frequencyOutput,
+    $historyBody,
+    $historyDetail,
     $input,
     $output,
     $outputDetail,
@@ -60,6 +62,7 @@ import {
 import { toLocaleString } from "./util/toLocaleString.js";
 import { LibraryUI } from "./components/library_ui.js";
 import { clearCanvas } from "./util/clear-canvas.js";
+import { HistoryUI } from "./components/history_ui.js";
 
 /** index.htmlと同期すること */
 const DEFAULT_FREQUENCY = 30;
@@ -91,6 +94,7 @@ export class App {
         $statsNumberOfStates,
         $statsModalMessage,
     );
+    #historyUI = new HistoryUI($historyBody);
     /** @readonly */
     $libraryUI = new LibraryUI();
     /** @readonly */
@@ -190,6 +194,7 @@ export class App {
         this.#setUpUnary();
         this.#setUpBinary();
         this.#setUpStats();
+        this.#setupHistory();
         initializeBreakpointSelect(
             $breakpointSelect,
             this.#machine,
@@ -398,6 +403,15 @@ export class App {
         }
     }
 
+    #setupHistory() {
+        const machine = this.#machine;
+        if (machine === undefined) {
+            this.#historyUI.initialize(0);
+        } else {
+            this.#historyUI.initialize(machine.stateHistoryMax);
+        }
+    }
+
     renderStats() {
         if (!$statsModal.classList.contains("show")) {
             return;
@@ -411,6 +425,17 @@ export class App {
             machine.getStateStats(),
             machine.currentStateIndex,
         );
+    }
+
+    renderHistory() {
+        if (!$historyDetail.open) {
+            return;
+        }
+        const machine = this.#machine;
+        if (machine === undefined) {
+            return;
+        }
+        this.#historyUI.render(machine);
     }
 
     /**
@@ -526,6 +551,7 @@ export class App {
         this.renderB2D();
         this.renderPrinter();
         this.renderStats();
+        this.renderHistory();
 
         this.#prevAppState = appState;
     }

@@ -87,6 +87,20 @@ export class Machine {
         this.currentStateIndex = stateNameToIndexMap.get(INITIAL_STATE_NAME) ??
             error(`${INITIAL_STATE_NAME} state is not present`);
 
+        /**
+         * @type {Array<{ step: number; stateIndex: number; output: 0 | 1 }>}
+         * @private
+         */
+        this.stateHistory = [];
+        /**
+         * @readonly
+         */
+        this.stateHistoryMax = 16;
+        /**
+         * @private
+         */
+        this.stateHistoryHead = 0;
+
         // /**
         //  * @type {number}
         //  * @readonly
@@ -239,6 +253,38 @@ export class Machine {
      */
     getPreviousOutput() {
         return this.prevOutput === 0 ? "Z" : "NZ";
+    }
+
+    /**
+     * @param {number} stateIndex
+     * @param {number} prevOutput
+     */
+    getCommandForStateIndex(stateIndex, prevOutput) {
+        const compiledCommand = this.lookup[stateIndex];
+
+        if (compiledCommand === undefined) {
+            error(
+                `Internal Error: command is not found: ` +
+                    `Current state index: ${stateIndex}`,
+            );
+        }
+        if (prevOutput === 0) {
+            const z = compiledCommand.z;
+            if (z !== undefined) {
+                return z;
+            }
+        } else {
+            const nz = compiledCommand.nz;
+            if (nz !== undefined) {
+                return nz;
+            }
+        }
+
+        error(
+            "Next command is not found: Current state = " +
+                this.getCurrentState() + ", output = " +
+                this.getPreviousOutput(),
+        );
     }
 
     /**
@@ -436,6 +482,31 @@ export class Machine {
         for (let i = 0; i < n; i++) {
             const compiledCommand = this.getNextCommand();
 
+            {
+                const stateHistory = this.stateHistory;
+                const stateHistoryHead = this.stateHistoryHead;
+                const stateHistoryMax = this.stateHistoryMax;
+                if (stateHistory.length < stateHistoryMax) {
+                    stateHistory.push({
+                        step: this.stepCount,
+                        stateIndex: this.currentStateIndex,
+                        output: this.prevOutput,
+                    });
+                } else {
+                    // reuse object instead of pushing and creating new one
+                    const object = stateHistory[stateHistoryHead];
+                    if (object === undefined) {
+                        internalError();
+                    }
+                    object.step = this.stepCount;
+                    object.stateIndex = this.currentStateIndex;
+                    object.output = this.prevOutput;
+                }
+
+                this.stateHistoryHead = (stateHistoryHead + 1) %
+                    stateHistoryMax;
+            }
+
             // optimization
             const tdecuOptimize = compiledCommand.tdecuOptimize;
             if (tdecuOptimize) {
@@ -578,6 +649,18 @@ export class Machine {
         this.prevOutput = result;
 
         return undefined;
+    }
+
+    *getStateHistory() {
+        const stateHistory = this.stateHistory;
+        const stateHistoryHead = this.stateHistoryHead;
+        const stateHistoryMax = this.stateHistoryMax;
+        const length = stateHistory.length;
+        for (let i = 0; i < length; i++) {
+            const index = (stateHistoryHead - 1 - i + stateHistoryMax) %
+                stateHistoryMax;
+            yield stateHistory[index];
+        }
     }
 
     /**

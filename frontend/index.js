@@ -29,6 +29,7 @@ import {
     $examples,
     $fileImport,
     $frequencyInput,
+    $historyDetail,
     $input,
     $printerDetail,
     $reset,
@@ -86,6 +87,10 @@ $binaryRegisterDetail.addEventListener("toggle", () => {
 
 $unaryRegisterDetail.addEventListener("toggle", () => {
     app.renderUnary();
+});
+
+$historyDetail.addEventListener("toggle", () => {
+    app.renderHistory();
 });
 
 // ファイルインポート
