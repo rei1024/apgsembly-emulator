@@ -1,6 +1,6 @@
 // @ts-check
 
-import { Machine } from "../../src/Machine";
+import { Machine } from "../../src/Machine.js";
 
 export class HistoryUI {
     /**
