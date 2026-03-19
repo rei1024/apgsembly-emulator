@@ -1,10 +1,7 @@
-- `deno task chore`を走らせる
 - Bootstrapの更新を確認する
   - https://blog.getbootstrap.com/
   - popperとBootstrapのJSが分かれている形式を選ぶ
   - deferを付ける
-- @stdの更新を確認してdeno.jsoncを更新する
-  - https://jsr.io/@std
 - VSCodeを更新する
   - `Code > Restart to Update`
 - npmを更新する
@@ -16,6 +13,5 @@
 
 ## プロジェクト追加
 
-- deno.jsoncに追加
 - test.ymlに追加
 - tsconfig.jsonに追加

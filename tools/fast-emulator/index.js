@@ -17,6 +17,7 @@ async function init() {
     output.textContent = "Initializing...";
 
     // console.log('a');
+    // TODO(Vite8)
     const response = await fetch("../../frontend/data/pi_calc.apg");
     if (!response.ok) {
         output.textContent = "Error loading pi_calc.apg";

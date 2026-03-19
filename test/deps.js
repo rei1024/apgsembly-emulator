@@ -1,3 +1,5 @@
+import { describe, it } from "vitest";
+
 export { assertEquals, assertIsError, assertThrows } from "@std/assert";
 
 /**
@@ -20,5 +22,9 @@ export function never() {
  * @returns {void}
  */
 export function test(name, fn) {
-    return Deno.test(name, fn);
+    return describe(name, () => {
+        it(name, () => {
+            fn();
+        });
+    });
 }

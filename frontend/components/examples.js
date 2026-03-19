@@ -55,7 +55,7 @@ export const examplesData = [
 ];
 
 // データ
-const DATA_DIR = "./frontend/data/";
+const DATA_DIR = "apgsembly-emulator/data/";
 
 /**
  * @param {import('../app.js').App} app

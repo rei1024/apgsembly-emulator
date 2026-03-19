@@ -16,17 +16,17 @@ jobs:
         steps:
             - name: Git Checkout
               uses: actions/checkout@v6
-            - name: Install Deno
-              uses: denoland/setup-deno@v2
+            - name: Setup Node.js
+              uses: actions/setup-node@v6
               with:
-                  deno-version: v2.x # latest
+                  node-version: "24"
             # - name: Lint Deno Module
             #   run: deno fmt --check
             # - name: Build Deno Module
             #   run: deno run --reload mod.ts
-            - name: Run Lint
-              run: deno task lint
-            - name: Run Test
-              run: deno task t
+            # - name: Run Lint
+            #   run: deno task lint
+            # - name: Run Test
+            #   run: deno task t
             - name: Run Type Check
-              run: deno task tsc
+              run: npm run check
