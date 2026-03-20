@@ -25,14 +25,14 @@
     },
     "author": "Rei",
     "license": "MIT",
-    "devDependencies": {
-        "@playwright/test": "^1.57.0",
-        "@types/node": "^22.19.3"
-    },
     "dependencies": {
         "@std/assert": "./test/assert",
         "typescript": "^5.9.3",
         "vite": "^8.0.1",
         "vitest": "^4.1.0"
+    },
+    "devDependencies": {
+        "@playwright/test": "^1.57.0",
+        "@types/node": "^22.19.3"
     }
 }
