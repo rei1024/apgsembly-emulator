@@ -41,7 +41,6 @@ export default defineConfig({
         //     name: "firefox",
         //     use: { ...devices["Desktop Firefox"] },
         // },
-
         // {
         //     name: "webkit",
         //     use: { ...devices["Desktop Safari"] },
@@ -70,7 +69,7 @@ export default defineConfig({
     /* Run your local dev server before starting the tests */
     webServer: {
         command: "npm run dev",
-        url: "http://localhost:4173/apgsembly-emulator",
+        url: "http://localhost:5174/apgsembly-emulator",
         reuseExistingServer: !process.env.CI,
     },
 });
