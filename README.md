@@ -18,8 +18,7 @@ npm i
 - `$ npm run dev` Local server
   - access to <http://localhost:5174/apgsembly-emulator>
 - `$ npm run test` Unit tests
-- `$ deno task lint` Linting
-- `$ deno task build` Production Build
+- `$ npm run build` Production Build
 
 ### Structure
 
