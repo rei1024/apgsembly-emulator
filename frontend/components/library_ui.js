@@ -65,13 +65,14 @@ export class LibraryUI {
             $addBinaryLibraryFile.disabled = true;
             this.addFile({
                 name: "binary.apglib",
-                content: await (fetch("./frontend/data/" + "binary.apglib"))
-                    .then((r) => {
-                        if (!r.ok) {
-                            throw new Error(`Failed to load`);
-                        }
-                        return r.text();
-                    }),
+                content:
+                    await (fetch("/apgsembly-emulator/data/" + "binary.apglib"))
+                        .then((r) => {
+                            if (!r.ok) {
+                                throw new Error(`Failed to load`);
+                            }
+                            return r.text();
+                        }),
                 builtin: true,
             });
             await new Promise((resolve) => setTimeout(resolve, 500));
