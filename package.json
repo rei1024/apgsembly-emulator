@@ -12,7 +12,7 @@
     "scripts": {
         "dev": "vite dev",
         "build": "vite build",
-        "preview": "vite preview",
+        "preview": "npm run build && vite preview",
         "test": "vitest",
         "check": "tsc",
         "e2e-update": "npx playwright install",

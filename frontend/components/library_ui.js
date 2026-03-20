@@ -7,6 +7,7 @@ import {
     $libraryModalClose,
 } from "../bind.js";
 import { create } from "../util/create.js";
+import { DATA_DIR } from "./examples.js";
 
 /**
  * ファイル選択ボタンを設定する関数
@@ -65,14 +66,13 @@ export class LibraryUI {
             $addBinaryLibraryFile.disabled = true;
             this.addFile({
                 name: "binary.apglib",
-                content:
-                    await (fetch("/apgsembly-emulator/data/" + "binary.apglib"))
-                        .then((r) => {
-                            if (!r.ok) {
-                                throw new Error(`Failed to load`);
-                            }
-                            return r.text();
-                        }),
+                content: await (fetch(DATA_DIR + "binary.apglib"))
+                    .then((r) => {
+                        if (!r.ok) {
+                            throw new Error(`Failed to load`);
+                        }
+                        return r.text();
+                    }),
                 builtin: true,
             });
             await new Promise((resolve) => setTimeout(resolve, 500));
