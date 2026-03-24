@@ -24,7 +24,8 @@ export function never() {
 export function test(name, fn) {
     return describe(name, () => {
         it(name, () => {
-            fn();
+            // Preserve Promise
+            return fn();
         });
     });
 }
