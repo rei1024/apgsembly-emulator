@@ -30,7 +30,7 @@ export default {
                 ),
                 ["tm-to-apg"]: resolve(
                     __dirname,
-                    "tools/fast-emulator/index.html",
+                    "tools/tm-to-apg/index.html",
                 ),
                 ["transpiler"]: resolve(
                     __dirname,
