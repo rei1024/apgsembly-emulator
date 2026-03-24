@@ -29,8 +29,6 @@ npm i
 
 ## E2E Testing
 
-### Requirements
-
 ### Usage
 
 - `$ npm run e2e-update` Install browsers
