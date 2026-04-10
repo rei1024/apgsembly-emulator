@@ -39,10 +39,13 @@ const error = (msg = "error") => {
 export class Machine {
     /**
      * @param {Program} program
-     * @param {{ enableBinaryOptimization?: boolean }} [options]
+     * @param {{ enableBinaryOptimization?: boolean, historyCapacity?: number | undefined }} [options]
      * @throws {Error} #REGISTERSでの初期化に失敗
      */
-    constructor(program, { enableBinaryOptimization = true } = {}) {
+    constructor(
+        program,
+        { enableBinaryOptimization = true, historyCapacity } = {},
+    ) {
         /**
          * ステップ数
          */
@@ -95,7 +98,7 @@ export class Machine {
         /**
          * @readonly
          */
-        this.stateHistoryMax = 16;
+        this.stateHistoryCapacity = historyCapacity ?? 8;
         /**
          * @private
          */
@@ -161,14 +164,14 @@ export class Machine {
      * 文字列から作成する
      * @param {string} source
      * @param {{ name: string; content: string }[]} [libraryFiles]
-     * @param {{ enableBinaryOptimization?: boolean }} [options]
+     * @param {{ enableBinaryOptimization?: boolean, historyCapacity?: number | undefined }} [options]
      * @returns {Machine}
      * @throws エラー
      */
     static fromString(
         source,
         libraryFiles,
-        { enableBinaryOptimization = false } = {},
+        { enableBinaryOptimization = false, historyCapacity } = {},
     ) {
         const program = Program.parse(source, {
             libraryFiles: libraryFiles ?? [],
@@ -180,6 +183,7 @@ export class Machine {
 
         return new Machine(program, {
             enableBinaryOptimization: enableBinaryOptimization,
+            historyCapacity,
         });
     }
 
@@ -485,7 +489,7 @@ export class Machine {
             {
                 const stateHistory = this.stateHistory;
                 const stateHistoryHead = this.stateHistoryHead;
-                const stateHistoryMax = this.stateHistoryMax;
+                const stateHistoryMax = this.stateHistoryCapacity;
                 if (stateHistory.length < stateHistoryMax) {
                     stateHistory.push({
                         step: this.stepCount,
@@ -657,7 +661,7 @@ export class Machine {
     *getStateHistory() {
         const stateHistory = this.stateHistory;
         const stateHistoryHead = this.stateHistoryHead;
-        const stateHistoryMax = this.stateHistoryMax;
+        const stateHistoryMax = this.stateHistoryCapacity;
         const length = stateHistory.length;
         for (let i = 0; i < length; i++) {
             const index = (stateHistoryHead - 1 - i + stateHistoryMax) %

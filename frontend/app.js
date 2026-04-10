@@ -36,6 +36,7 @@ import {
     $error,
     $frequencyOutput,
     $historyBody,
+    $historyCapacity,
     $historyDetail,
     $input,
     $output,
@@ -261,6 +262,7 @@ export class App {
             const libraryFiles = this.$libraryUI.getFiles();
             this.#machine = Machine.fromString($input.value, libraryFiles, {
                 enableBinaryOptimization: $enableBinaryOptimization.checked,
+                historyCapacity: parseInt($historyCapacity.value, 10),
             });
             this.#onMachineSet({ prevBreakpointName: prevBreakpointStateName });
             this.#appState = "Stop";
@@ -408,7 +410,7 @@ export class App {
         if (machine === undefined) {
             this.#historyUI.initialize(0);
         } else {
-            this.#historyUI.initialize(machine.stateHistoryMax);
+            this.#historyUI.initialize(machine.stateHistoryCapacity);
         }
     }
 

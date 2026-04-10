@@ -47,8 +47,8 @@ export class HistoryUI {
      * @param {Machine} machine
      */
     render(machine) {
-        if (machine.stateHistoryMax !== this.items.length) {
-            this.initialize(machine.stateHistoryMax);
+        if (machine.stateHistoryCapacity !== this.items.length) {
+            this.initialize(machine.stateHistoryCapacity);
         }
 
         const items = this.items;

@@ -180,6 +180,8 @@ export const $b2dFlipUpsideDown = $type(
     HTMLInputElement_,
 );
 
+export const $historyCapacity = $type("#history_capacity", HTMLSelectElement);
+
 export const $enableBinaryOptimization = $type(
     "#enable_binary_optimization",
     HTMLInputElement_,
