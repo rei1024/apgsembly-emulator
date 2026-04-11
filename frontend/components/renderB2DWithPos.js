@@ -1,9 +1,9 @@
 // @ts-check
 
-import { B2D } from "../../src/components/B2D";
-import { $b2dFlipUpsideDown, $b2dHidePointer } from "../bind";
-import { clearCanvas } from "../util/clear-canvas";
-import { renderB2D } from "./renderB2D";
+import { B2D } from "../../src/components/B2D.js";
+import { $b2dFlipUpsideDown, $b2dHidePointer } from "../bind.js";
+import { clearCanvas } from "../util/clear-canvas.js";
+import { renderB2D } from "./renderB2D.js";
 
 /**
  * @param {B2D | undefined} b2d
