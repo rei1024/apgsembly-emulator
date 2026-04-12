@@ -15,9 +15,9 @@ import {
     Command,
     commandWithLineNumber,
     INITIAL_STATE_NAME,
-    RegistersHeader,
 } from "./Command.js";
 import { internalError } from "./internalError.js";
+import { parseRegistersHeader } from "./parser/parseRegistersHeader.js";
 export { INITIAL_STATE_NAME as INITIAL_STATE };
 
 /**
@@ -151,7 +151,9 @@ export class Machine {
 
         const regHeaders = program.registersHeader;
         for (const regHeader of regHeaders) {
-            this.#setByRegistersHeader(regHeader);
+            this.actionExecutor.setByRegistersInit(
+                parseRegistersHeader(regHeader),
+            );
         }
 
         // 存在する場合のみ検証
@@ -205,30 +207,6 @@ export class Machine {
         }
 
         return result;
-    }
-
-    /**
-     * @param {RegistersHeader} regHeader
-     * @throws
-     */
-    #setByRegistersHeader(regHeader) {
-        // Pythonのevalと合わせるためシングルクォーテーションを変換
-        /** @type {string} */
-        const str = regHeader.content.replace(/'/ug, `"`);
-
-        /** @type {import("./ActionExecutor.js").RegistersInit} */
-        let parsed = {};
-        try {
-            parsed = JSON.parse(str);
-        } catch (_e) {
-            error(`Invalid #REGISTERS: is not a valid JSON: "${str}"`);
-        }
-        if (parsed === null || typeof parsed !== "object") {
-            error(`Invalid #REGISTERS: "${str}" is not an object`);
-        }
-
-        // throw if error is occurred
-        this.actionExecutor.setByRegistersInit(parsed);
     }
 
     /**
