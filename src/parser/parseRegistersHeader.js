@@ -1,8 +1,8 @@
 // @ts-check
 
 /**
- * @param {import('../Command').RegistersHeader} registersHeader
- * @returns {import('../ActionExecutor').RegistersInit}
+ * @param {import('../Command.js').RegistersHeader} registersHeader
+ * @returns {import('../ActionExecutor.js').RegistersInit}
  */
 export function parseRegistersHeader(registersHeader) {
     // Pythonのevalと合わせるためシングルクォーテーションを変換
