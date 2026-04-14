@@ -47,6 +47,30 @@ ID0; ZZ; ID0; NOP
     );
 });
 
+test("Machine #COMPONENTS multiple", () => {
+    const str = `
+#COMPONENTS U0-1,HALT_OUT
+#COMPONENTS U0-2,HALT_OUT
+#REGISTERS {"U0": 7}
+INITIAL; ZZ; ID1; TDEC U0
+ID1; *; ID1; NOP`;
+    assertNewMachineThrows(
+        str,
+        Error,
+        "#COMPONENTS header appears after the computer is built",
+    );
+});
+
+test("Machine #COMPONENTS multiple continue", () => {
+    const str = `
+#COMPONENTS U0-1,HALT_OUT,...
+#COMPONENTS U0-2,HALT_OUT
+#REGISTERS {"U0": 7}
+INITIAL; ZZ; ID1; TDEC U0
+ID1; *; ID1; NOP`;
+    Machine.fromString(str);
+});
+
 test("Machine duplicated command", () => {
     const str = `
 INITIAL; ZZ; ID0; OUTPUT 3, NOP

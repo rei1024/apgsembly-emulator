@@ -4,7 +4,7 @@ const CLOCK_PREFIX = "CLOCK-2^";
 
 /**
  * @param {string} content `B0-5, U0-5, U8-9, ADD, SUB, MUL, OUTPUT`
- * @returns {string[]} `["B0", "B1", "B2", ..., "OUTPUT"]`
+ * @returns {{components: string[], isCont: boolean }} `["B0", "B1", "B2", ..., "OUTPUT"]`
  */
 export function parseComponentsHeader(content) {
     /** @type {string[]} */
@@ -12,7 +12,7 @@ export function parseComponentsHeader(content) {
     const strArray = content.split(",").map((x) => x.trim());
     for (const str of strArray) {
         if (str === "...") {
-            continue;
+            return { components, isCont: true };
         }
         if (str === "NOP" || str === "HALT_OUT") {
             continue;
@@ -38,7 +38,7 @@ export function parseComponentsHeader(content) {
         }
     }
 
-    return components;
+    return { components, isCont: false };
 }
 
 /**
