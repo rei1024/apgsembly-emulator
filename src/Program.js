@@ -206,9 +206,27 @@ export const analyzeProgram = (program) => {
 export const validateComponentsHeader = (componentsHeaders, analyzeResult) => {
     /** @type {string[]} */
     const errors = [];
-    const components = new Set(
-        componentsHeaders.flatMap((c) => parseComponentsHeader(c.content)),
-    );
+
+    let isBuilt = false;
+
+    /**
+     * @type {Set<string>}
+     */
+    const components = new Set();
+    for (const h of componentsHeaders) {
+        if (isBuilt) {
+            throw new Error(
+                "#COMPONENTS header appears after the computer is built",
+            );
+        }
+        const result = parseComponentsHeader(h.content);
+        for (const c of result.components) {
+            components.add(c);
+        }
+        if (!result.isCont) {
+            isBuilt = true;
+        }
+    }
 
     /**
      * @param {string} comp
