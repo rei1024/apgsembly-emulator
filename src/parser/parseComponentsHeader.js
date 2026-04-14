@@ -3,8 +3,9 @@
 const CLOCK_PREFIX = "CLOCK-2^";
 
 /**
- * @param {string} content `B0-5, U0-5, U8-9, ADD, SUB, MUL, OUTPUT`
- * @returns {{components: string[], isCont: boolean }} `["B0", "B1", "B2", ..., "OUTPUT"]`
+ * Parse #COMPONENTS header contents
+ * @param {string} content `"B0-5, U0-5, U8-9, ADD, SUB, MUL, OUTPUT"`
+ * @returns {{ components: string[], isCont: boolean }} `{ components: ["B0", "B1", "B2", ..., "OUTPUT"], isCont: false }`
  */
 export function parseComponentsHeader(content) {
     /** @type {string[]} */
