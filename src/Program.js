@@ -289,8 +289,6 @@ export const validateComponentsHeader = (componentsHeaders, analyzeResult) => {
 
         throw new Error(errors.join("\n"));
     }
-
-    return { isBuilt: true };
 };
 
 /**
