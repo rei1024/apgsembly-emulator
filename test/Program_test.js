@@ -147,6 +147,7 @@ INITIAL; ZZ; ID1; TDEC U0`;
     }
 });
 
+// Machine.fromString rejects
 test("Program multiple $COMPONENTS", () => {
     const src = `
 #COMPONENTS U0-1,HALT_OUT
@@ -155,18 +156,18 @@ test("Program multiple $COMPONENTS", () => {
 INITIAL; ZZ; ID1; TDEC U0`;
     const program = Program.parse(src);
 
-    if (program instanceof Program) {
-        assertEquals(program.commands.length, 1);
-        assertEquals(program.registersHeader?.map((x) => x.content), [
-            `{"U0":7, "U1":5}`,
-        ]);
-        assertEquals(program.componentsHeader?.map((x) => x.content), [
-            "U0-1,HALT_OUT",
-            "U0-2,HALT_OUT",
-        ]);
-    } else {
+    if (!(program instanceof Program)) {
         throw Error("parse error");
     }
+
+    assertEquals(program.commands.length, 1);
+    assertEquals(program.registersHeader?.map((x) => x.content), [
+        `{"U0":7, "U1":5}`,
+    ]);
+    assertEquals(program.componentsHeader?.map((x) => x.content), [
+        "U0-1,HALT_OUT",
+        "U0-2,HALT_OUT",
+    ]);
 });
 
 test("Program duplicated actions", () => {
