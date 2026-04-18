@@ -34,38 +34,38 @@ test("ActionExecutor setByRegistersInit empty", () => {
 
 test("ActionExecutor constructor", () => {
     const x = new ActionExecutor({
-        unary: [0],
-        binary: [1],
+        unary: ["0"],
+        binary: ["1"],
         legacyT: [2],
     });
-    assertEquals(x.getUReg(0) !== undefined, true);
-    assertEquals(x.getBReg(1) !== undefined, true);
+    assertEquals(x.getUReg("0") !== undefined, true);
+    assertEquals(x.getBReg("1") !== undefined, true);
     assertEquals(x.legacyTRegMap.get(2) !== undefined, true);
 });
 
 test("ActionExecutor setByRegistersInit", () => {
     const x = new ActionExecutor({
-        unary: [0, 1],
-        binary: [0, 1],
+        unary: ["0", "1"],
+        binary: ["0", "1"],
         legacyT: [],
     });
 
     assertEquals(x.uRegMap.size, 2);
     assertEquals(x.bRegMap.size, 2);
 
-    const bReg0 = x.getBReg(0);
+    const bReg0 = x.getBReg("0");
 
     if (bReg0 === undefined) {
         throw Error("is undefined");
     }
 
-    const bReg1 = x.getBReg(1);
+    const bReg1 = x.getBReg("1");
 
     if (bReg1 === undefined) {
         throw Error("is undefined");
     }
 
-    const uReg0 = x.getUReg(0);
+    const uReg0 = x.getUReg("0");
 
     if (uReg0 === undefined) {
         throw Error("is undefined");
@@ -90,8 +90,8 @@ test("ActionExecutor setByRegistersInit", () => {
 
 test("ActionExecutor setByRegistersInit 2", () => {
     const x = new ActionExecutor({
-        unary: [0, 1],
-        binary: [0, 1],
+        unary: ["0", "1"],
+        binary: ["0", "1"],
         legacyT: [],
     });
 
@@ -99,7 +99,7 @@ test("ActionExecutor setByRegistersInit 2", () => {
     assertEquals(x.bRegMap.size, 2);
 
     x.setByRegistersInit({ B0: 11 });
-    const bReg0 = x.getBReg(0);
+    const bReg0 = x.getBReg("0");
     if (bReg0 == undefined) {
         throw Error("bReg0 is undefined");
     }
@@ -112,8 +112,8 @@ test("ActionExecutor setByRegistersInit 2", () => {
 
 test("ActionExecutor setByRegistersInit error", () => {
     const x = new ActionExecutor({
-        unary: [0, 1],
-        binary: [0, 1],
+        unary: ["0", "1"],
+        binary: ["0", "1"],
         legacyT: [],
     });
 
@@ -160,34 +160,34 @@ test("ActionExecutor setByRegistersInit error", () => {
 
 test("ActionExecutor register not found error", () => {
     const x = new ActionExecutor({
-        unary: [0],
-        binary: [0],
+        unary: ["0"],
+        binary: ["0"],
         legacyT: [],
     });
 
-    assertEquals(x.execAction(new URegAction(U_INC, 0)), undefined);
-    assertEquals(x.execAction(new URegAction(U_TDEC, 0)), 1);
-    assertEquals(x.execAction(new URegAction(U_TDEC, 0)), 0);
+    assertEquals(x.execAction(new URegAction(U_INC, "0")), undefined);
+    assertEquals(x.execAction(new URegAction(U_TDEC, "0")), 1);
+    assertEquals(x.execAction(new URegAction(U_TDEC, "0")), 0);
     assertThrows(() => {
-        x.execAction(new URegAction(U_INC, 1));
+        x.execAction(new URegAction(U_INC, "1"));
     });
 });
 
 test("ActionExecutor BReg", () => {
     const x = new ActionExecutor({
         unary: [],
-        binary: [0],
+        binary: ["0"],
         legacyT: [],
     });
 
-    assertEquals(x.execAction(new BRegAction(B_INC, 0)), undefined);
-    assertEquals(x.execAction(new BRegAction(B_TDEC, 0)), 1);
-    assertEquals(x.execAction(new BRegAction(B_TDEC, 0)), 0);
-    assertEquals(x.execAction(new BRegAction(B_SET, 0)), undefined);
-    assertEquals(x.execAction(new BRegAction(B_READ, 0)), 1);
-    assertEquals(x.execAction(new BRegAction(B_READ, 0)), 0);
+    assertEquals(x.execAction(new BRegAction(B_INC, "0")), undefined);
+    assertEquals(x.execAction(new BRegAction(B_TDEC, "0")), 1);
+    assertEquals(x.execAction(new BRegAction(B_TDEC, "0")), 0);
+    assertEquals(x.execAction(new BRegAction(B_SET, "0")), undefined);
+    assertEquals(x.execAction(new BRegAction(B_READ, "0")), 1);
+    assertEquals(x.execAction(new BRegAction(B_READ, "0")), 0);
 
     assertThrows(() => {
-        x.execAction(new URegAction(U_INC, 1));
+        x.execAction(new URegAction(U_INC, "1"));
     });
 });

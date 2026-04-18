@@ -21,8 +21,8 @@ test("validateAll", () => {
                 input: "ZZ",
                 nextState: "A0",
                 actions: [
-                    new URegAction(U_INC, 0),
-                    new URegAction(U_INC, 0),
+                    new URegAction(U_INC, "0"),
+                    new URegAction(U_INC, "0"),
                     new NopAction(),
                 ],
             }),
