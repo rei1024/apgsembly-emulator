@@ -4,7 +4,7 @@
  * @param {HTMLInputElement} $file
  * @param {(fileText: string) => void} callback
  */
-export function importFileAsText($file, callback) {
+export function setupOnInputFileText($file, callback) {
     $file.addEventListener("input", () => {
         const file = $file.files?.item(0);
         if (file == undefined) {

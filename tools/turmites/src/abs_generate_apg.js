@@ -16,7 +16,7 @@ import {
 } from "./abs_turmites.js";
 
 /**
- * @param {import('./abs_turmites').Dir} dir
+ * @param {import('./abs_turmites.js').Dir} dir
  * @param {0 | 1 | 2 | 3} rotate
  * @param {boolean} flip
  */

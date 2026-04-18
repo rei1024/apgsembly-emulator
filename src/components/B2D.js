@@ -72,7 +72,7 @@ export class B2D {
 
     /**
      * @param {B2DAction} act
-     * @returns {0 | 1 | void}
+     * @returns {0 | 1 | undefined}
      */
     action(act) {
         switch (act.op) {
@@ -116,34 +116,39 @@ export class B2D {
                 }
                 break;
             }
-            default:
+            default: {
                 internalError();
+            }
         }
     }
 
     /**
      * `INC B2DX`
-     * @returns {void}
+     * @returns {undefined}
      */
     incB2DX() {
-        this.x++;
-        if (this.maxX < this.x) {
+        const currentX = this.x;
+        const newX = currentX + 1;
+        this.x = newX;
+        if (this.maxX < newX) {
             for (const a of this.array) {
                 a.push(0);
             }
-            this.maxX = this.x;
+            this.maxX = newX;
         }
     }
 
     /**
      * `INC B2DY`
-     * @returns {void}
+     * @returns {undefined}
      */
     incB2DY() {
-        this.y++;
-        if (this.maxY < this.y) {
+        const currentY = this.y;
+        const newY = currentY + 1;
+        this.y = newY;
+        if (this.maxY < newY) {
             this.array.push(generateArray(this.maxX + 1, () => 0));
-            this.maxY = this.y;
+            this.maxY = newY;
         }
     }
 
@@ -182,25 +187,27 @@ export class B2D {
         if (arrayY === undefined) {
             internalError();
         }
-        const value = arrayY[this.x];
+        const x = this.x;
+        const value = arrayY[x];
         if (value === undefined) {
             internalError();
         }
-        arrayY[this.x] = 0;
+        arrayY[x] = 0;
         return value;
     }
 
     /**
      * `SET B2D`
-     * @returns {void}
+     * @returns {undefined}
      */
     set() {
         const arrayY = this.array[this.y] ?? internalError();
-        if (arrayY[this.x] === 1) {
+        const x = this.x;
+        if (arrayY[x] === 1) {
             throw Error(
-                `SET B2D: Tried to set when it was already 1. x = ${this.x}, y = ${this.y}`,
+                `SET B2D: Tried to set when it was already 1. x = ${x}, y = ${this.y}`,
             );
         }
-        arrayY[this.x] = 1;
+        arrayY[x] = 1;
     }
 }

@@ -6,8 +6,13 @@ import { create } from "../util/create.js";
  * ブレークポイント初期化
  * @param {HTMLSelectElement} $breakpointSelect
  * @param {import('../../src/Machine.js').Machine | undefined} machine
+ * @param {string | undefined} prevBreakpointName
  */
-export function initializeBreakpointSelect($breakpointSelect, machine) {
+export function initializeBreakpointSelect(
+    $breakpointSelect,
+    machine,
+    prevBreakpointName,
+) {
     $breakpointSelect.innerHTML = "";
     if (machine === undefined) {
         return;
@@ -18,10 +23,13 @@ export function initializeBreakpointSelect($breakpointSelect, machine) {
     none.selected = true;
     $breakpointSelect.append(none);
 
-    for (const [state, stateIndex] of machine.getStateMap()) {
+    for (const [state, stateIndex] of machine.getStateNameToIndexMap()) {
         const option = create("option", state);
         option.value = stateIndex.toString();
         $breakpointSelect.append(option);
+        if (state === prevBreakpointName) {
+            option.selected = true;
+        }
     }
 }
 

@@ -14,10 +14,11 @@ import {
 import {
     Command,
     commandWithLineNumber,
-    INITIAL_STATE,
-    RegistersHeader,
+    INITIAL_STATE_NAME,
 } from "./Command.js";
-export { INITIAL_STATE };
+import { internalError } from "./internalError.js";
+import { parseRegistersHeader } from "./parser/parseRegistersHeader.js";
+export { INITIAL_STATE_NAME as INITIAL_STATE };
 
 /**
  * @returns {never}
@@ -38,15 +39,21 @@ const error = (msg = "error") => {
 export class Machine {
     /**
      * @param {Program} program
+     * @param {{ enableBinaryOptimization?: boolean, historyCapacity?: number | undefined }} [options]
      * @throws {Error} #REGISTERSでの初期化に失敗
      */
-    constructor(program) {
+    constructor(
+        program,
+        { enableBinaryOptimization = true, historyCapacity } = {},
+    ) {
         /**
          * ステップ数
          */
         this.stepCount = 0;
 
         const analyzeResult = analyzeProgram(program);
+
+        this.enableBinaryOptimization = enableBinaryOptimization;
 
         /**
          * @readonly
@@ -56,9 +63,10 @@ export class Machine {
         /** @type {0 | 1} */
         this.prevOutput = 0;
 
-        const { states, stateMap, lookup } = commandsToLookupTable(
-            program.commands,
-        );
+        const { stateNames, stateNameToIndexMap, lookup } =
+            commandsToLookupTable(
+                program.commands,
+            );
 
         /**
          * @readonly
@@ -79,8 +87,22 @@ export class Machine {
         /**
          * 現在の状態の添字
          */
-        this.currentStateIndex = stateMap.get(INITIAL_STATE) ??
-            error(`${INITIAL_STATE} state is not present`);
+        this.currentStateIndex = stateNameToIndexMap.get(INITIAL_STATE_NAME) ??
+            error(`${INITIAL_STATE_NAME} state is not present`);
+
+        /**
+         * @type {Array<{ step: number; stateIndex: number; output: 0 | 1 }>}
+         * @private
+         */
+        this.stateHistory = [];
+        /**
+         * @readonly
+         */
+        this.stateHistoryCapacity = historyCapacity ?? 8;
+        /**
+         * @private
+         */
+        this.stateHistoryHead = 0;
 
         // /**
         //  * @type {number}
@@ -93,6 +115,9 @@ export class Machine {
          * Statistics
          * 統計
          * NとNZが交互に並ぶ
+         *
+         * index = this.currentStateIndex * 2 + this.prevOutput
+         *
          * @type {number[]}
          * @private
          */
@@ -101,13 +126,13 @@ export class Machine {
         /**
          * @readonly
          */
-        this.states = states;
+        this.stateNames = stateNames;
 
         /**
          * @readonly
          * @private
          */
-        this.stateMap = stateMap;
+        this.stateNameToIndexMap = stateNameToIndexMap;
 
         /**
          * @readonly
@@ -126,7 +151,9 @@ export class Machine {
 
         const regHeaders = program.registersHeader;
         for (const regHeader of regHeaders) {
-            this.#setByRegistersHeader(regHeader);
+            this.actionExecutor.setByRegistersInit(
+                parseRegistersHeader(regHeader),
+            );
         }
 
         // 存在する場合のみ検証
@@ -139,10 +166,15 @@ export class Machine {
      * 文字列から作成する
      * @param {string} source
      * @param {{ name: string; content: string }[]} [libraryFiles]
+     * @param {{ enableBinaryOptimization?: boolean, historyCapacity?: number | undefined }} [options]
      * @returns {Machine}
      * @throws エラー
      */
-    static fromString(source, libraryFiles) {
+    static fromString(
+        source,
+        libraryFiles,
+        { enableBinaryOptimization = false, historyCapacity } = {},
+    ) {
         const program = Program.parse(source, {
             libraryFiles: libraryFiles ?? [],
         });
@@ -151,7 +183,10 @@ export class Machine {
             throw Error(program);
         }
 
-        return new Machine(program);
+        return new Machine(program, {
+            enableBinaryOptimization: enableBinaryOptimization,
+            historyCapacity,
+        });
     }
 
     /**
@@ -175,35 +210,11 @@ export class Machine {
     }
 
     /**
-     * @param {RegistersHeader} regHeader
-     * @throws
-     */
-    #setByRegistersHeader(regHeader) {
-        // Pythonのevalと合わせるためシングルクォーテーションを変換
-        /** @type {string} */
-        const str = regHeader.content.replace(/'/ug, `"`);
-
-        /** @type {import("./ActionExecutor.js").RegistersInit} */
-        let parsed = {};
-        try {
-            parsed = JSON.parse(str);
-        } catch (_e) {
-            error(`Invalid #REGISTERS: is not a valid JSON: "${str}"`);
-        }
-        if (parsed === null || typeof parsed !== "object") {
-            error(`Invalid #REGISTERS: "${str}" is not an object`);
-        }
-
-        // throw if error is occurred
-        this.actionExecutor.setByRegistersInit(parsed);
-    }
-
-    /**
      * 現在の状態の名前
      * @returns {string}
      */
     getCurrentState() {
-        const name = this.states[this.currentStateIndex];
+        const name = this.stateNames[this.currentStateIndex];
         if (name === undefined) {
             error("State name is not found");
         }
@@ -214,8 +225,8 @@ export class Machine {
      * 状態の名前から添字へのマップを取得する
      * @returns {Map<string, number>}
      */
-    getStateMap() {
-        return this.stateMap;
+    getStateNameToIndexMap() {
+        return this.stateNameToIndexMap;
     }
 
     /**
@@ -224,6 +235,38 @@ export class Machine {
      */
     getPreviousOutput() {
         return this.prevOutput === 0 ? "Z" : "NZ";
+    }
+
+    /**
+     * @param {number} stateIndex
+     * @param {number} prevOutput
+     */
+    getCommandForStateIndex(stateIndex, prevOutput) {
+        const compiledCommand = this.lookup[stateIndex];
+
+        if (compiledCommand === undefined) {
+            error(
+                `Internal Error: command is not found: ` +
+                    `Current state index: ${stateIndex}`,
+            );
+        }
+        if (prevOutput === 0) {
+            const z = compiledCommand.z;
+            if (z !== undefined) {
+                return z;
+            }
+        } else {
+            const nz = compiledCommand.nz;
+            if (nz !== undefined) {
+                return nz;
+            }
+        }
+
+        error(
+            "Next command is not found: Current state = " +
+                this.getCurrentState() + ", output = " +
+                this.getPreviousOutput(),
+        );
     }
 
     /**
@@ -283,9 +326,121 @@ export class Machine {
             }
         }
         const statIndex = this.currentStateIndex * 2 + this.prevOutput;
-        this.stateStatsArray[statIndex] =
-            (this.stateStatsArray[statIndex] ?? 0) + num;
+        const stateStatsArray = this.stateStatsArray;
+        stateStatsArray[statIndex] = (stateStatsArray[statIndex] ?? 0) + num;
         this.stepCount += num;
+    }
+
+    /**
+     * @param {import("./optimize/binary-optimize.js").BinaryAddOptimizeResult} optimizeResult
+     * @param {number} breakpointIndex
+     * @param {number} num
+     * @returns {{ type: 'cant-execute' } | { type: 'executed', count: number }}
+     * @private
+     */
+    _internalExecBinaryAdd(optimizeResult, breakpointIndex, num) {
+        if (num <= 5) {
+            return { type: "cant-execute" };
+        }
+        if (
+            breakpointIndex !== -1 &&
+            (
+                optimizeResult.state0 === breakpointIndex ||
+                optimizeResult.state1 === breakpointIndex ||
+                optimizeResult.state2 === breakpointIndex ||
+                optimizeResult.state3 === breakpointIndex
+            )
+        ) {
+            return { type: "cant-execute" };
+        }
+
+        const allocUReg = this.actionExecutor.getUReg(
+            optimizeResult.allocNumUReg,
+        );
+        if (allocUReg === undefined) {
+            internalError();
+        }
+
+        const allocURegValue = allocUReg.getValue();
+
+        const iterationCount = allocURegValue + 1;
+
+        // ensure enough steps is provided
+        if (!(iterationCount >= 4 && iterationCount * 5 + 1 < num)) {
+            // 5 is state0, state1, state2, state3, state3 (loop)
+            // fully executing the optimized command requires more registers than available, so do normal execution to stop at the breakpoint if needed
+            return { type: "cant-execute" };
+        }
+
+        const outputBReg = this.actionExecutor.getBReg(
+            optimizeResult.outputBReg,
+        );
+        const inputBReg = this.actionExecutor.getBReg(optimizeResult.inputBReg);
+        if (outputBReg === undefined || inputBReg === undefined) {
+            internalError();
+        }
+
+        // TODO optimize if ouputBReg.pointer is not zero
+        if (outputBReg.pointer !== 0 || inputBReg.pointer !== 0) {
+            // fully executing the optimized command requires non-zero pointer, so do normal execution to stop at the breakpoint if needed
+            return { type: "cant-execute" };
+        }
+
+        // binary bits has 0 or 1 as values
+
+        // -- Start Execution --
+
+        allocUReg.setValue(0); // for TDEC U loop
+
+        outputBReg.pointer = iterationCount;
+        outputBReg.extend();
+        inputBReg.pointer = iterationCount;
+        inputBReg.extend();
+
+        // this should be below the extend() calls above
+        const outputBRegUint8Array = outputBReg.getInternalUint8Array();
+        const inputBRegUint8Array = inputBReg.getInternalUint8Array();
+
+        let stepCount = 0;
+
+        // outputBReg += inputBReg;
+        let carry = 0;
+        for (let i = 0; i < iterationCount; i++) {
+            const sum = (outputBRegUint8Array[i] ?? internalError()) +
+                (inputBRegUint8Array[i] ?? internalError()) +
+                carry;
+            const outputValue = sum % 2;
+            outputBRegUint8Array[i] = outputValue;
+            // +1 for `MULA19;  NZ; MULA19; SET B1, NOP`
+            stepCount += outputValue === 0 ? 4 : 5;
+            carry = sum >= 2 ? 1 : 0;
+
+            // TODO: This is wrong. depending on state should change the value of execution count.
+            // for (
+            //     const statState of [
+            //         optimizeResult.state0,
+            //         optimizeResult.state1,
+            //         optimizeResult.state2,
+            //         optimizeResult.state3,
+            //     ]
+            // ) {
+            //     const statIndex = statState * 2 + TODO;
+            //     const stateStatsArray = this.stateStatsArray;
+            //     stateStatsArray[statIndex] = (stateStatsArray[statIndex] ?? 0) +
+            //                 statState === optimizeResult.state3
+            //         ? outputValue === 0 ? 1 : 2
+            //         : 1;
+            // }
+        }
+        // if there is overflow, the result is truncated, so we can ignore the carry
+
+        this.prevOutput = inputBReg.tdec(); // last TDEC B
+        stepCount += 1; // for last TDEC B
+
+        this.currentStateIndex = optimizeResult.outputState;
+
+        this.stepCount += stepCount;
+        return { type: "executed", count: stepCount };
     }
 
     /**
@@ -300,10 +455,39 @@ export class Machine {
      */
     exec(n, isRunning, breakpointIndex, breakpointInputValue) {
         const hasBreakpoint = breakpointIndex !== -1;
-        const start = isRunning && performance.now();
+        /**
+         * @type {number | null}
+         */
+        const start = isRunning ? null : performance.now();
 
+        const enableBinaryOptimization = this.enableBinaryOptimization;
         for (let i = 0; i < n; i++) {
             const compiledCommand = this.getNextCommand();
+
+            {
+                const stateHistory = this.stateHistory;
+                const stateHistoryHead = this.stateHistoryHead;
+                const stateHistoryMax = this.stateHistoryCapacity;
+                if (stateHistory.length < stateHistoryMax) {
+                    stateHistory.push({
+                        step: this.stepCount,
+                        stateIndex: this.currentStateIndex,
+                        output: this.prevOutput,
+                    });
+                } else {
+                    // reuse object instead of pushing and creating new one
+                    const object = stateHistory[stateHistoryHead];
+                    if (object === undefined) {
+                        internalError();
+                    }
+                    object.step = this.stepCount;
+                    object.stateIndex = this.currentStateIndex;
+                    object.output = this.prevOutput;
+                }
+
+                this.stateHistoryHead = (stateHistoryHead + 1) %
+                    stateHistoryMax;
+            }
 
             // optimization
             const tdecuOptimize = compiledCommand.tdecuOptimize;
@@ -325,6 +509,22 @@ export class Machine {
                     i += num - 1; // i++しているため1減らす
                     continue;
                 }
+            } else if (
+                enableBinaryOptimization &&
+                compiledCommand.binaryaAddOptimization
+            ) {
+                const num = n - i;
+                const result = this._internalExecBinaryAdd(
+                    compiledCommand.binaryaAddOptimization,
+                    breakpointIndex,
+                    num,
+                );
+
+                if (result.type === "executed") {
+                    i += result.count - 1; // i++しているため1減らす
+                    continue;
+                }
+                // for "cant-execute", do normal execution, and it will stop at the breakpoint if needed
             }
             // optimization end
 
@@ -353,7 +553,7 @@ export class Machine {
 
             // 1フレームに50ms以上時間が掛かっていたら、残りはスキップする
             if (
-                isRunning && (i + 1) % 500000 === 0 && start !== false &&
+                isRunning && (i + 1) % 500000 === 0 && start !== null &&
                 (performance.now() - start >= 50)
             ) {
                 return undefined;
@@ -374,7 +574,7 @@ export class Machine {
     /**
      * @private
      * @param {import('./compile.js').CompiledCommandWithNextState} compiledCommand
-     * @returns {-1 | void} -1 is HALT_OUT
+     * @returns {-1 | undefined} -1 is HALT_OUT
      */
     execCommandFor(compiledCommand) {
         this.stepCount += 1;
@@ -384,8 +584,8 @@ export class Machine {
             const currentStateIndex = this.currentStateIndex;
             const prevOutput = this.prevOutput;
             const statIndex = currentStateIndex * 2 + prevOutput;
-            this.stateStatsArray[statIndex] =
-                (this.stateStatsArray[statIndex] ?? 0) + 1;
+            const stateStatsArray = this.stateStatsArray;
+            stateStatsArray[statIndex] = (stateStatsArray[statIndex] ?? 0) + 1;
         }
 
         /**
@@ -429,12 +629,36 @@ export class Machine {
         // }
         this.currentStateIndex = nextStateIndex;
         this.prevOutput = result;
+
+        return undefined;
+    }
+
+    /**
+     * WARN: Do not reuse returned object of the array
+     */
+    *getStateHistory() {
+        const stateHistory = this.stateHistory;
+        const stateHistoryHead = this.stateHistoryHead;
+        const stateHistoryMax = this.stateHistoryCapacity;
+        const length = stateHistory.length;
+        for (let i = 0; i < length; i++) {
+            const index = (stateHistoryHead - 1 - i + stateHistoryMax) %
+                stateHistoryMax;
+            yield stateHistory[index];
+        }
+    }
+
+    getStateHistoryInternal() {
+        return {
+            items: this.stateHistory,
+            head: this.stateHistoryHead,
+        };
     }
 
     /**
      * 次のコマンドを実行する
      * エラーが発生した場合は例外を投げる
-     * @returns {-1 | void}
+     * @returns {-1 | undefined}
      * - -1はHALT_OUT
      * - voidは正常
      * @throws {Error} 実行時エラー

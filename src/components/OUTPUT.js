@@ -11,7 +11,7 @@ export class OUTPUT {
 
     /**
      * @param {OutputAction} act
-     * @returns {void}
+     * @returns {undefined}
      */
     action(act) {
         this.output(act.digit);

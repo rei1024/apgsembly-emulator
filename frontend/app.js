@@ -8,7 +8,7 @@ import { renderErrorMessage } from "./components/error.js";
 import { renderOutput } from "./components/output.js";
 import { UnaryUI } from "./components/unary_ui.js";
 import { BinaryUI } from "./components/binary_ui.js";
-import { renderB2D } from "./components/renderB2D.js";
+import { renderB2DWithPos } from "./components/renderB2DWithPos.js";
 import { StatsUI } from "./components/stats_ui.js";
 import {
     getBreakpointInput,
@@ -23,26 +23,30 @@ import {
     $addSubMul,
     $addSubMulDetail,
     $b2dDetail,
-    $b2dFlipUpsideDown,
-    $b2dHidePointer,
     $b2dPos,
     $binaryRegister,
     $binaryRegisterDetail,
     $breakpointInputSelect,
     $breakpointSelect,
-    $canvas,
     $command,
     $currentState,
+    $enableBinaryOptimization,
     $error,
     $frequencyOutput,
+    $historyBody,
+    $historyCapacity,
+    $historyDetail,
     $input,
     $output,
     $outputDetail,
     $previousOutput,
+    $printerDetail,
+    $printerPos,
     $reset,
     $statsBody,
     $statsButton,
     $statsModal,
+    $statsModalMessage,
     $statsNumberOfStates,
     $step,
     $stepCount,
@@ -52,9 +56,12 @@ import {
     $unaryRegisterDetail,
     binaryConfig,
     context,
+    printerContext,
 } from "./bind.js";
 import { toLocaleString } from "./util/toLocaleString.js";
 import { LibraryUI } from "./components/library_ui.js";
+import { HistoryUI } from "./components/history_ui.js";
+import { clearCanvas } from "./util/clear-canvas.js";
 
 /** index.htmlと同期すること */
 const DEFAULT_FREQUENCY = 30;
@@ -81,7 +88,12 @@ export class App {
     /** @readonly */
     #binaryUI = new BinaryUI($binaryRegister);
     /** @readonly */
-    #statsUI = new StatsUI($statsBody, $statsNumberOfStates);
+    #statsUI = new StatsUI(
+        $statsBody,
+        $statsNumberOfStates,
+        $statsModalMessage,
+    );
+    #historyUI = new HistoryUI($historyBody);
     /** @readonly */
     $libraryUI = new LibraryUI();
     /** @readonly */
@@ -175,12 +187,18 @@ export class App {
 
     /**
      * machineがセットされた時のコールバック
+     * @param {{ prevBreakpointName: string | undefined }} param0
      */
-    #onMachineSet() {
+    #onMachineSet({ prevBreakpointName }) {
         this.#setUpUnary();
         this.#setUpBinary();
         this.#setUpStats();
-        initializeBreakpointSelect($breakpointSelect, this.#machine);
+        this.#setupHistory();
+        initializeBreakpointSelect(
+            $breakpointSelect,
+            this.#machine,
+            prevBreakpointName,
+        );
     }
 
     doStep() {
@@ -229,14 +247,22 @@ export class App {
      * @returns {boolean} 成功
      */
     reset() {
+        const prevBreakpointStateName =
+            $breakpointSelect.value !== "-1" && this.#machine != null
+                ? this.#machine?.stateNames[Number($breakpointSelect.value)]
+                : undefined;
+
         this.#errorMessage = "";
         this.#machine = undefined;
         this.#valve.reset();
 
         try {
             const libraryFiles = this.$libraryUI.getFiles();
-            this.#machine = Machine.fromString($input.value, libraryFiles);
-            this.#onMachineSet();
+            this.#machine = Machine.fromString($input.value, libraryFiles, {
+                enableBinaryOptimization: $enableBinaryOptimization.checked,
+                historyCapacity: parseInt($historyCapacity.value, 10),
+            });
+            this.#onMachineSet({ prevBreakpointName: prevBreakpointStateName });
             this.#appState = "Stop";
         } catch (e) {
             this.#appState = "ParseError";
@@ -280,29 +306,33 @@ export class App {
         if (!$b2dDetail.open) {
             return;
         }
-        const machine = this.#machine;
-        if (machine === undefined) {
-            $b2dPos.x.textContent = "0";
-            $b2dPos.y.textContent = "0";
-            context.clearRect(0, 0, $canvas.width, $canvas.height);
-            context.resetTransform();
-            return;
-        }
-        const b2d = machine.actionExecutor.b2d;
-        $b2dPos.x.textContent = b2d.x.toString();
-        $b2dPos.y.textContent = b2d.y.toString();
 
         const start = performance.now();
-        renderB2D(
-            context,
-            b2d,
-            $b2dHidePointer.checked,
-            $b2dFlipUpsideDown.checked,
-        );
+        renderB2DWithPos(this.#machine?.actionExecutor.b2d, $b2dPos, context);
 
         // 描画に時間がかかっている場合閉じる
         if (this.#appState === "Running" && performance.now() - start >= 200) {
             $b2dDetail.open = false;
+            clearCanvas(context);
+        }
+    }
+
+    renderPrinter() {
+        if (!$printerDetail.open) {
+            return;
+        }
+
+        const start = performance.now();
+        renderB2DWithPos(
+            this.#machine?.actionExecutor.matrixPrinter,
+            $printerPos,
+            printerContext,
+        );
+
+        // 描画に時間がかかっている場合閉じる
+        if (this.#appState === "Running" && performance.now() - start >= 200) {
+            $printerDetail.open = false;
+            clearCanvas(printerContext);
         }
     }
 
@@ -336,13 +366,24 @@ export class App {
     }
 
     #setUpStats() {
-        if (this.#machine === undefined) {
+        const machine = this.#machine;
+        if (machine === undefined) {
             this.#statsUI.clear();
         } else {
             this.#statsUI.initialize(
-                this.#machine.getStateStats(),
-                this.#machine.states,
+                machine.getStateStats(),
+                machine.stateNames,
+                $enableBinaryOptimization.checked,
             );
+        }
+    }
+
+    #setupHistory() {
+        const machine = this.#machine;
+        if (machine === undefined) {
+            this.#historyUI.initialize(0);
+        } else {
+            this.#historyUI.initialize(machine.stateHistoryCapacity);
         }
     }
 
@@ -359,6 +400,17 @@ export class App {
             machine.getStateStats(),
             machine.currentStateIndex,
         );
+    }
+
+    renderHistory() {
+        if (!$historyDetail.open) {
+            return;
+        }
+        const machine = this.#machine;
+        if (machine === undefined) {
+            return;
+        }
+        this.#historyUI.render(machine);
     }
 
     /**
@@ -443,6 +495,9 @@ export class App {
                     ? ""
                     : "none";
             $b2dDetail.style.display = analyzeResult?.hasB2D ? "" : "none";
+            $printerDetail.style.display = analyzeResult?.hasPrinter
+                ? ""
+                : "none";
             $outputDetail.style.display = analyzeResult?.hasOutput
                 ? ""
                 : "none";
@@ -469,7 +524,9 @@ export class App {
             machine?.actionExecutor.addSubMulToUIString() ??
                 "";
         this.renderB2D();
+        this.renderPrinter();
         this.renderStats();
+        this.renderHistory();
 
         this.#prevAppState = appState;
     }

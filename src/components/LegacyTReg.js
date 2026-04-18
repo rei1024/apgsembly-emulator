@@ -30,7 +30,7 @@ export class LegacyTReg {
 
     /**
      * @param {LegacyTRegAction} act
-     * @returns {0 | 1 | void}
+     * @returns {0 | 1 | undefined}
      */
     action(act) {
         switch (act.op) {
@@ -113,7 +113,7 @@ export class LegacyTReg {
 
     /**
      * `SET`
-     * @returns {void}
+     * @returns {undefined}
      */
     set() {
         const pointer = this.pointer;
@@ -126,7 +126,7 @@ export class LegacyTReg {
 
     /**
      * `RESET`
-     * @returns {void}
+     * @returns {undefined}
      */
     reset() {
         const pointer = this.pointer;

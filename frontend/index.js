@@ -1,24 +1,8 @@
 // @ts-check
 
-// critical path
-import {} from "./util/selector.js";
-import {} from "./util/create.js";
-import {} from "./util/valve.js";
-import {} from "./util/get-message-from-error.js";
-import {} from "./util/chunk.js";
-import {} from "./util/spinner.js";
-import {} from "./components/renderB2D.js";
-import {} from "./components/unary_ui.js";
-import {} from "./components/binary_ui.js";
-import {} from "./components/stats_ui.js";
-import {} from "./components/breakpoint.js";
-import {} from "./components/toggle.js";
-import {} from "./components/error.js";
-import {} from "./components/output.js";
-
 import { setupFrequencyInput } from "./components/frequency_input.js";
 import { removeCustomError, setCustomError } from "./util/validation_ui.js";
-import { importFileAsText } from "./util/import_file.js";
+import { setupOnInputFileText } from "./util/input-file.js";
 import { idle } from "./util/idle.js";
 import {
     localStorageGetItem,
@@ -33,17 +17,23 @@ import {
     $b2dFlipUpsideDown,
     $b2dHidePointer,
     $binaryRegisterDetail,
+    $breakpointConfig,
+    $breakpointInputSelect,
+    $breakpointSelect,
+    $clearBreakpointButton,
     $configButton,
     // Modal
     $configModalContent,
     $darkMode,
     $darkModeLabel,
-    $exampleCodes,
     $examples,
     $fileImport,
     $frequencyInput,
+    $historyDetail,
     $input,
+    $printerDetail,
     $reset,
+    $showBreakpointConfig,
     // Stats
     $statsModal,
     $step,
@@ -55,9 +45,8 @@ import {
 } from "./bind.js";
 
 import { App } from "./app.js";
-
-// データ
-const DATA_DIR = "./frontend/data/";
+import { scrollToTop } from "./util/scroll-to-top.js";
+import { setupExamples } from "./components/examples.js";
 
 /** instance */
 const app = new App();
@@ -78,25 +67,7 @@ $step.addEventListener("click", () => {
 });
 
 // サンプル
-$exampleCodes.forEach((e) => {
-    e.addEventListener("click", async () => {
-        $examples.style.opacity = "0.5";
-        const src = e.dataset["src"];
-        try {
-            const response = await fetch(DATA_DIR + src);
-            if (!response.ok) {
-                throw Error("error");
-            }
-            app.setInputAndReset(await response.text());
-            // スクロール
-            scrollToTop();
-        } catch (e) {
-            throw e;
-        } finally {
-            $examples.removeAttribute("style");
-        }
-    });
-});
+setupExamples(app);
 
 // 周波数の設定
 setupFrequencyInput($frequencyInput, app);
@@ -104,6 +75,10 @@ setupFrequencyInput($frequencyInput, app);
 // 開閉で描画
 $b2dDetail.addEventListener("toggle", () => {
     app.renderB2D();
+});
+
+$printerDetail.addEventListener("toggle", () => {
+    app.renderPrinter();
 });
 
 $binaryRegisterDetail.addEventListener("toggle", () => {
@@ -114,12 +89,23 @@ $unaryRegisterDetail.addEventListener("toggle", () => {
     app.renderUnary();
 });
 
-const scrollToTop = () => {
-    $input.scrollTop = 0;
-};
+const HISTORY_OPEN_KEY = "apge_history_open";
+
+if (localStorageGetItem(HISTORY_OPEN_KEY)) {
+    $historyDetail.open = true;
+}
+
+$historyDetail.addEventListener("toggle", () => {
+    app.renderHistory();
+    if ($historyDetail.open) {
+        localStorageSetItem(HISTORY_OPEN_KEY, "1");
+    } else {
+        localStorageRemoveItem(HISTORY_OPEN_KEY);
+    }
+});
 
 // ファイルインポート
-importFileAsText($fileImport, (result) => {
+setupOnInputFileText($fileImport, (result) => {
     app.setInputAndReset(result);
     // スクロール
     scrollToTop();
@@ -169,6 +155,7 @@ setupCheckbox(binaryConfig.$showBinaryValueInHex, SHOW_BINARY_IN_HEX_KEY);
 // B2D
 $b2dHidePointer.addEventListener("change", () => {
     app.renderB2D();
+    app.renderPrinter();
 });
 
 const B2D_FLIP_UPSIDE_DOWN_KEY = "apge_b2d_flip_upside_down";
@@ -177,6 +164,23 @@ setupCheckbox($b2dFlipUpsideDown, B2D_FLIP_UPSIDE_DOWN_KEY);
 // showの場合クラスが追加されない
 $statsModal.addEventListener("shown.bs.modal", () => {
     app.renderStats();
+});
+
+$clearBreakpointButton.addEventListener("click", () => {
+    $breakpointSelect.value = "-1";
+    $breakpointInputSelect.value = "*";
+});
+
+$showBreakpointConfig.addEventListener("change", () => {
+    if ($showBreakpointConfig.checked) {
+        $breakpointConfig.classList.remove("d-none");
+        $breakpointConfig.classList.add("d-flex");
+    } else {
+        $breakpointConfig.classList.remove("d-flex");
+        $breakpointConfig.classList.add("d-none");
+        $breakpointSelect.value = "-1";
+        $breakpointInputSelect.value = "*";
+    }
 });
 
 $viewStateDiagramButton.addEventListener("click", () => {

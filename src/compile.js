@@ -8,6 +8,7 @@ import { URegAction } from "./actions/URegAction.js";
 import { U_TDEC } from "./action_consts/UReg_consts.js";
 import { HaltOutAction } from "./exports.js";
 import { internalError } from "./internalError.js";
+import { optimizeBinaryAddPass } from "./optimize/binary-optimize.js";
 
 /**
  * @param {Action} action
@@ -103,6 +104,13 @@ export class CompiledCommandWithNextState {
 
         this.tdecuOptimize = getOptimizedTdecU(command);
         this.tdecbOptimize = getOptimizedTdecB(command);
+
+        /**
+         * should be defined on NZ
+         *
+         * @type {undefined | import("./optimize/binary-optimize.js").BinaryAddOptimizeResult}
+         */
+        this.binaryaAddOptimization = undefined;
     }
 }
 
@@ -137,12 +145,21 @@ const throwDuplicated = (oldCommand, command) => {
 };
 
 /**
+ * @param {Command} command
+ * @param {number} nextState
+ */
+function newCompiled(command, nextState) {
+    return new CompiledCommandWithNextState(command, nextState);
+}
+
+/**
  * 速く実行できる形式へ変換する
  * @param {ReadonlyArray<Command>} commands
  * @returns {{
- *   readonly states: string[];
- *   readonly stateMap: Map<string, number>;
+ *   readonly stateNames: string[];
+ *   readonly stateNameToIndexMap: Map<string, number>;
  *   readonly lookup: CompiledCommand[];
+ *   readonly reverseStateList: Set<number>[];
  * }}
  */
 export const commandsToLookupTable = (commands) => {
@@ -182,10 +199,7 @@ export const commandsToLookupTable = (commands) => {
             case "Z": {
                 if (compiledCommand.z === undefined) {
                     // 新しく作成する
-                    compiledCommand.z = new CompiledCommandWithNextState(
-                        command,
-                        nextState,
-                    );
+                    compiledCommand.z = newCompiled(command, nextState);
                 } else {
                     throwDuplicated(compiledCommand.z.command, command);
                 }
@@ -194,10 +208,7 @@ export const commandsToLookupTable = (commands) => {
             case "NZ": {
                 if (compiledCommand.nz === undefined) {
                     // 新しく作成する
-                    compiledCommand.nz = new CompiledCommandWithNextState(
-                        command,
-                        nextState,
-                    );
+                    compiledCommand.nz = newCompiled(command, nextState);
                 } else {
                     throwDuplicated(compiledCommand.nz.command, command);
                 }
@@ -211,10 +222,7 @@ export const commandsToLookupTable = (commands) => {
                         }`,
                     );
                 } else if (compiledCommand.z === undefined) {
-                    compiledCommand.z = new CompiledCommandWithNextState(
-                        command,
-                        nextState,
-                    );
+                    compiledCommand.z = newCompiled(command, nextState);
                 } else {
                     throwDuplicated(compiledCommand.z.command, command);
                 }
@@ -234,10 +242,7 @@ export const commandsToLookupTable = (commands) => {
                         }`,
                     );
                 } else {
-                    const c = new CompiledCommandWithNextState(
-                        command,
-                        nextState,
-                    );
+                    const c = newCompiled(command, nextState);
                     compiledCommand.z = c;
                     compiledCommand.nz = c;
                 }
@@ -249,9 +254,45 @@ export const commandsToLookupTable = (commands) => {
         }
     }
 
+    const binaryAddOptimizeResults = optimizeBinaryAddPass(lookup);
+    for (const r of binaryAddOptimizeResults) {
+        const c = lookup[r.inputState];
+        if (c === undefined || c.nz === undefined) {
+            internalError();
+        }
+        c.nz.binaryaAddOptimization = r;
+    }
+
+    const stateNames = [...stateMap.keys()];
+
+    /**
+     * Reverse state map for analyzation and optimization
+     *
+     * `reverseStateList[toState] = { fromState1, fromState2, ... }`
+     *
+     * @type {Set<number>[]}
+     */
+    const reverseStateList = Array(stateNames.length).fill(0).map(() =>
+        new Set()
+    );
+
+    for (let index = 0; index < lookup.length; index++) {
+        const command = lookup[index];
+        if (command === undefined) {
+            continue;
+        }
+        if (command.z) {
+            reverseStateList[command.z.nextState]?.add(index);
+        }
+        if (command.nz) {
+            reverseStateList[command.nz.nextState]?.add(index);
+        }
+    }
+
     return {
-        states: [...stateMap.keys()],
-        stateMap,
+        stateNames,
+        stateNameToIndexMap: stateMap,
         lookup,
+        reverseStateList,
     };
 };

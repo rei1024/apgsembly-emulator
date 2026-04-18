@@ -24,14 +24,18 @@ export class SUB {
             // A1  176960
             // B0 1902824
             // B1  172184
-            case SUB_B0:
+            case SUB_B0: {
                 return this.b0();
-            case SUB_A1:
+            }
+            case SUB_A1: {
                 return this.a1();
-            case SUB_B1:
+            }
+            case SUB_B1: {
                 return this.b1();
-            default:
+            }
+            default: {
                 internalError();
+            }
         }
     }
 
@@ -44,7 +48,7 @@ export class SUB {
 
     /**
      * `SUB A1`
-     * @returns {void}
+     * @returns {undefined}
      */
     a1() {
         this.value = (this.value + 1) % 4;
@@ -56,9 +60,8 @@ export class SUB {
      */
     b0() {
         const value = this.value;
-        const t = value % 2;
+        const t = /** @type {0 | 1} */ (value % 2);
         this.value = value >= 2 ? 3 : 0;
-        // @ts-ignore
         return t;
     }
 
@@ -68,9 +71,8 @@ export class SUB {
      */
     b1() {
         const value = this.value;
-        const t = 1 - value % 2;
+        const t = /** @type {0 | 1} */ (1 - value % 2);
         this.value = value === 0 || value === 3 ? 3 : 0;
-        // @ts-ignore
         return t;
     }
 

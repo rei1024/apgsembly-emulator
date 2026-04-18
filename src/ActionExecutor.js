@@ -20,6 +20,7 @@ import { OUTPUT } from "./components/OUTPUT.js";
 import { SUB } from "./components/SUB.js";
 import { throwRegisterInitError, UReg } from "./components/UReg.js";
 import { LegacyTReg } from "./components/LegacyTReg.js";
+import { B2D_KIND_PRINTER, B2D_READ } from "./action_consts/B2D_consts.js";
 
 /**
  * @param {"B" | "U" | "T"} type
@@ -35,9 +36,9 @@ const isNaNLocal = Number.isNaN;
 
 /**
  * #REGISTERSのJSON
- * Uの場合はnumberのみ
- * Bのときはポインタとバイナリの文字列の配列である場合はそのまま設定する。
- * 数字である場合は二進数に変換してそれを逆さまにして配列へ設定する。ポインタは0とする。TODO コンパイラを確認
+ * - Uの場合はnumberのみ
+ * - Bのときはポインタとバイナリの文字列の配列である場合はそのまま設定する。
+ *    - 数字である場合は二進数に変換してそれを逆さまにして配列へ設定する。ポインタは0とする。TODO コンパイラを確認
  * @typedef {{ [reg: string]: unknown }} RegistersInit
  */
 
@@ -47,11 +48,7 @@ const isNaNLocal = Number.isNaN;
 export class ActionExecutor {
     /**
      * 使用するレジスタ番号を引数に取る
-     * @param {{
-     *    unary: ReadonlyArray<string>;
-     *    binary: ReadonlyArray<string>;
-     *    legacyT: ReadonlyArray<number>;
-     * }} param0
+     * @param {Pick<import("./Program.js").AnalyzeProgramResult, 'unary' | 'binary' | 'legacyT'>} param0
      */
     constructor(
         { unary, binary, legacyT },
@@ -96,6 +93,11 @@ export class ActionExecutor {
          * @readonly
          */
         this.b2d = new B2D();
+
+        /**
+         * @readonly
+         */
+        this.matrixPrinter = new B2D();
 
         /**
          * @readonly
@@ -163,7 +165,7 @@ export class ActionExecutor {
      * `-1`が正常終了
      * `-1` is HALT_OUT
      * @param {Action} action
-     * @returns {0 | 1 | -1 | void}
+     * @returns {0 | 1 | -1 | undefined}
      * @throws
      */
     execAction(action) {
@@ -193,7 +195,14 @@ export class ActionExecutor {
         } else if (action instanceof MulAction) {
             return this.mul.action(action);
         } else if (action instanceof B2DAction) {
-            return this.b2d.action(action);
+            if (action.kind === B2D_KIND_PRINTER) {
+                if (action.op === B2D_READ) {
+                    throw Error("PRINTER component cannot READ");
+                }
+                return this.matrixPrinter.action(action);
+            } else {
+                return this.b2d.action(action);
+            }
         } else if (action instanceof OutputAction) {
             return this.output.action(action);
         } else if (action instanceof HaltOutAction) {
@@ -211,7 +220,7 @@ export class ActionExecutor {
      * `-1` is HALT_OUT
      * @param {Action} action
      * @param {number} n
-     * @returns {0 | 1 | -1 | void}
+     * @returns {0 | 1 | -1 | undefined}
      * @throws `action` not `URegAction`, `BRegAction`, or `HaltOutAction`
      */
     execActionN(action, n) {

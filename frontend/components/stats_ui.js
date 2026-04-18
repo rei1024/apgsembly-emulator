@@ -54,21 +54,22 @@ const createRow = (stateName, { z, nz }) => {
 export class StatsUI {
     /** @type {HTMLElement} */
     #statsNumberOfStates;
+    /** @type {HTMLElement} */
+    #$statsModalMessage;
 
     /**
      * @param {HTMLElement} root
      * @param {HTMLElement} statsNumberOfStates
+     * @param {HTMLElement} $statsModalMessage
      */
-    constructor(root, statsNumberOfStates) {
+    constructor(root, statsNumberOfStates, $statsModalMessage) {
         /**
          * @private
          */
         this.root = root;
 
-        /**
-         * @private
-         */
         this.#statsNumberOfStates = statsNumberOfStates;
+        this.#$statsModalMessage = $statsModalMessage;
 
         /**
          * @type {{ $sum: Element, $z: Element, $nz: Element, $tr: HTMLElement }[]}
@@ -79,16 +80,27 @@ export class StatsUI {
 
     /**
      * @param {StatsItem[]} stateStats
-     * @param {string[]} states
+     * @param {string[]} stateNames
+     * @param {boolean} enableBinaryOptimization
      */
-    initialize(stateStats, states) {
-        this.#statsNumberOfStates.textContent = toLocaleString(states.length);
+    initialize(stateStats, stateNames, enableBinaryOptimization) {
+        this.#statsNumberOfStates.textContent = toLocaleString(
+            stateNames.length,
+        );
+
+        if (enableBinaryOptimization) {
+            this.#$statsModalMessage.textContent =
+                "Binary optimization is enabled. The number of states may be smaller than expected.";
+            this.#$statsModalMessage.style.color = "#dc3545";
+        } else {
+            this.#$statsModalMessage.textContent = "";
+        }
 
         this.cells = [];
         this.root.innerHTML = "";
 
         for (const [i, stat] of stateStats.entries()) {
-            const name = states[i] ?? "";
+            const name = stateNames[i] ?? "";
             const { $tr, $sum, $z, $nz } = createRow(name, stat);
             this.root.append($tr);
             this.cells.push({ $sum, $z, $nz, $tr });

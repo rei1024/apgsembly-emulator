@@ -15,6 +15,7 @@ import { B2DAction } from "./actions/B2DAction.js";
 import { OutputAction } from "./actions/OutputAction.js";
 import { parseComponentsHeader } from "./parser/parseComponentsHeader.js";
 import { internalError } from "./internalError.js";
+import { B2D_KIND_PRINTER } from "./action_consts/B2D_consts.js";
 
 /**
  * APGsembly program
@@ -116,8 +117,29 @@ const sortNub = (array) => {
  * hasSub: boolean,
  * hasMul: boolean,
  * hasB2D: boolean,
+ * hasPrinter: boolean,
  * hasOutput: boolean, }} AnalyzeProgramResult
  */
+
+export const singleComponents = /** @type {const} */ ([{
+    key: "hasAdd",
+    component: "ADD",
+}, {
+    key: "hasSub",
+    component: "SUB",
+}, {
+    key: "hasMul",
+    component: "MUL",
+}, {
+    key: "hasB2D",
+    component: "B2D",
+}, {
+    key: "hasPrinter",
+    component: "PRINTER",
+}, {
+    key: "hasOutput",
+    component: "OUTPUT",
+}]);
 
 /**
  * プログラムから使用されているレジスタ番号を抽出
@@ -155,6 +177,7 @@ export const analyzeProgram = (program) => {
     let hasSub = false;
     let hasMul = false;
     let hasB2D = false;
+    let hasPrinter = false;
     let hasOutput = false;
 
     for (const action of actions) {
@@ -165,7 +188,11 @@ export const analyzeProgram = (program) => {
         } else if (action instanceof MulAction) {
             hasMul = true;
         } else if (action instanceof B2DAction) {
-            hasB2D = true;
+            if (action.kind === B2D_KIND_PRINTER) {
+                hasPrinter = true;
+            } else {
+                hasB2D = true;
+            }
         } else if (action instanceof OutputAction) {
             hasOutput = true;
         }
@@ -179,6 +206,7 @@ export const analyzeProgram = (program) => {
         hasSub,
         hasMul,
         hasB2D,
+        hasPrinter,
         hasOutput,
     };
 };
@@ -218,9 +246,27 @@ function numberOrStringSort(array) {
 export const validateComponentsHeader = (componentsHeaders, analyzeResult) => {
     /** @type {string[]} */
     const errors = [];
-    const components = new Set(
-        componentsHeaders.flatMap((c) => parseComponentsHeader(c.content)),
-    );
+
+    let isBuilt = false;
+
+    /**
+     * @type {Set<string>}
+     */
+    const components = new Set();
+    for (const h of componentsHeaders) {
+        if (isBuilt) {
+            throw new Error(
+                "#COMPONENTS header appears after the computer is built",
+            );
+        }
+        const result = parseComponentsHeader(h.content);
+        for (const c of result.components) {
+            components.add(c);
+        }
+        if (!result.isCont) {
+            isBuilt = true;
+        }
+    }
 
     /**
      * @param {string} comp
@@ -229,24 +275,10 @@ export const validateComponentsHeader = (componentsHeaders, analyzeResult) => {
     const errorMessage = (comp) =>
         `Program uses ${comp} component but the #COMPONENTS header does not include it.`;
 
-    if (analyzeResult.hasAdd && !components.has("ADD")) {
-        errors.push(errorMessage("ADD"));
-    }
-
-    if (analyzeResult.hasSub && !components.has("SUB")) {
-        errors.push(errorMessage("SUB"));
-    }
-
-    if (analyzeResult.hasMul && !components.has("MUL")) {
-        errors.push(errorMessage("MUL"));
-    }
-
-    if (analyzeResult.hasB2D && !components.has("B2D")) {
-        errors.push(errorMessage("B2D"));
-    }
-
-    if (analyzeResult.hasOutput && !components.has("OUTPUT")) {
-        errors.push(errorMessage("OUTPUT"));
+    for (const { key, component } of singleComponents) {
+        if (analyzeResult[key] && !components.has(component)) {
+            errors.push(errorMessage(component));
+        }
     }
 
     /** @type {string[]} */
@@ -290,6 +322,11 @@ export const validateComponentsHeader = (componentsHeaders, analyzeResult) => {
     }
 
     if (errors.length !== 0) {
+        const suggestedHeader = generateComponentsHeader(analyzeResult);
+        errors.push(
+            `Suggested header: #COMPONENTS ${suggestedHeader}`,
+        );
+
         throw new Error(errors.join("\n"));
     }
 };
@@ -343,10 +380,6 @@ export const generateComponentsHeader = (analyzeResult) => {
     /** @type {string[]} */
     let components = [];
 
-    if (analyzeResult.hasB2D) {
-        components.push("B2D");
-    }
-
     const binary = numberOrStringSort(analyzeResult.binary.slice());
     components = components.concat(
         compactRangesString(binary).map((x) => "B" + x),
@@ -357,20 +390,10 @@ export const generateComponentsHeader = (analyzeResult) => {
         compactRangesString(unary).map((x) => "U" + x),
     );
 
-    if (analyzeResult.hasAdd) {
-        components.push("ADD");
-    }
-
-    if (analyzeResult.hasSub) {
-        components.push("SUB");
-    }
-
-    if (analyzeResult.hasMul) {
-        components.push("MUL");
-    }
-
-    if (analyzeResult.hasOutput) {
-        components.push("OUTPUT");
+    for (const { key, component } of singleComponents) {
+        if (analyzeResult[key]) {
+            components.push(component);
+        }
     }
 
     return components.join(", ");

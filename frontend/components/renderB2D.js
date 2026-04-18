@@ -2,6 +2,7 @@
 
 import { B2D } from "../../src/components/B2D.js";
 import { internalError } from "../../src/internalError.js";
+import { clearCanvas } from "../util/clear-canvas.js";
 
 /**
  * B2Dをcanvasに描画する
@@ -12,33 +13,34 @@ import { internalError } from "../../src/internalError.js";
  * @param {boolean} flipUpsideDown 上下逆にする
  */
 export const renderB2D = (context, b2d, hidePointer, flipUpsideDown) => {
-    const width = context.canvas.width;
-    const prevHeight = context.canvas.height;
+    const devicePixelRatio = Math.min(window.devicePixelRatio || 1, 4);
+    const SIZE = 300 * devicePixelRatio;
 
-    if (width !== prevHeight) {
+    if (context.canvas.width !== SIZE || context.canvas.height !== SIZE) {
         // make square
-        context.canvas.height = width;
+        context.canvas.width = SIZE;
+        context.canvas.height = SIZE;
+        context.canvas.style.width = `${
+            (SIZE / devicePixelRatio).toFixed(0)
+        }px`;
+        context.canvas.style.height = `${
+            (SIZE / devicePixelRatio).toFixed(0)
+        }px`;
     }
 
     // reset canvas
-    if (context.reset) {
-        context.reset();
-    } else {
-        context.clearRect(0, 0, width, width);
-        context.resetTransform();
-        context.beginPath();
-    }
+    clearCanvas(context);
 
     const maxX = b2d.getMaxX();
     const maxY = b2d.getMaxY();
 
     const n = Math.max(maxX, maxY) + 1;
-    const cellSize = width / n;
+    const cellSize = SIZE / n;
 
     // default is math coordinates
     if (!flipUpsideDown) {
         context.scale(1, -1);
-        context.translate(0, -width);
+        context.translate(0, -SIZE);
     }
 
     const array = b2d.getArray();

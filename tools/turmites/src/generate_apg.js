@@ -15,7 +15,7 @@ import {
 } from "./turmites.js";
 
 /**
- * @param {import('./turmites').Dir} dir
+ * @param {import('./turmites.js').Dir} dir
  */
 function dirToAction(dir) {
     switch (dir) {

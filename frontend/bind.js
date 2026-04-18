@@ -64,20 +64,43 @@ export const context = $canvas.getContext("2d") ?? (() => {
     throw Error("context is null");
 })();
 
+const HTMLDetailsElement_ = HTMLDetailsElement;
+
 export const $b2dPos = {
     x: $type("#b2dx", HTMLElement_),
     y: $type("#b2dy", HTMLElement_),
 };
 
 // B2Dの開閉
-export const $b2dDetail = $type("#b2d_detail", HTMLDetailsElement);
+export const $b2dDetail = $type("#b2d_detail", HTMLDetailsElement_);
+
+// Printer
+export const $printerCanvas = $type("#printer_canvas", HTMLCanvasElement);
+
+/**
+ * @type {CanvasRenderingContext2D}
+ */
+export const printerContext = $printerCanvas.getContext("2d") ?? (() => {
+    throw Error("context is null");
+})();
+
+export const $printerPos = {
+    x: $type("#printer_x", HTMLElement_),
+    y: $type("#printer_y", HTMLElement_),
+};
+
+// Printerの開閉
+export const $printerDetail = $type("#printer_detail", HTMLDetailsElement_);
+
+export const $historyDetail = $type("#history_detail", HTMLDetailsElement_);
+export const $historyBody = $type("#history_body", HTMLElement_);
 
 // スライディングレジスタ
 export const $unaryRegister = $type("#unary_register", HTMLElement_);
 
 export const $unaryRegisterDetail = $type(
     "#unary_register_detail",
-    HTMLDetailsElement,
+    HTMLDetailsElement_,
 );
 
 // バイナリレジスタ
@@ -86,7 +109,7 @@ export const $binaryRegister = $type("#binary_register", HTMLElement_);
 // バイナリレジスタの開閉
 export const $binaryRegisterDetail = $type(
     "#binary_register_detail",
-    HTMLDetailsElement,
+    HTMLDetailsElement_,
 );
 
 // ADD SUB MULの表示
@@ -98,11 +121,7 @@ export const $fileImport = $type("#import_file", HTMLInputElement_);
 
 export const $examples = $type("#examples", HTMLButtonElement_);
 
-// サンプルコード
-/**
- * @type {NodeListOf<HTMLElement>}
- */
-export const $exampleCodes = document.querySelectorAll(".js_example");
+export const $examplesDropdown = $type("#examples_dropdown", HTMLElement_);
 
 // --------- Modal --------- //
 
@@ -129,6 +148,13 @@ export const binaryConfig = {
     ),
 };
 
+export const $showBreakpointConfig = $type(
+    "#show-breakpoint-config",
+    HTMLInputElement_,
+);
+
+export const $breakpointConfig = $type(".js-breakpoint-config", HTMLElement_);
+
 // ブレークポイント
 export const $breakpointSelect = $type("#breakpoint_select", HTMLSelectElement);
 
@@ -136,6 +162,11 @@ export const $breakpointSelect = $type("#breakpoint_select", HTMLSelectElement);
 export const $breakpointInputSelect = $type(
     "#breakpoint_input_select",
     HTMLSelectElement,
+);
+
+export const $clearBreakpointButton = $type(
+    "#clear-breakpoint",
+    HTMLButtonElement_,
 );
 
 // ダークモード
@@ -149,10 +180,17 @@ export const $b2dFlipUpsideDown = $type(
     HTMLInputElement_,
 );
 
+export const $historyCapacity = $type("#history_capacity", HTMLSelectElement);
+
+export const $enableBinaryOptimization = $type(
+    "#enable_binary_optimization",
+    HTMLInputElement_,
+);
+
 // Stats Modal
 
 export const $statsModal = $type("#stats_modal", HTMLElement_);
-
+export const $statsModalMessage = $type("#stats_modal_message", HTMLElement_);
 export const $statsBody = $type("#stats_body", HTMLElement_);
 
 export const $statsNumberOfStates = $type(

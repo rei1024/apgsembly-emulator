@@ -7,12 +7,12 @@ import { parseComponentsHeader } from "./parseComponentsHeader.js";
  * @param {string} str
  */
 function parse(str) {
-    return { components: parseComponentsHeader(str) };
+    return { components: parseComponentsHeader(str).components };
 }
 
 test("parseComponentsHeader", () => {
     assertEquals(
-        parse("B0-5, U0-5, U8-9, ADD, SUB, MUL, OUTPUT"),
+        parse("B0-5, U0-5, U8-9, ADD, SUB, MUL, OUTPUT, PRINTER"),
         {
             components: [
                 "B0",
@@ -33,6 +33,7 @@ test("parseComponentsHeader", () => {
                 "SUB",
                 "MUL",
                 "OUTPUT",
+                "PRINTER",
             ],
         },
     );

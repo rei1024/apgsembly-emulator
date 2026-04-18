@@ -1,11 +1,3723 @@
-var p=(e,t)=>{let r=document.querySelector(e);if(r==null)throw Error(`can't found a element for "${e}"`);if(r instanceof t)return r;throw Error(`"${e}" is not a ${t.name}`)};function f(e,t=void 0){let r=document.createElement(e);if(typeof t=="string")r.textContent=t;else if(t!=null&&typeof t=="object"&&(t.text&&(r.textContent=t.text),t.classes&&r.classList.add(...t.classes),t.fn&&(t.fn(r),t.fn=void 0),t.children&&r.append(...t.children),t.style))for(let[n,s]of Object.entries(t.style))n in r.style?r.style[n]=s:r.style.setProperty(n,s);return r}var Wt=class{#e=0;#n=-1;#t=!1;#i=0;#s=0;constructor(t,{frequency:r,signal:n}){this.#i=r;let s=requestAnimationFrame,i=o=>{if(this.#t&&this.#n!==-1){let a=o-this.#n,u=this.#e,l=u+a/1e3*this.#i,d=Math.floor(l)-Math.floor(u);this.#e=l,t(d)}this.#n=o,this.#s=s(i)};this.#s=s(i),n?.addEventListener("abort",()=>{this.abort()})}abort(){this.#s!==0&&cancelAnimationFrame(this.#s)}get frequency(){return this.#i}set frequency(t){this.#i=t}get disabled(){return!this.#t}set disabled(t){this.#t=!t}reset(){this.#e=0}};var Ne=e=>e instanceof Error?e.message:"Unknown error is occurred.";function*hr(e,t){if(!Number.isInteger(t))throw RangeError("size is not an integer");let r=[];for(let n of e)r.push(n),t<=r.length&&(yield r,r=[]);r.length!==0&&(yield r)}var gr=()=>{let e=document.createElement("span");return e.classList.add("spinner-border","spinner-border-sm"),e.setAttribute("role","status"),e.setAttribute("aria-hidden","true"),e};var g=class{pretty(){return""}doesReturnValue(){return!1}isSameComponent(t){return!0}};var Zt="INC",_e="TDEC",Yt="READ",jt="SET",Te="B2DX",Be="B2DY",Ie="B2D",In="DEC",xr="SQX",yr="SQY",br="SQ",Sr=e=>{switch(e){case Zt:return 0;case _e:return 1;case Yt:return 2;case jt:return 3}},Dn=e=>{switch(e){case 0:return Zt;case 1:return _e;case 2:return Yt;case 3:return jt}},Er=e=>{switch(e){case Te:return 4;case Be:return 5;case Ie:return 6}},Cn=e=>{switch(e){case 4:return Te;case 5:return Be;case 6:return Ie}},Z=class e extends g{constructor(t,r){super(),this.op=t,this.axis=r}pretty(){return`${Dn(this.op)} ${Cn(this.axis)}`}static parse(t){let r=t.trim().split(" ");if(r.length!==2)return;let[n,s]=r;if(!(n===void 0||s===void 0)){if(n===Zt||n===_e){if(s===Te||s===Be)return new e(Sr(n),Er(s))}else if((n===Yt||n===jt)&&s===Ie)return new e(Sr(n),Er(s));switch(n){case Zt:switch(s){case xr:return new e(0,4);case yr:return new e(0,5);default:return}case In:switch(s){case xr:return new e(1,4);case yr:return new e(1,5);default:return}case Yt:switch(s){case br:return new e(2,6);default:return}case jt:switch(s){case br:return new e(3,6);default:return}}}}doesReturnValue(){switch(this.op){case 0:return!1;case 1:return!0;case 2:return!0;case 3:return!1}}isSameComponent(t){if(t instanceof e){let r=this.axis,n=t.axis;return r===4&&n===5?!1:!(r===5&&n===4)}return!1}};var c=()=>{throw Error("internal error")};var De=(e,t)=>Array(e).fill(0).map((r,n)=>t(n)),qt=class{constructor(){this.x=0,this.y=0,this.maxX=0,this.maxY=0,this.array=De(1,()=>De(1,()=>0))}getArray(){return this.array}getMaxX(){return this.maxX}getMaxY(){return this.maxY}action(t){switch(t.op){case 0:{switch(t.axis){case 4:return this.incB2DX();case 5:return this.incB2DY();case 6:c()}break}case 1:{switch(t.axis){case 4:return this.tdecB2DX();case 5:return this.tdecB2DY();case 6:c()}break}case 2:{switch(t.axis){case 6:return this.read();default:c()}break}case 3:{switch(t.axis){case 6:return this.set();default:c()}break}default:c()}}incB2DX(){if(this.x++,this.maxX<this.x){for(let t of this.array)t.push(0);this.maxX=this.x}}incB2DY(){this.y++,this.maxY<this.y&&(this.array.push(De(this.maxX+1,()=>0)),this.maxY=this.y)}tdecB2DX(){return this.x===0?0:(this.x--,1)}tdecB2DY(){return this.y===0?0:(this.y--,1)}read(){let t=this.array[this.y];t===void 0&&c();let r=t[this.x];return r===void 0&&c(),t[this.x]=0,r}set(){let t=this.array[this.y]??c();if(t[this.x]===1)throw Error(`SET B2D: Tried to set when it was already 1. x = ${this.x}, y = ${this.y}`);t[this.x]=1}};var $r=(e,t,r,n)=>{let s=e.canvas.width,i=e.canvas.height;s!==i&&(e.canvas.height=s),e.reset?e.reset():(e.clearRect(0,0,s,s),e.resetTransform(),e.beginPath());let o=t.getMaxX(),a=t.getMaxY(),u=Math.max(o,a)+1,l=s/u;n||(e.scale(1,-1),e.translate(0,-s));let d=t.getArray();e.fillStyle="#212529";for(let m=0;m<=a;m++){let h=d[m]??c(),S=m*l;for(let w=0;w<=o;w++)h[w]===1&&e.rect(w*l,S,l,l)}e.fill(),r||(e.strokeStyle="#03A9F4",e.lineWidth=4,e.strokeRect(t.x*l,t.y*l,l,l))};var Ce="INC",ve="TDEC",wr="U",vn="R",An=e=>{switch(e){case 0:return Ce;case 1:return ve}},Rn=e=>{switch(e){case Ce:return 0;case ve:return 1}},E=class e extends g{constructor(t,r){super(),this.op=t,this.regNumber=r,this.registerCache=void 0}pretty(){return`${An(this.op)} ${wr}${this.regNumber}`}static parse(t){let r=t.trim().split(" ");if(r.length!==2)return;let[n,s]=r;if(!(n===void 0||s===void 0)&&(n===Ce||n===ve)&&(s.startsWith(wr)||s.startsWith(vn))){let i=s.slice(1);if(/^[a-zA-Z0-9]+$/u.test(i))return new e(Rn(n),i)}}doesReturnValue(){switch(this.op){case 0:return!1;case 1:return!0}}isSameComponent(t){return t instanceof e?this.regNumber===t.regNumber:!1}};var Xt=class{constructor(){this.value=0}action(t){switch(t.op){case 1:return this.value===0?0:(this.value--,1);case 0:this.value++}}actionN(t,r){switch(t.op){case 1:{this.value-=r;break}case 0:{this.value+=r;break}}}getValue(){return this.value}setValue(t){this.value=t}inc(){this.action(new E(0,"0"))}tdec(){let t=this.action(new E(1,"0"));return t===void 0&&c(),t}setByRegistersInit(t,r){(typeof r!="number"||r<0||!Number.isInteger(r))&&lt(t,r),this.setValue(r)}},lt=(e,t)=>{let r=`"${e}": ${JSON.stringify(t)}`;throw Error(`Invalid #REGISTERS ${r}`)};var Ln=e=>{if(window.innerWidth<768)return e===9?e:8;let r=12;return r+1<=e&&e<=r+2?e:r},Mn=e=>f("th",{text:`U${e}`,classes:["text-end"]}),kn=(e,t)=>f("td",{text:t.getValue().toString(),fn:r=>{r.dataset.test=`U${e}`},classes:["text-end"]}),Un=e=>{let t=[],r=[],n=Ln(e.size);for(let i of hr(e,n)){let o=f("tr"),a=f("tr");for(let[u,l]of i){o.append(Mn(u));let d=kn(u,l);t.push(d),a.append(d)}r.push({header:o,data:a})}let s=f("table");for(let i of r)s.append(i.header,i.data);return s.classList.add("table"),s.style.tableLayout="fixed",s.style.marginBottom="0",{table:s,cells:t}},Kt=class{constructor(t){this.root=t,this.cells=[]}initialize(t){let{table:r,cells:n}=Un(t);this.root.replaceChildren(r),this.cells=n}clear(){this.cells=[],this.root.innerHTML=""}render(t){let r=0,n=this.cells;for(let s of t.values()){let i=n[r]??c();i.textContent=s.getValue().toString(),r++}}};var Ae="INC",Re="TDEC",Le="READ",Me="SET",Nr="B",On=e=>{switch(e){case 0:return Ae;case 1:return Re;case 2:return Le;case 3:return Me}},Hn=e=>{switch(e){case Ae:return 0;case Re:return 1;case Le:return 2;case Me:return 3}},b=class e extends g{constructor(t,r){super(),this.op=t,this.regNumber=r,this.registerCache=void 0}pretty(){return`${On(this.op)} ${Nr}${this.regNumber}`}static parse(t){let r=t.trim().split(" ");if(r.length!==2)return;let[n,s]=r;if(!(n===void 0||s===void 0)&&(n===Ae||n===Re||n===Le||n===Me)&&s.startsWith(Nr)){let i=s.slice(1);if(/^[a-zA-Z0-9]+$/u.test(i))return new e(Hn(n),i)}}doesReturnValue(){switch(this.op){case 0:return!1;case 1:return!0;case 2:return!0;case 3:return!1}}isSameComponent(t){return t instanceof e?this.regNumber===t.regNumber:!1}};var _r=e=>[...e].map(t=>{if(t==="0")return 0;if(t==="1")return 1;throw Error(`Invalid #REGISTERS: "${e}"`)}),Pn=typeof BigInt<"u",Jt=e=>{let t="";for(let r=e.length-1;r>=0;r--)t+=e[r]===0?"0":"1";return t},ke=e=>{let t="",r=e.length;for(let n=0;n<r;n++)t+=e[n]===0?"0":"1";return t},Qt=class{constructor(){this.pointer=0,this.bits=[0]}action(t){switch(t.op){case 1:return this.pointer===0?0:(this.pointer--,1);case 0:{let r=this.pointer+1;this.pointer=r;let n=this.bits;r===n.length&&n.push(0);break}case 2:{let r=this.pointer,n=this.bits;if(r<n.length){let s=n[r]??c();return n[r]=0,s}else return 0}case 3:{let r=this.bits,n=this.pointer;if(n>=r.length&&this.extend(),r[n]===1)throw Error(`The bit of the binary register B${t.regNumber} is already 1`);r[n]=1;break}default:{let r=t.op}}}actionN(t,r){switch(t.op){case 0:{this.pointer+=r,this.extend();break}case 1:{this.pointer-=r;break}default:throw Error("todo")}}getBits(){return this.bits}setBits(t){this.bits=t}inc(){let t=this.action(new b(0,"0"));return t!==void 0&&c(),t}tdec(){let t=this.action(new b(1,"0"));return t===void 0&&c(),t}read(){let t=this.action(new b(2,"0"));return t===void 0&&c(),t}set(){let t=this.action(new b(3,"0"));return t!==void 0&&c(),t}extend(){let t=this.pointer,r=this.bits,n=r.length;if(t>=n)if(t===n)r.push(0);else{let s=Array(t-n+1).fill(0).map(()=>0);this.bits=this.bits.concat(s)}}toNumberString(t=10){return(Pn?BigInt:Number)("0b"+Jt(this.bits)).toString(t)}toObject(){this.extend();let t=this.bits,r=this.pointer;return{prefix:t.slice(0,r),head:t[r]??c(),suffix:t.slice(r+1)}}setByRegistersInit(t,r){if(typeof r=="number")this.setBits(_r(r.toString(2)).reverse()),this.extend();else if(!Array.isArray(r)||r.length!==2)lt(t,r);else{let[n,s]=r;if(typeof n!="number"||typeof s!="string"||n<0||!Number.isInteger(n))lt(t,r);else{let i=_r(s);this.pointer=n,this.setBits(i),this.extend()}}}};var zn=()=>{let e=f("span",{classes:["decimal"]}),t=f("span",{classes:["hex"]}),r=f("span",{classes:["max_pointer"]}),n=f("span",{classes:["pointer"]});return{metaData:f("code",{classes:["binary_info","word-break-all"],children:[e,t,r,n]}),$decimal:e,$hex:t,$maxPointer:r,$pointer:n}},Fn=()=>{let e=f("span",{classes:["prefix"]}),t=f("span",{classes:["binary-head"]}),r=f("span",{classes:["suffix"]});return{binaryBits:f("code",{classes:["word-break-all"],children:[e,t,r]}),$prefix:e,$head:t,$suffix:r}},te=class{constructor(t){this.root=t,this.cells=[]}initialize(t){this.clear();let r=[],n=f("table");for(let s of t.keys()){let i=f("td");i.dataset.test=`B${s}`;let{metaData:o,$decimal:a,$hex:u,$maxPointer:l,$pointer:d}=zn();i.append(o,f("br"));let{binaryBits:m,$prefix:h,$head:S,$suffix:w}=Fn();i.append(m);let C=f("tr",{children:[f("th",`B${s}`),i]});n.append(C),r.push({$decimal:a,$hex:u,$maxPointer:l,$pointer:d,$prefix:h,$head:S,$suffix:w})}this.root.append(n),this.cells=r}clear(){this.cells=[],this.root.innerHTML=""}render(t,r,n,s,i){let o=0,a=this.cells;for(let u of t.values()){let{$prefix:l,$head:d,$suffix:m,$decimal:h,$hex:S,$maxPointer:w,$pointer:C}=a[o]??c();if(r)l.innerHTML="",d.innerHTML="",m.innerHTML="";else{let T=u.toObject();l.textContent=n?Jt(T.suffix):ke(T.prefix),d.textContent=T.head.toString(),m.textContent=n?Jt(T.prefix):ke(T.suffix)}s?h.textContent="value = "+u.toNumberString(10)+", ":h.innerHTML="",i?S.textContent="hex = "+u.toNumberString(16)+", ":S.innerHTML="",w.textContent="max_pointer = "+(u.getBits().length-1)+", ",C.textContent="pointer = "+u.pointer.toString(),o++}}};var v=e=>e.toLocaleString();var Tr="stats_current_state",Gn=(e,{z:t,nz:r})=>{let n=f("td",{fn:l=>{l.colSpan=2},children:[f("code",e)]}),s="num",i=f("td",{text:v(t+r),classes:[s]}),o=f("td",{text:v(t),classes:[s]}),a=f("td",{text:v(r),classes:[s]});return{$tr:f("tr",{children:[n,i,o,a]}),$sum:i,$z:o,$nz:a}},ee=class{#e;constructor(t,r){this.root=t,this.#e=r,this.cells=[]}initialize(t,r){this.#e.textContent=v(r.length),this.cells=[],this.root.innerHTML="";for(let[n,s]of t.entries()){let i=r[n]??"",{$tr:o,$sum:a,$z:u,$nz:l}=Gn(i,s);this.root.append(o),this.cells.push({$sum:a,$z:u,$nz:l,$tr:o})}}clear(){this.#e.innerHTML="",this.cells=[],this.root.innerHTML=""}render(t,r){let n=t,s=this.cells,i=s.length;for(let o=0;o<i;o++){let a=s[o]??c();r===o?a.$tr.classList.add(Tr):a.$tr.classList.remove(Tr);let{z:u,nz:l}=n[o]??c();a.$sum.textContent=v(u+l),a.$z.textContent=v(u),a.$nz.textContent=v(l)}}};function Br(e,t){if(e.innerHTML="",t===void 0)return;let r=f("option","None");r.value="-1",r.selected=!0,e.append(r);for(let[n,s]of t.getStateMap()){let i=f("option",n);i.value=s.toString(),e.append(i)}}function Ir(e){switch(e.value){case"*":return-1;case"Z":return 0;default:return 1}}var Vn="Start",Wn="Stop",Dr="btn-primary",Cr="btn-danger",vr=e=>`<svg width="16" height="16" viewBox="0 0 16 16">${e}</svg>`,Zn=()=>{let e=f("div");return e.innerHTML=vr('<path stroke="currentColor" stroke-width="1" d="M10.804 8 5 4.633v6.734L10.804 8zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692z"/>')+Vn,e},Yn=Zn(),jn=()=>{let e=f("div");return e.innerHTML=vr('<path stroke="currentColor" stroke-width="1" d="M3.5 5A1.5 1.5 0 0 1 5 3.5h6A1.5 1.5 0 0 1 12.5 5v6a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 11V5zM5 4.5a.5.5 0 0 0-.5.5v6a.5.5 0 0 0 .5.5h6a.5.5 0 0 0 .5-.5V5a.5.5 0 0 0-.5-.5H5z"/>')+Wn,e},qn=jn();function wt(e){e.disabled=!1,e.replaceChildren(Yn),e.classList.add(Dr),e.classList.remove(Cr)}function Ar(e){e.disabled=!1,e.replaceChildren(qn),e.classList.remove(Dr),e.classList.add(Cr)}function Rr(e,t,r){if(e.replaceChildren(),t==="RuntimeError"||t==="ParseError"){let n=r.split(`
-`);for(let s of n)e.append(f("span","- "+s),f("br"));e.classList.remove("d-none")}else e.classList.add("d-none")}var Nt=40,re=window.innerWidth;re>=1200?Nt=120:re>=992?Nt=100:re>=768?Nt=70:re>=576&&(Nt=50);var Lr=(e,t)=>{if(t=t??"",e.value===t)return;e.value=t;let r=t.length,s=Math.min(6,Math.max(1,Math.ceil(r/Nt)));e.rows=s};var Xn=()=>{let e=[];for(let r=0;r<=6;r++)for(let n of[1,...r===0?[]:[1.5],2,3,5,8])e.push(n*10**r);return e.push(10*10**6,15*10**6,20*10**6),e.map(r=>Math.floor(r))};function Mr(e,t){let r=Xn();e.min="0",e.max=(r.length-1).toString();function n(){let s=parseInt(e.value,10),i=r[s]??c();e.ariaValueText=`(${i.toString()}Hz)`,t.setFrequency(i)}e.addEventListener("input",()=>{n()}),setTimeout(()=>{n()},1)}var kr=(e,t)=>{e.setCustomValidity(t),e.reportValidity(),e.classList.add("is-invalid")},Ur=e=>{e.setCustomValidity(""),e.reportValidity(),e.classList.remove("is-invalid")};function Or(e,t){e.addEventListener("input",()=>{let r=e.files?.item(0);r?.text().then(t)})}var ne=window.requestIdleCallback??(e=>{setTimeout(()=>{e({didTimeout:!1,timeRemaining(){return 0}})},0)});function dt(e,t){try{localStorage.setItem(e,t)}catch{}}function se(e){try{localStorage.removeItem(e)}catch{}}function mt(e){try{return localStorage.getItem(e)}catch{return null}}function ht(e,t){try{let r=mt(e);r!=null&&(se(e),dt(t,r))}catch{}}var Kn=new Set(["textarea","input","summary","details","button","audio","video","select","option","a","area","modal"]),Hr=()=>{let e=document.activeElement?.tagName.toLowerCase()??"";return Kn.has(e)};var x=HTMLElement,M=HTMLInputElement,G=HTMLButtonElement,Pr=p("#error",x),k=p("#input",HTMLTextAreaElement),zr=p("#output_detail",x),Fr=p("#output",HTMLTextAreaElement),Gr=p("#steps",x),A=p("#toggle",G),V=p("#reset",G),R=p("#step",G),ie=p("#step-text",x),Vr=p("#config_button",G),gt=p("#stats_button",G),Wr=p("#current_state",x),Zr=p("#previous_output",x),Yr=p("#frequency_input",M),jr=p("#frequency_output",x),qr=p("#command",x),oe=p("#canvas",HTMLCanvasElement),ae=oe.getContext("2d")??(()=>{throw Error("context is null")})(),_t={x:p("#b2dx",x),y:p("#b2dy",x)},xt=p("#b2d_detail",HTMLDetailsElement),Xr=p("#unary_register",x),Tt=p("#unary_register_detail",HTMLDetailsElement),Kr=p("#binary_register",x),Bt=p("#binary_register_detail",HTMLDetailsElement),Qr=p("#add_sub_mul_detail",x),Jr=p("#add_sub_mul",x),tn=p("#import_file",M),ce=p("#examples",G),en=document.querySelectorAll(".js_example"),Ue=p("#config_modal_content",x),It=p("#step_input",M),N={$hideBits:p("#hide_bits",M),$reverseBits:p("#reverse_bits",M),$showBinaryValueInDecimal:p("#show_binary_value_in_decimal",M),$showBinaryValueInHex:p("#show_binary_value_in_hex",M)},Oe=p("#breakpoint_select",HTMLSelectElement),rn=p("#breakpoint_input_select",HTMLSelectElement),Dt=p("#dark_mode",M),He=p("#dark_mode_label",x),ue=p("#b2d_hide_pointer",M),Ct=p("#b2d_flip_upside_down",M),le=p("#stats_modal",x),nn=p("#stats_body",x),sn=p("#stats_number_of_states",x),on=p("#view-state-diagram",G),an=p("#add-library-file",G),cn=p("#library-list",x),Pe=p('#library_modal [data-bs-dismiss="modal"]',x),pe=p("#add-binary-library-file",G);var ze="A1",Fe="B0",Ge="B1",un="ADD",Qn=e=>{switch(e){case 0:return ze;case 1:return Fe;case 2:return Ge}},Jn=e=>{switch(e){case ze:return 0;case Fe:return 1;case Ge:return 2}},I=class e extends g{constructor(t){super(),this.op=t}pretty(){return`${un} ${Qn(this.op)}`}static parse(t){let r=t.trim().split(" ");if(r.length!==2)return;let[n,s]=r;if(n===un&&(s===ze||s===Fe||s===Ge))return new e(Jn(s))}doesReturnValue(){switch(this.op){case 0:return!1;case 1:return!0;case 2:return!0}}isSameComponent(t){return t instanceof e}};var ln="HALT_OUT",pn="HALT",$=class e extends g{constructor(t=!0){super(),this.output=t}pretty(){return this.output?ln:pn}static parse(t){let r=t.trim().split(" ");if(r.length!==1)return;let[n]=r;if(n===ln)return new e(!0);if(n===pn)return new e(!1)}doesReturnValue(){return!1}isSameComponent(t){return t instanceof e}};var Ve="0",We="1",fn="MUL",ts=e=>{switch(e){case Ve:return 0;case We:return 1}},es=e=>{switch(e){case 0:return Ve;case 1:return We}},Y=class e extends g{constructor(t){super(),this.op=t}pretty(){return`${fn} ${es(this.op)}`}static parse(t){let r=t.trim().split(" ");if(r.length!==2)return;let[n,s]=r;if(n===fn&&(s===Ve||s===We))return new e(ts(s))}doesReturnValue(){return!0}isSameComponent(t){return t instanceof e}};var dn="NOP",nt=class e extends g{constructor(){super()}pretty(){return dn}static parse(t){let r=t.trim().split(" ");if(r.length!==1)return;let[n]=r;if(n===dn)return new e}doesReturnValue(){return!0}isSameComponent(t){return t instanceof e}};var mn="OUTPUT",j=class e extends g{constructor(t){super(),this.digit=t}pretty(){return`${mn} ${this.digit}`}static parse(t){let r=t.trim().split(" ");if(r.length!==2)return;let[n,s]=r;if(n===mn&&s!==void 0)return new e(s)}doesReturnValue(){return!1}isSameComponent(t){return t instanceof e}};var Ze="A1",Ye="B0",je="B1",hn="SUB",rs=e=>{switch(e){case 0:return Ze;case 1:return Ye;case 2:return je}},ns=e=>{switch(e){case Ze:return 0;case Ye:return 1;case je:return 2}},q=class e extends g{constructor(t){super(),this.op=t}pretty(){return`${hn} ${rs(this.op)}`}static parse(t){let r=t.trim().split(" ");if(r.length!==2)return;let[n,s]=r;if(n===hn&&(s===Ze||s===Ye||s===je))return new e(ns(s))}doesReturnValue(){switch(this.op){case 0:return!1;case 1:return!0;case 2:return!0}}isSameComponent(t){return t instanceof e}};var qe="INC",Xe="DEC",Ke="READ",Qe="SET",Je="RESET",ss=e=>{switch(e){case 0:return qe;case 1:return Xe;case 2:return Ke;case 3:return Qe;case 4:return Je}},is=e=>{switch(e){case qe:return 0;case Xe:return 1;case Ke:return 2;case Qe:return 3;case Je:return 4}},X=class e extends g{constructor(t,r){super(),this.op=t,this.regNumber=r}pretty(){return`${ss(this.op)} T${this.regNumber}`}static parse(t){let r=t.trim().split(" ");if(r.length!==2)return;let[n,s]=r;if(!(n===void 0||s===void 0)&&(n===qe||n===Xe||n===Ke||n===Qe||n===Je)&&s.startsWith("T")){let i=s.slice(1);if(/^[0-9]+$/u.test(i))return new e(is(n),parseInt(i,10))}}doesReturnValue(){switch(this.op){case 0:return!0;case 1:return!0;case 2:return!0;case 3:return!1;case 4:return!1}}isSameComponent(t){return t instanceof e?this.regNumber===t.regNumber:!1}};var me=class{constructor(){this.value=0}action(t){switch(t.op){case 1:{let r=this.value,n=r%2;return this.value=r>>>1,n}case 2:{let r=this.value,n=1-r%2;return this.value=r===1||r===2?1:0,n}case 0:{this.value=(this.value+1)%4;return}default:c()}}getValue(){return this.value}a1(){this.action(new I(0))}b0(){let t=this.action(new I(1));return t===void 0&&c(),t}b1(){let t=this.action(new I(2));return t===void 0&&c(),t}toString(){return this.value.toString(2).padStart(2,"0")}toStringDetail(){return this.toString()}};var he=class{constructor(){this.value=0}action(t){switch(t.op){case 0:return this.mul0();case 1:return this.mul1();default:throw Error("MUL: action")}}getValue(){return this.value}mul0(){let t=this.value,r=t%2;return this.value=t>>1,r}mul1(){let t=this.value,r=t%2;return t<=21?this.value=(t>>1)+5:this.value=t-22>>1,r}toString(){return this.value.toString(2).padStart(5,"0")}};var ge=class{constructor(){}action(){return 0}};var xe=class{#e="";constructor(){}action(t){this.output(t.digit)}getString(){return this.#e}output(t){this.#e+=t}};var ye=class{constructor(){this.value=0}action(t){switch(t.op){case 1:return this.b0();case 0:return this.a1();case 2:return this.b1();default:c()}}getValue(){return this.value}a1(){this.value=(this.value+1)%4}b0(){let t=this.value,r=t%2;return this.value=t>=2?3:0,r}b1(){let t=this.value,r=1-t%2;return this.value=t===0||t===3?3:0,r}toString(){return this.value.toString(2).padStart(2,"0")}toStringDetail(){return this.toString()}};var be=class{constructor(){this.pointer=0,this.bits=[0]}action(t){switch(t.op){case 0:return this.inc();case 2:return this.read();case 1:return this.dec();case 3:return this.set();case 4:return this.reset();default:c()}}getPointer(){return this.pointer}getBits(){return this.bits}inc(){let t=this.bits;return this.pointer===t.length-1?(t.push(0),this.pointer++,0):(this.pointer++,1)}dec(){return this.pointer===0?0:(this.pointer--,1)}read(){let t=this.pointer,r=this.bits,n=r[t];if(n===0)return r[t]=-1,0;if(n===1)return r[t]=-1,1;if(n===-1)throw Error("Error: reading empty space of T register");c()}set(){let t=this.pointer;if(this.bits[t]===-1)this.bits[t]=1;else throw Error("Error: SET to nonempty bit")}reset(){let t=this.pointer;if(this.bits[t]===-1)this.bits[t]=0;else throw Error("Error: RESET to nonempty bit")}};var Ht=(e,t)=>{throw Error(`Register ${e}${t} is not found.`)},jo=Number.parseInt,qo=Number.isNaN,Se=class{constructor({unary:t,binary:r,legacyT:n}){this.uRegMap=new Map(t.map(s=>[s,new Xt])),this.bRegMap=new Map(r.map(s=>[s,new Qt])),this.legacyTRegMap=new Map(n.map(s=>[s,new be])),this.add=new me,this.sub=new ye,this.mul=new he,this.b2d=new qt,this.output=new xe,this.nop=new ge}setByRegistersInit(t){for(let[r,n]of Object.entries(t))this.#e(r,n)}setCache(t){t instanceof b?t.registerCache=this.getBReg(t.regNumber):t instanceof E&&(t.registerCache=this.getUReg(t.regNumber))}#e(t,r){if(t.startsWith("U")){let n=t.slice(1),s=this.getUReg(n);if(s===void 0)throw Error(`Invalid #REGISTERS: U${n} isn't used in the program`);s.setByRegistersInit(t,r)}else if(t.startsWith("B")){let n=t.slice(1),s=this.getBReg(n);if(s===void 0)throw Error(`Invalid #REGISTERS: B${n} isn't used in the program`);s.setByRegistersInit(t,r)}else lt(t,r)}execAction(t){if(t instanceof b)return(t.registerCache??this.bRegMap.get(t.regNumber)??Ht("B",t.regNumber)).action(t);if(t instanceof E)return(t.registerCache??this.uRegMap.get(t.regNumber)??Ht("U",t.regNumber)).action(t);if(t instanceof I)return this.add.action(t);if(t instanceof nt)return this.nop.action();if(t instanceof q)return this.sub.action(t);if(t instanceof Y)return this.mul.action(t);if(t instanceof Z)return this.b2d.action(t);if(t instanceof j)return this.output.action(t);if(t instanceof $)return-1;if(t instanceof X)return(this.legacyTRegMap.get(t.regNumber)??Ht("T",t.regNumber.toString())).action(t);throw Error(`execAction: unknown action ${t.pretty()}`)}execActionN(t,r){if(t instanceof E)return(t.registerCache??this.uRegMap.get(t.regNumber)??Ht("U",t.regNumber)).actionN(t,r);if(t instanceof b)return(t.registerCache??this.bRegMap.get(t.regNumber)??Ht("B",t.regNumber)).actionN(t,r);if(t instanceof $)return-1;throw Error(`execActionN: ${t.pretty()}`)}getUReg(t){return this.uRegMap.get(t)}getBReg(t){return this.bRegMap.get(t)}addSubMulToUIString(){return`
+var l = () => {
+        throw Error("internal error");
+};
+var ls = () => {
+        let e = [];
+        for (let r = 0; r <= 6; r++) {
+                for (let n of [1, ...r === 0 ? [] : [1.5], 2, 3, 5, 8]) {
+                        e.push(n * 10 ** r);
+                }
+        }
+        return e.push(10 * 10 ** 6, 15 * 10 ** 6, 20 * 10 ** 6),
+                e.map((r) => Math.floor(r));
+};
+function kr(e, t) {
+        let r = ls();
+        e.min = "0", e.max = (r.length - 1).toString();
+        function n() {
+                let s = parseInt(e.value, 10), i = r[s] ?? l();
+                e.ariaValueText = `(${i.toString()}Hz)`, t.setFrequency(i);
+        }
+        e.addEventListener("input", () => {
+                n();
+        }),
+                setTimeout(() => {
+                        n();
+                }, 1);
+}
+var Ur = (e, t) => {
+                e.setCustomValidity(t),
+                        e.reportValidity(),
+                        e.classList.add("is-invalid");
+        },
+        zr = (e) => {
+                e.setCustomValidity(""),
+                        e.reportValidity(),
+                        e.classList.remove("is-invalid");
+        };
+function Or(e, t) {
+        e.addEventListener("input", () => {
+                let r = e.files?.item(0);
+                r?.text().then(t);
+        });
+}
+var oe = window.requestIdleCallback ?? ((e) => {
+        setTimeout(() => {
+                e({
+                        didTimeout: !1,
+                        timeRemaining() {
+                                return 0;
+                        },
+                });
+        }, 0);
+});
+var pt = (e, t) => {
+                try {
+                        localStorage.setItem(e, t);
+                } catch {}
+        },
+        At = (e) => {
+                try {
+                        localStorage.removeItem(e);
+                } catch {}
+        },
+        dt = (e) => {
+                try {
+                        return localStorage.getItem(e);
+                } catch {
+                        return null;
+                }
+        };
+function Nt(e, t) {
+        try {
+                let r = dt(e);
+                r != null && (At(e), pt(t, r));
+        } catch {}
+}
+var ps = new Set([
+                "textarea",
+                "input",
+                "summary",
+                "details",
+                "button",
+                "audio",
+                "video",
+                "select",
+                "option",
+                "a",
+                "area",
+                "modal",
+        ]),
+        Hr = () => {
+                let e = document.activeElement?.tagName.toLowerCase() ?? "";
+                return ps.has(e);
+        };
+var p = (e, t) => {
+        let r = document.querySelector(e);
+        if (r == null) throw Error(`can't found a element for "${e}"`);
+        if (r instanceof t) return r;
+        throw Error(`"${e}" is not a ${t.name}`);
+};
+var S = HTMLElement,
+        D = HTMLInputElement,
+        G = HTMLButtonElement,
+        Pr = p("#error", S),
+        L = p("#input", HTMLTextAreaElement),
+        Fr = p("#output_detail", S),
+        Gr = p("#output", HTMLTextAreaElement),
+        Vr = p("#steps", S),
+        M = p("#toggle", G),
+        Z = p("#reset", G),
+        k = p("#step", G),
+        ae = p("#step-text", S),
+        Yr = p("#config_button", G),
+        wt = p("#stats_button", G),
+        Zr = p("#current_state", S),
+        Wr = p("#previous_output", S),
+        Xr = p("#frequency_input", D),
+        jr = p("#frequency_output", S),
+        qr = p("#command", S),
+        ds = p("#canvas", HTMLCanvasElement),
+        ke = ds.getContext("2d") ?? (() => {
+                throw Error("context is null");
+        })(),
+        Dt = HTMLDetailsElement,
+        Kr = { x: p("#b2dx", S), y: p("#b2dy", S) },
+        _t = p("#b2d_detail", Dt),
+        fs = p("#printer_canvas", HTMLCanvasElement),
+        Ue = fs.getContext("2d") ?? (() => {
+                throw Error("context is null");
+        })(),
+        Qr = { x: p("#printer_x", S), y: p("#printer_y", S) },
+        Bt = p("#printer_detail", Dt),
+        Tt = p("#history_detail", Dt),
+        Jr = p("#history_body", S),
+        tn = p("#unary_register", S),
+        Rt = p("#unary_register_detail", Dt),
+        en = p("#binary_register", S),
+        vt = p("#binary_register_detail", Dt),
+        rn = p("#add_sub_mul_detail", S),
+        nn = p("#add_sub_mul", S),
+        sn = p("#import_file", D),
+        Lt = p("#examples", G),
+        on = p("#examples_dropdown", S),
+        ze = p("#config_modal_content", S),
+        Mt = p("#step_input", D),
+        I = {
+                $hideBits: p("#hide_bits", D),
+                $reverseBits: p("#reverse_bits", D),
+                $showBinaryValueInDecimal: p(
+                        "#show_binary_value_in_decimal",
+                        D,
+                ),
+                $showBinaryValueInHex: p("#show_binary_value_in_hex", D),
+        },
+        Oe = p("#show-breakpoint-config", D),
+        kt = p(".js-breakpoint-config", S),
+        K = p("#breakpoint_select", HTMLSelectElement),
+        Ut = p("#breakpoint_input_select", HTMLSelectElement),
+        an = p("#clear-breakpoint", G),
+        zt = p("#dark_mode", D),
+        He = p("#dark_mode_label", S),
+        ce = p("#b2d_hide_pointer", D),
+        Ot = p("#b2d_flip_upside_down", D),
+        cn = p("#history_capacity", HTMLSelectElement),
+        Pe = p("#enable_binary_optimization", D),
+        ue = p("#stats_modal", S),
+        un = p("#stats_modal_message", S),
+        ln = p("#stats_body", S),
+        pn = p("#stats_number_of_states", S),
+        dn = p("#view-state-diagram", G),
+        fn = p("#add-library-file", G),
+        mn = p("#library-list", S),
+        Fe = p('#library_modal [data-bs-dismiss="modal"]', S),
+        le = p("#add-binary-library-file", G);
+var N = class {
+        pretty() {
+                return "";
+        }
+        doesReturnValue() {
+                return !1;
+        }
+        isSameComponent(t) {
+                return !0;
+        }
+};
+var Ge = "A1",
+        Ve = "B0",
+        Ye = "B1",
+        hn = "ADD",
+        ms = (e) => {
+                switch (e) {
+                        case 0:
+                                return Ge;
+                        case 1:
+                                return Ve;
+                        case 2:
+                                return Ye;
+                }
+        },
+        hs = (e) => {
+                switch (e) {
+                        case Ge:
+                                return 0;
+                        case Ve:
+                                return 1;
+                        case Ye:
+                                return 2;
+                }
+        },
+        B = class e extends N {
+                constructor(t) {
+                        super(), this.op = t;
+                }
+                pretty() {
+                        return `${hn} ${ms(this.op)}`;
+                }
+                static parse(t) {
+                        let r = t.trim().split(" ");
+                        if (r.length !== 2) return;
+                        let [n, s] = r;
+                        if (n === hn && (s === Ge || s === Ve || s === Ye)) {
+                                return new e(hs(s));
+                        }
+                }
+                doesReturnValue() {
+                        switch (this.op) {
+                                case 0:
+                                        return !1;
+                                case 1:
+                                        return !0;
+                                case 2:
+                                        return !0;
+                        }
+                }
+                isSameComponent(t) {
+                        return t instanceof e;
+                }
+        };
+var Ht = "INC",
+        pe = "TDEC",
+        de = "READ",
+        fe = "SET",
+        We = "B2DX",
+        Xe = "B2DY",
+        je = "B2D",
+        ys = "DEC",
+        gn = "SQX",
+        yn = "SQY",
+        xn = "SQ",
+        Ze = (e) => {
+                switch (e) {
+                        case Ht:
+                                return 0;
+                        case pe:
+                                return 1;
+                        case de:
+                                return 2;
+                        case fe:
+                                return 3;
+                }
+        },
+        bn = (e) => {
+                switch (e) {
+                        case 0:
+                                return Ht;
+                        case 1:
+                                return pe;
+                        case 2:
+                                return de;
+                        case 3:
+                                return fe;
+                }
+        },
+        Sn = (e) => {
+                switch (e) {
+                        case We:
+                                return 4;
+                        case Xe:
+                                return 5;
+                        case je:
+                                return 6;
+                }
+        },
+        xs = (e) => {
+                switch (e) {
+                        case 4:
+                                return We;
+                        case 5:
+                                return Xe;
+                        case 6:
+                                return je;
+                }
+        },
+        rt = class e extends N {
+                constructor(t, r, n = 0) {
+                        super(), this.op = t, this.axis = r, this.kind = n;
+                }
+                pretty() {
+                        let t = this.op;
+                        if (this.kind === 1) {
+                                if (t === 2) {
+                                        throw new Error(
+                                                "PRINTER component cannot READ",
+                                        );
+                                }
+                                return t === 3 && this.axis === 6
+                                        ? "PRINT"
+                                        : `${bn(t)} PRN${
+                                                this.axis === 4 ? "X" : "Y"
+                                        }`;
+                        }
+                        return `${bn(t)} ${xs(this.axis)}`;
+                }
+                static parse(t) {
+                        let r = t.trim().split(" "), n = r.length;
+                        if (r.length === 1 && r[0] === "PRINT") {
+                                return new e(3, 6, 1);
+                        }
+                        if (n === 2) {
+                                let [o, a] = r;
+                                if (
+                                        (o === Ht || o === pe) &&
+                                        (a === "PRNX" || a === "PRNY")
+                                ) {
+                                        let c = a === "PRNX" ? 4 : 5;
+                                        return new e(Ze(o), c, 1);
+                                }
+                        }
+                        if (n !== 2) return;
+                        let [s, i] = r;
+                        if (!(s === void 0 || i === void 0)) {
+                                if (s === Ht || s === pe) {
+                                        if (i === We || i === Xe) {
+                                                return new e(Ze(s), Sn(i));
+                                        }
+                                } else if ((s === de || s === fe) && i === je) {
+                                        return new e(Ze(s), Sn(i));
+                                }
+                                switch (s) {
+                                        case Ht:
+                                                switch (i) {
+                                                        case gn:
+                                                                return new e(
+                                                                        0,
+                                                                        4,
+                                                                );
+                                                        case yn:
+                                                                return new e(
+                                                                        0,
+                                                                        5,
+                                                                );
+                                                        default:
+                                                                return;
+                                                }
+                                        case ys:
+                                                switch (i) {
+                                                        case gn:
+                                                                return new e(
+                                                                        1,
+                                                                        4,
+                                                                );
+                                                        case yn:
+                                                                return new e(
+                                                                        1,
+                                                                        5,
+                                                                );
+                                                        default:
+                                                                return;
+                                                }
+                                        case de:
+                                                return i === xn
+                                                        ? new e(2, 6)
+                                                        : void 0;
+                                        case fe:
+                                                return i === xn
+                                                        ? new e(3, 6)
+                                                        : void 0;
+                                }
+                        }
+                }
+                doesReturnValue() {
+                        switch (this.op) {
+                                case 0:
+                                        return !1;
+                                case 1:
+                                        return !0;
+                                case 2:
+                                        return !0;
+                                case 3:
+                                        return !1;
+                        }
+                }
+                isSameComponent(t) {
+                        if (t instanceof e) {
+                                if (t.kind !== this.kind) return !1;
+                                let r = this.axis, n = t.axis;
+                                return r === 4 && n === 5
+                                        ? !1
+                                        : !(r === 5 && n === 4);
+                        }
+                        return !1;
+                }
+        };
+var qe = "INC",
+        Ke = "TDEC",
+        Qe = "READ",
+        Je = "SET",
+        En = "B",
+        bs = (e) => {
+                switch (e) {
+                        case 0:
+                                return qe;
+                        case 1:
+                                return Ke;
+                        case 2:
+                                return Qe;
+                        case 3:
+                                return Je;
+                }
+        },
+        Ss = (e) => {
+                switch (e) {
+                        case qe:
+                                return 0;
+                        case Ke:
+                                return 1;
+                        case Qe:
+                                return 2;
+                        case Je:
+                                return 3;
+                }
+        },
+        y = class e extends N {
+                constructor(t, r) {
+                        super(),
+                                this.op = t,
+                                this.regNumber = r,
+                                this.registerCache = void 0;
+                }
+                pretty() {
+                        return `${bs(this.op)} ${En}${this.regNumber}`;
+                }
+                static parse(t) {
+                        let r = t.trim().split(" ");
+                        if (r.length !== 2) return;
+                        let [n, s] = r;
+                        if (
+                                !(n === void 0 || s === void 0) &&
+                                (n === qe || n === Ke || n === Qe ||
+                                        n === Je) &&
+                                s.startsWith(En)
+                        ) {
+                                let i = s.slice(1);
+                                if (/^[0-9]+$/u.test(i)) {
+                                        return new e(Ss(n), parseInt(i, 10));
+                                }
+                        }
+                }
+                doesReturnValue() {
+                        switch (this.op) {
+                                case 0:
+                                        return !1;
+                                case 1:
+                                        return !0;
+                                case 2:
+                                        return !0;
+                                case 3:
+                                        return !1;
+                        }
+                }
+                isSameComponent(t) {
+                        return t instanceof e
+                                ? this.regNumber === t.regNumber
+                                : !1;
+                }
+        };
+var $n = "HALT_OUT",
+        Nn = "HALT",
+        T = class e extends N {
+                constructor(t = !0) {
+                        super(), this.output = t;
+                }
+                pretty() {
+                        return this.output ? $n : Nn;
+                }
+                static parse(t) {
+                        let r = t.trim().split(" ");
+                        if (r.length !== 1) return;
+                        let [n] = r;
+                        if (n === $n) return new e(!0);
+                        if (n === Nn) return new e(!1);
+                }
+                doesReturnValue() {
+                        return !1;
+                }
+                isSameComponent(t) {
+                        return t instanceof e;
+                }
+        };
+var tr = "0",
+        er = "1",
+        wn = "MUL",
+        Es = (e) => {
+                switch (e) {
+                        case tr:
+                                return 0;
+                        case er:
+                                return 1;
+                }
+        },
+        $s = (e) => {
+                switch (e) {
+                        case 0:
+                                return tr;
+                        case 1:
+                                return er;
+                }
+        },
+        nt = class e extends N {
+                constructor(t) {
+                        super(), this.op = t;
+                }
+                pretty() {
+                        return `${wn} ${$s(this.op)}`;
+                }
+                static parse(t) {
+                        let r = t.trim().split(" ");
+                        if (r.length !== 2) return;
+                        let [n, s] = r;
+                        if (n === wn && (s === tr || s === er)) {
+                                return new e(Es(s));
+                        }
+                }
+                doesReturnValue() {
+                        return !0;
+                }
+                isSameComponent(t) {
+                        return t instanceof e;
+                }
+        };
+var _n = "NOP",
+        j = class e extends N {
+                constructor() {
+                        super();
+                }
+                pretty() {
+                        return _n;
+                }
+                static parse(t) {
+                        let r = t.trim().split(" ");
+                        if (r.length !== 1) return;
+                        let [n] = r;
+                        if (n === _n) return new e();
+                }
+                doesReturnValue() {
+                        return !0;
+                }
+                isSameComponent(t) {
+                        return t instanceof e;
+                }
+        };
+var Bn = "OUTPUT",
+        st = class e extends N {
+                constructor(t) {
+                        super(), this.digit = t;
+                }
+                pretty() {
+                        return `${Bn} ${this.digit}`;
+                }
+                static parse(t) {
+                        let r = t.trim().split(" ");
+                        if (r.length !== 2) return;
+                        let [n, s] = r;
+                        if (n === Bn && s !== void 0) return new e(s);
+                }
+                doesReturnValue() {
+                        return !1;
+                }
+                isSameComponent(t) {
+                        return t instanceof e;
+                }
+        };
+var rr = "A1",
+        nr = "B0",
+        sr = "B1",
+        Tn = "SUB",
+        Ns = (e) => {
+                switch (e) {
+                        case 0:
+                                return rr;
+                        case 1:
+                                return nr;
+                        case 2:
+                                return sr;
+                }
+        },
+        ws = (e) => {
+                switch (e) {
+                        case rr:
+                                return 0;
+                        case nr:
+                                return 1;
+                        case sr:
+                                return 2;
+                }
+        },
+        it = class e extends N {
+                constructor(t) {
+                        super(), this.op = t;
+                }
+                pretty() {
+                        return `${Tn} ${Ns(this.op)}`;
+                }
+                static parse(t) {
+                        let r = t.trim().split(" ");
+                        if (r.length !== 2) return;
+                        let [n, s] = r;
+                        if (n === Tn && (s === rr || s === nr || s === sr)) {
+                                return new e(ws(s));
+                        }
+                }
+                doesReturnValue() {
+                        switch (this.op) {
+                                case 0:
+                                        return !1;
+                                case 1:
+                                        return !0;
+                                case 2:
+                                        return !0;
+                        }
+                }
+                isSameComponent(t) {
+                        return t instanceof e;
+                }
+        };
+var ir = "INC",
+        or = "TDEC",
+        In = "U",
+        _s = "R",
+        Bs = (e) => {
+                switch (e) {
+                        case 0:
+                                return ir;
+                        case 1:
+                                return or;
+                }
+        },
+        Ts = (e) => {
+                switch (e) {
+                        case ir:
+                                return 0;
+                        case or:
+                                return 1;
+                }
+        },
+        w = class e extends N {
+                constructor(t, r) {
+                        super(),
+                                this.op = t,
+                                this.regNumber = r,
+                                this.registerCache = void 0;
+                }
+                pretty() {
+                        return `${Bs(this.op)} ${In}${this.regNumber}`;
+                }
+                static parse(t) {
+                        let r = t.trim().split(" ");
+                        if (r.length !== 2) return;
+                        let [n, s] = r;
+                        if (
+                                !(n === void 0 || s === void 0) &&
+                                (n === ir || n === or) &&
+                                (s.startsWith(In) || s.startsWith(_s))
+                        ) {
+                                let i = s.slice(1);
+                                if (/^[0-9]+$/u.test(i)) {
+                                        return new e(Ts(n), parseInt(i, 10));
+                                }
+                        }
+                }
+                doesReturnValue() {
+                        switch (this.op) {
+                                case 0:
+                                        return !1;
+                                case 1:
+                                        return !0;
+                        }
+                }
+                isSameComponent(t) {
+                        return t instanceof e
+                                ? this.regNumber === t.regNumber
+                                : !1;
+                }
+        };
+var ar = "INC",
+        cr = "DEC",
+        ur = "READ",
+        lr = "SET",
+        pr = "RESET",
+        Is = (e) => {
+                switch (e) {
+                        case 0:
+                                return ar;
+                        case 1:
+                                return cr;
+                        case 2:
+                                return ur;
+                        case 3:
+                                return lr;
+                        case 4:
+                                return pr;
+                }
+        },
+        Cs = (e) => {
+                switch (e) {
+                        case ar:
+                                return 0;
+                        case cr:
+                                return 1;
+                        case ur:
+                                return 2;
+                        case lr:
+                                return 3;
+                        case pr:
+                                return 4;
+                }
+        },
+        ot = class e extends N {
+                constructor(t, r) {
+                        super(), this.op = t, this.regNumber = r;
+                }
+                pretty() {
+                        return `${Is(this.op)} T${this.regNumber}`;
+                }
+                static parse(t) {
+                        let r = t.trim().split(" ");
+                        if (r.length !== 2) return;
+                        let [n, s] = r;
+                        if (
+                                !(n === void 0 || s === void 0) &&
+                                (n === ar || n === cr || n === ur || n === lr ||
+                                        n === pr) &&
+                                s.startsWith("T")
+                        ) {
+                                let i = s.slice(1);
+                                if (/^[0-9]+$/u.test(i)) {
+                                        return new e(Cs(n), parseInt(i, 10));
+                                }
+                        }
+                }
+                doesReturnValue() {
+                        switch (this.op) {
+                                case 0:
+                                        return !0;
+                                case 1:
+                                        return !0;
+                                case 2:
+                                        return !0;
+                                case 3:
+                                        return !1;
+                                case 4:
+                                        return !1;
+                        }
+                }
+                isSameComponent(t) {
+                        return t instanceof e
+                                ? this.regNumber === t.regNumber
+                                : !1;
+                }
+        };
+var ge = class {
+        constructor() {
+                this.value = 0;
+        }
+        action(t) {
+                switch (t.op) {
+                        case 1: {
+                                let r = this.value, n = r % 2;
+                                return this.value = r >>> 1, n;
+                        }
+                        case 2: {
+                                let r = this.value, n = 1 - r % 2;
+                                return this.value = r === 1 || r === 2 ? 1 : 0,
+                                        n;
+                        }
+                        case 0: {
+                                this.value = (this.value + 1) % 4;
+                                return;
+                        }
+                        default:
+                                l();
+                }
+        }
+        getValue() {
+                return this.value;
+        }
+        a1() {
+                this.action(new B(0));
+        }
+        b0() {
+                let t = this.action(new B(1));
+                return t === void 0 && l(), t;
+        }
+        b1() {
+                let t = this.action(new B(2));
+                return t === void 0 && l(), t;
+        }
+        toString() {
+                return this.value.toString(2).padStart(2, "0");
+        }
+        toStringDetail() {
+                return this.toString();
+        }
+};
+var dr = (e, t) => Array(e).fill(0).map((r, n) => t(n)),
+        jt = class {
+                constructor() {
+                        this.x = 0,
+                                this.y = 0,
+                                this.maxX = 0,
+                                this.maxY = 0,
+                                this.array = dr(1, () => dr(1, () => 0));
+                }
+                getArray() {
+                        return this.array;
+                }
+                getMaxX() {
+                        return this.maxX;
+                }
+                getMaxY() {
+                        return this.maxY;
+                }
+                action(t) {
+                        switch (t.op) {
+                                case 0: {
+                                        switch (t.axis) {
+                                                case 4:
+                                                        return this.incB2DX();
+                                                case 5:
+                                                        return this.incB2DY();
+                                                case 6:
+                                                        l();
+                                        }
+                                        break;
+                                }
+                                case 1: {
+                                        switch (t.axis) {
+                                                case 4:
+                                                        return this.tdecB2DX();
+                                                case 5:
+                                                        return this.tdecB2DY();
+                                                case 6:
+                                                        l();
+                                        }
+                                        break;
+                                }
+                                case 2: {
+                                        if (t.axis === 6) return this.read();
+                                        l();
+                                        break;
+                                }
+                                case 3: {
+                                        if (t.axis === 6) return this.set();
+                                        l();
+                                        break;
+                                }
+                                default:
+                                        l();
+                        }
+                }
+                incB2DX() {
+                        let r = this.x + 1;
+                        if (this.x = r, this.maxX < r) {
+                                for (let n of this.array) n.push(0);
+                                this.maxX = r;
+                        }
+                }
+                incB2DY() {
+                        let r = this.y + 1;
+                        this.y = r,
+                                this.maxY < r &&
+                                (this.array.push(dr(this.maxX + 1, () =>
+                                        0)),
+                                        this.maxY = r);
+                }
+                tdecB2DX() {
+                        return this.x === 0 ? 0 : (this.x--, 1);
+                }
+                tdecB2DY() {
+                        return this.y === 0 ? 0 : (this.y--, 1);
+                }
+                read() {
+                        let t = this.array[this.y];
+                        t === void 0 && l();
+                        let r = this.x, n = t[r];
+                        return n === void 0 && l(), t[r] = 0, n;
+                }
+                set() {
+                        let t = this.array[this.y] ?? l(), r = this.x;
+                        if (t[r] === 1) {
+                                throw Error(
+                                        `SET B2D: Tried to set when it was already 1. x = ${r}, y = ${this.y}`,
+                                );
+                        }
+                        t[r] = 1;
+                }
+        };
+var ye = class {
+                constructor() {
+                        this.value = 0;
+                }
+                action(t) {
+                        switch (t.op) {
+                                case 1:
+                                        return this.value === 0
+                                                ? 0
+                                                : (this.value--, 1);
+                                case 0: {
+                                        this.value++;
+                                        return;
+                                }
+                        }
+                }
+                actionN(t, r) {
+                        switch (t.op) {
+                                case 1: {
+                                        this.value -= r;
+                                        break;
+                                }
+                                case 0: {
+                                        this.value += r;
+                                        break;
+                                }
+                        }
+                }
+                getValue() {
+                        return this.value;
+                }
+                setValue(t) {
+                        this.value = t;
+                }
+                inc() {
+                        this.action(new w(0, 0));
+                }
+                tdec() {
+                        let t = this.action(new w(1, 0));
+                        return t === void 0 && l(), t;
+                }
+                setByRegistersInit(t, r) {
+                        (typeof r != "number" || r < 0 ||
+                                !Number.isInteger(r)) && at(t, r),
+                                this.setValue(r);
+                }
+        },
+        at = (e, t) => {
+                let r = `"${e}": ${JSON.stringify(t)}`;
+                throw Error(`Invalid #REGISTERS ${r}`);
+        };
+var Cn = (e) =>
+                [...e].map((t) => {
+                        if (t === "0") return 0;
+                        if (t === "1") return 1;
+                        throw Error(`Invalid #REGISTERS: "${e}"`);
+                }),
+        As = typeof BigInt < "u",
+        fr = (e) => {
+                let t = "";
+                for (let r = e.length - 1; r >= 0; r--) {
+                        t += e[r] === 0
+                                ? "0"
+                                : "1";
+                }
+                return t;
+        },
+        Ds = (e) => {
+                let t = "";
+                for (let r = e.length - 1; r >= 0; r--) {
+                        t += e[r] === 0
+                                ? "0"
+                                : "1";
+                }
+                return t;
+        },
+        mr = (e) => {
+                let t = "", r = e.length;
+                for (let n = 0; n < r; n++) t += e[n] === 0 ? "0" : "1";
+                return t;
+        },
+        xe = class {
+                constructor() {
+                        this.pointer = 0,
+                                this.bits = new Uint8Array(1),
+                                this.length = 1;
+                }
+                action(t) {
+                        switch (t.op) {
+                                case 1:
+                                        return this.pointer === 0
+                                                ? 0
+                                                : (this.pointer--, 1);
+                                case 0: {
+                                        let r = this.pointer + 1;
+                                        this.pointer = r,
+                                                r >= this.length &&
+                                                this.extend();
+                                        return;
+                                }
+                                case 2: {
+                                        let r = this.pointer;
+                                        if (r < this.length) {
+                                                let n = this.bits,
+                                                        s = n[r] ?? l();
+                                                return n[r] = 0, s;
+                                        } else return 0;
+                                }
+                                case 3: {
+                                        let r = this.pointer;
+                                        r >= this.length && this.extend();
+                                        let n = this.bits;
+                                        if (n[r] === 1) {
+                                                throw Error(
+                                                        `The bit of the binary register B${t.regNumber} is already 1`,
+                                                );
+                                        }
+                                        n[r] = 1;
+                                        return;
+                                }
+                                default: {
+                                        let r = t.op;
+                                        return;
+                                }
+                        }
+                }
+                actionN(t, r) {
+                        switch (t.op) {
+                                case 0: {
+                                        this.pointer += r,
+                                                this.pointer >= this.length &&
+                                                this.extend();
+                                        break;
+                                }
+                                case 1: {
+                                        this.pointer -= r;
+                                        break;
+                                }
+                                default:
+                                        throw Error("todo");
+                        }
+                }
+                getBits() {
+                        return Array.from(this.bits.slice(0, this.length));
+                }
+                getLength() {
+                        return this.length;
+                }
+                setBits(t) {
+                        this.length = t.length,
+                                this.bits = new Uint8Array(
+                                        Math.max(1, t.length),
+                                );
+                        for (let r = 0; r < t.length; r++) {
+                                let n = t[r];
+                                n !== void 0 && (this.bits[r] = n);
+                        }
+                }
+                inc() {
+                        this.action(new y(0, 0)) !== void 0 && l();
+                }
+                tdec() {
+                        let t = this.action(new y(1, 0));
+                        return t === void 0 && l(), t;
+                }
+                read() {
+                        let t = this.action(new y(2, 0));
+                        return t === void 0 && l(), t;
+                }
+                set() {
+                        if (this.action(new y(3, 0)) !== void 0) return l();
+                }
+                extend() {
+                        let t = this.pointer, n = this.bits.length;
+                        if (t >= n) {
+                                let s = n * 2;
+                                for (; t >= s;) s *= 2;
+                                let i = new Uint8Array(s);
+                                i.set(this.bits), this.bits = i;
+                        }
+                        t >= this.length && (this.length = t + 1);
+                }
+                toNumberString(t = 10) {
+                        return (As ? BigInt : Number)(
+                                "0b" + Ds(this.bits.slice(0, this.length)),
+                        ).toString(t);
+                }
+                toObject() {
+                        this.extend();
+                        let t = Array.from(this.bits.slice(0, this.length)),
+                                r = this.pointer;
+                        return {
+                                prefix: t.slice(0, r),
+                                head: t[r] ?? l(),
+                                suffix: t.slice(r + 1),
+                        };
+                }
+                setByRegistersInit(t, r) {
+                        if (typeof r == "number") {
+                                this.setBits(Cn(r.toString(2)).reverse()),
+                                        this.extend();
+                        } else if (!Array.isArray(r) || r.length !== 2) {
+                                at(t, r);
+                        } else {
+                                let [n, s] = r;
+                                if (
+                                        typeof n != "number" ||
+                                        typeof s != "string" || n < 0 ||
+                                        !Number.isInteger(n)
+                                ) at(t, r);
+                                else {
+                                        let i = Cn(s);
+                                        this.pointer = n,
+                                                this.setBits(i),
+                                                this.extend();
+                                }
+                        }
+                }
+                getInternalUint8Array() {
+                        return this.bits;
+                }
+        };
+var be = class {
+        constructor() {
+                this.value = 0;
+        }
+        action(t) {
+                switch (t.op) {
+                        case 0:
+                                return this.mul0();
+                        case 1:
+                                return this.mul1();
+                        default:
+                                throw Error("MUL: action");
+                }
+        }
+        getValue() {
+                return this.value;
+        }
+        mul0() {
+                let t = this.value, r = t % 2;
+                return this.value = t >> 1, r;
+        }
+        mul1() {
+                let t = this.value, r = t % 2;
+                return t <= 21
+                        ? this.value = (t >> 1) + 5
+                        : this.value = t - 22 >> 1,
+                        r;
+        }
+        toString() {
+                return this.value.toString(2).padStart(5, "0");
+        }
+};
+var Se = class {
+        constructor() {}
+        action() {
+                return 0;
+        }
+};
+var Ee = class {
+        #t = "";
+        constructor() {}
+        action(t) {
+                this.output(t.digit);
+        }
+        getString() {
+                return this.#t;
+        }
+        output(t) {
+                this.#t += t;
+        }
+};
+var $e = class {
+        constructor() {
+                this.value = 0;
+        }
+        action(t) {
+                switch (t.op) {
+                        case 1:
+                                return this.b0();
+                        case 0:
+                                return this.a1();
+                        case 2:
+                                return this.b1();
+                        default:
+                                l();
+                }
+        }
+        getValue() {
+                return this.value;
+        }
+        a1() {
+                this.value = (this.value + 1) % 4;
+        }
+        b0() {
+                let t = this.value, r = t % 2;
+                return this.value = t >= 2 ? 3 : 0, r;
+        }
+        b1() {
+                let t = this.value, r = 1 - t % 2;
+                return this.value = t === 0 || t === 3 ? 3 : 0, r;
+        }
+        toString() {
+                return this.value.toString(2).padStart(2, "0");
+        }
+        toStringDetail() {
+                return this.toString();
+        }
+};
+var Ne = class {
+        constructor() {
+                this.pointer = 0, this.bits = [0];
+        }
+        action(t) {
+                switch (t.op) {
+                        case 0:
+                                return this.inc();
+                        case 2:
+                                return this.read();
+                        case 1:
+                                return this.dec();
+                        case 3:
+                                return this.set();
+                        case 4:
+                                return this.reset();
+                        default:
+                                l();
+                }
+        }
+        getPointer() {
+                return this.pointer;
+        }
+        getBits() {
+                return this.bits;
+        }
+        inc() {
+                let t = this.bits;
+                return this.pointer === t.length - 1
+                        ? (t.push(0), this.pointer++, 0)
+                        : (this.pointer++, 1);
+        }
+        dec() {
+                return this.pointer === 0 ? 0 : (this.pointer--, 1);
+        }
+        read() {
+                let t = this.pointer, r = this.bits, n = r[t];
+                if (n === 0) return r[t] = -1, 0;
+                if (n === 1) return r[t] = -1, 1;
+                if (n === -1) {
+                        throw Error("Error: reading empty space of T register");
+                }
+                l();
+        }
+        set() {
+                let t = this.pointer;
+                if (this.bits[t] === -1) this.bits[t] = 1;
+                else throw Error("Error: SET to nonempty bit");
+        }
+        reset() {
+                let t = this.pointer;
+                if (this.bits[t] === -1) this.bits[t] = 0;
+                else throw Error("Error: RESET to nonempty bit");
+        }
+};
+var qt = (e, t) => {
+                throw Error(`Register ${e}${t} is not found.`);
+        },
+        An = Number.parseInt,
+        Dn = Number.isNaN,
+        we = class {
+                constructor({ unary: t, binary: r, legacyT: n }) {
+                        this.uRegMap = new Map(t.map((s) => [s, new ye()])),
+                                this.bRegMap = new Map(
+                                        r.map((s) => [s, new xe()]),
+                                ),
+                                this.legacyTRegMap = new Map(
+                                        n.map((s) => [s, new Ne()]),
+                                ),
+                                this.add = new ge(),
+                                this.sub = new $e(),
+                                this.mul = new be(),
+                                this.b2d = new jt(),
+                                this.matrixPrinter = new jt(),
+                                this.output = new Ee(),
+                                this.nop = new Se();
+                }
+                setByRegistersInit(t) {
+                        for (let [r, n] of Object.entries(t)) this.#t(r, n);
+                }
+                setCache(t) {
+                        t instanceof y
+                                ? t.registerCache = this.getBReg(t.regNumber)
+                                : t instanceof w &&
+                                        (t.registerCache = this.getUReg(
+                                                t.regNumber,
+                                        ));
+                }
+                #t(t, r) {
+                        if (t.startsWith("U")) {
+                                let n = An(t.slice(1), 10);
+                                Dn(n) && at(t, r);
+                                let s = this.getUReg(n);
+                                if (s === void 0) {
+                                        throw Error(
+                                                `Invalid #REGISTERS: U${n} isn't used in the program`,
+                                        );
+                                }
+                                s.setByRegistersInit(t, r);
+                        } else if (t.startsWith("B")) {
+                                let n = An(t.slice(1), 10);
+                                Dn(n) && at(t, r);
+                                let s = this.getBReg(n);
+                                if (s === void 0) {
+                                        throw Error(
+                                                `Invalid #REGISTERS: B${n} isn't used in the program`,
+                                        );
+                                }
+                                s.setByRegistersInit(t, r);
+                        } else at(t, r);
+                }
+                execAction(t) {
+                        if (t instanceof y) {
+                                return (t.registerCache ??
+                                        this.bRegMap.get(t.regNumber) ??
+                                        qt("B", t.regNumber)).action(t);
+                        }
+                        if (t instanceof w) {
+                                return (t.registerCache ??
+                                        this.uRegMap.get(t.regNumber) ??
+                                        qt("U", t.regNumber)).action(t);
+                        }
+                        if (t instanceof B) return this.add.action(t);
+                        if (t instanceof j) return this.nop.action();
+                        if (t instanceof it) return this.sub.action(t);
+                        if (t instanceof nt) return this.mul.action(t);
+                        if (t instanceof rt) {
+                                if (t.kind === 1) {
+                                        if (t.op === 2) {
+                                                throw Error(
+                                                        "PRINTER component cannot READ",
+                                                );
+                                        }
+                                        return this.matrixPrinter.action(t);
+                                } else return this.b2d.action(t);
+                        } else {
+                                if (t instanceof st) {
+                                        return this.output.action(t);
+                                }
+                                if (t instanceof T) return -1;
+                                if (t instanceof ot) {
+                                        return (this.legacyTRegMap.get(
+                                                t.regNumber,
+                                        ) ?? qt("T", t.regNumber)).action(t);
+                                }
+                        }
+                        throw Error(`execAction: unknown action ${t.pretty()}`);
+                }
+                execActionN(t, r) {
+                        if (t instanceof w) {
+                                return (t.registerCache ??
+                                        this.uRegMap.get(t.regNumber) ??
+                                        qt("U", t.regNumber)).actionN(t, r);
+                        }
+                        if (t instanceof y) {
+                                return (t.registerCache ??
+                                        this.bRegMap.get(t.regNumber) ??
+                                        qt("B", t.regNumber)).actionN(t, r);
+                        }
+                        if (t instanceof T) return -1;
+                        throw Error(`execActionN: ${t.pretty()}`);
+                }
+                getUReg(t) {
+                        return this.uRegMap.get(t);
+                }
+                getBReg(t) {
+                        return this.bRegMap.get(t);
+                }
+                addSubMulToUIString() {
+                        return `
         ADD = ${this.add.toStringDetail()},
         SUB = ${this.sub.toStringDetail()},
         MUL = ${this.mul.toString()}
-        `}};var os=[Z.parse,b.parse,E.parse,nt.parse,I.parse,Y.parse,q.parse,j.parse,$.parse,X.parse],tr=e=>{for(let t of os){let r=t(e);if(r!==void 0)return r}};var _=e=>e!==void 0?` at line ${e}`:"";function er(e,t,r,n){if(e=e.trim(),!e.startsWith("{"))return`Invalid line "${r}"${_(t)}. ${n} replacements does not start with "{"`;if(!e.endsWith("}"))return`Invalid line "${r}"${_(t)}. ${n} replacements does not end with "}"`;try{return e.slice(1,-1).slice().split(";").map(s=>{let i=s.trim().split("=").map(o=>o.trim());if(i.length!=2)throw new Error(`Invalid line "${r}"${_(t)}. #DEFINE invalid replacements`);return{needle:i[0]??c(),replacement:i[1]??c()}})}catch(s){return s instanceof Error?s.message:c()}}var Pt="INITIAL",B=class{pretty(){return""}},st=class e extends B{constructor(t){super(),this.content=t}static get key(){return"#COMPONENTS"}pretty(){return e.key+" "+this.content}},it=class e extends B{constructor(t){super(),this.content=t}static get key(){return"#REGISTERS"}pretty(){return e.key+" "+this.content}};function gn(e){return"{ "+e.map(t=>t.needle+" = "+t.replacement).join("; ")+" }"}var ot=class e extends B{constructor(t,r){super(),this.name=t,this.defaultReplacements=r}static get key(){return"#DEFINE"}pretty(){return e.key+" "+this.name+(this.defaultReplacements.length===0?"":" "+gn(this.defaultReplacements))}},Q=class e extends B{constructor(){super()}static get key(){return"#ENDDEF"}pretty(){return e.key}},K=class e extends B{constructor(t,r){super(),this.templateName=t,this.replacements=r}static get key(){return"#INSERT"}pretty(){return e.key+" "+this.templateName+(this.replacements.length===0?"":" "+gn(this.replacements))}},at=class extends B{constructor(t){super(),this.filename=t}static get key(){return"#INCLUDE"}pretty(){return K.key+" "+this.filename}},rr=class extends B{constructor(t){super(),this.str=t}getString(){return this.str}pretty(){return this.getString()}},nr=class extends B{constructor(){super()}pretty(){return""}},as=e=>{switch(e){case"Z":return e;case"NZ":return e;case"ZZ":return e;case"*":return e;default:return}},Et=class extends B{constructor({state:t,input:r,nextState:n,actions:s,line:i}){super(),this.state=t,this.input=r,this.nextState=n,this.actions=s,this.line=i,this._string=`${this.state}; ${this.input};${" ".repeat(2-this.input.length)} ${this.nextState}; ${this.actions.map(o=>o.pretty()).join(", ")}`}pretty(){return this._string}},sr=(e,t)=>{let r=e.trim();if(r==="")return new nr;if(r.startsWith("#")){if(r.startsWith(st.key))return new st(r.slice(st.key.length).trim());if(r.startsWith(it.key))return new it(r.slice(it.key.length).trim());if(r.startsWith(ot.key)){let h=r.slice(ot.key.length).trim();if(h.length===0)return`Invalid line "${e}"${_(t)}. #DEFINE needs a name.`;let S,w=[],C=h.indexOf("{");if(C!==-1){S=h.slice(0,C).trim();let T=er(h.slice(C),t,e,"#DEFINE");if(typeof T=="string")return T;w=T}else S=h;return new ot(S,w??[])}else{if(r.startsWith(Q.key))return new Q;if(r.startsWith(K.key)){let h=r.slice(K.key.length).trim();if(h.length===0)return`Invalid line "${e}"${_(t)}. #INSERT needs a name.`;let S,w=[],C=h.indexOf("{");if(C!==-1){S=h.slice(0,C).trim();let T=er(h.slice(C),t,e,"#INSERT");if(typeof T=="string")return T;w=T}else S=h;return new K(S,w)}else if(r.startsWith(at.key)){let h=r.slice(at.key.length).trim();return h===""?`Invalid line "${e}"${_(t)}. #INCLUDE needs filename.`:new at(h)}}return new rr(e)}let s=(r.split("#")[0]??"").split(/\s*;\s*/u);if(s.length<4)return`Invalid line "${e}"${_(t)}`;if(s.length>4)return s[4]===""?`Extraneous semicolon "${e}"${_(t)}`:`Invalid line "${e}"${_(t)}`;let i=s[0]??c(),o=s[1]??c(),a=s[2]??c(),l=(s[3]??c()).trim().split(/\s*,\s*/u).filter(h=>h!==""),d=[];for(let h of l){let S=tr(h);if(S===void 0)return`Unknown action "${h}" in "${e}"${_(t)}`;d.push(S)}let m=as(o);return m===void 0?`Unknown input "${o}" in "${e}"${_(t)}. Expect "Z", "NZ", "ZZ" or "*"`:new Et({state:i,input:m,nextState:a,actions:d,line:t})},W=e=>_(e.line),D=e=>`"${e.pretty()}"${W(e)}`;var xn=e=>{let t=e.actions;if(t.some(n=>n instanceof $))return;let r=t.filter(n=>n.doesReturnValue());if(r.length!==1)return r.length===0?`Does not return a value in ${D(e)}`:`Does not contain exactly one action that returns a value in "${e.pretty()}": Actions that produce value are ${r.map(n=>`"${n.pretty()}"`).join(", ")}${W(e)}`};var yn=e=>{if(e.nextState===Pt)return`Return to initial state in ${D(e)}`};var bn=e=>{let t=e.actions;if(t.length<=1)return;let r=t.map(s=>s.pretty());r.sort();let n=r.length-1;for(let s=0;s<n;s++){let i=r[s],o=r[s+1];if(i===o)return`Duplicated actions "${i}" in ${D(e)}`}};var Sn=e=>{let t=e.actions;if(t.some(n=>n instanceof $))return;let r=t.length;if(!(r<=1))for(let n=0;n<r;n++){let s=t[n]??c();for(let i=n+1;i<r;i++){let o=t[i]??c();if(s.isSameComponent(o))return`Actions "${s.pretty()}" and "${o.pretty()}" use same component in ${D(e)}`}}};var cs=(e,t)=>e.line!==void 0&&t?.line!==void 0?` at line ${e.line} and ${t.line}`:"",En=e=>{if(e.length===0)return;let t=(s,i)=>`Need Z line followed by NZ line in "${s.pretty()}"${cs(s,i)}`,r=e.length-1;for(let s=0;s<r;s++){let i=e[s]??c(),o=e[s+1]??c(),a=i.input,u=o.input;if(a==="Z"&&u!=="NZ"||u==="NZ"&&a!=="Z"||a==="Z"&&u==="NZ"&&i.state!==o.state)return[t(i,o)]}let n=e[r];if(n?.input==="Z")return[t(n)]};var J=class e{constructor(t,r=new Map){this.templates=r,this.array=t}getArray(){return this.array}getTemplates(){return this.templates}pretty(){return this.array.map(t=>t.pretty()).join(`
-`)}static parse(t){let r=t.split(/\r\n|\n|\r/u),n=[],s=[],i=new Map,o=null;for(let[a,u]of r.entries()){if(o!=null){if(u.trimStart().startsWith(Q.key)&&sr(u,a+1)instanceof Q){o=null;continue}let d=i.get(o);d==null&&c(),d.lines.push(u);continue}let l=sr(u,a+1);if(l instanceof ot){if(o!=null)return`#DEFINE needs #ENDDEF ${l.pretty()}`;if(o=l.name,i.has(o))return`#DEFINE duplicate template name ${l.pretty()}`;i.set(o,{defaultReplacements:l.defaultReplacements,lines:[]})}else{if(l instanceof Q)return`#ENDDEF needs #DEFINE ${l.pretty()}`;l instanceof B?s.push(l):typeof l=="string"?n.push(l):c()}}return o!=null&&n.push(`#DEFINE needs #ENDDEF. "${o}"`),n.length>0?n.join(`
-`):new e(s,i)}};var $n=e=>{let t=[];{let r=[bn,xn,Sn,yn];for(let n of e)for(let s of r){let i=s(n);typeof i=="string"&&t.push(i)}}{let r=[En];for(let n of r){let s=n(e);s!==void 0&&(t=t.concat(s))}}if(t.length>0)return t.join(`
-`)};function us(e,t,r){let n=e;for(let s of r.concat(t.defaultReplacements))n=n.replaceAll(s.needle,s.replacement);return n}function wn(e,t){let r=[],n=new Map(e.getTemplates().entries()),s=e.getArray().slice().reverse();function i(o){let a=o.getArray();for(let u=a.length-1;u>=0;u--)s.push(a[u]??c());for(let[u,l]of o.getTemplates()){if(n.get(u)!=null)throw new Error(`#DEFINE duplicate template name "${u}"`);n.set(u,l)}}for(;s.length>=1;){let o=s.pop();if(o instanceof Et)r.push(o);else if(o instanceof at){let a=t.find(u=>u.name===o.filename);if(a==null)throw new Error(`#INCLUDE file not found: "${o.filename}". Add a library file.`);i(a.programLines)}else if(o instanceof K){let a=n.get(o.templateName);if(a==null)throw new Error(`Undefined template: "${o.templateName}" at line "${o.pretty()}"`);let u=a.lines.map(d=>us(d,a,o.replacements)).join(`
-`),l=J.parse(u);if(typeof l=="string")throw new Error(l);i(l)}}return r}var Nn="CLOCK-2^";function _n(e){let t=[],r=e.split(",").map(n=>n.trim());for(let n of r)if(n!=="..."&&!(n==="NOP"||n==="HALT_OUT"))if(n==="OUTPUT"||n==="B2D"||n==="ADD"||n==="SUB"||n==="MUL")t.push(n);else if(n.startsWith(Nn)){let s=Number(n.slice(Nn.length))}else{let s=n.startsWith("B")?"B":n.startsWith("U")?"U":null;if(s){let i=ls(n.slice(1));for(let o of i.map(a=>`${s}${a}`))t.push(o)}}return t}function ls(e){let t=e.split("-");if(t.length===1){let r=t[0];if(r===void 0||r.length===0)throw new Error("Invalid #COMPONENTS");if(/[0-9]+/u.test(r)){let s=Number(r);if(Number.isNaN(s))throw new Error("Invalid #COMPONENTS");return[s.toString()]}else return[r]}else if(t.length===2){if(t.some(i=>i.length===0))throw new Error("Invalid #COMPONENTS");let[r,n]=t.map(i=>Number(i));if(r==null||n==null||Number.isNaN(r)||Number.isNaN(n))throw new Error("Invalid #COMPONENTS");if(r>=100||n>=100)throw new Error("Invalid #COMPONENTS: range declaration must be less than 100");let s=[];for(let i=r;i<n+1;i++)s.push(i.toString());return s}throw new Error("Invalid #COMPONENTS")}var zt=class e{constructor(t,r,n){this.commands=t,this.componentsHeader=r,this.registersHeader=n}static parse(t,{noValidate:r,libraryFiles:n}={}){let s=J.parse(t);if(typeof s=="string")return s;let i=[];for(let a of n??[]){let u=J.parse(a.content);if(typeof u=="string")return u;i.push({name:a.name,programLines:u})}let o=wn(s,i);if(!r){if(o.length===0)return"Program is empty";let a=$n(o);if(typeof a=="string")return a}return new e(o,s.getArray().flatMap(a=>a instanceof st?[a]:[]),s.getArray().flatMap(a=>a instanceof it?[a]:[]))}},ps=e=>[...new Set(e)].sort((t,r)=>t-r),ir=e=>{let t=e.commands.flatMap(l=>l.actions),r=l=>ps(t.flatMap(d=>d instanceof l?[d.regNumber]:[])),n=l=>{let d=t.flatMap(m=>m instanceof l?[m.regNumber]:[]);return fs([...new Set(d)])},s=!1,i=!1,o=!1,a=!1,u=!1;for(let l of t)l instanceof I?s=!0:l instanceof q?i=!0:l instanceof Y?o=!0:l instanceof Z?a=!0:l instanceof j&&(u=!0);return{unary:n(E),binary:n(b),legacyT:r(X),hasAdd:s,hasSub:i,hasMul:o,hasB2D:a,hasOutput:u}};function fs(e){return e.sort((t,r)=>{let n=/[0-9]+/.test(t),s=/[0-9]+/.test(r);return n&&s?Number(t)-Number(r):n?-1:s?1:t<r?-1:t>r?1:0})}var Tn=(e,t)=>{let r=[],n=new Set(e.flatMap(a=>_n(a.content))),s=a=>`Program uses ${a} component but the #COMPONENTS header does not include it.`;t.hasAdd&&!n.has("ADD")&&r.push(s("ADD")),t.hasSub&&!n.has("SUB")&&r.push(s("SUB")),t.hasMul&&!n.has("MUL")&&r.push(s("MUL")),t.hasB2D&&!n.has("B2D")&&r.push(s("B2D")),t.hasOutput&&!n.has("OUTPUT")&&r.push(s("OUTPUT"));let i=[];for(let a of t.unary)n.has("U"+a)||i.push(a);i.length>0&&r.push(`Program uses ${i.map(a=>"U"+a).join(", ")} component${i.length===1?"":"s"} but the #COMPONENTS header does not include ${i.length===1?"it":"them"}.`);let o=[];for(let a of t.binary)n.has("B"+a)||o.push(a);if(o.length>0&&r.push(`Program uses ${o.map(a=>"B"+a).join(", ")} component${o.length===1?"":"s"} but the #COMPONENTS header does not include ${o.length===1?"it":"them"}.`),r.length!==0)throw new Error(r.join(`
-`))};var ds=e=>e instanceof b&&e.op===0,ms=e=>e instanceof E&&e.op===1,hs=e=>{if(e.input==="NZ"&&e.state===e.nextState&&e.actions.every(t=>!(t instanceof $))&&e.actions.every(t=>t instanceof E||ds(t))){let t=e.actions.find(ms);if(t&&t instanceof E)return{tdecU:t}}},gs=e=>{if(e.input==="NZ"&&e.state===e.nextState&&e.actions.every(t=>!(t instanceof $))&&e.actions.length===1&&e.actions.every(t=>t instanceof b)){let t=e.actions.find(r=>r instanceof b&&r.op===1);if(t&&t instanceof b)return{tdecB:t}}},$t=class{constructor(t,r){this.command=t,this.nextState=r,this.tdecuOptimize=hs(t),this.tdecbOptimize=gs(t)}},ar=class{constructor(t,r){this.z=t,this.nz=r}},or=(e,t)=>{throw Error(`Duplicated command: "${e.pretty()}" and "${t.pretty()}"${W(t)}`)},Bn=e=>{let t=new Map,r=[];for(let n of e)t.has(n.state)||(t.set(n.state,t.size),r.push(new ar(void 0,void 0)));for(let n of e){let s=r[t.get(n.state)??c()]??c(),i=t.get(n.nextState);if(i===void 0)throw Error(`Unknown state: "${n.nextState}" at "${n.pretty()}"${W(n)}`);switch(n.input){case"Z":{s.z===void 0?s.z=new $t(n,i):or(s.z.command,n);break}case"NZ":{s.nz===void 0?s.nz=new $t(n,i):or(s.nz.command,n);break}case"ZZ":{if(s.nz!==void 0)throw Error(`Invalid input: ZZ with NZ or *: "${n.pretty()}" and "${s.nz.command.pretty()}"${W(n)}`);s.z===void 0?s.z=new $t(n,i):or(s.z.command,n);break}case"*":{if(s.nz!==void 0)throw Error(`Invalid input: * "${n.pretty()}" and "${s.nz.command.pretty()}"${W(n)}`);if(s.z!==void 0)throw Error(`Invalid input: * "${n.pretty()}" and "${s.z.command.pretty()}"${W(n)}`);{let o=new $t(n,i);s.z=o,s.nz=o}break}default:c()}}return{states:[...t.keys()],stateMap:t,lookup:r}};var L=(e="error")=>{throw Error(e)},Ft=class e{constructor(t){this.stepCount=0;let r=ir(t);this.actionExecutor=new Se(r),this.prevOutput=0;let{states:n,stateMap:s,lookup:i}=Bn(t.commands);this.lookup=i;for(let a of i){let u=(a.z?.command.actions??[]).concat(a.nz?.command.actions??[]);for(let l of u)this.actionExecutor.setCache(l)}this.currentStateIndex=s.get(Pt)??L(`${Pt} state is not present`),this.stateStatsArray=[],this.states=n,this.stateMap=s,this.program=t,this.analyzeResult=r;for(let a=0;a<i.length*2;a++)this.stateStatsArray.push(0);let o=t.registersHeader;for(let a of o)this.#e(a);t.componentsHeader.length>0&&Tn(t.componentsHeader,r)}static fromString(t,r){let n=zt.parse(t,{libraryFiles:r??[]});if(typeof n=="string")throw Error(n);return new e(n)}getStateStats(){let t=this.stateStatsArray,r=t.length,n=[];for(let s=0;s<r;s+=2)n.push({z:t[s]??L(),nz:t[s+1]??L()});return n}#e(t){let r=t.content.replace(/'/ug,'"'),n={};try{n=JSON.parse(r)}catch{L(`Invalid #REGISTERS: is not a valid JSON: "${r}"`)}(n===null||typeof n!="object")&&L(`Invalid #REGISTERS: "${r}" is not an object`),this.actionExecutor.setByRegistersInit(n)}getCurrentState(){let t=this.states[this.currentStateIndex];return t===void 0&&L("State name is not found"),t}getStateMap(){return this.stateMap}getPreviousOutput(){return this.prevOutput===0?"Z":"NZ"}getNextCommand(){let t=this.currentStateIndex,r=this.lookup[t];if(r===void 0&&L(`Internal Error: Next command is not found: Current state index: ${t}`),this.prevOutput===0){let s=r.z;if(s!==void 0)return s}else{let s=r.nz;if(s!==void 0)return s}L("Next command is not found: Current state = "+this.getCurrentState()+", output = "+this.getPreviousOutput())}_internalExecActionN(t,r){try{let s=this.actionExecutor;for(let i of t.actions)s.execActionN(i,r)}catch(s){if(s instanceof Error)this.#n(s);else throw s}let n=this.currentStateIndex*2+this.prevOutput;this.stateStatsArray[n]=(this.stateStatsArray[n]??0)+r,this.stepCount+=r}exec(t,r,n,s){let i=n!==-1,o=r&&performance.now();for(let a=0;a<t;a++){let u=this.getNextCommand(),l=u.tdecuOptimize;if(l){let m=l.tdecU.registerCache?.getValue();if(m!==void 0&&m!==0){m=Math.min(m,t-a),this._internalExecActionN(u.command,m),a+=m-1;continue}}else if(u.tdecbOptimize){let m=u.tdecbOptimize.tdecB.registerCache?.pointer;if(m!==void 0&&m!==0){m=Math.min(m,t-a),this._internalExecActionN(u.command,m),a+=m-1;continue}}try{if(this.execCommandFor(u)===-1)return"Halted"}catch(d){if(d instanceof Error)this.#n(d);else throw d}if(i&&this.currentStateIndex===n&&(s===-1||s===this.prevOutput))return"Stop";if(r&&(a+1)%5e5===0&&o!==!1&&performance.now()-o>=50)return}}#n(t){let r=this.getNextCommand().command;return L(t.message+" in "+D(r))}execCommandFor(t){this.stepCount+=1;{let o=this.currentStateIndex,a=this.prevOutput,u=o*2+a;this.stateStatsArray[u]=(this.stateStatsArray[u]??0)+1}let r=-1,n=this.actionExecutor,s=t.command;for(let o of s.actions){let a=n.execAction(o);if(a===-1)return-1;a!==void 0&&(r===-1?r=a:L(`Return value twice: line = ${D(s)}`))}r===-1&&L(`No return value: line = ${D(s)}`);let i=t.nextState;this.currentStateIndex=i,this.prevOutput=r}execCommand(){return this.execCommandFor(this.getNextCommand())}};function xs(e,t){let r=document.createElement("input");r.type="file",r.style.display="none",e.addEventListener("click",()=>{r.click()}),r.addEventListener("change",n=>{let s=n.target.files;if(s.length>0){let i=s[0];t(i)}}),document.body.appendChild(r)}var Ee=class{constructor(){this.files=[]}getFiles(){return this.files.slice()}initialize(){pe.addEventListener("click",async()=>{pe.disabled=!0,this.addFile({name:"binary.apglib",content:await fetch("./frontend/data/binary.apglib").then(t=>t.text()),builtin:!0}),await new Promise(t=>setTimeout(t,500)),Pe.click()}),xs(an,async t=>{this.addFile({name:t.name,content:await t.text()}),await new Promise(r=>setTimeout(r,500)),Pe.click()})}addFile(t){this.files.push(t);let r=f("td");r.textContent=t.name;let n=f("button",{text:"Delete"});n.className="btn btn-danger btn-sm",n.addEventListener("click",()=>{t.builtin&&(pe.disabled=!1),this.files=this.files.filter(o=>o.name!==t.name),i.remove()});let s=f("td",{children:[n]}),i=f("tr",{children:[r,s]});cn.append(i)}};var ys=30,$e=class{#e;#n="";#t;#i;#s=new Kt(Xr);#c=new te(Kr);#a=new ee(nn,sn);$libraryUI=new Ee;#o;#r="Initial";constructor(){this.stepConfig=1,this.#o=new Wt(t=>{this.run(t)},{frequency:ys}),this.$libraryUI.initialize()}setFrequency(t){this.#o.frequency=t,this.#u()}start(){switch(this.#r){case"Initial":{this.reset()&&(this.#r="Running");break}case"Stop":{this.#r="Running";break}default:throw Error("start: unreachable")}this.render()}stop(){this.#r="Stop",this.render()}toggle(){this.#r==="Running"?this.stop():this.start()}#l(){this.#t===void 0?this.#s.clear():this.#s.initialize(this.#t.actionExecutor.uRegMap)}#p(){this.#t===void 0?this.#c.clear():this.#c.initialize(this.#t.actionExecutor.bRegMap)}#f(){this.#l(),this.#p(),this.#h(),Br(Oe,this.#t)}doStep(){if(this.#r==="Running"&&this.stop(),this.stepConfig>=5e6){let t=gr();t.style.position="absolute",R.append(t),ie.style.color="transparent",R.disabled=!0,V.disabled=!0,A.disabled=!0,setTimeout(()=>{try{this.run(this.stepConfig)}finally{ie.style.color="",t.remove()}},33)}else this.run(this.stepConfig)}setInputAndReset(t){k.value=t,this.reset()}reset(){this.#n="",this.#t=void 0,this.#o.reset();try{let t=this.$libraryUI.getFiles();this.#t=Ft.fromString(k.value,t),this.#f(),this.#r="Stop"}catch(t){return this.#r="ParseError",this.#n=Ne(t),this.render(),!1}return this.render(),!0}#u(){let t=this.#o.frequency;this.#i!==t&&(jr.textContent=v(t),this.#i=t)}#d(){try{let t=this.#t?.getNextCommand();qr.textContent=t?.command.pretty()??""}catch(t){console.error(t)}}renderB2D(){if(!xt.open)return;let t=this.#t;if(t===void 0){_t.x.textContent="0",_t.y.textContent="0",ae.clearRect(0,0,oe.width,oe.height),ae.resetTransform();return}let r=t.actionExecutor.b2d;_t.x.textContent=r.x.toString(),_t.y.textContent=r.y.toString();let n=performance.now();$r(ae,r,ue.checked,Ct.checked),this.#r==="Running"&&performance.now()-n>=200&&(xt.open=!1)}renderUnary(){this.#t!==void 0&&Tt.open&&this.#s.render(this.#t.actionExecutor.uRegMap)}renderBinary(){this.#t!==void 0&&Bt.open&&this.#c.render(this.#t.actionExecutor.bRegMap,N.$hideBits.checked,N.$reverseBits.checked,N.$showBinaryValueInDecimal.checked,N.$showBinaryValueInHex.checked)}#m(){let t=this.#t?.actionExecutor.output.getString();Lr(Fr,t)}#h(){this.#t===void 0?this.#a.clear():this.#a.initialize(this.#t.getStateStats(),this.#t.states)}renderStats(){if(!le.classList.contains("show"))return;let t=this.#t;if(t===void 0){this.#a.clear();return}this.#a.render(t.getStateStats(),t.currentStateIndex)}#g(){switch(this.#r){case"Initial":{wt(A),R.disabled=!1,V.disabled=!1,gt.disabled=!0;break}case"Stop":{wt(A),R.disabled=!1,V.disabled=!1,gt.disabled=!1;break}case"Running":{Ar(A),R.disabled=!0,V.disabled=!0,gt.disabled=!1;break}case"RuntimeError":case"ParseError":{wt(A),A.disabled=!0,R.disabled=!0,V.disabled=!1,gt.disabled=!0;break}case"Halted":{wt(A),A.disabled=!0,R.disabled=!0,V.disabled=!1,gt.disabled=!1;break}}}render(){let t=this.#t,r=this.#r;if(this.#o.disabled=r!=="Running",this.#e!==r||r==="Stop"){this.#g(),r==="ParseError"?k.classList.add("is-invalid"):k.classList.remove("is-invalid");let s=t?.analyzeResult;Tt.style.display=s==null||s.unary.length===0?"none":"",Bt.style.display=s==null||s.binary.length===0?"none":"",Qr.style.display=s?.hasAdd||s?.hasSub||s?.hasMul?"":"none",xt.style.display=s?.hasB2D?"":"none",zr.style.display=s?.hasOutput?"":"none"}Rr(Pr,r,this.#n),this.#u(),Wr.textContent=t?.getCurrentState()??"",Zr.textContent=t?.getPreviousOutput()??"",Gr.textContent=t?.stepCount.toLocaleString()??"";let n=this.stepConfig;ie.textContent=n===1?"Step":`${v(n)} Steps`,this.#d(),this.#m(),this.renderUnary(),this.renderBinary(),Jr.textContent=t?.actionExecutor.addSubMulToUIString()??"",this.renderB2D(),this.renderStats(),this.#e=r}run(t){switch(this.#r){case"Initial":if(!this.reset())return}if(t<=0||isNaN(t))return;let r=this.#t;if(r===void 0)return;let n=this.#r==="Running",s=parseInt(Oe.value,10),i=Ir(rn);try{let o=r.exec(t,n,s,i);o!==void 0&&(this.#r=o)}catch(o){this.#r="RuntimeError",this.#n=Ne(o)}finally{this.render()}}};var bs="./frontend/data/",y=new $e;V.addEventListener("click",()=>{y.reset()});A.addEventListener("click",()=>{y.toggle()});R.addEventListener("click",()=>{y.doStep()});en.forEach(e=>{e.addEventListener("click",async()=>{ce.style.opacity="0.5";let t=e.dataset.src;try{let r=await fetch(bs+t);if(!r.ok)throw Error("error");y.setInputAndReset(await r.text()),mr()}catch(r){throw r}finally{ce.removeAttribute("style")}})});Mr(Yr,y);xt.addEventListener("toggle",()=>{y.renderB2D()});Bt.addEventListener("toggle",()=>{y.renderBinary()});Tt.addEventListener("toggle",()=>{y.renderUnary()});var mr=()=>{k.scrollTop=0};Or(tn,e=>{y.setInputAndReset(e),mr()});It.addEventListener("input",()=>{let e=Number(It.value);isNaN(e)||e<=0||!Number.isInteger(e)?(kr(It,"Enter a positive integer"),y.stepConfig=1):(Ur(It),y.stepConfig=e),y.render()});var Vt=(e,t)=>{e.addEventListener("change",()=>{y.render(),dt(t,e.checked.toString())})},cr="apge_hide_binary";Vt(N.$hideBits,cr);var ur="apge_reverse_binary";Vt(N.$reverseBits,ur);var Gt="apge_show_binary_in_decimal";Vt(N.$showBinaryValueInDecimal,Gt);var lr="apge_show_binary_in_hex";Vt(N.$showBinaryValueInHex,lr);ue.addEventListener("change",()=>{y.renderB2D()});var pr="apge_b2d_flip_upside_down";Vt(Ct,pr);le.addEventListener("shown.bs.modal",()=>{y.renderStats()});on.addEventListener("click",()=>{k.value.length>=10**6||(dt("state-diagram-input",k.value),window.open("./tools/diagram/index.html",void 0,"noreferrer=yes,noopener=yes"))});var fr="apge_dark",we="on",dr="dark_mode";Dt.addEventListener("change",()=>{Dt.checked?(dt(dr,we),document.body.setAttribute(fr,we)):(se(dr),document.body.removeAttribute(fr)),He.textContent=Dt.checked?"On":"Off";let e="dark-mode-anim";document.body.classList.add(e),Ue.classList.add(e),setTimeout(()=>{document.body.classList.remove(e),Ue.classList.remove(e)},500)});document.addEventListener("keydown",e=>{if(!(Hr()||e.isComposing||e.metaKey||e.shiftKey||e.ctrlKey))switch(e.code){case"Enter":{y.toggle();break}case"Space":{R.disabled||(e.preventDefault(),y.doStep());break}}});k.addEventListener("drop",async e=>{e.preventDefault();let t=e.dataTransfer?.files.item(0);t!=null&&(y.setInputAndReset(await t.text()),mr())});ce.disabled=!1;Vr.disabled=!1;y.render();ne(()=>{let e="initial_code",t=mt(e);t!==null&&(se(e),y.setInputAndReset(t))});ne(()=>{ht("hide_binary",cr),ht("show_binary_in_decimal",Gt),ht("reverse_binary",ur),ht("b2d_flip_upside_down",pr),ht("show_binary_in_hex",lr),mt(Gt)===null&&dt(Gt,"true");let e=[{key:pr,checkbox:Ct},{key:ur,checkbox:N.$reverseBits},{key:cr,checkbox:N.$hideBits},{key:Gt,checkbox:N.$showBinaryValueInDecimal},{key:lr,checkbox:N.$showBinaryValueInHex}];for(let{key:t,checkbox:r}of e)mt(t)==="true"&&(r.checked=!0);mt(dr)===we&&(document.body.setAttribute(fr,we),Dt.checked=!0,He.textContent="On"),y.render()});"serviceWorker"in navigator&&ne(async()=>{(await navigator.serviceWorker.getRegistrations()).map(t=>t.unregister())});
+        `;
+                }
+        };
+var Rs = [
+                y.parse,
+                w.parse,
+                rt.parse,
+                j.parse,
+                B.parse,
+                nt.parse,
+                it.parse,
+                st.parse,
+                T.parse,
+                ot.parse,
+        ],
+        hr = (e) => {
+                for (let t of Rs) {
+                        let r = t(e);
+                        if (r !== void 0) return r;
+                }
+        };
+var C = (e) => e !== void 0 ? ` at line ${e}` : "";
+function gr(e, t, r, n) {
+        if (e = e.trim(), !e.startsWith("{")) {
+                return `Invalid line "${r}"${
+                        C(t)
+                }. ${n} replacements does not start with "{"`;
+        }
+        if (!e.endsWith("}")) {
+                return `Invalid line "${r}"${
+                        C(t)
+                }. ${n} replacements does not end with "}"`;
+        }
+        try {
+                return e.slice(1, -1).slice().split(";").map((s) => {
+                        let i = s.trim().split("=").map((o) => o.trim());
+                        if (i.length != 2) {
+                                throw new Error(
+                                        `Invalid line "${r}"${
+                                                C(t)
+                                        }. #DEFINE invalid replacements`,
+                                );
+                        }
+                        return {
+                                needle: i[0] ?? l(),
+                                replacement: i[1] ?? l(),
+                        };
+                });
+        } catch (s) {
+                return s instanceof Error ? s.message : l();
+        }
+}
+var Kt = "INITIAL",
+        A = class {
+                pretty() {
+                        return "";
+                }
+        },
+        yt = class e extends A {
+                constructor(t) {
+                        super(), this.content = t;
+                }
+                static get key() {
+                        return "#COMPONENTS";
+                }
+                pretty() {
+                        return e.key + " " + this.content;
+                }
+        },
+        xt = class e extends A {
+                constructor(t) {
+                        super(), this.content = t;
+                }
+                static get key() {
+                        return "#REGISTERS";
+                }
+                pretty() {
+                        return e.key + " " + this.content;
+                }
+        };
+function Rn(e) {
+        return "{ " + e.map((t) =>
+                t.needle + " = " + t.replacement
+        ).join("; ") + " }";
+}
+var bt = class e extends A {
+                constructor(t, r) {
+                        super(), this.name = t, this.defaultReplacements = r;
+                }
+                static get key() {
+                        return "#DEFINE";
+                }
+                pretty() {
+                        return e.key + " " + this.name +
+                                (this.defaultReplacements.length === 0
+                                        ? ""
+                                        : " " + Rn(this.defaultReplacements));
+                }
+        },
+        ut = class e extends A {
+                constructor() {
+                        super();
+                }
+                static get key() {
+                        return "#ENDDEF";
+                }
+                pretty() {
+                        return e.key;
+                }
+        },
+        ct = class e extends A {
+                constructor(t, r) {
+                        super(), this.templateName = t, this.replacements = r;
+                }
+                static get key() {
+                        return "#INSERT";
+                }
+                pretty() {
+                        return e.key + " " + this.templateName +
+                                (this.replacements.length === 0
+                                        ? ""
+                                        : " " + Rn(this.replacements));
+                }
+        },
+        St = class extends A {
+                constructor(t) {
+                        super(), this.filename = t;
+                }
+                static get key() {
+                        return "#INCLUDE";
+                }
+                pretty() {
+                        return ct.key + " " + this.filename;
+                }
+        },
+        yr = class extends A {
+                constructor(t) {
+                        super(), this.str = t;
+                }
+                getString() {
+                        return this.str;
+                }
+                pretty() {
+                        return this.getString();
+                }
+        },
+        xr = class extends A {
+                constructor() {
+                        super();
+                }
+                pretty() {
+                        return "";
+                }
+        },
+        vs = (e) => {
+                switch (e) {
+                        case "Z":
+                                return e;
+                        case "NZ":
+                                return e;
+                        case "ZZ":
+                                return e;
+                        case "*":
+                                return e;
+                        default:
+                                return;
+                }
+        },
+        It = class extends A {
+                constructor(
+                        {
+                                state: t,
+                                input: r,
+                                nextState: n,
+                                actions: s,
+                                line: i,
+                        },
+                ) {
+                        super(),
+                                this.state = t,
+                                this.input = r,
+                                this.nextState = n,
+                                this.actions = s,
+                                this.line = i,
+                                this._string = `${this.state}; ${this.input};${
+                                        " ".repeat(2 - this.input.length)
+                                } ${this.nextState}; ${
+                                        this.actions.map((o) => o.pretty())
+                                                .join(", ")
+                                }`;
+                }
+                pretty() {
+                        return this._string;
+                }
+        },
+        br = (e, t) => {
+                let r = e.trim();
+                if (r === "") return new xr();
+                if (r.startsWith("#")) {
+                        if (r.startsWith(yt.key)) {
+                                return new yt(r.slice(yt.key.length).trim());
+                        }
+                        if (r.startsWith(xt.key)) {
+                                return new xt(r.slice(xt.key.length).trim());
+                        }
+                        if (r.startsWith(bt.key)) {
+                                let d = r.slice(bt.key.length).trim();
+                                if (d.length === 0) {
+                                        return `Invalid line "${e}"${
+                                                C(t)
+                                        }. #DEFINE needs a name.`;
+                                }
+                                let g, x = [], $ = d.indexOf("{");
+                                if ($ !== -1) {
+                                        g = d.slice(0, $).trim();
+                                        let _ = gr(d.slice($), t, e, "#DEFINE");
+                                        if (typeof _ == "string") return _;
+                                        x = _;
+                                } else g = d;
+                                return new bt(g, x ?? []);
+                        } else {
+                                if (r.startsWith(ut.key)) return new ut();
+                                if (r.startsWith(ct.key)) {
+                                        let d = r.slice(ct.key.length).trim();
+                                        if (d.length === 0) {
+                                                return `Invalid line "${e}"${
+                                                        C(t)
+                                                }. #INSERT needs a name.`;
+                                        }
+                                        let g, x = [], $ = d.indexOf("{");
+                                        if ($ !== -1) {
+                                                g = d.slice(0, $).trim();
+                                                let _ = gr(
+                                                        d.slice($),
+                                                        t,
+                                                        e,
+                                                        "#INSERT",
+                                                );
+                                                if (typeof _ == "string") {
+                                                        return _;
+                                                }
+                                                x = _;
+                                        } else g = d;
+                                        return new ct(g, x);
+                                } else if (r.startsWith(St.key)) {
+                                        let d = r.slice(St.key.length).trim();
+                                        return d === ""
+                                                ? `Invalid line "${e}"${
+                                                        C(t)
+                                                }. #INCLUDE needs filename.`
+                                                : new St(d);
+                                }
+                        }
+                        return new yr(e);
+                }
+                let s = (r.split("#")[0] ?? "").split(/\s*;\s*/u);
+                if (s.length < 4) return `Invalid line "${e}"${C(t)}`;
+                if (s.length > 4) {
+                        return s[4] === ""
+                                ? `Extraneous semicolon "${e}"${C(t)}`
+                                : `Invalid line "${e}"${C(t)}`;
+                }
+                let i = s[0] ?? l(),
+                        o = s[1] ?? l(),
+                        a = s[2] ?? l(),
+                        u = (s[3] ?? l()).trim().split(/\s*,\s*/u).filter((d) =>
+                                d !== ""
+                        ),
+                        m = [];
+                for (let d of u) {
+                        let g = hr(d);
+                        if (g === void 0) {
+                                return `Unknown action "${d}" in "${e}"${C(t)}`;
+                        }
+                        m.push(g);
+                }
+                let h = vs(o);
+                return h === void 0
+                        ? `Unknown input "${o}" in "${e}"${
+                                C(t)
+                        }. Expect "Z", "NZ", "ZZ" or "*"`
+                        : new It({
+                                state: i,
+                                input: h,
+                                nextState: a,
+                                actions: m,
+                                line: t,
+                        });
+        },
+        q = (e) => C(e.line),
+        v = (e) => `"${e.pretty()}"${q(e)}`;
+var vn = (e) => {
+        let t = e.actions;
+        if (t.some((n) => n instanceof T)) return;
+        let r = t.filter((n) => n.doesReturnValue());
+        if (r.length !== 1) {
+                return r.length === 0
+                        ? `Does not return a value in ${v(e)}`
+                        : `Does not contain exactly one action that returns a value in "${e.pretty()}": Actions that produce value are ${
+                                r.map((n) => `"${n.pretty()}"`).join(", ")
+                        }${q(e)}`;
+        }
+};
+var Ln = (e) => {
+        if (e.nextState === Kt) return `Return to initial state in ${v(e)}`;
+};
+var Mn = (e) => {
+        let t = e.actions;
+        if (t.length <= 1) return;
+        let r = t.map((s) => s.pretty());
+        r.sort();
+        let n = r.length - 1;
+        for (let s = 0; s < n; s++) {
+                let i = r[s], o = r[s + 1];
+                if (i === o) return `Duplicated actions "${i}" in ${v(e)}`;
+        }
+};
+var kn = (e) => {
+        let t = e.actions;
+        if (t.some((n) => n instanceof T)) return;
+        let r = t.length;
+        if (!(r <= 1)) {
+                for (let n = 0; n < r; n++) {
+                        let s = t[n] ?? l();
+                        for (let i = n + 1; i < r; i++) {
+                                let o = t[i] ?? l();
+                                if (s.isSameComponent(o)) {
+                                        return `Actions "${s.pretty()}" and "${o.pretty()}" use same component in ${
+                                                v(e)
+                                        }`;
+                                }
+                        }
+                }
+        }
+};
+var Ls = (e, t) =>
+                e.line !== void 0 && t?.line !== void 0
+                        ? ` at line ${e.line} and ${t.line}`
+                        : "",
+        Un = (e) => {
+                if (e.length === 0) return;
+                let t = (s, i) =>
+                                `Need Z line followed by NZ line in "${s.pretty()}"${
+                                        Ls(s, i)
+                                }`,
+                        r = e.length - 1;
+                for (let s = 0; s < r; s++) {
+                        let i = e[s] ?? l(),
+                                o = e[s + 1] ?? l(),
+                                a = i.input,
+                                c = o.input;
+                        if (
+                                a === "Z" && c !== "NZ" ||
+                                c === "NZ" && a !== "Z" ||
+                                a === "Z" && c === "NZ" && i.state !== o.state
+                        ) return [t(i, o)];
+                }
+                let n = e[r];
+                if (n?.input === "Z") return [t(n)];
+        };
+var lt = class e {
+        constructor(t, r = new Map()) {
+                this.templates = r, this.array = t;
+        }
+        getArray() {
+                return this.array;
+        }
+        getTemplates() {
+                return this.templates;
+        }
+        pretty() {
+                return this.array.map((t) => t.pretty()).join(`
+`);
+        }
+        static parse(t) {
+                let r = t.split(/\r\n|\n|\r/u),
+                        n = [],
+                        s = [],
+                        i = new Map(),
+                        o = null;
+                for (let [a, c] of r.entries()) {
+                        if (o != null) {
+                                if (
+                                        c.trimStart().startsWith(ut.key) &&
+                                        br(c, a + 1) instanceof ut
+                                ) {
+                                        o = null;
+                                        continue;
+                                }
+                                let m = i.get(o);
+                                m == null && l(), m.lines.push(c);
+                                continue;
+                        }
+                        let u = br(c, a + 1);
+                        if (u instanceof bt) {
+                                if (o != null) {
+                                        return `#DEFINE needs #ENDDEF ${u.pretty()}`;
+                                }
+                                if (o = u.name, i.has(o)) {
+                                        return `#DEFINE duplicate template name ${u.pretty()}`;
+                                }
+                                i.set(o, {
+                                        defaultReplacements:
+                                                u.defaultReplacements,
+                                        lines: [],
+                                });
+                        } else {
+                                if (u instanceof ut) {
+                                        return `#ENDDEF needs #DEFINE ${u.pretty()}`;
+                                }
+                                u instanceof A
+                                        ? s.push(u)
+                                        : typeof u == "string"
+                                        ? n.push(u)
+                                        : l();
+                        }
+                }
+                return o != null && n.push(`#DEFINE needs #ENDDEF. "${o}"`),
+                        n.length > 0
+                                ? n.join(`
+`)
+                                : new e(s, i);
+        }
+};
+var zn = (e) => {
+        let t = [];
+        {
+                let r = [Mn, vn, kn, Ln];
+                for (let n of e) {
+                        for (let s of r) {
+                                let i = s(n);
+                                typeof i == "string" && t.push(i);
+                        }
+                }
+        }
+        {
+                let r = [Un];
+                for (let n of r) {
+                        let s = n(e);
+                        s !== void 0 && (t = t.concat(s));
+                }
+        }
+        if (t.length > 0) {
+                return t.join(`
+`);
+        }
+};
+function Ms(e, t, r) {
+        let n = e;
+        for (let s of r.concat(t.defaultReplacements)) {
+                n = n.replaceAll(s.needle, s.replacement);
+        }
+        return n;
+}
+function On(e, t) {
+        let r = [],
+                n = new Map(e.getTemplates().entries()),
+                s = e.getArray().slice().reverse();
+        function i(o) {
+                let a = o.getArray();
+                for (let c = a.length - 1; c >= 0; c--) s.push(a[c] ?? l());
+                for (let [c, u] of o.getTemplates()) {
+                        if (n.get(c) != null) {
+                                throw new Error(
+                                        `#DEFINE duplicate template name "${c}"`,
+                                );
+                        }
+                        n.set(c, u);
+                }
+        }
+        for (; s.length >= 1;) {
+                let o = s.pop();
+                if (o instanceof It) r.push(o);
+                else if (o instanceof St) {
+                        let a = t.find((c) => c.name === o.filename);
+                        if (a == null) {
+                                throw new Error(
+                                        `#INCLUDE file not found: "${o.filename}". Add a library file.`,
+                                );
+                        }
+                        i(a.programLines);
+                } else if (o instanceof ct) {
+                        let a = n.get(o.templateName);
+                        if (a == null) {
+                                throw new Error(
+                                        `Undefined template: "${o.templateName}" at line "${o.pretty()}"`,
+                                );
+                        }
+                        let c = a.lines.map((m) => Ms(m, a, o.replacements))
+                                        .join(`
+`),
+                                u = lt.parse(c);
+                        if (typeof u == "string") throw new Error(u);
+                        i(u);
+                }
+        }
+        return r;
+}
+var Hn = "CLOCK-2^";
+function Pn(e) {
+        let t = [], r = e.split(",").map((n) => n.trim());
+        for (let n of r) {
+                if (n === "...") return { components: t, isCont: !0 };
+                if (!(n === "NOP" || n === "HALT_OUT")) {
+                        if (
+                                n === "OUTPUT" || n === "B2D" ||
+                                n === "PRINTER" || n === "ADD" || n === "SUB" ||
+                                n === "MUL"
+                        ) t.push(n);
+                        else if (n.startsWith(Hn)) {
+                                let s = Number(n.slice(Hn.length));
+                        } else {
+                                let s = n.startsWith("B")
+                                        ? "B"
+                                        : n.startsWith("U")
+                                        ? "U"
+                                        : null;
+                                if (s) {
+                                        let i = ks(n.slice(1));
+                                        for (
+                                                let o of i.map((a) =>
+                                                        `${s}${a}`
+                                                )
+                                        ) t.push(o);
+                                }
+                        }
+                }
+        }
+        return { components: t, isCont: !1 };
+}
+function ks(e) {
+        let t = e.split("-");
+        if (t.length === 1) {
+                let r = t[0];
+                if (r?.length === 0) throw new Error("Invalid #COMPONENTS");
+                let n = Number(r);
+                if (Number.isNaN(n)) throw new Error("Invalid #COMPONENTS");
+                return [n];
+        } else if (t.length === 2) {
+                if (t.some((i) => i.length === 0)) {
+                        throw new Error("Invalid #COMPONENTS");
+                }
+                let [r, n] = t.map((i) => Number(i));
+                if (
+                        r == null || n == null || Number.isNaN(r) ||
+                        Number.isNaN(n)
+                ) throw new Error("Invalid #COMPONENTS");
+                if (r >= 100 || n >= 100) {
+                        throw new Error(
+                                "Invalid #COMPONENTS: range declaration must be less than 100",
+                        );
+                }
+                let s = [];
+                for (let i = r; i < n + 1; i++) s.push(i);
+                return s;
+        }
+        throw new Error("Invalid #COMPONENTS");
+}
+var Qt = class e {
+                constructor(t, r, n) {
+                        this.commands = t,
+                                this.componentsHeader = r,
+                                this.registersHeader = n;
+                }
+                static parse(t, { noValidate: r, libraryFiles: n } = {}) {
+                        let s = lt.parse(t);
+                        if (typeof s == "string") return s;
+                        let i = [];
+                        for (let a of n ?? []) {
+                                let c = lt.parse(a.content);
+                                if (typeof c == "string") return c;
+                                i.push({ name: a.name, programLines: c });
+                        }
+                        let o = On(s, i);
+                        if (!r) {
+                                if (o.length === 0) return "Program is empty";
+                                let a = zn(o);
+                                if (typeof a == "string") return a;
+                        }
+                        return new e(
+                                o,
+                                s.getArray().flatMap((a) =>
+                                        a instanceof yt ? [a] : []
+                                ),
+                                s.getArray().flatMap((a) =>
+                                        a instanceof xt ? [a] : []
+                                ),
+                        );
+                }
+        },
+        Us = (e) => [...new Set(e)].sort((t, r) => t - r),
+        Gn = [
+                { key: "hasAdd", component: "ADD" },
+                { key: "hasSub", component: "SUB" },
+                { key: "hasMul", component: "MUL" },
+                { key: "hasB2D", component: "B2D" },
+                { key: "hasPrinter", component: "PRINTER" },
+                { key: "hasOutput", component: "OUTPUT" },
+        ],
+        Sr = (e) => {
+                let t = e.commands.flatMap((u) => u.actions),
+                        r = (u) =>
+                                Us(t.flatMap((m) =>
+                                        m instanceof u ? [m.regNumber] : []
+                                )),
+                        n = !1,
+                        s = !1,
+                        i = !1,
+                        o = !1,
+                        a = !1,
+                        c = !1;
+                for (let u of t) {
+                        u instanceof B
+                                ? n = !0
+                                : u instanceof it
+                                ? s = !0
+                                : u instanceof nt
+                                ? i = !0
+                                : u instanceof rt
+                                ? u.kind === 1 ? a = !0 : o = !0
+                                : u instanceof st && (c = !0);
+                }
+                return {
+                        unary: r(w),
+                        binary: r(y),
+                        legacyT: r(ot),
+                        hasAdd: n,
+                        hasSub: s,
+                        hasMul: i,
+                        hasB2D: o,
+                        hasPrinter: a,
+                        hasOutput: c,
+                };
+        },
+        Vn = (e, t) => {
+                let r = [], n = !1, s = new Set();
+                for (let c of e) {
+                        if (n) {
+                                throw new Error(
+                                        "#COMPONENTS header appears after the computer is built",
+                                );
+                        }
+                        let u = Pn(c.content);
+                        for (let m of u.components) s.add(m);
+                        u.isCont || (n = !0);
+                }
+                let i = (c) =>
+                        `Program uses ${c} component but the #COMPONENTS header does not include it.`;
+                for (let { key: c, component: u } of Gn) {
+                        t[c] && !s.has(u) && r.push(i(u));
+                }
+                let o = [];
+                for (let c of t.unary) s.has("U" + c) || o.push(c);
+                o.length > 0 &&
+                        r.push(`Program uses ${
+                                o.map((c) => "U" + c).join(", ")
+                        } component${
+                                o.length === 1 ? "" : "s"
+                        } but the #COMPONENTS header does not include ${
+                                o.length === 1 ? "it" : "them"
+                        }.`);
+                let a = [];
+                for (let c of t.binary) s.has("B" + c) || a.push(c);
+                if (
+                        a.length > 0 && r.push(`Program uses ${
+                                a.map((c) => "B" + c).join(", ")
+                        } component${
+                                a.length === 1 ? "" : "s"
+                        } but the #COMPONENTS header does not include ${
+                                a.length === 1 ? "it" : "them"
+                        }.`),
+                                r.length !== 0
+                ) {
+                        let c = Yn(t);
+                        throw r.push(`Suggested header: #COMPONENTS ${c}`),
+                                new Error(r.join(`
+`));
+                }
+        };
+function Fn(e) {
+        let t = e.length;
+        if (t === 0) return [];
+        let r = [], n = e[0], s = e[0] ?? l();
+        for (let i = 1; i < t; i++) {
+                let o = e[i] ?? l();
+                o === s + 1 || (r.push(n === s ? `${n}` : `${n}-${s}`), n = o),
+                        s = o;
+        }
+        return r.push(n === s ? `${n}` : `${n}-${s}`), r;
+}
+var Yn = (e) => {
+        let t = [], r = e.binary.slice().sort((s, i) => s - i);
+        t = t.concat(Fn(r).map((s) => "B" + s));
+        let n = e.unary.slice().sort((s, i) => s - i);
+        t = t.concat(Fn(n).map((s) => "U" + s));
+        for (let { key: s, component: i } of Gn) e[s] && t.push(i);
+        return t.join(", ");
+};
+function Zn(e) {
+        let t = [];
+        for (let r = 0; r < e.length; r++) {
+                let n = e[r];
+                if (!n?.z || !n.nz || n.z.command.actions.length !== 1) {
+                        continue;
+                }
+                let s = n.z.command.actions[0];
+                if (!(s instanceof y && s.op === 1)) continue;
+                let i = r, o = n.z.nextState, a = s.regNumber;
+                if (n.nz.command.actions.length !== 1) continue;
+                let c = n.nz.command.actions[0];
+                if (!(c instanceof y && c.op === 2 && c.regNumber === a)) {
+                        continue;
+                }
+                let u = n.nz.nextState;
+                if (u >= e.length) continue;
+                let m = e[u];
+                if (!m?.z || !m.nz || m.z.command.actions.length !== 1) {
+                        continue;
+                }
+                let h = m.z.command.actions[0];
+                if (!(h instanceof y && h.op === 2)) continue;
+                let d = h.regNumber, g = m.z.nextState;
+                if (m.nz.nextState !== g) continue;
+                let x = m.nz.command.actions;
+                if (
+                        x.length !== 3 || !x.some((b) =>
+                                b instanceof y && b.op === 2 &&
+                                b.regNumber === d
+                        ) || !x.some((b) =>
+                                b instanceof y && b.op === 3 &&
+                                b.regNumber === a
+                        ) || !x.some((b) =>
+                                b instanceof B && b.op === 0
+                        ) || g >= e.length
+                ) continue;
+                let $ = e[g];
+                if (!$?.z || !$.nz || $.z.command.actions.length !== 1) {
+                        continue;
+                }
+                let _ = $.z.command.actions[0];
+                if (!(_ instanceof B && _.op === 1)) continue;
+                let Ct = $.z.nextState;
+                if (
+                        $.nz.nextState !== Ct ||
+                        $.nz.command.actions.length !== 1
+                ) continue;
+                let vr = $.nz.command.actions[0];
+                if (!(vr instanceof B && vr.op === 2) || Ct >= e.length) {
+                        continue;
+                }
+                let $t = e[Ct];
+                if (!$t?.z || !$t.nz || $t.z.nextState !== r) continue;
+                let ie = $t.z.command.actions;
+                if (ie.length !== 3) continue;
+                let Lr = ie.find((b) => b instanceof w && b.op === 1);
+                if (!(Lr instanceof w)) continue;
+                let cs = Lr.regNumber;
+                if (
+                        !ie.some((b) =>
+                                b instanceof y && b.op === 0 &&
+                                b.regNumber === d
+                        ) || !ie.some((b) =>
+                                b instanceof y && b.op === 0 &&
+                                b.regNumber === a
+                        ) || $t.nz.nextState !== Ct
+                ) continue;
+                let Me = $t.nz.command.actions,
+                        Mr = Me.filter((b) =>
+                                b instanceof y && b.op === 3 &&
+                                b.regNumber === d
+                        );
+                if (Mr.length !== 1) continue;
+                let us = Me.filter((b) => b instanceof j);
+                Mr.length + us.length === Me.length &&
+                        t.push({
+                                state0: r,
+                                state1: u,
+                                state2: g,
+                                state3: Ct,
+                                inputBReg: a,
+                                outputBReg: d,
+                                allocNumUReg: cs,
+                                inputState: i,
+                                outputState: o,
+                        });
+        }
+        return t;
+}
+var zs = (e) => e instanceof y && e.op === 0,
+        Os = (e) => e instanceof w && e.op === 1,
+        Hs = (e) => {
+                if (
+                        e.input === "NZ" && e.state === e.nextState &&
+                        e.actions.every((t) => !(t instanceof T)) &&
+                        e.actions.every((t) => t instanceof w || zs(t))
+                ) {
+                        let t = e.actions.find(Os);
+                        if (t && t instanceof w) return { tdecU: t };
+                }
+        },
+        Ps = (e) => {
+                if (
+                        e.input === "NZ" && e.state === e.nextState &&
+                        e.actions.every((t) => !(t instanceof T)) &&
+                        e.actions.length === 1 && e.actions.every((t) =>
+                                t instanceof y
+                        )
+                ) {
+                        let t = e.actions.find((r) =>
+                                r instanceof y && r.op === 1
+                        );
+                        if (t && t instanceof y) return { tdecB: t };
+                }
+        },
+        $r = class {
+                constructor(t, r) {
+                        this.command = t,
+                                this.nextState = r,
+                                this.tdecuOptimize = Hs(t),
+                                this.tdecbOptimize = Ps(t),
+                                this.binaryaAddOptimization = void 0;
+                }
+        },
+        Nr = class {
+                constructor(t, r) {
+                        this.z = t, this.nz = r;
+                }
+        },
+        Er = (e, t) => {
+                throw Error(
+                        `Duplicated command: "${e.pretty()}" and "${t.pretty()}"${
+                                q(t)
+                        }`,
+                );
+        };
+function _e(e, t) {
+        return new $r(e, t);
+}
+var Wn = (e) => {
+        let t = new Map(), r = [];
+        for (let o of e) {
+                t.has(o.state) ||
+                        (t.set(o.state, t.size),
+                                r.push(new Nr(void 0, void 0)));
+        }
+        for (let o of e) {
+                let a = r[t.get(o.state) ?? l()] ?? l(), c = t.get(o.nextState);
+                if (c === void 0) {
+                        throw Error(
+                                `Unknown state: "${o.nextState}" at "${o.pretty()}"${
+                                        q(o)
+                                }`,
+                        );
+                }
+                switch (o.input) {
+                        case "Z": {
+                                a.z === void 0
+                                        ? a.z = _e(o, c)
+                                        : Er(a.z.command, o);
+                                break;
+                        }
+                        case "NZ": {
+                                a.nz === void 0
+                                        ? a.nz = _e(o, c)
+                                        : Er(a.nz.command, o);
+                                break;
+                        }
+                        case "ZZ": {
+                                if (a.nz !== void 0) {
+                                        throw Error(
+                                                `Invalid input: ZZ with NZ or *: "${o.pretty()}" and "${a.nz.command.pretty()}"${
+                                                        q(o)
+                                                }`,
+                                        );
+                                }
+                                a.z === void 0
+                                        ? a.z = _e(o, c)
+                                        : Er(a.z.command, o);
+                                break;
+                        }
+                        case "*": {
+                                if (a.nz !== void 0) {
+                                        throw Error(
+                                                `Invalid input: * "${o.pretty()}" and "${a.nz.command.pretty()}"${
+                                                        q(o)
+                                                }`,
+                                        );
+                                }
+                                if (a.z !== void 0) {
+                                        throw Error(
+                                                `Invalid input: * "${o.pretty()}" and "${a.z.command.pretty()}"${
+                                                        q(o)
+                                                }`,
+                                        );
+                                }
+                                {
+                                        let u = _e(o, c);
+                                        a.z = u, a.nz = u;
+                                }
+                                break;
+                        }
+                        default:
+                                l();
+                }
+        }
+        let n = Zn(r);
+        for (let o of n) {
+                let a = r[o.inputState];
+                (a === void 0 || a.nz === void 0) && l(),
+                        a.nz.binaryaAddOptimization = o;
+        }
+        let s = [...t.keys()], i = Array(s.length).fill(0).map(() => new Set());
+        for (let o = 0; o < r.length; o++) {
+                let a = r[o];
+                a !== void 0 &&
+                        (a.z && i[a.z.nextState]?.add(o),
+                                a.nz && i[a.nz.nextState]?.add(o));
+        }
+        return {
+                stateNames: s,
+                stateNameToIndexMap: t,
+                lookup: r,
+                reverseStateList: i,
+        };
+};
+function Xn(e) {
+        let t = e.content.replace(/'/ug, '"'), r = {};
+        try {
+                r = JSON.parse(t);
+        } catch {
+                throw new Error(
+                        `Invalid #REGISTERS: is not a valid JSON: "${t}"`,
+                );
+        }
+        if (r === null || typeof r != "object") {
+                throw new Error(`Invalid #REGISTERS: "${t}" is not an object`);
+        }
+        return r;
+}
+var P = (e = "error") => {
+                throw Error(e);
+        },
+        Jt = class e {
+                constructor(
+                        t,
+                        {
+                                enableBinaryOptimization: r = !0,
+                                historyCapacity: n,
+                        } = {},
+                ) {
+                        this.stepCount = 0;
+                        let s = Sr(t);
+                        this.enableBinaryOptimization = r,
+                                this.actionExecutor = new we(s),
+                                this.prevOutput = 0;
+                        let {
+                                stateNames: i,
+                                stateNameToIndexMap: o,
+                                lookup: a,
+                        } = Wn(t.commands);
+                        this.lookup = a;
+                        for (let u of a) {
+                                let m = (u.z?.command.actions ?? []).concat(
+                                        u.nz?.command.actions ?? [],
+                                );
+                                for (let h of m) {
+                                        this.actionExecutor.setCache(h);
+                                }
+                        }
+                        this.currentStateIndex = o.get(Kt) ??
+                                P(`${Kt} state is not present`),
+                                this.stateHistory = [],
+                                this.stateHistoryCapacity = n ?? 8,
+                                this.stateHistoryHead = 0,
+                                this.stateStatsArray = [],
+                                this.stateNames = i,
+                                this.stateNameToIndexMap = o,
+                                this.program = t,
+                                this.analyzeResult = s;
+                        for (let u = 0; u < a.length * 2; u++) {
+                                this.stateStatsArray.push(0);
+                        }
+                        let c = t.registersHeader;
+                        for (let u of c) {
+                                this.actionExecutor.setByRegistersInit(Xn(u));
+                        }
+                        t.componentsHeader.length > 0 &&
+                                Vn(t.componentsHeader, s);
+                }
+                static fromString(
+                        t,
+                        r,
+                        {
+                                enableBinaryOptimization: n = !1,
+                                historyCapacity: s,
+                        } = {},
+                ) {
+                        let i = Qt.parse(t, { libraryFiles: r ?? [] });
+                        if (typeof i == "string") throw Error(i);
+                        return new e(i, {
+                                enableBinaryOptimization: n,
+                                historyCapacity: s,
+                        });
+                }
+                getStateStats() {
+                        let t = this.stateStatsArray, r = t.length, n = [];
+                        for (let s = 0; s < r; s += 2) {
+                                n.push({ z: t[s] ?? P(), nz: t[s + 1] ?? P() });
+                        }
+                        return n;
+                }
+                getCurrentState() {
+                        let t = this.stateNames[this.currentStateIndex];
+                        return t === void 0 && P("State name is not found"), t;
+                }
+                getStateNameToIndexMap() {
+                        return this.stateNameToIndexMap;
+                }
+                getPreviousOutput() {
+                        return this.prevOutput === 0 ? "Z" : "NZ";
+                }
+                getCommandForStateIndex(t, r) {
+                        let n = this.lookup[t];
+                        if (
+                                n === void 0 &&
+                                P(`Internal Error: command is not found: Current state index: ${t}`),
+                                        r === 0
+                        ) {
+                                let s = n.z;
+                                if (s !== void 0) return s;
+                        } else {
+                                let s = n.nz;
+                                if (s !== void 0) return s;
+                        }
+                        P(
+                                "Next command is not found: Current state = " +
+                                        this.getCurrentState() + ", output = " +
+                                        this.getPreviousOutput(),
+                        );
+                }
+                getNextCommand() {
+                        let t = this.currentStateIndex, r = this.lookup[t];
+                        if (
+                                r === void 0 &&
+                                P(`Internal Error: Next command is not found: Current state index: ${t}`),
+                                        this.prevOutput === 0
+                        ) {
+                                let s = r.z;
+                                if (s !== void 0) return s;
+                        } else {
+                                let s = r.nz;
+                                if (s !== void 0) return s;
+                        }
+                        P(
+                                "Next command is not found: Current state = " +
+                                        this.getCurrentState() + ", output = " +
+                                        this.getPreviousOutput(),
+                        );
+                }
+                _internalExecActionN(t, r) {
+                        try {
+                                let i = this.actionExecutor;
+                                for (let o of t.actions) i.execActionN(o, r);
+                        } catch (i) {
+                                if (i instanceof Error) this.#t(i);
+                                else throw i;
+                        }
+                        let n = this.currentStateIndex * 2 + this.prevOutput,
+                                s = this.stateStatsArray;
+                        s[n] = (s[n] ?? 0) + r, this.stepCount += r;
+                }
+                _internalExecBinaryAdd(t, r, n) {
+                        if (n <= 5) return { type: "cant-execute" };
+                        if (
+                                r !== -1 &&
+                                (t.state0 === r || t.state1 === r ||
+                                        t.state2 === r || t.state3 === r)
+                        ) return { type: "cant-execute" };
+                        let s = this.actionExecutor.getUReg(t.allocNumUReg);
+                        s === void 0 && l();
+                        let o = s.getValue() + 1;
+                        if (!(o >= 4 && o * 5 + 1 < n)) {
+                                return { type: "cant-execute" };
+                        }
+                        let a = this.actionExecutor.getBReg(t.outputBReg),
+                                c = this.actionExecutor.getBReg(t.inputBReg);
+                        if (
+                                (a === void 0 || c === void 0) && l(),
+                                        a.pointer !== 0 || c.pointer !== 0
+                        ) return { type: "cant-execute" };
+                        s.setValue(0),
+                                a.pointer = o,
+                                a.extend(),
+                                c.pointer = o,
+                                c.extend();
+                        let u = a.getInternalUint8Array(),
+                                m = c.getInternalUint8Array(),
+                                h = 0,
+                                d = 0;
+                        for (let g = 0; g < o; g++) {
+                                let x = (u[g] ?? l()) + (m[g] ?? l()) + d,
+                                        $ = x % 2;
+                                u[g] = $,
+                                        h += $ === 0 ? 4 : 5,
+                                        d = x >= 2 ? 1 : 0;
+                        }
+                        return this.prevOutput = c.tdec(),
+                                h += 1,
+                                this.currentStateIndex = t.outputState,
+                                this.stepCount += h,
+                                { type: "executed", count: h };
+                }
+                exec(t, r, n, s) {
+                        let i = n !== -1,
+                                o = r ? null : performance.now(),
+                                a = this.enableBinaryOptimization;
+                        for (let c = 0; c < t; c++) {
+                                let u = this.getNextCommand();
+                                {
+                                        let h = this.stateHistory,
+                                                d = this.stateHistoryHead,
+                                                g = this.stateHistoryCapacity;
+                                        if (h.length < g) {
+                                                h.push({
+                                                        step: this.stepCount,
+                                                        stateIndex:
+                                                                this.currentStateIndex,
+                                                        output: this.prevOutput,
+                                                });
+                                        } else {
+                                                let x = h[d];
+                                                x === void 0 && l(),
+                                                        x.step = this.stepCount,
+                                                        x.stateIndex =
+                                                                this.currentStateIndex,
+                                                        x.output =
+                                                                this.prevOutput;
+                                        }
+                                        this.stateHistoryHead = (d + 1) % g;
+                                }
+                                let m = u.tdecuOptimize;
+                                if (m) {
+                                        let d = m.tdecU.registerCache
+                                                ?.getValue();
+                                        if (d !== void 0 && d !== 0) {
+                                                d = Math.min(d, t - c),
+                                                        this._internalExecActionN(
+                                                                u.command,
+                                                                d,
+                                                        ),
+                                                        c += d - 1;
+                                                continue;
+                                        }
+                                } else if (u.tdecbOptimize) {
+                                        let d = u.tdecbOptimize.tdecB
+                                                .registerCache?.pointer;
+                                        if (d !== void 0 && d !== 0) {
+                                                d = Math.min(d, t - c),
+                                                        this._internalExecActionN(
+                                                                u.command,
+                                                                d,
+                                                        ),
+                                                        c += d - 1;
+                                                continue;
+                                        }
+                                } else if (a && u.binaryaAddOptimization) {
+                                        let h = t - c,
+                                                d = this._internalExecBinaryAdd(
+                                                        u.binaryaAddOptimization,
+                                                        n,
+                                                        h,
+                                                );
+                                        if (d.type === "executed") {
+                                                c += d.count - 1;
+                                                continue;
+                                        }
+                                }
+                                try {
+                                        if (this.execCommandFor(u) === -1) {
+                                                return "Halted";
+                                        }
+                                } catch (h) {
+                                        if (h instanceof Error) this.#t(h);
+                                        else throw h;
+                                }
+                                if (
+                                        i && this.currentStateIndex === n &&
+                                        (s === -1 || s === this.prevOutput)
+                                ) return "Stop";
+                                if (
+                                        r && (c + 1) % 5e5 === 0 &&
+                                        o !== null &&
+                                        performance.now() - o >= 50
+                                ) return;
+                        }
+                }
+                #t(t) {
+                        let r = this.getNextCommand().command;
+                        return P(t.message + " in " + v(r));
+                }
+                execCommandFor(t) {
+                        this.stepCount += 1;
+                        {
+                                let o = this.currentStateIndex,
+                                        a = this.prevOutput,
+                                        c = o * 2 + a,
+                                        u = this.stateStatsArray;
+                                u[c] = (u[c] ?? 0) + 1;
+                        }
+                        let r = -1, n = this.actionExecutor, s = t.command;
+                        for (let o of s.actions) {
+                                let a = n.execAction(o);
+                                if (a === -1) return -1;
+                                a !== void 0 &&
+                                        (r === -1
+                                                ? r = a
+                                                : P(`Return value twice: line = ${
+                                                        v(s)
+                                                }`));
+                        }
+                        r === -1 && P(`No return value: line = ${v(s)}`);
+                        let i = t.nextState;
+                        this.currentStateIndex = i, this.prevOutput = r;
+                }
+                *getStateHistory() {
+                        let t = this.stateHistory,
+                                r = this.stateHistoryHead,
+                                n = this.stateHistoryCapacity,
+                                s = t.length;
+                        for (let i = 0; i < s; i++) {
+                                let o = (r - 1 - i + n) % n;
+                                yield t[o];
+                        }
+                }
+                getStateHistoryInternal() {
+                        return {
+                                items: this.stateHistory,
+                                head: this.stateHistoryHead,
+                        };
+                }
+                execCommand() {
+                        return this.execCommandFor(this.getNextCommand());
+                }
+        };
+function f(e, t = void 0) {
+        let r = document.createElement(e);
+        if (typeof t == "string") r.textContent = t;
+        else if (
+                t != null && typeof t == "object" &&
+                (t.text && (r.textContent = t.text),
+                        t.classes && r.classList.add(...t.classes),
+                        t.fn && (t.fn(r), t.fn = void 0),
+                        t.children && r.append(...t.children),
+                        t.style)
+        ) {
+                for (let [n, s] of Object.entries(t.style)) {
+                        n in r.style
+                                ? r.style[n] = s
+                                : r.style.setProperty(n, s);
+                }
+        }
+        return r;
+}
+var Fs = "Start",
+        Gs = "Stop",
+        jn = "btn-primary",
+        qn = "btn-danger",
+        Kn = (e) =>
+                `<svg width="16" height="16" viewBox="0 0 16 16">${e}</svg>`,
+        Vs = () => {
+                let e = f("div");
+                return e.innerHTML =
+                        Kn('<path stroke="currentColor" stroke-width="1" d="M10.804 8 5 4.633v6.734L10.804 8zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692z"/>') +
+                        Fs,
+                        e;
+        },
+        Ys = Vs(),
+        Zs = () => {
+                let e = f("div");
+                return e.innerHTML =
+                        Kn('<path stroke="currentColor" stroke-width="1" d="M3.5 5A1.5 1.5 0 0 1 5 3.5h6A1.5 1.5 0 0 1 12.5 5v6a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 11V5zM5 4.5a.5.5 0 0 0-.5.5v6a.5.5 0 0 0 .5.5h6a.5.5 0 0 0 .5-.5V5a.5.5 0 0 0-.5-.5H5z"/>') +
+                        Gs,
+                        e;
+        },
+        Ws = Zs();
+function te(e) {
+        e.disabled = !1,
+                e.replaceChildren(Ys),
+                e.classList.add(jn),
+                e.classList.remove(qn);
+}
+function Qn(e) {
+        e.disabled = !1,
+                e.replaceChildren(Ws),
+                e.classList.remove(jn),
+                e.classList.add(qn);
+}
+function Jn(e, t, r) {
+        if (e.replaceChildren(), t === "RuntimeError" || t === "ParseError") {
+                let n = r.split(`
+`);
+                for (let s of n) e.append(f("span", "- " + s), f("br"));
+                e.classList.remove("d-none");
+        } else e.classList.add("d-none");
+}
+var ee = 40, Be = window.innerWidth;
+Be >= 1200
+        ? ee = 120
+        : Be >= 992
+        ? ee = 100
+        : Be >= 768
+        ? ee = 70
+        : Be >= 576 && (ee = 50);
+var ts = (e, t) => {
+        if (t = t ?? "", e.value === t) return;
+        e.value = t;
+        let r = t.length, s = Math.min(6, Math.max(1, Math.ceil(r / ee)));
+        e.rows = s;
+};
+function* es(e, t) {
+        if (!Number.isInteger(t)) throw RangeError("size is not an integer");
+        let r = [];
+        for (let n of e) r.push(n), t <= r.length && (yield r, r = []);
+        r.length !== 0 && (yield r);
+}
+var Xs = (e) => {
+                if (window.innerWidth < 768) return e === 9 ? e : 8;
+                let r = 12;
+                return r + 1 <= e && e <= r + 2 ? e : r;
+        },
+        js = (e) => f("th", { text: `U${e}`, classes: ["text-end"] }),
+        qs = (e, t) =>
+                f("td", {
+                        text: t.getValue().toString(),
+                        fn: (r) => {
+                                r.dataset.test = `U${e}`;
+                        },
+                        classes: ["text-end"],
+                }),
+        Ks = (e) => {
+                let t = [], r = [], n = Xs(e.size);
+                for (let i of es(e, n)) {
+                        let o = f("tr"), a = f("tr");
+                        for (let [c, u] of i) {
+                                o.append(js(c));
+                                let m = qs(c, u);
+                                t.push(m), a.append(m);
+                        }
+                        r.push({ header: o, data: a });
+                }
+                let s = f("table");
+                for (let i of r) s.append(i.header, i.data);
+                return s.classList.add("table"),
+                        s.style.tableLayout = "fixed",
+                        s.style.marginBottom = "0",
+                        { table: s, cells: t };
+        },
+        Te = class {
+                #t;
+                #r;
+                constructor(t) {
+                        this.#t = t, this.#r = [];
+                }
+                initialize(t) {
+                        let { table: r, cells: n } = Ks(t);
+                        this.#t.replaceChildren(r), this.#r = n;
+                }
+                clear() {
+                        this.#r = [], this.#t.innerHTML = "";
+                }
+                render(t) {
+                        let r = 0, n = this.#r;
+                        for (let s of t.values()) {
+                                let i = n[r] ?? l();
+                                i.textContent = s.getValue().toString(), r++;
+                        }
+                }
+        };
+var Qs = () => {
+                let e = f("span", { classes: ["decimal"] }),
+                        t = f("span", { classes: ["hex"] }),
+                        r = f("span", { classes: ["max_pointer"] }),
+                        n = f("span", { classes: ["pointer"] });
+                return {
+                        metaData: f("code", {
+                                classes: ["binary_info", "word-break-all"],
+                                children: [e, t, r, n],
+                        }),
+                        $decimal: e,
+                        $hex: t,
+                        $maxPointer: r,
+                        $pointer: n,
+                };
+        },
+        Js = () => {
+                let e = f("span", { classes: ["prefix"] }),
+                        t = f("span", { classes: ["binary-head"] }),
+                        r = f("span", { classes: ["suffix"] });
+                return {
+                        binaryBits: f("code", {
+                                classes: ["word-break-all"],
+                                children: [e, t, r],
+                        }),
+                        $prefix: e,
+                        $head: t,
+                        $suffix: r,
+                };
+        },
+        Ie = class {
+                #t;
+                #r;
+                constructor(t) {
+                        this.#t = t, this.#r = [];
+                }
+                initialize(t) {
+                        this.clear();
+                        let r = [], n = f("table");
+                        for (let s of t.keys()) {
+                                let i = f("td");
+                                i.dataset.test = `B${s}`;
+                                let {
+                                        metaData: o,
+                                        $decimal: a,
+                                        $hex: c,
+                                        $maxPointer: u,
+                                        $pointer: m,
+                                } = Qs();
+                                i.append(o, f("br"));
+                                let {
+                                        binaryBits: h,
+                                        $prefix: d,
+                                        $head: g,
+                                        $suffix: x,
+                                } = Js();
+                                i.append(h);
+                                let $ = f("tr", {
+                                        children: [f("th", `B${s}`), i],
+                                });
+                                n.append($),
+                                        r.push({
+                                                $decimal: a,
+                                                $hex: c,
+                                                $maxPointer: u,
+                                                $pointer: m,
+                                                $prefix: d,
+                                                $head: g,
+                                                $suffix: x,
+                                        });
+                        }
+                        this.#t.append(n), this.#r = r;
+                }
+                clear() {
+                        this.#r = [], this.#t.innerHTML = "";
+                }
+                render(t, r, n, s, i) {
+                        let o = 0, a = this.#r;
+                        for (let c of t.values()) {
+                                let {
+                                        $prefix: u,
+                                        $head: m,
+                                        $suffix: h,
+                                        $decimal: d,
+                                        $hex: g,
+                                        $maxPointer: x,
+                                        $pointer: $,
+                                } = a[o] ?? l();
+                                if (r) {
+                                        u.innerHTML = "",
+                                                m.innerHTML = "",
+                                                h.innerHTML = "";
+                                } else {
+                                        let _ = c.toObject();
+                                        u.textContent = n
+                                                ? fr(_.suffix)
+                                                : mr(_.prefix),
+                                                m.textContent = _.head
+                                                        .toString(),
+                                                h.textContent = n
+                                                        ? fr(_.prefix)
+                                                        : mr(_.suffix);
+                                }
+                                s
+                                        ? d.textContent = "value = " +
+                                                c.toNumberString(10) + ", "
+                                        : d.innerHTML = "",
+                                        i
+                                                ? g.textContent = "hex = " +
+                                                        c.toNumberString(16) +
+                                                        ", "
+                                                : g.innerHTML = "",
+                                        x.textContent = "max_pointer = " +
+                                                (c.getLength() - 1) + ", ",
+                                        $.textContent = "pointer = " +
+                                                c.pointer.toString(),
+                                        o++;
+                        }
+                }
+        };
+function Et(e) {
+        e.reset
+                ? e.reset()
+                : (e.clearRect(0, 0, e.canvas.width, e.canvas.height),
+                        e.resetTransform(),
+                        e.beginPath());
+}
+var rs = (e, t, r, n) => {
+        let s = Math.min(window.devicePixelRatio || 1, 4), i = 300 * s;
+        (e.canvas.width !== i || e.canvas.height !== i) &&
+        (e.canvas.width = i,
+                e.canvas.height = i,
+                e.canvas.style.width = `${(i / s).toFixed(0)}px`,
+                e.canvas.style.height = `${(i / s).toFixed(0)}px`),
+                Et(e);
+        let o = t.getMaxX(), a = t.getMaxY(), c = Math.max(o, a) + 1, u = i / c;
+        n || (e.scale(1, -1), e.translate(0, -i));
+        let m = t.getArray();
+        e.fillStyle = "#212529";
+        for (let h = 0; h <= a; h++) {
+                let d = m[h] ?? l(), g = h * u;
+                for (let x = 0; x <= o; x++) {
+                        d[x] === 1 && e.rect(x * u, g, u, u);
+                }
+        }
+        e.fill(),
+                r ||
+                (e.strokeStyle = "#03A9F4",
+                        e.lineWidth = 4,
+                        e.strokeRect(t.x * u, t.y * u, u, u));
+};
+function wr(e, t, r) {
+        if (e === void 0) {
+                t.x.textContent = "0", t.y.textContent = "0", Et(r);
+                return;
+        }
+        t.x.textContent = e.x.toString(),
+                t.y.textContent = e.y.toString(),
+                rs(r, e, ce.checked, Ot.checked);
+}
+var F = (e) => e.toLocaleString();
+var ns = "stats_current_state",
+        ti = (e, { z: t, nz: r }) => {
+                let n = f("td", {
+                                fn: (u) => {
+                                        u.colSpan = 2;
+                                },
+                                children: [f("code", e)],
+                        }),
+                        s = "num",
+                        i = f("td", { text: F(t + r), classes: [s] }),
+                        o = f("td", { text: F(t), classes: [s] }),
+                        a = f("td", { text: F(r), classes: [s] });
+                return {
+                        $tr: f("tr", { children: [n, i, o, a] }),
+                        $sum: i,
+                        $z: o,
+                        $nz: a,
+                };
+        },
+        Ce = class {
+                #t;
+                #r;
+                constructor(t, r, n) {
+                        this.root = t,
+                                this.#t = r,
+                                this.#r = n,
+                                this.cells = [];
+                }
+                initialize(t, r, n) {
+                        this.#t.textContent = F(r.length),
+                                n
+                                        ? (this.#r.textContent =
+                                                "Binary optimization is enabled. The number of states may be smaller than expected.",
+                                                this.#r.style.color = "#dc3545")
+                                        : this.#r.textContent = "",
+                                this.cells = [],
+                                this.root.innerHTML = "";
+                        for (let [s, i] of t.entries()) {
+                                let o = r[s] ?? "",
+                                        { $tr: a, $sum: c, $z: u, $nz: m } = ti(
+                                                o,
+                                                i,
+                                        );
+                                this.root.append(a),
+                                        this.cells.push({
+                                                $sum: c,
+                                                $z: u,
+                                                $nz: m,
+                                                $tr: a,
+                                        });
+                        }
+                }
+                clear() {
+                        this.#t.innerHTML = "",
+                                this.cells = [],
+                                this.root.innerHTML = "";
+                }
+                render(t, r) {
+                        let n = t, s = this.cells, i = s.length;
+                        for (let o = 0; o < i; o++) {
+                                let a = s[o] ?? l();
+                                r === o
+                                        ? a.$tr.classList.add(ns)
+                                        : a.$tr.classList.remove(ns);
+                                let { z: c, nz: u } = n[o] ?? l();
+                                a.$sum.textContent = F(c + u),
+                                        a.$z.textContent = F(c),
+                                        a.$nz.textContent = F(u);
+                        }
+                }
+        };
+function ss(e, t, r) {
+        if (e.innerHTML = "", t === void 0) return;
+        let n = f("option", "None");
+        n.value = "-1", n.selected = !0, e.append(n);
+        for (let [s, i] of t.getStateNameToIndexMap()) {
+                let o = f("option", s);
+                o.value = i.toString(),
+                        e.append(o),
+                        s === r && (o.selected = !0);
+        }
+}
+function is(e) {
+        switch (e.value) {
+                case "*":
+                        return -1;
+                case "Z":
+                        return 0;
+                default:
+                        return 1;
+        }
+}
+var Ae = class {
+        #t = 0;
+        #r = -1;
+        #e = !1;
+        #i = 0;
+        #s = 0;
+        constructor(t, { frequency: r, signal: n }) {
+                this.#i = r;
+                let s = requestAnimationFrame,
+                        i = (o) => {
+                                if (this.#e && this.#r !== -1) {
+                                        let a = o - this.#r,
+                                                c = this.#t,
+                                                u = c + a / 1e3 * this.#i,
+                                                m = Math.floor(u) -
+                                                        Math.floor(c);
+                                        this.#t = u, t(m);
+                                }
+                                this.#r = o, this.#s = s(i);
+                        };
+                this.#s = s(i),
+                        n?.addEventListener("abort", () => {
+                                this.abort();
+                        });
+        }
+        abort() {
+                this.#s !== 0 && cancelAnimationFrame(this.#s);
+        }
+        get frequency() {
+                return this.#i;
+        }
+        set frequency(t) {
+                this.#i = t;
+        }
+        get disabled() {
+                return !this.#e;
+        }
+        set disabled(t) {
+                this.#e = !t;
+        }
+        reset() {
+                this.#t = 0;
+        }
+};
+var _r = (e) => e instanceof Error ? e.message : "Unknown error is occurred.";
+var os = () => {
+        let e = f("span");
+        return e.classList.add("spinner-border", "spinner-border-sm"),
+                e.setAttribute("role", "status"),
+                e.setAttribute("aria-hidden", "true"),
+                e;
+};
+function ei(e, t) {
+        let r = f("input");
+        r.type = "file",
+                r.style.display = "none",
+                e.addEventListener("click", () => {
+                        r.click();
+                }),
+                r.addEventListener("change", () => {
+                        let n = r.files;
+                        if (n != null && n.length > 0) {
+                                let s = n[0];
+                                s != null && t(s);
+                        }
+                }),
+                document.body.append(r);
+}
+var De = class {
+        #t;
+        constructor() {
+                this.#t = [];
+        }
+        getFiles() {
+                return this.#t.slice();
+        }
+        initialize() {
+                le.addEventListener("click", async () => {
+                        le.disabled = !0,
+                                this.addFile({
+                                        name: "binary.apglib",
+                                        content: await fetch(
+                                                "./frontend/data/binary.apglib",
+                                        ).then((t) => {
+                                                if (!t.ok) {
+                                                        throw new Error(
+                                                                "Failed to load",
+                                                        );
+                                                }
+                                                return t.text();
+                                        }),
+                                        builtin: !0,
+                                }),
+                                await new Promise((t) => setTimeout(t, 500)),
+                                Fe.click();
+                }),
+                        ei(fn, async (t) => {
+                                this.addFile({
+                                        name: t.name,
+                                        content: await t.text(),
+                                }),
+                                        await new Promise((r) =>
+                                                setTimeout(r, 500)
+                                        ),
+                                        Fe.click();
+                        });
+        }
+        addFile(t) {
+                this.#t.push(t);
+                let r = f("td");
+                r.textContent = t.name;
+                let n = f("button", { text: "Delete" });
+                n.className = "btn btn-danger btn-sm",
+                        n.addEventListener("click", () => {
+                                t.builtin && (le.disabled = !1),
+                                        this.#t = this.#t.filter((o) =>
+                                                o.name !== t.name
+                                        ),
+                                        i.remove();
+                        });
+                let s = f("td", { children: [n] }),
+                        i = f("tr", { children: [r, s] });
+                mn.append(i);
+        }
+};
+var Re = class {
+        constructor(t) {
+                this.historyBody = t, this.items = [];
+        }
+        initialize(t) {
+                this.historyBody.innerHTML = "", this.items = [];
+                for (let r = 0; r < t; r++) {
+                        let n = document.createElement("tr");
+                        n.classList.add("code-mono");
+                        let s = document.createElement("td");
+                        s.colSpan = 2;
+                        let i = document.createElement("td");
+                        i.colSpan = 2;
+                        let o = document.createElement("td"),
+                                a = document.createElement("td");
+                        a.colSpan = 2,
+                                n.append(s, i, o, a),
+                                this.historyBody.appendChild(n),
+                                this.items.push({
+                                        $row: n,
+                                        $step: s,
+                                        $state: i,
+                                        $output: o,
+                                        $actions: a,
+                                });
+                }
+        }
+        render(t) {
+                t.stateHistoryCapacity !== this.items.length &&
+                        this.initialize(t.stateHistoryCapacity);
+                let r = this.items,
+                        n = !1,
+                        s = t.getStateHistoryInternal(),
+                        i = n ? s.items : [...t.getStateHistory()];
+                for (let o = 0; o < r.length; o++) {
+                        let a = r[o], c = i[o];
+                        if (!a) return;
+                        if (c) {
+                                a.$row.classList.remove("d-none"),
+                                        n &&
+                                        (s.head === 0 && o === r.length - 1 ||
+                                                        o === s.head - 1
+                                                ? a.$row.classList.add(
+                                                        "current_state",
+                                                )
+                                                : a.$row.classList.remove(
+                                                        "current_state",
+                                                )),
+                                        a.$step.textContent = c.step
+                                                .toLocaleString(),
+                                        a.$state.textContent =
+                                                t.stateNames[c.stateIndex] ??
+                                                        "",
+                                        a.$output.textContent = c.output === 0
+                                                ? "Z"
+                                                : "NZ";
+                                let u = t.getCommandForStateIndex(
+                                        c.stateIndex,
+                                        c.output,
+                                );
+                                a.$actions.textContent =
+                                        u.command.actions.map((m) => m.pretty())
+                                                .join(", ") ?? "";
+                        } else {a.$row.classList.add("d-none"),
+                                        a.$row.classList.remove(
+                                                "current_state",
+                                        ),
+                                        a.$step.textContent = "",
+                                        a.$state.textContent = "",
+                                        a.$output.textContent = "",
+                                        a.$actions.textContent = "";}
+                }
+        }
+};
+var ri = 30,
+        ve = class {
+                #t;
+                #r = "";
+                #e;
+                #i;
+                #s = new Te(tn);
+                #c = new Ie(en);
+                #a = new Ce(ln, pn, un);
+                #u = new Re(Jr);
+                $libraryUI = new De();
+                #o;
+                #n = "Initial";
+                constructor() {
+                        this.stepConfig = 1,
+                                this.#o = new Ae((t) => {
+                                        this.run(t);
+                                }, { frequency: ri }),
+                                this.$libraryUI.initialize();
+                }
+                setFrequency(t) {
+                        this.#o.frequency = t, this.#l();
+                }
+                start() {
+                        switch (this.#n) {
+                                case "Initial": {
+                                        this.reset() && (this.#n = "Running");
+                                        break;
+                                }
+                                case "Stop": {
+                                        this.#n = "Running";
+                                        break;
+                                }
+                                default:
+                                        throw Error("start: unreachable");
+                        }
+                        this.render();
+                }
+                stop() {
+                        this.#n = "Stop", this.render();
+                }
+                toggle() {
+                        this.#n === "Running" ? this.stop() : this.start();
+                }
+                #p() {
+                        this.#e === void 0
+                                ? this.#s.clear()
+                                : this.#s.initialize(
+                                        this.#e.actionExecutor.uRegMap,
+                                );
+                }
+                #d() {
+                        this.#e === void 0
+                                ? this.#c.clear()
+                                : this.#c.initialize(
+                                        this.#e.actionExecutor.bRegMap,
+                                );
+                }
+                #f({ prevBreakpointName: t }) {
+                        this.#p(),
+                                this.#d(),
+                                this.#g(),
+                                this.#y(),
+                                ss(K, this.#e, t);
+                }
+                doStep() {
+                        if (
+                                this.#n === "Running" && this.stop(),
+                                        this.stepConfig >= 5e6
+                        ) {
+                                let t = os();
+                                t.style.position = "absolute",
+                                        k.append(t),
+                                        ae.style.color = "transparent",
+                                        k.disabled = !0,
+                                        Z.disabled = !0,
+                                        M.disabled = !0,
+                                        setTimeout(() => {
+                                                try {
+                                                        this.run(
+                                                                this.stepConfig,
+                                                        );
+                                                } finally {
+                                                        ae.style.color = "",
+                                                                t.remove();
+                                                }
+                                        }, 33);
+                        } else this.run(this.stepConfig);
+                }
+                setInputAndReset(t) {
+                        L.value = t, this.reset();
+                }
+                reset() {
+                        let t = K.value !== "-1" && this.#e != null
+                                ? this.#e?.stateNames[Number(K.value)]
+                                : void 0;
+                        this.#r = "", this.#e = void 0, this.#o.reset();
+                        try {
+                                let r = this.$libraryUI.getFiles();
+                                this.#e = Jt.fromString(L.value, r, {
+                                        enableBinaryOptimization: Pe.checked,
+                                        historyCapacity: parseInt(cn.value, 10),
+                                }),
+                                        this.#f({ prevBreakpointName: t }),
+                                        this.#n = "Stop";
+                        } catch (r) {
+                                return this.#n = "ParseError",
+                                        this.#r = _r(r),
+                                        this.render(),
+                                        !1;
+                        }
+                        return this.render(), !0;
+                }
+                #l() {
+                        let t = this.#o.frequency;
+                        this.#i !== t && (jr.textContent = F(t), this.#i = t);
+                }
+                #m() {
+                        try {
+                                let t = this.#e?.getNextCommand();
+                                qr.textContent = t?.command.pretty() ?? "";
+                        } catch (t) {
+                                console.error(t);
+                        }
+                }
+                renderB2D() {
+                        if (!_t.open) return;
+                        let t = performance.now();
+                        wr(this.#e?.actionExecutor.b2d, Kr, ke),
+                                this.#n === "Running" &&
+                                performance.now() - t >= 200 &&
+                                (_t.open = !1, Et(ke));
+                }
+                renderPrinter() {
+                        if (!Bt.open) return;
+                        let t = performance.now();
+                        wr(this.#e?.actionExecutor.matrixPrinter, Qr, Ue),
+                                this.#n === "Running" &&
+                                performance.now() - t >= 200 &&
+                                (Bt.open = !1, Et(Ue));
+                }
+                renderUnary() {
+                        this.#e !== void 0 && Rt.open &&
+                                this.#s.render(this.#e.actionExecutor.uRegMap);
+                }
+                renderBinary() {
+                        this.#e !== void 0 && vt.open &&
+                                this.#c.render(
+                                        this.#e.actionExecutor.bRegMap,
+                                        I.$hideBits.checked,
+                                        I.$reverseBits.checked,
+                                        I.$showBinaryValueInDecimal.checked,
+                                        I.$showBinaryValueInHex.checked,
+                                );
+                }
+                #h() {
+                        let t = this.#e?.actionExecutor.output.getString();
+                        ts(Gr, t);
+                }
+                #g() {
+                        let t = this.#e;
+                        t === void 0
+                                ? this.#a.clear()
+                                : this.#a.initialize(
+                                        t.getStateStats(),
+                                        t.stateNames,
+                                        Pe.checked,
+                                );
+                }
+                #y() {
+                        let t = this.#e;
+                        t === void 0
+                                ? this.#u.initialize(0)
+                                : this.#u.initialize(t.stateHistoryCapacity);
+                }
+                renderStats() {
+                        if (!ue.classList.contains("show")) return;
+                        let t = this.#e;
+                        if (t === void 0) {
+                                this.#a.clear();
+                                return;
+                        }
+                        this.#a.render(t.getStateStats(), t.currentStateIndex);
+                }
+                renderHistory() {
+                        if (!Tt.open) return;
+                        let t = this.#e;
+                        t !== void 0 && this.#u.render(t);
+                }
+                #x() {
+                        switch (this.#n) {
+                                case "Initial": {
+                                        te(M),
+                                                k.disabled = !1,
+                                                Z.disabled = !1,
+                                                wt.disabled = !0;
+                                        break;
+                                }
+                                case "Stop": {
+                                        te(M),
+                                                k.disabled = !1,
+                                                Z.disabled = !1,
+                                                wt.disabled = !1;
+                                        break;
+                                }
+                                case "Running": {
+                                        Qn(M),
+                                                k.disabled = !0,
+                                                Z.disabled = !0,
+                                                wt.disabled = !1;
+                                        break;
+                                }
+                                case "RuntimeError":
+                                case "ParseError": {
+                                        te(M),
+                                                M.disabled = !0,
+                                                k.disabled = !0,
+                                                Z.disabled = !1,
+                                                wt.disabled = !0;
+                                        break;
+                                }
+                                case "Halted": {
+                                        te(M),
+                                                M.disabled = !0,
+                                                k.disabled = !0,
+                                                Z.disabled = !1,
+                                                wt.disabled = !1;
+                                        break;
+                                }
+                        }
+                }
+                render() {
+                        let t = this.#e, r = this.#n;
+                        if (
+                                this.#o.disabled = r !== "Running",
+                                        this.#t !== r || r === "Stop"
+                        ) {
+                                this.#x(),
+                                        r === "ParseError"
+                                                ? L.classList.add("is-invalid")
+                                                : L.classList.remove(
+                                                        "is-invalid",
+                                                );
+                                let s = t?.analyzeResult;
+                                Rt.style.display =
+                                        s == null || s.unary.length === 0
+                                                ? "none"
+                                                : "",
+                                        vt.style.display =
+                                                s == null ||
+                                                        s.binary.length === 0
+                                                        ? "none"
+                                                        : "",
+                                        rn.style.display =
+                                                s?.hasAdd || s?.hasSub ||
+                                                        s?.hasMul
+                                                        ? ""
+                                                        : "none",
+                                        _t.style.display = s?.hasB2D
+                                                ? ""
+                                                : "none",
+                                        Bt.style.display = s?.hasPrinter
+                                                ? ""
+                                                : "none",
+                                        Fr.style.display = s?.hasOutput
+                                                ? ""
+                                                : "none";
+                        }
+                        Jn(Pr, r, this.#r),
+                                this.#l(),
+                                Zr.textContent = t?.getCurrentState() ?? "",
+                                Wr.textContent = t?.getPreviousOutput() ?? "",
+                                Vr.textContent =
+                                        t?.stepCount.toLocaleString() ?? "";
+                        let n = this.stepConfig;
+                        ae.textContent = n === 1 ? "Step" : `${F(n)} Steps`,
+                                this.#m(),
+                                this.#h(),
+                                this.renderUnary(),
+                                this.renderBinary(),
+                                nn.textContent =
+                                        t?.actionExecutor
+                                                .addSubMulToUIString() ?? "",
+                                this.renderB2D(),
+                                this.renderPrinter(),
+                                this.renderStats(),
+                                this.renderHistory(),
+                                this.#t = r;
+                }
+                run(t) {
+                        switch (this.#n) {
+                                case "Initial":
+                                        if (!this.reset()) return;
+                        }
+                        if (t <= 0 || isNaN(t)) return;
+                        let r = this.#e;
+                        if (r === void 0) return;
+                        let n = this.#n === "Running",
+                                s = parseInt(K.value, 10),
+                                i = is(Ut);
+                        try {
+                                let o = r.exec(t, n, s, i);
+                                o !== void 0 && (this.#n = o);
+                        } catch (o) {
+                                this.#n = "RuntimeError", this.#r = _r(o);
+                        } finally {
+                                this.render();
+                        }
+                }
+        };
+var re = () => {
+        L.scrollTop = 0;
+};
+var ni = [
+                {
+                        name: "Unary register multiplication",
+                        src: "unary_multiply.apg",
+                },
+                { name: "Binary ruler", src: "binary_ruler.apg" },
+                { name: "Integers", src: "integers.apg" },
+                { name: "Primes", src: "primes.apg" },
+                { name: "O(sqrt(log(t)))", src: "sqrt_log_t.apg" },
+                { name: "Rule 90", src: "rule90.apg" },
+                { name: "Rule 110", src: "rule110.apg" },
+                { name: "Langton's ant", src: "ant2.apg" },
+                { name: "Alien Counter", src: "alien_counter.apg" },
+                { name: "Koch snowflake", src: "koch.apg" },
+                { name: "99 Bottles of Beer", src: "99.apg" },
+                { name: "\u03C0 Calculator", src: "pi_calc.apg" },
+        ],
+        si = "./frontend/data/";
+function as(e) {
+        for (let { name: t, src: r } of ni) {
+                let n = document.createElement("li"),
+                        s = document.createElement("button");
+                s.classList.add("dropdown-item"),
+                        s.dataset.src = r,
+                        s.textContent = t,
+                        n.append(s),
+                        on.append(n),
+                        s.addEventListener("click", async () => {
+                                Lt.style.opacity = "0.5";
+                                try {
+                                        let i = await fetch(si + r);
+                                        if (!i.ok) throw Error("error");
+                                        e.setInputAndReset(await i.text()),
+                                                re();
+                                } catch (i) {
+                                        throw i;
+                                } finally {
+                                        Lt.removeAttribute("style");
+                                }
+                        });
+        }
+}
+var E = new ve();
+Z.addEventListener("click", () => {
+        E.reset();
+});
+M.addEventListener("click", () => {
+        E.toggle();
+});
+k.addEventListener("click", () => {
+        E.doStep();
+});
+as(E);
+kr(Xr, E);
+_t.addEventListener("toggle", () => {
+        E.renderB2D();
+});
+Bt.addEventListener("toggle", () => {
+        E.renderPrinter();
+});
+vt.addEventListener("toggle", () => {
+        E.renderBinary();
+});
+Rt.addEventListener("toggle", () => {
+        E.renderUnary();
+});
+var Br = "apge_history_open";
+dt(Br) && (Tt.open = !0);
+Tt.addEventListener("toggle", () => {
+        E.renderHistory(), Tt.open ? pt(Br, "1") : At(Br);
+});
+Or(sn, (e) => {
+        E.setInputAndReset(e), re();
+});
+Mt.addEventListener("input", () => {
+        let e = Number(Mt.value);
+        isNaN(e) || e <= 0 || !Number.isInteger(e)
+                ? (Ur(Mt, "Enter a positive integer"), E.stepConfig = 1)
+                : (zr(Mt), E.stepConfig = e), E.render();
+});
+var se = (e, t) => {
+                e.addEventListener("change", () => {
+                        E.render(), pt(t, e.checked.toString());
+                });
+        },
+        Tr = "apge_hide_binary";
+se(I.$hideBits, Tr);
+var Ir = "apge_reverse_binary";
+se(I.$reverseBits, Ir);
+var ne = "apge_show_binary_in_decimal";
+se(I.$showBinaryValueInDecimal, ne);
+var Cr = "apge_show_binary_in_hex";
+se(I.$showBinaryValueInHex, Cr);
+ce.addEventListener("change", () => {
+        E.renderB2D(), E.renderPrinter();
+});
+var Ar = "apge_b2d_flip_upside_down";
+se(Ot, Ar);
+ue.addEventListener("shown.bs.modal", () => {
+        E.renderStats();
+});
+an.addEventListener("click", () => {
+        K.value = "-1", Ut.value = "*";
+});
+Oe.addEventListener("change", () => {
+        Oe.checked
+                ? (kt.classList.remove("d-none"), kt.classList.add("d-flex"))
+                : (kt.classList.remove("d-flex"),
+                        kt.classList.add("d-none"),
+                        K.value = "-1",
+                        Ut.value = "*");
+});
+dn.addEventListener("click", () => {
+        L.value.length >= 10 ** 6 ||
+                (pt("state-diagram-input", L.value),
+                        window.open(
+                                "./tools/diagram/index.html",
+                                void 0,
+                                "noreferrer=yes,noopener=yes",
+                        ));
+});
+var Dr = "apge_dark", Le = "on", Rr = "dark_mode";
+zt.addEventListener("change", () => {
+        zt.checked
+                ? (pt(Rr, Le), document.body.setAttribute(Dr, Le))
+                : (At(Rr), document.body.removeAttribute(Dr)),
+                He.textContent = zt.checked ? "On" : "Off";
+        let e = "dark-mode-anim";
+        document.body.classList.add(e),
+                ze.classList.add(e),
+                setTimeout(() => {
+                        document.body.classList.remove(e),
+                                ze.classList.remove(e);
+                }, 500);
+});
+document.addEventListener("keydown", (e) => {
+        if (
+                !(Hr() || e.isComposing || e.metaKey || e.shiftKey || e.ctrlKey)
+        ) {
+                switch (e.code) {
+                        case "Enter": {
+                                E.toggle();
+                                break;
+                        }
+                        case "Space": {
+                                k.disabled || (e.preventDefault(), E.doStep());
+                                break;
+                        }
+                }
+        }
+});
+L.addEventListener("drop", async (e) => {
+        e.preventDefault();
+        let t = e.dataTransfer?.files.item(0);
+        t != null && (E.setInputAndReset(await t.text()), re());
+});
+Lt.disabled = !1;
+Yr.disabled = !1;
+E.render();
+oe(() => {
+        let e = "initial_code", t = dt(e);
+        t !== null && (At(e), E.setInputAndReset(t));
+});
+oe(() => {
+        Nt("hide_binary", Tr),
+                Nt("show_binary_in_decimal", ne),
+                Nt("reverse_binary", Ir),
+                Nt("b2d_flip_upside_down", Ar),
+                Nt("show_binary_in_hex", Cr),
+                dt(ne) === null && pt(ne, "true");
+        let e = [
+                { key: Ar, checkbox: Ot },
+                { key: Ir, checkbox: I.$reverseBits },
+                { key: Tr, checkbox: I.$hideBits },
+                { key: ne, checkbox: I.$showBinaryValueInDecimal },
+                { key: Cr, checkbox: I.$showBinaryValueInHex },
+        ];
+        for (let { key: t, checkbox: r } of e) {
+                dt(t) === "true" && (r.checked = !0);
+        }
+        dt(Rr) === Le &&
+        (document.body.setAttribute(Dr, Le),
+                zt.checked = !0,
+                He.textContent = "On"), E.render();
+});
+"serviceWorker" in navigator && oe(async () => {
+        (await navigator.serviceWorker.getRegistrations()).map((t) =>
+                t.unregister()
+        );
+});
