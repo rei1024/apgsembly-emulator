@@ -1,6 +1,5 @@
 {
     "files.trimTrailingWhitespace": true,
-    "deno.enablePaths": ["build.ts"],
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "denoland.vscode-deno",
     "files.readonlyInclude": {

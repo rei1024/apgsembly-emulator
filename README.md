@@ -6,18 +6,19 @@ An emulator for [APGsembly](https://conwaylife.com/wiki/APGsembly) 2.0
 
 ### Requirements
 
-- `deno`
-  - Above v2.0
-  - https://docs.deno.com/runtime/getting_started/installation/
+- Node.js
+  - Above v24
+
+```sh
+npm i
+```
 
 ### Usage
 
-- `$ deno task dev` Local server
-  - access to [http://localhost:1123/](http://localhost:1123/)
-- `$ deno task t` Unit tests
-- `$ deno task w` Unit tests with file watcher
-- `$ deno task lint` Linting
-- `$ deno task build` Production Build
+- `$ npm run dev` Local server
+  - access to <http://localhost:5174/apgsembly-emulator>
+- `$ npm run test` Unit tests
+- `$ npm run build` Production Build
 
 ### Structure
 
@@ -28,13 +29,7 @@ An emulator for [APGsembly](https://conwaylife.com/wiki/APGsembly) 2.0
 
 ## E2E Testing
 
-### Requirements
-
-- `deno`
-- `npm`
-  - Run `$ npm install`
-
 ### Usage
 
-- `$ deno task e2e-update` Install browsers
-- `$ deno task e2e` E2E tests
+- `$ npm run e2e-update` Install browsers
+- `$ npm run e2e` E2E tests

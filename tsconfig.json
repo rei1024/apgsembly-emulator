@@ -3,6 +3,7 @@
         "isolatedModules": true,
         "outDir": "dist",
         "allowJs": true,
+        "noEmit": true,
         "target": "ES2023",
         "lib": ["ES2023", "dom"],
         "module": "ESNext",
