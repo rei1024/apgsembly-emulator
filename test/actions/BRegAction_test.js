@@ -10,18 +10,20 @@ import {
 import { assertEquals, never, test } from "../deps.js";
 
 test("BRegAction parse success", () => {
-    assertEquals(BRegAction.parse("INC B2"), new BRegAction(B_INC, 2));
+    assertEquals(BRegAction.parse("INC B2"), new BRegAction(B_INC, "2"));
 
-    assertEquals(BRegAction.parse("TDEC B2"), new BRegAction(B_TDEC, 2));
+    assertEquals(BRegAction.parse("TDEC B2"), new BRegAction(B_TDEC, "2"));
 
-    assertEquals(BRegAction.parse("READ B2"), new BRegAction(B_READ, 2));
+    assertEquals(BRegAction.parse("READ B2"), new BRegAction(B_READ, "2"));
 
-    assertEquals(BRegAction.parse("SET B2"), new BRegAction(B_SET, 2));
+    assertEquals(BRegAction.parse("SET B2"), new BRegAction(B_SET, "2"));
+
+    assertEquals(BRegAction.parse("INC Bflag"), new BRegAction(B_INC, "flag"));
 });
 
 test("BRegAction parse whitespace", () => {
-    assertEquals(BRegAction.parse(" INC B2"), new BRegAction(B_INC, 2));
-    assertEquals(BRegAction.parse("INC B2   "), new BRegAction(B_INC, 2));
+    assertEquals(BRegAction.parse(" INC B2"), new BRegAction(B_INC, "2"));
+    assertEquals(BRegAction.parse("INC B2   "), new BRegAction(B_INC, "2"));
 });
 
 test("BRegAction parse fail", () => {
@@ -31,6 +33,8 @@ test("BRegAction parse fail", () => {
     assertEquals(BRegAction.parse("INC"), undefined);
     assertEquals(BRegAction.parse("INC B"), undefined);
     assertEquals(BRegAction.parse("INC B_2"), undefined);
+    // upper case is not allowed in lua compiler v1.3
+    assertEquals(BRegAction.parse("INC BA"), undefined);
 });
 
 test("BRegAction pretty", () => {

@@ -3,13 +3,13 @@
 import { Action } from "./actions/Action.js";
 import { AddAction } from "./actions/AddAction.js";
 import { B2DAction } from "./actions/B2DAction.js";
-import { BRegAction } from "./actions/BRegAction.js";
+import { BRegAction, bRegSuffixRegex } from "./actions/BRegAction.js";
 import { HaltOutAction } from "./actions/HaltOutAction.js";
 import { MulAction } from "./actions/MulAction.js";
 import { NopAction } from "./actions/NopAction.js";
 import { OutputAction } from "./actions/OutputAction.js";
 import { SubAction } from "./actions/SubAction.js";
-import { URegAction } from "./actions/URegAction.js";
+import { URegAction, uRegSuffixRegex } from "./actions/URegAction.js";
 import { LegacyTRegAction } from "./actions/LegacyTRegAction.js";
 import { ADD } from "./components/ADD.js";
 import { B2D } from "./components/B2D.js";
@@ -24,7 +24,7 @@ import { B2D_KIND_PRINTER, B2D_READ } from "./action_consts/B2D_consts.js";
 
 /**
  * @param {"B" | "U" | "T"} type
- * @param {number} regNum
+ * @param {string} regNum
  * @returns {never}
  */
 const throwNotFound = (type, regNum) => {
@@ -139,9 +139,11 @@ export class ActionExecutor {
      */
     #setKeyValue(key, value) {
         if (key.startsWith("U")) {
-            const n = parseNum(key.slice(1), 10);
-            if (isNaNLocal(n)) {
-                throwRegisterInitError(key, value);
+            const n = key.slice(1);
+            if (!uRegSuffixRegex.test(n)) {
+                throw Error(
+                    `Invalid #REGISTERS: "U${n}". The register suffix must consist only of lowercase letters or numbers.`,
+                );
             }
             const reg = this.getUReg(n);
             if (reg === undefined) {
@@ -151,9 +153,11 @@ export class ActionExecutor {
             }
             reg.setByRegistersInit(key, value);
         } else if (key.startsWith("B")) {
-            const n = parseNum(key.slice(1), 10);
-            if (isNaNLocal(n)) {
-                throwRegisterInitError(key, value);
+            const n = key.slice(1);
+            if (!bRegSuffixRegex.test(n)) {
+                throw Error(
+                    `Invalid #REGISTERS: "B${n}". The register suffix must consist only of lowercase letters or numbers.`,
+                );
             }
             const reg = this.getBReg(n);
             if (reg === undefined) {
@@ -215,7 +219,7 @@ export class ActionExecutor {
             return -1;
         } else if (action instanceof LegacyTRegAction) {
             const tReg = this.legacyTRegMap.get(action.regNumber) ??
-                throwNotFound("T", action.regNumber);
+                throwNotFound("T", action.regNumber.toString());
             return tReg.action(action);
         }
         throw Error(`execAction: unknown action ${action.pretty()}`);
@@ -248,7 +252,7 @@ export class ActionExecutor {
 
     /**
      * Get unary register
-     * @param {number} n
+     * @param {string} n
      * @returns {UReg | undefined}
      */
     getUReg(n) {
@@ -257,7 +261,7 @@ export class ActionExecutor {
 
     /**
      * Get binary register
-     * @param {number} n
+     * @param {string} n
      * @returns {BReg | undefined}
      */
     getBReg(n) {

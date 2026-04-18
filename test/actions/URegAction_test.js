@@ -5,17 +5,22 @@ import { URegAction } from "../../src/actions/URegAction.js";
 import { assertEquals, never, test } from "../deps.js";
 
 test("URegAction parse", () => {
-    assertEquals(URegAction.parse("INC U0"), new URegAction(U_INC, 0));
-    assertEquals(URegAction.parse("INC U7"), new URegAction(U_INC, 7));
+    assertEquals(URegAction.parse("INC U0"), new URegAction(U_INC, "0"));
+    assertEquals(URegAction.parse("INC U7"), new URegAction(U_INC, "7"));
 
-    assertEquals(URegAction.parse(" INC U0"), new URegAction(U_INC, 0));
-    assertEquals(URegAction.parse("INC U0 "), new URegAction(U_INC, 0));
+    assertEquals(URegAction.parse(" INC U0"), new URegAction(U_INC, "0"));
+    assertEquals(URegAction.parse("INC U0 "), new URegAction(U_INC, "0"));
 
-    assertEquals(URegAction.parse("TDEC U0"), new URegAction(U_TDEC, 0));
+    assertEquals(URegAction.parse("TDEC U0"), new URegAction(U_TDEC, "0"));
 
-    assertEquals(URegAction.parse("TDEC U5"), new URegAction(U_TDEC, 5));
+    assertEquals(URegAction.parse("TDEC U5"), new URegAction(U_TDEC, "5"));
 
-    assertEquals(URegAction.parse("TDEC U12"), new URegAction(U_TDEC, 12));
+    assertEquals(URegAction.parse("TDEC U12"), new URegAction(U_TDEC, "12"));
+
+    assertEquals(
+        URegAction.parse("TDEC Uflag"),
+        new URegAction(U_TDEC, "flag"),
+    );
 });
 
 test("URegAction parse fail", () => {
@@ -23,7 +28,7 @@ test("URegAction parse fail", () => {
 });
 
 test("URegAction APGsembly 1.0", () => {
-    assertEquals(URegAction.parse("TDEC R12"), new URegAction(U_TDEC, 12));
+    assertEquals(URegAction.parse("TDEC R12"), new URegAction(U_TDEC, "12"));
 });
 
 test("URegAction parse fail", () => {
@@ -36,6 +41,9 @@ test("URegAction parse fail", () => {
     assertEquals(URegAction.parse("TDEC U12 aaa"), undefined);
 
     assertEquals(URegAction.parse("DEC U0"), undefined);
+
+    // upper case is not allowed in lua compiler v1.3
+    assertEquals(URegAction.parse("INC UA"), undefined);
 });
 
 test("URegAction pretty", () => {

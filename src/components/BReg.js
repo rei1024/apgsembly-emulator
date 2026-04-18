@@ -207,7 +207,7 @@ export class BReg {
      * @returns {undefined}
      */
     inc() {
-        const value = this.action(new BRegAction(B_INC, 0)); // regNumberは仮
+        const value = this.action(new BRegAction(B_INC, "0")); // regNumberは仮
         if (value !== undefined) {
             internalError();
         }
@@ -218,7 +218,7 @@ export class BReg {
      * @returns {0 | 1}
      */
     tdec() {
-        const value = this.action(new BRegAction(B_TDEC, 0)); // regNumberは仮
+        const value = this.action(new BRegAction(B_TDEC, "0")); // regNumberは仮
         if (value === undefined) {
             internalError();
         }
@@ -230,7 +230,7 @@ export class BReg {
      * @returns {0 | 1}
      */
     read() {
-        const value = this.action(new BRegAction(B_READ, 0)); // regNumberは仮
+        const value = this.action(new BRegAction(B_READ, "0")); // regNumberは仮
         if (value === undefined) {
             internalError();
         }
@@ -242,7 +242,7 @@ export class BReg {
      * @returns {undefined}
      */
     set() {
-        const value = this.action(new BRegAction(B_SET, 0)); // regNumberは仮
+        const value = this.action(new BRegAction(B_SET, "0")); // regNumberは仮
         if (value !== undefined) {
             return internalError();
         }
