@@ -3,13 +3,13 @@
 import { Action } from "./actions/Action.js";
 import { AddAction } from "./actions/AddAction.js";
 import { B2DAction } from "./actions/B2DAction.js";
-import { BRegAction } from "./actions/BRegAction.js";
+import { BRegAction, bRegSuffixRegex } from "./actions/BRegAction.js";
 import { HaltOutAction } from "./actions/HaltOutAction.js";
 import { MulAction } from "./actions/MulAction.js";
 import { NopAction } from "./actions/NopAction.js";
 import { OutputAction } from "./actions/OutputAction.js";
 import { SubAction } from "./actions/SubAction.js";
-import { URegAction } from "./actions/URegAction.js";
+import { URegAction, uRegSuffixRegex } from "./actions/URegAction.js";
 import { LegacyTRegAction } from "./actions/LegacyTRegAction.js";
 import { ADD } from "./components/ADD.js";
 import { B2D } from "./components/B2D.js";
@@ -140,6 +140,11 @@ export class ActionExecutor {
     #setKeyValue(key, value) {
         if (key.startsWith("U")) {
             const n = key.slice(1);
+            if (!uRegSuffixRegex.test(n)) {
+                throw Error(
+                    `Invalid #REGISTERS: "U${n}". The register suffix must consist only of lowercase letters or numbers.`,
+                );
+            }
             const reg = this.getUReg(n);
             if (reg === undefined) {
                 throw Error(
@@ -149,6 +154,11 @@ export class ActionExecutor {
             reg.setByRegistersInit(key, value);
         } else if (key.startsWith("B")) {
             const n = key.slice(1);
+            if (!bRegSuffixRegex.test(n)) {
+                throw Error(
+                    `Invalid #REGISTERS: "B${n}". The register suffix must consist only of lowercase letters or numbers.`,
+                );
+            }
             const reg = this.getBReg(n);
             if (reg === undefined) {
                 throw Error(

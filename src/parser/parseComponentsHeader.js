@@ -1,5 +1,9 @@
 // @ts-check
 
+import { bRegSuffixRegex } from "../actions/BRegAction";
+import { uRegSuffixRegex } from "../actions/URegAction";
+import { internalError } from "../internalError";
+
 const CLOCK_PREFIX = "CLOCK-2^";
 
 /**
@@ -31,7 +35,7 @@ export function parseComponentsHeader(content) {
                 ? "B"
                 : (str.startsWith("U") ? "U" : null);
             if (register) {
-                const numList = parseRange(str.slice(1));
+                const numList = parseRange(str[0] ?? "", str.slice(1));
                 for (const x of numList.map((x) => `${register}${x}`)) {
                     components.push(x);
                 }
@@ -43,27 +47,28 @@ export function parseComponentsHeader(content) {
 }
 
 /**
+ * @param {string} registerType "B", "U"
  * @param {string} rangeStr `0`, `0-6`
  * @returns {string[]}
  */
-function parseRange(rangeStr) {
+function parseRange(registerType, rangeStr) {
     const range = rangeStr.split("-");
     if (range.length === 1) {
         const singleValue = range[0];
         if (singleValue === undefined || singleValue.length === 0) {
-            throw new Error("Invalid #COMPONENTS");
+            internalError();
         }
 
-        const isNumber = /[0-9]+/u.test(singleValue);
-        if (isNumber) {
-            const num = Number(singleValue);
-            if (Number.isNaN(num)) {
-                throw new Error("Invalid #COMPONENTS");
-            }
-            return [num.toString()];
-        } else {
-            return [singleValue];
+        if (
+            !(registerType === "U" ? uRegSuffixRegex : bRegSuffixRegex).test(
+                singleValue,
+            )
+        ) {
+            throw new Error(
+                `Invalid #COMPONENTS at "${registerType}${rangeStr}". The register suffix must consist only of lowercase letters or numbers.`,
+            );
         }
+        return [singleValue];
     } else if (range.length === 2) {
         if (range.some((x) => x.length === 0)) {
             throw new Error("Invalid #COMPONENTS");

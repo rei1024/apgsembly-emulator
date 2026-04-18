@@ -43,6 +43,8 @@ const parseOp = (op) => {
     }
 };
 
+export const uRegSuffixRegex = /^[a-z0-9]+$/u;
+
 /**
  * Action for `Un`
  */
@@ -98,7 +100,7 @@ export class URegAction extends Action {
             if (reg.startsWith(U_STRING) || reg.startsWith(R_STRING)) {
                 const str = reg.slice(1);
                 // allow lower alphabet and number
-                if (/^[a-z0-9]+$/u.test(str)) {
+                if (uRegSuffixRegex.test(str)) {
                     return new URegAction(parseOp(op), str);
                 }
             }

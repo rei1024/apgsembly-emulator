@@ -218,8 +218,8 @@ export const analyzeProgram = (program) => {
 function numberOrStringSort(array) {
     return array.sort((a, b) => {
         // 数字([0-9]+)であれば先にソートする
-        const aIsNumber = /[0-9]+/.test(a);
-        const bIsNumber = /[0-9]+/.test(b);
+        const aIsNumber = /^[0-9]+$/.test(a);
+        const bIsNumber = /^[0-9]+$/.test(b);
         if (aIsNumber && bIsNumber) {
             return Number(a) - Number(b); // 数字同士は数値として比較
         }
