@@ -1,8 +1,8 @@
 // @ts-check
 
-import { bRegSuffixRegex } from "../actions/BRegAction";
-import { uRegSuffixRegex } from "../actions/URegAction";
-import { internalError } from "../internalError";
+import { bRegSuffixRegex } from "../actions/BRegAction.js";
+import { uRegSuffixRegex } from "../actions/URegAction.js";
+import { internalError } from "../internalError.js";
 
 const CLOCK_PREFIX = "CLOCK-2^";
 
