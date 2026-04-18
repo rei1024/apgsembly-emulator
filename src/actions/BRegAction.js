@@ -107,7 +107,8 @@ export class BRegAction extends Action {
         ) {
             if (reg.startsWith(B_STRING)) {
                 const str = reg.slice(1);
-                if (/^[a-zA-Z0-9]+$/u.test(str)) {
+                // allow lower alphabet and number
+                if (/^[a-z0-9]+$/u.test(str)) {
                     return new BRegAction(parseOp(op), str);
                 }
             }
