@@ -22,7 +22,7 @@ import { NopAction } from "../exports.js";
 // [State 3] MULA19;  NZ; MULA19; SET B1, NOP
 
 /**
- * @typedef {{ state0: number, state1: number, state2: number, state3: number, inputBReg: number, outputBReg: number, allocNumUReg: number, inputState: number, outputState: number }} BinaryAddOptimizeResult
+ * @typedef {{ state0: number, state1: number, state2: number, state3: number, inputBReg: string, outputBReg: string, allocNumUReg: string, inputState: number, outputState: number }} BinaryAddOptimizeResult
  */
 
 /**

@@ -42,9 +42,9 @@ FINAL2; *; FINAL; HALT_OUT
             prevOutput: machine.prevOutput,
             // FIXME: if large causes out of memory
             // stateStats: machine.getStateStats(),
-            b01Bits: machine.actionExecutor.getBReg(1)?.getBits().slice(),
-            b1Pointer: machine.actionExecutor.getBReg(1)?.pointer,
-            u7Value: machine.actionExecutor.getUReg(7)?.getValue(),
+            b01Bits: machine.actionExecutor.getBReg("1")?.getBits().slice(),
+            b1Pointer: machine.actionExecutor.getBReg("1")?.pointer,
+            u7Value: machine.actionExecutor.getUReg("7")?.getValue(),
         };
     }
 
