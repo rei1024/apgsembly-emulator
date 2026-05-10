@@ -1,7 +1,11 @@
 // @ts-check
 
 import { B2D } from "../../src/components/B2D.js";
-import { $b2dFlipUpsideDown, $b2dHidePointer } from "../bind.js";
+import {
+    $b2dDisplayGrid,
+    $b2dFlipUpsideDown,
+    $b2dHidePointer,
+} from "../bind.js";
 import { clearCanvas } from "../util/clear-canvas.js";
 import { renderB2D } from "./renderB2D.js";
 
@@ -26,5 +30,6 @@ export function renderB2DWithPos(b2d, pos, ctx) {
         b2d,
         $b2dHidePointer.checked,
         $b2dFlipUpsideDown.checked,
+        $b2dDisplayGrid.checked,
     );
 }

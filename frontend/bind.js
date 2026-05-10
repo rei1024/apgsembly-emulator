@@ -55,42 +55,41 @@ export const $frequencyOutput = $type("#frequency_output", HTMLElement_);
 export const $command = $type("#command", HTMLElement_);
 
 // B2D
-export const $canvas = $type("#canvas", HTMLCanvasElement);
-
-/**
- * @type {CanvasRenderingContext2D}
- */
-export const context = $canvas.getContext("2d") ?? (() => {
-    throw Error("context is null");
-})();
-
 const HTMLDetailsElement_ = HTMLDetailsElement;
 
-export const $b2dPos = {
-    x: $type("#b2dx", HTMLElement_),
-    y: $type("#b2dy", HTMLElement_),
-};
-
-// B2Dの開閉
-export const $b2dDetail = $type("#b2d_detail", HTMLDetailsElement_);
+const $b2dCanvas = $type("#canvas", HTMLCanvasElement);
 
 // Printer
-export const $printerCanvas = $type("#printer_canvas", HTMLCanvasElement);
+const $printerCanvas = $type("#printer_canvas", HTMLCanvasElement);
 
-/**
- * @type {CanvasRenderingContext2D}
- */
-export const printerContext = $printerCanvas.getContext("2d") ?? (() => {
-    throw Error("context is null");
-})();
-
-export const $printerPos = {
-    x: $type("#printer_x", HTMLElement_),
-    y: $type("#printer_y", HTMLElement_),
-};
-
-// Printerの開閉
-export const $printerDetail = $type("#printer_detail", HTMLDetailsElement_);
+export const $b2dView = [
+    {
+        type: /** @type {const} */ ("b2d"),
+        canvas: $b2dCanvas,
+        pos: {
+            x: $type("#b2dx", HTMLElement_),
+            y: $type("#b2dy", HTMLElement_),
+        },
+        detail: $type("#b2d_detail", HTMLDetailsElement_),
+        context: $b2dCanvas.getContext("2d") ??
+            (() => {
+                throw Error("context is null");
+            })(),
+    },
+    {
+        type: /** @type {const} */ ("printer"),
+        canvas: $printerCanvas,
+        pos: {
+            x: $type("#printer_x", HTMLElement_),
+            y: $type("#printer_y", HTMLElement_),
+        },
+        detail: $type("#printer_detail", HTMLDetailsElement_),
+        context: $printerCanvas.getContext("2d") ??
+            (() => {
+                throw Error("context is null");
+            })(),
+    },
+];
 
 export const $historyDetail = $type("#history_detail", HTMLDetailsElement_);
 export const $historyBody = $type("#history_body", HTMLElement_);
@@ -177,6 +176,11 @@ export const $b2dHidePointer = $type("#b2d_hide_pointer", HTMLInputElement_);
 
 export const $b2dFlipUpsideDown = $type(
     "#b2d_flip_upside_down",
+    HTMLInputElement_,
+);
+
+export const $b2dDisplayGrid = $type(
+    "#b2d_display_grid",
     HTMLInputElement_,
 );
 
