@@ -87,7 +87,7 @@ export function generateBFCode({
     pushLine(`# Code`);
     const codeLines = code.split("\n");
     for (const [i, codeLine] of codeLines.entries()) {
-      pushLine(`# ${codeLine}`);
+      pushLine(`#  ${codeLine}`);
     }
     pushLine(`# End of Code`);
   }
@@ -155,9 +155,66 @@ export function generateBFCode({
     );
   }
 
+  // '+' operation
+
+  // 00000000 -> 00000001
+  // 00000001 -> 00000010
+  // 00000010 -> 00000011
+  // 00000011 -> 00000100
+  // 00000100 -> 00000101
+
+  pushLine(`\n# '+' operation`);
+  pushLine(`SWITCH_CODE_BIT_1010_OP; ZZ; OP_DATA_INC_0; NOP`);
+
+  for (let i = 0; i < BYTE; i++) {
+    pushLine(`OP_DATA_INC_${i}; ZZ; OP_DATA_INC_${i}_SET_IF_ZERO; READ B2`);
+    pushLine(
+      `OP_DATA_INC_${i}_SET_IF_ZERO; Z; OP_DATA_INC_${i}_TDEC; SET B2, NOP`,
+    );
+    pushLine(`OP_DATA_INC_${i}_SET_IF_ZERO; NZ; OP_DATA_INC_${i}_INC; NOP`);
+    pushLine(
+      `OP_DATA_INC_${i}_INC; ZZ; ${
+        i === BYTE - 1 ? `OP_DATA_INC_${i}_TDEC` : `OP_DATA_INC_${i + 1}`
+      }; ${i === BYTE - 1 ? `` : `INC B2, `}NOP`,
+    );
+
+    pushLine(
+      `OP_DATA_INC_${i}_TDEC; *; ${
+        i === 0 ? `SWITCH_CODE` : `OP_DATA_INC_${i - 1}_TDEC`
+      }; ${i === 0 ? `NOP` : `TDEC B2`}`,
+    );
+  }
+
+  // '-' operation
+  pushLine(`\n# '-' operation`);
+  pushLine(`SWITCH_CODE_BIT_1011_OP; ZZ; OP_DATA_DEC_0; NOP`);
+
+  for (let i = 0; i < BYTE; i++) {
+    pushLine(
+      `OP_DATA_DEC_${i}; *; OP_DATA_DEC_${i}_SET_IF_ZERO; READ B2`,
+    );
+    pushLine(
+      `OP_DATA_DEC_${i}_SET_IF_ZERO; Z; OP_DATA_DEC_${i}_INC; SET B2, NOP`,
+    );
+    pushLine(
+      `OP_DATA_DEC_${i}_SET_IF_ZERO; NZ; OP_DATA_DEC_${i}_TDEC; NOP`,
+    );
+
+    pushLine(
+      `OP_DATA_DEC_${i}_INC; *; ${
+        i === BYTE - 1 ? `OP_DATA_DEC_${i}_TDEC` : `OP_DATA_DEC_${i + 1}`
+      }; ${i === BYTE - 1 ? `` : `INC B2, `}NOP`,
+    );
+
+    pushLine(
+      `OP_DATA_DEC_${i}_TDEC; *; ${
+        i === 0 ? `SWITCH_CODE` : `OP_DATA_DEC_${i - 1}_TDEC`
+      }; ${i === 0 ? `NOP` : `TDEC B2`}`,
+    );
+  }
+
   // mock
-  pushLine(`SWITCH_CODE_BIT_1010_OP; ZZ; SWITCH_CODE_BIT_1010_OP; NOP`);
-  pushLine(`SWITCH_CODE_BIT_1011_OP; ZZ; SWITCH_CODE_BIT_1011_OP; NOP`);
+  pushLine(``);
   pushLine(`SWITCH_CODE_BIT_1100_OP; ZZ; SWITCH_CODE_BIT_1100_OP; NOP`);
   pushLine(`SWITCH_CODE_BIT_1101_OP; ZZ; SWITCH_CODE_BIT_1101_OP; NOP`);
   pushLine(`SWITCH_CODE_BIT_1110_OP; ZZ; SWITCH_CODE_BIT_1110_OP; NOP`);
