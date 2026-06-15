@@ -1,10 +1,14 @@
 // @ts-check
 
+import { getAsciiData } from "./get_ascii.js";
+import { printAscii } from "./ascii.js";
+
 // BF interpreter
 // # Registers
 // B0: Code
 // B1: Input
 // B2: Data
+// B3: Font Data
 //
 // # Code Format
 // 0000: End of Code
@@ -93,7 +97,11 @@ export function generateBFCode({
   }
 
   pushLine(`#COMPONENTS B0,B2`);
-  pushLine(`#REGISTERS { "B0": [0, "${generateCodeRegister(code)}"] }`);
+  pushLine(
+    `#REGISTERS { "B0": [0, "${
+      generateCodeRegister(code)
+    }"], "B3": [0, "${getAsciiData()}"] }`,
+  );
   pushLine(`INITIAL; ZZ; SWITCH_CODE; NOP`);
   pushLine(`SWITCH_CODE; *;    SWITCH_CODE_BIT; READ B0`);
   pushLine(`SWITCH_CODE_BIT; Z; SWITCH_CODE_BIT; HALT`); // End of Code
@@ -213,6 +221,16 @@ export function generateBFCode({
     );
   }
 
+  // '.' operation
+  pushLine(`\n# '.' operation`);
+  pushLine(`SWITCH_CODE_BIT_1100_OP; ZZ; OP_OUTPUT; NOP`);
+  {
+    const lines = printAscii("B2", "OP_OUTPUT", "SWITCH_CODE");
+    for (const line of lines) {
+      pushLine(line);
+    }
+  }
+
   // mock
   pushLine(``);
   pushLine(`SWITCH_CODE_BIT_1100_OP; ZZ; SWITCH_CODE_BIT_1100_OP; NOP`);
@@ -222,5 +240,3 @@ export function generateBFCode({
 
   return lines.join("\n");
 }
-
-console.log(generateBFCode({ code: `>>>><<>>`, input: `` }));
