@@ -45,7 +45,7 @@ export class ADD {
                 return undefined;
             }
             default: {
-                internalError();
+                return internalError();
             }
         }
     }
@@ -73,7 +73,7 @@ export class ADD {
     b0() {
         const t = this.action(new AddAction(ADD_B0));
         if (t === undefined) {
-            internalError();
+            return internalError();
         }
         return t;
     }
@@ -85,7 +85,7 @@ export class ADD {
     b1() {
         const t = this.action(new AddAction(ADD_B1));
         if (t === undefined) {
-            internalError();
+            return internalError();
         }
         return t;
     }

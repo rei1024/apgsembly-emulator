@@ -143,8 +143,6 @@ export class BReg {
                 return undefined;
             }
             default: {
-                /** @type {never} */
-                const _ = act.op;
                 return undefined; // unreachable
             }
         }
@@ -220,7 +218,7 @@ export class BReg {
     tdec() {
         const value = this.action(new BRegAction(B_TDEC, "0")); // regNumberは仮
         if (value === undefined) {
-            internalError();
+            return internalError();
         }
         return value;
     }
@@ -232,7 +230,7 @@ export class BReg {
     read() {
         const value = this.action(new BRegAction(B_READ, "0")); // regNumberは仮
         if (value === undefined) {
-            internalError();
+            return internalError();
         }
         return value;
     }

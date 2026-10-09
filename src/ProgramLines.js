@@ -90,7 +90,7 @@ export class ProgramLines {
                 }
                 const template = templates.get(activeTemplateName);
                 if (template == null) {
-                    internalError();
+                    return internalError();
                 }
                 template.lines.push(lineStr);
                 continue;

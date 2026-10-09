@@ -56,7 +56,7 @@ function parseRange(registerType, rangeStr) {
     if (range.length === 1) {
         const singleValue = range[0];
         if (singleValue === undefined || singleValue.length === 0) {
-            internalError();
+            return internalError();
         }
 
         if (

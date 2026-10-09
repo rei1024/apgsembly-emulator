@@ -9,6 +9,7 @@ import { U_TDEC } from "./action_consts/UReg_consts.js";
 import { HaltOutAction } from "./exports.js";
 import { internalError } from "./internalError.js";
 import { optimizeBinaryAddPass } from "./optimize/binary-optimize.js";
+import { assertNever } from "./util.js";
 
 /**
  * @param {Action} action
@@ -249,7 +250,7 @@ export const commandsToLookupTable = (commands) => {
                 break;
             }
             default: {
-                internalError();
+                return assertNever(command.input);
             }
         }
     }
@@ -258,7 +259,7 @@ export const commandsToLookupTable = (commands) => {
     for (const r of binaryAddOptimizeResults) {
         const c = lookup[r.inputState];
         if (c === undefined || c.nz === undefined) {
-            internalError();
+            return internalError();
         }
         c.nz.binaryaAddOptimization = r;
     }

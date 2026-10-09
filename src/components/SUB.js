@@ -2,7 +2,7 @@
 
 import { SubAction } from "../actions/SubAction.js";
 import { SUB_A1, SUB_B0, SUB_B1 } from "../action_consts/Sub_consts.js";
-import { internalError } from "../internalError.js";
+import { assertNever } from "../util.js";
 
 /**
  * `SUB`
@@ -34,7 +34,7 @@ export class SUB {
                 return this.b1();
             }
             default: {
-                internalError();
+                return assertNever(act.op);
             }
         }
     }

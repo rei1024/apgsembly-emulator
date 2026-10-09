@@ -3,6 +3,7 @@
 import { URegAction } from "../actions/URegAction.js";
 import { U_INC, U_TDEC } from "../action_consts/UReg_consts.js";
 import { internalError } from "../internalError.js";
+import { assertNever } from "../util.js";
 
 /**
  * Un: Sliding Block Register
@@ -34,6 +35,9 @@ export class UReg {
             case U_INC: {
                 this.value++;
                 return undefined;
+            }
+            default: {
+                return assertNever(act.op);
             }
         }
     }
@@ -85,7 +89,7 @@ export class UReg {
     tdec() {
         const res = this.action(new URegAction(U_TDEC, "0")); // regNumberは仮
         if (res === undefined) {
-            internalError();
+            return internalError();
         }
         return res;
     }
@@ -98,7 +102,7 @@ export class UReg {
         if (
             typeof value !== "number" || value < 0 || !Number.isInteger(value)
         ) {
-            throwRegisterInitError(key, value);
+            return throwRegisterInitError(key, value);
         }
         this.setValue(value);
     }

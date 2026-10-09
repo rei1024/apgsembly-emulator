@@ -7,6 +7,7 @@ import {
     T_RESET,
     T_SET,
 } from "../action_consts/LegacyTReg_consts.js";
+import { assertNever } from "../util.js";
 import { Action } from "./Action.js";
 
 const T_INC_STRING = "INC";
@@ -16,12 +17,12 @@ const T_SET_STRING = "SET";
 const T_RESET_STRING = "RESET";
 
 /**
- * @typedef {T_INC | T_DEC | T_READ | T_SET | T_RESET} TOp
+ * @typedef {typeof T_INC | typeof T_DEC | typeof T_READ | typeof T_SET | typeof T_RESET} TOp
  */
 
 /**
- * @typedef {T_INC_STRING | T_DEC_STRING |
- *          T_READ_STRING | T_SET_STRING | T_RESET_STRING} TOpString
+ * @typedef {typeof T_INC_STRING | typeof T_DEC_STRING |
+ *          typeof T_READ_STRING | typeof T_SET_STRING | typeof T_RESET_STRING} TOpString
  */
 
 /**
@@ -134,6 +135,8 @@ export class LegacyTRegAction extends Action {
                 return false;
             case T_RESET:
                 return false;
+            default:
+                return assertNever(this.op);
         }
     }
 

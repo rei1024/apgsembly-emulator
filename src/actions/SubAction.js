@@ -1,6 +1,7 @@
 // @ts-check
 
 import { SUB_A1, SUB_B0, SUB_B1 } from "../action_consts/Sub_consts.js";
+import { assertNever } from "../util.js";
 import { Action } from "./Action.js";
 
 const SUB_A1_STRING = "A1";
@@ -10,11 +11,11 @@ const SUB_B1_STRING = "B1";
 const SUB_STRING = "SUB";
 
 /**
- * @typedef {SUB_A1 | SUB_B0 | SUB_B1} SubOp
+ * @typedef {typeof SUB_A1 | typeof SUB_B0 | typeof SUB_B1} SubOp
  */
 
 /**
- * @typedef {SUB_A1_STRING | SUB_B0_STRING | SUB_B1_STRING} SubOpString
+ * @typedef {typeof SUB_A1_STRING | typeof SUB_B0_STRING | typeof SUB_B1_STRING} SubOpString
  */
 
 /**
@@ -107,6 +108,8 @@ export class SubAction extends Action {
                 return true;
             case SUB_B1:
                 return true;
+            default:
+                return assertNever(this.op);
         }
     }
 

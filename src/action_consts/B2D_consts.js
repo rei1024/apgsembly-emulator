@@ -14,9 +14,9 @@ export const B2D_KIND_NORMAL = 0;
 export const B2D_KIND_PRINTER = 1;
 
 /**
- * @typedef {B2D_INC | B2D_TDEC | B2D_READ | B2D_SET} B2DOp
+ * @typedef {typeof B2D_INC | typeof B2D_TDEC | typeof B2D_READ | typeof B2D_SET} B2DOp
  */
 
 /**
- * @typedef {B2D_B2DX | B2D_B2DY | B2D_B2D} B2DAxis
+ * @typedef {typeof B2D_B2DX | typeof B2D_B2DY | typeof B2D_B2D} B2DAxis
  */
