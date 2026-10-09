@@ -11,6 +11,7 @@ import {
     B2D_TDEC,
 } from "../action_consts/B2D_consts.js";
 import { internalError } from "../internalError.js";
+import { assertNever } from "../util.js";
 
 /**
  * @template A
@@ -98,7 +99,7 @@ export class B2D {
                     case B2D_B2D:
                         return internalError();
                     default:
-                        return internalError();
+                        return assertNever(act.axis);
                 }
                 break;
             }
@@ -121,7 +122,7 @@ export class B2D {
                 break;
             }
             default: {
-                return internalError();
+                return assertNever(act.op);
             }
         }
     }

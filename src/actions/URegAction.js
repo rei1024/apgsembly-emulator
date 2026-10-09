@@ -121,7 +121,7 @@ export class URegAction extends Action {
             case U_TDEC:
                 return true;
             default:
-                return internalError();
+                return assertNever(this.op);
         }
     }
 
