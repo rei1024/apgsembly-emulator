@@ -22,8 +22,7 @@ import { makeSpinner } from "./util/spinner.js";
 import {
     $addSubMul,
     $addSubMulDetail,
-    $b2dDetail,
-    $b2dPos,
+    $b2dView,
     $binaryRegister,
     $binaryRegisterDetail,
     $breakpointInputSelect,
@@ -40,8 +39,6 @@ import {
     $output,
     $outputDetail,
     $previousOutput,
-    $printerDetail,
-    $printerPos,
     $reset,
     $statsBody,
     $statsButton,
@@ -55,8 +52,6 @@ import {
     $unaryRegister,
     $unaryRegisterDetail,
     binaryConfig,
-    context,
-    printerContext,
 } from "./bind.js";
 import { toLocaleString } from "./util/toLocaleString.js";
 import { LibraryUI } from "./components/library_ui.js";
@@ -301,38 +296,30 @@ export class App {
 
     /**
      * B2Dの表示
+     * @param {'b2d' | 'printer'} type
      */
-    renderB2D() {
-        if (!$b2dDetail.open) {
-            return;
+    renderB2D(type) {
+        const b2d = $b2dView.find((x) => x.type === type);
+        if (b2d == null) {
+            throw new Error("internal error");
         }
-
-        const start = performance.now();
-        renderB2DWithPos(this.#machine?.actionExecutor.b2d, $b2dPos, context);
-
-        // 描画に時間がかかっている場合閉じる
-        if (this.#appState === "Running" && performance.now() - start >= 200) {
-            $b2dDetail.open = false;
-            clearCanvas(context);
-        }
-    }
-
-    renderPrinter() {
-        if (!$printerDetail.open) {
+        if (!b2d.detail.open) {
             return;
         }
 
         const start = performance.now();
         renderB2DWithPos(
-            this.#machine?.actionExecutor.matrixPrinter,
-            $printerPos,
-            printerContext,
+            type === "b2d"
+                ? this.#machine?.actionExecutor.b2d
+                : this.#machine?.actionExecutor.matrixPrinter,
+            b2d.pos,
+            b2d.context,
         );
 
         // 描画に時間がかかっている場合閉じる
         if (this.#appState === "Running" && performance.now() - start >= 200) {
-            $printerDetail.open = false;
-            clearCanvas(printerContext);
+            b2d.detail.open = false;
+            clearCanvas(b2d.context);
         }
     }
 
@@ -494,10 +481,13 @@ export class App {
                     analyzeResult?.hasMul
                     ? ""
                     : "none";
-            $b2dDetail.style.display = analyzeResult?.hasB2D ? "" : "none";
-            $printerDetail.style.display = analyzeResult?.hasPrinter
-                ? ""
-                : "none";
+            for (const b2d of $b2dView) {
+                b2d.detail.style.display = (b2d.type === "b2d"
+                        ? (analyzeResult?.hasB2D)
+                        : (analyzeResult?.hasPrinter))
+                    ? ""
+                    : "none";
+            }
             $outputDetail.style.display = analyzeResult?.hasOutput
                 ? ""
                 : "none";
@@ -523,8 +513,8 @@ export class App {
         $addSubMul.textContent =
             machine?.actionExecutor.addSubMulToUIString() ??
                 "";
-        this.renderB2D();
-        this.renderPrinter();
+        this.renderB2D("b2d");
+        this.renderB2D("printer");
         this.renderStats();
         this.renderHistory();
 

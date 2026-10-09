@@ -11,8 +11,15 @@ import { clearCanvas } from "../util/clear-canvas.js";
  * @param {B2D} b2d
  * @param {boolean} hidePointer ポインタを非表示にする
  * @param {boolean} flipUpsideDown 上下逆にする
+ * @param {boolean} displayGrid 格子を表示
  */
-export const renderB2D = (context, b2d, hidePointer, flipUpsideDown) => {
+export const renderB2D = (
+    context,
+    b2d,
+    hidePointer,
+    flipUpsideDown,
+    displayGrid,
+) => {
     const devicePixelRatio = Math.min(window.devicePixelRatio || 1, 4);
     const SIZE = 300 * devicePixelRatio;
 
@@ -57,6 +64,26 @@ export const renderB2D = (context, b2d, hidePointer, flipUpsideDown) => {
     }
 
     context.fill();
+
+    if (displayGrid) {
+        context.beginPath();
+        // Use a subtle, light color for the grid lines
+        context.strokeStyle = "rgba(0, 0, 0, 0.1)";
+        context.lineWidth = Math.max(2, 4 * (1 / devicePixelRatio));
+
+        for (let i = 0; i <= n; i++) {
+            const pos = i * cellSize;
+
+            // Vertical lines
+            context.moveTo(pos, 0);
+            context.lineTo(pos, SIZE);
+
+            // Horizontal lines
+            context.moveTo(0, pos);
+            context.lineTo(SIZE, pos);
+        }
+        context.stroke();
+    }
 
     // draw pointer
     if (!hidePointer) {

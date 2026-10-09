@@ -13,9 +13,10 @@ import {
 import { hasFocus } from "./util/has-focus.js";
 
 import {
-    $b2dDetail,
+    $b2dDisplayGrid,
     $b2dFlipUpsideDown,
     $b2dHidePointer,
+    $b2dView,
     $binaryRegisterDetail,
     $breakpointConfig,
     $breakpointInputSelect,
@@ -31,7 +32,6 @@ import {
     $frequencyInput,
     $historyDetail,
     $input,
-    $printerDetail,
     $reset,
     $showBreakpointConfig,
     // Stats
@@ -73,13 +73,11 @@ setupExamples(app);
 setupFrequencyInput($frequencyInput, app);
 
 // 開閉で描画
-$b2dDetail.addEventListener("toggle", () => {
-    app.renderB2D();
-});
-
-$printerDetail.addEventListener("toggle", () => {
-    app.renderPrinter();
-});
+for (const b2d of $b2dView) {
+    b2d.detail.addEventListener("toggle", () => {
+        app.renderB2D(b2d.type);
+    });
+}
 
 $binaryRegisterDetail.addEventListener("toggle", () => {
     app.renderBinary();
@@ -154,12 +152,15 @@ setupCheckbox(binaryConfig.$showBinaryValueInHex, SHOW_BINARY_IN_HEX_KEY);
 
 // B2D
 $b2dHidePointer.addEventListener("change", () => {
-    app.renderB2D();
-    app.renderPrinter();
+    app.renderB2D("b2d");
+    app.renderB2D("printer");
 });
 
 const B2D_FLIP_UPSIDE_DOWN_KEY = "apge_b2d_flip_upside_down";
 setupCheckbox($b2dFlipUpsideDown, B2D_FLIP_UPSIDE_DOWN_KEY);
+
+const B2D_DISPLAY_GRID_KEY = "apge_b2d_display_grid";
+setupCheckbox($b2dDisplayGrid, B2D_DISPLAY_GRID_KEY);
 
 // showの場合クラスが追加されない
 $statsModal.addEventListener("shown.bs.modal", () => {
@@ -298,6 +299,7 @@ idle(() => {
      */
     const items = [
         { key: B2D_FLIP_UPSIDE_DOWN_KEY, checkbox: $b2dFlipUpsideDown },
+        { key: B2D_DISPLAY_GRID_KEY, checkbox: $b2dDisplayGrid },
         { key: REVERSE_BITS_KEY, checkbox: binaryConfig.$reverseBits },
         { key: HIDE_BITS_KEY, checkbox: binaryConfig.$hideBits },
         {

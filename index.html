@@ -87,18 +87,18 @@
     <body>
         <!-- CSP hash 'sha256-XgSuI+ouCZFnUnMiuXyyjkBDGwBQtt1Lb700zhlq3yQ=' -->
         <script>
-            "use strict";
-            // Fix Dark mode flashing
-            try {
-                if (
-                    localStorage.getItem("dark_mode") === "on"
-                ) {
-                    document.body.setAttribute(
-                        "apge_dark",
-                        "on",
-                    );
-                }
-            } catch (_) {}
+        "use strict";
+        // Fix Dark mode flashing
+        try {
+            if (
+                localStorage.getItem("dark_mode") === "on"
+            ) {
+                document.body.setAttribute(
+                    "apge_dark",
+                    "on",
+                );
+            }
+        } catch (_) {}
         </script>
         <header class="text-center">
             <h1>APGsembly 2.0 Emulator</h1>
@@ -342,8 +342,7 @@
                 id="error"
                 class="mt-3 d-none alert alert-danger tabular-nums"
                 role="alert"
-            >
-            </div>
+            ></div>
             <div class="mt-1 mb-2">
                 <!-- チラつき防止のためデフォルト値を設定 DEFAULT_FREQUENCY と同期すること -->
                 <label for="frequency_input" class="form-label m-0"
@@ -630,6 +629,17 @@
                                     class="form-check-label"
                                 >Hide pointer</label>
                             </div>
+                            <div class="form-check">
+                                <input
+                                    type="checkbox"
+                                    id="b2d_display_grid"
+                                    class="form-check-input"
+                                />
+                                <label
+                                    for="b2d_display_grid"
+                                    class="form-check-label"
+                                >Display grid</label>
+                            </div>
                         </div>
                         <div class="mt-3">
                             <div>
@@ -765,11 +775,11 @@
                             </thead>
                             <tbody id="stats_body">
                                 <!-- <tr>
-                            <td colspan="2">I</td>
-                            <td>1</td>
-                            <td>2</td>
-                            <td>2</td>
-                        </tr> -->
+                                <td colspan="2">I</td>
+                                <td>1</td>
+                                <td>2</td>
+                                <td>2</td>
+                                </tr> -->
                             </tbody>
                         </table>
                     </div>
