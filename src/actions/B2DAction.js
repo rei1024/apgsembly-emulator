@@ -11,19 +11,20 @@ import {
     B2D_SET,
     B2D_TDEC,
 } from "../action_consts/B2D_consts.js";
+import { assertNever } from "../util.js";
 import { Action } from "./Action.js";
 
 /**
- * @typedef {B2D_INC_STRING | B2D_TDEC_STRING |
- *          B2D_READ_STRING | B2D_SET_STRING} B2DOpString
+ * @typedef {typeof B2D_INC_STRING | typeof B2D_TDEC_STRING |
+ *          typeof B2D_READ_STRING | typeof B2D_SET_STRING} B2DOpString
  */
 
 /**
- * @typedef {B2D_B2DX_STRING | B2D_B2DY_STRING | B2D_B2D_STRING} B2DAxisString
+ * @typedef {typeof B2D_B2DX_STRING | typeof B2D_B2DY_STRING | typeof B2D_B2D_STRING} B2DAxisString
  */
 
 /**
- * @typedef {B2D_KIND_NORMAL | B2D_KIND_PRINTER} B2DKind
+ * @typedef {typeof B2D_KIND_NORMAL | typeof B2D_KIND_PRINTER} B2DKind
  */
 
 const B2D_INC_STRING = "INC";
@@ -257,6 +258,8 @@ export class B2DAction extends Action {
                 return true;
             case B2D_SET:
                 return false;
+            default:
+                return assertNever(this.op);
         }
     }
 

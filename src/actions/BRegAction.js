@@ -1,6 +1,7 @@
 // @ts-check
 
 import { B_INC, B_READ, B_SET, B_TDEC } from "../action_consts/BReg_consts.js";
+import { assertNever } from "../util.js";
 import { Action } from "./Action.js";
 
 const B_INC_STRING = "INC";
@@ -11,12 +12,12 @@ const B_SET_STRING = "SET";
 const B_STRING = "B";
 
 /**
- * @typedef {B_INC | B_TDEC | B_READ | B_SET} BOp
+ * @typedef {typeof B_INC | typeof B_TDEC | typeof B_READ | typeof B_SET} BOp
  */
 
 /**
- * @typedef {B_INC_STRING | B_TDEC_STRING |
- *          B_READ_STRING | B_SET_STRING} BOpString
+ * @typedef {typeof B_INC_STRING | typeof B_TDEC_STRING |
+ *          typeof B_READ_STRING | typeof B_SET_STRING} BOpString
  */
 
 /**
@@ -131,6 +132,8 @@ export class BRegAction extends Action {
                 return true;
             case B_SET:
                 return false;
+            default:
+                return assertNever(this.op);
         }
     }
 

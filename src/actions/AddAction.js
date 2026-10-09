@@ -1,6 +1,7 @@
 // @ts-check
 
 import { ADD_A1, ADD_B0, ADD_B1 } from "../action_consts/Add_consts.js";
+import { assertNever } from "../util.js";
 import { Action } from "./Action.js";
 
 const ADD_A1_STRING = "A1";
@@ -10,11 +11,11 @@ const ADD_B1_STRING = "B1";
 const ADD_STRING = "ADD";
 
 /**
- * @typedef {ADD_A1 | ADD_B0 | ADD_B1} AddOp
+ * @typedef {typeof ADD_A1 | typeof ADD_B0 | typeof ADD_B1} AddOp
  */
 
 /**
- * @typedef {ADD_A1_STRING | ADD_B0_STRING | ADD_B1_STRING} AddOpString
+ * @typedef {typeof ADD_A1_STRING | typeof ADD_B0_STRING | typeof ADD_B1_STRING} AddOpString
  */
 
 /**
@@ -106,6 +107,8 @@ export class AddAction extends Action {
                 return true;
             case ADD_B1:
                 return true;
+            default:
+                return assertNever(this.op);
         }
     }
 

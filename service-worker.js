@@ -22,22 +22,8 @@ self.addEventListener("activate", function (event) {
         await Promise.all(oldCacheNames.map((name) => caches.delete(name)));
 
         const cache = await caches.open(CACHE_VERSION);
-        // deno eval 'console.log([...Deno.readDirSync("./frontend/data")].map(x => x.name).filter(x => x.endsWith(".apg")).map(x => "./frontend/data/" + x ) )'
-        await cache.addAll([
-            "./frontend/data/ant2.apg",
-            "./frontend/data/koch.apg",
-            "./frontend/data/wip_e_calc.apg",
-            "./frontend/data/integers.apg",
-            "./frontend/data/alien_counter.apg",
-            "./frontend/data/rule110.apg",
-            "./frontend/data/unary_multiply.apg",
-            "./frontend/data/binary_ruler.apg",
-            "./frontend/data/pi_calc.apg",
-            "./frontend/data/primes.apg",
-            "./frontend/data/sqrt_log_t.apg",
-            "./frontend/data/rule90.apg",
-            "./frontend/data/99.apg",
-        ]);
+        // deno eval 'console.log([...Deno.readDirSync("./public/data")].map(x => x.name).filter(x => x.endsWith(".apg")).map(x => "./public/data/" + x ) )'
+        await cache.addAll([]);
     }
 
     event.waitUntil(handleCache());

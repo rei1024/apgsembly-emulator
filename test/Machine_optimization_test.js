@@ -2,7 +2,7 @@
 
 /* eslint-disable camelcase */
 
-// deno test test/Machine_optimization_test.js
+// npm run test -- test/Machine_optimization_test.js
 
 import { Machine } from "../src/Machine.js";
 import { Program } from "../src/Program.js";

@@ -1,5 +1,4 @@
 // @ts-check
-// deno-lint-ignore-file no-unused-vars
 
 import { ActionExecutor } from "./ActionExecutor.js";
 import {
@@ -216,7 +215,7 @@ export class Machine {
     getCurrentState() {
         const name = this.stateNames[this.currentStateIndex];
         if (name === undefined) {
-            error("State name is not found");
+            return error("State name is not found");
         }
         return name;
     }
@@ -245,7 +244,7 @@ export class Machine {
         const compiledCommand = this.lookup[stateIndex];
 
         if (compiledCommand === undefined) {
-            error(
+            return error(
                 `Internal Error: command is not found: ` +
                     `Current state index: ${stateIndex}`,
             );
@@ -262,7 +261,7 @@ export class Machine {
             }
         }
 
-        error(
+        return error(
             "Next command is not found: Current state = " +
                 this.getCurrentState() + ", output = " +
                 this.getPreviousOutput(),
@@ -279,7 +278,7 @@ export class Machine {
         const compiledCommand = this.lookup[currentStateIndex];
 
         if (compiledCommand === undefined) {
-            error(
+            return error(
                 `Internal Error: Next command is not found: ` +
                     `Current state index: ${currentStateIndex}`,
             );
@@ -299,7 +298,7 @@ export class Machine {
             }
         }
 
-        error(
+        return error(
             "Next command is not found: Current state = " +
                 this.getCurrentState() + ", output = " +
                 this.getPreviousOutput(),
@@ -358,7 +357,7 @@ export class Machine {
             optimizeResult.allocNumUReg,
         );
         if (allocUReg === undefined) {
-            internalError();
+            return internalError();
         }
 
         const allocURegValue = allocUReg.getValue();
@@ -377,7 +376,7 @@ export class Machine {
         );
         const inputBReg = this.actionExecutor.getBReg(optimizeResult.inputBReg);
         if (outputBReg === undefined || inputBReg === undefined) {
-            internalError();
+            return internalError();
         }
 
         // TODO optimize if ouputBReg.pointer is not zero
@@ -478,7 +477,7 @@ export class Machine {
                     // reuse object instead of pushing and creating new one
                     const object = stateHistory[stateHistoryHead];
                     if (object === undefined) {
-                        internalError();
+                        return internalError();
                     }
                     object.step = this.stepCount;
                     object.stateIndex = this.currentStateIndex;
@@ -614,7 +613,7 @@ export class Machine {
         }
 
         if (result === -1) {
-            error(
+            return error(
                 `No return value: line = ${commandWithLineNumber(command)}`,
             );
         }

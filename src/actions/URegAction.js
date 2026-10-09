@@ -1,6 +1,8 @@
 // @ts-check
 
 import { U_INC, U_TDEC } from "../action_consts/UReg_consts.js";
+import { internalError } from "../internalError.js";
+import { assertNever } from "../util.js";
 import { Action } from "./Action.js";
 
 const U_INC_STRING = "INC";
@@ -10,11 +12,11 @@ const U_STRING = "U";
 const R_STRING = "R";
 
 /**
- * @typedef {U_INC | U_TDEC} UOp
+ * @typedef {typeof U_INC | typeof U_TDEC} UOp
  */
 
 /**
- * @typedef {U_INC_STRING | U_TDEC_STRING} UOpString
+ * @typedef {typeof U_INC_STRING | typeof U_TDEC_STRING} UOpString
  */
 
 /**
@@ -118,6 +120,8 @@ export class URegAction extends Action {
                 return false;
             case U_TDEC:
                 return true;
+            default:
+                return assertNever(this.op);
         }
     }
 

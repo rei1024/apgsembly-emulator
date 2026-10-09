@@ -9,6 +9,7 @@ import {
     T_SET,
 } from "../action_consts/LegacyTReg_consts.js";
 import { internalError } from "../internalError.js";
+import { assertNever } from "../util.js";
 
 /**
  * Compatibility for APGsembly 1.0
@@ -45,7 +46,7 @@ export class LegacyTReg {
             case T_RESET:
                 return this.reset();
             default:
-                internalError();
+                return assertNever(act.op);
         }
     }
 
@@ -107,7 +108,7 @@ export class LegacyTReg {
         } else if (bit === -1) {
             throw Error("Error: reading empty space of T register");
         } else {
-            internalError();
+            return internalError();
         }
     }
 

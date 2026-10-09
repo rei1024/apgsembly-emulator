@@ -25,7 +25,7 @@ export const RIGHT = "RIGHT";
 export const allDirs = [UP, DOWN, LEFT, RIGHT];
 
 /**
- * @typedef {UP | DOWN | LEFT | RIGHT} Dir
+ * @typedef {typeof UP | typeof DOWN | typeof LEFT | typeof RIGHT} Dir
  */
 
 export const NoTurnOp = 1;
@@ -34,7 +34,7 @@ export const UTurnOp = 4;
 export const LeftTurnOp = 8;
 
 /**
- * @typedef {NoTurnOp | RightTurnOp | UTurnOp | LeftTurnOp} Op
+ * @typedef {typeof NoTurnOp | typeof RightTurnOp | typeof UTurnOp | typeof LeftTurnOp} Op
  */
 
 /**

@@ -4,6 +4,7 @@
 // https://github.com/rm-hull/turmites
 
 import { formatAPGsembly } from "../../../src/exports.js";
+import { assertNever } from "../../../src/util.js";
 import {
     actionOp,
     allDirs,
@@ -16,6 +17,7 @@ import {
 
 /**
  * @param {import('./turmites.js').Dir} dir
+ * @returns {string}
  */
 function dirToAction(dir) {
     switch (dir) {
@@ -27,6 +29,8 @@ function dirToAction(dir) {
             return "TDEC B2DY";
         case DOWN:
             return "INC B2DY, NOP";
+        default:
+            return assertNever(dir);
     }
 }
 

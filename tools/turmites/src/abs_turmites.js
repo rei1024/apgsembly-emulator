@@ -1,5 +1,7 @@
 // @ts-check
 
+import { assertNever } from "../../../src/util";
+
 /**
  * @typedef {number} State
  */
@@ -29,6 +31,8 @@ export function rotateDir(dir) {
             return WEST;
         case HALT:
             return HALT;
+        default:
+           return assertNever(dir);
     }
 }
 
@@ -47,6 +51,8 @@ export function flipDir(dir) {
             return SOUTH;
         case HALT:
             return HALT;
+        default:
+            return assertNever(dir);
     }
 }
 
@@ -56,7 +62,7 @@ export function flipDir(dir) {
 export const allDirs = [NORTH, EAST, WEST, SOUTH, HALT];
 
 /**
- * @typedef {NORTH | EAST | WEST | SOUTH | HALT} Dir
+ * @typedef {typeof NORTH | typeof EAST | typeof WEST |typeof SOUTH | typeof HALT} Dir
  */
 
 /**

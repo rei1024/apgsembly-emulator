@@ -17,7 +17,7 @@ async function init() {
     output.textContent = "Initializing...";
 
     // console.log('a');
-    const response = await fetch("../../frontend/data/pi_calc.apg");
+    const response = await fetch("/apgsembly-emulator/data/pi_calc.apg");
     if (!response.ok) {
         output.textContent = "Error loading pi_calc.apg";
         throw new Error("Network response was not ok");

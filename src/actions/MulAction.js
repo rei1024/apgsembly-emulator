@@ -9,11 +9,11 @@ const MUL_1_STRING = "1";
 const MUL_STRING = "MUL";
 
 /**
- * @typedef {MUL_0 | MUL_1} MulOp
+ * @typedef {typeof MUL_0 | typeof MUL_1} MulOp
  */
 
 /**
- * @typedef {MUL_0_STRING | MUL_1_STRING} MulOpString
+ * @typedef {typeof MUL_0_STRING | typeof MUL_1_STRING} MulOpString
  */
 
 /**

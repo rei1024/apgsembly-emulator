@@ -11,6 +11,7 @@ import {
     B2D_TDEC,
 } from "../action_consts/B2D_consts.js";
 import { internalError } from "../internalError.js";
+import { assertNever } from "../util.js";
 
 /**
  * @template A
@@ -83,7 +84,9 @@ export class B2D {
                     case B2D_B2DY:
                         return this.incB2DY();
                     case B2D_B2D:
-                        internalError();
+                        return internalError();
+                    default:
+                        return internalError();
                 }
                 break;
             }
@@ -94,7 +97,9 @@ export class B2D {
                     case B2D_B2DY:
                         return this.tdecB2DY();
                     case B2D_B2D:
-                        internalError();
+                        return internalError();
+                    default:
+                        return assertNever(act.axis);
                 }
                 break;
             }
@@ -103,7 +108,7 @@ export class B2D {
                     case B2D_B2D:
                         return this.read();
                     default:
-                        internalError();
+                        return internalError();
                 }
                 break;
             }
@@ -112,12 +117,12 @@ export class B2D {
                     case B2D_B2D:
                         return this.set();
                     default:
-                        internalError();
+                        return internalError();
                 }
                 break;
             }
             default: {
-                internalError();
+                return assertNever(act.op);
             }
         }
     }
@@ -185,12 +190,12 @@ export class B2D {
     read() {
         const arrayY = this.array[this.y];
         if (arrayY === undefined) {
-            internalError();
+            return internalError();
         }
         const x = this.x;
         const value = arrayY[x];
         if (value === undefined) {
-            internalError();
+            return internalError();
         }
         arrayY[x] = 0;
         return value;

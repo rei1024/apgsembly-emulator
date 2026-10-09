@@ -4,7 +4,7 @@ import { assertEquals, test } from "./test_deps.js";
 import { TM } from "./TM.js";
 import { Line } from "./Line.js";
 import { TMMap } from "./TMMap.js";
-import { palindrome, tm21 } from "./test_data_test.js";
+import { palindrome, tm21 } from "./test_data.js";
 
 test("TMMap", () => {
     const tm = TM.parse(palindrome);

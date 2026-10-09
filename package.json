@@ -9,15 +9,30 @@
         "doc": "doc",
         "test": "test"
     },
-    "scripts": {},
+    "scripts": {
+        "dev": "vite dev",
+        "build": "vite build",
+        "preview": "npm run build && vite preview",
+        "test": "vitest",
+        "check": "tsc",
+        "e2e-update": "npx playwright install",
+        "e2e": "npx playwright test && npx playwright show-report",
+        "spell": "npx cspell ."
+    },
     "repository": {
         "type": "git",
         "url": "https://github.com/rei1024/apgsembly-emulator"
     },
     "author": "Rei",
     "license": "MIT",
+    "dependencies": {
+        "@std/assert": "./test/assert",
+        "typescript": "^7.0.2",
+        "vite": "^8.3.4",
+        "vitest": "^5.0.3"
+    },
     "devDependencies": {
-        "@playwright/test": "^1.57.0",
-        "@types/node": "^22.19.3"
+        "@playwright/test": "^1.64.0",
+        "@types/node": "^24.19.1"
     }
 }
