@@ -15,29 +15,29 @@ export default {
     build: {
         rolldownOptions: {
             input: {
-                main: resolve(__dirname, "index.html"),
+                main: resolve(import.meta.dirname, "index.html"),
                 ["eca-generator"]: resolve(
-                    __dirname,
+                    import.meta.dirname,
                     "tools/eca-generator/index.html",
                 ),
                 ["diagram"]: resolve(
-                    __dirname,
+                    import.meta.dirname,
                     "tools/diagram/index.html",
                 ),
                 ["fast-emulator"]: resolve(
-                    __dirname,
+                    import.meta.dirname,
                     "tools/fast-emulator/index.html",
                 ),
                 ["tm-to-apg"]: resolve(
-                    __dirname,
+                    import.meta.dirname,
                     "tools/tm-to-apg/index.html",
                 ),
                 ["transpiler"]: resolve(
-                    __dirname,
+                    import.meta.dirname,
                     "tools/transpiler/index.html",
                 ),
                 ["turmites"]: resolve(
-                    __dirname,
+                    import.meta.dirname,
                     "tools/turmites/index.html",
                 ),
             },

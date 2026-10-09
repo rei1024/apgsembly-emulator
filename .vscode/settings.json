@@ -1,7 +1,6 @@
 {
     "files.trimTrailingWhitespace": true,
     "editor.formatOnSave": true,
-    "editor.defaultFormatter": "denoland.vscode-deno",
     "files.readonlyInclude": {
         "/node_modules/**/*": true,
         "/playwright-report/**/*": true,

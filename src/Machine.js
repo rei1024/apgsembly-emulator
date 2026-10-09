@@ -1,5 +1,4 @@
 // @ts-check
-// deno-lint-ignore-file no-unused-vars
 
 import { ActionExecutor } from "./ActionExecutor.js";
 import {
