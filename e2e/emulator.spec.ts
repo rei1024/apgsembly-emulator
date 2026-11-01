@@ -130,25 +130,6 @@ test.describe("Emulator", () => {
         );
     });
 
-    test("Error B2D", async ({ page }) => {
-        await page.goto(APGsemblyEmulatorURL);
-        await setProgram(
-            page,
-            `
-    INITIAL; ZZ; A0; NOP
-    A0; ZZ; A1; SET B2D, NOP
-    A1; ZZ; A1; SET B2D, NOP`,
-        );
-        await setStep(page, 100);
-        await clickStep(page);
-        await assertSteps(page, 3);
-
-        await assertError(
-            page,
-            '- SET B2D: Tried to set when it was already 1. x = 0, y = 0 in "A1; ZZ; A1; SET B2D, NOP" at line 4',
-        );
-    });
-
     test("Validation", async ({ page }) => {
         await page.goto(APGsemblyEmulatorURL);
         await setProgram(

@@ -117,12 +117,11 @@ test("B2D incB2DX read set", () => {
     assertEquals(x.read(), 0);
 });
 
-test("B2D set Error", () => {
+test("B2D set no Error", () => {
     const x = new B2D();
     x.set();
-    assertThrows(() => {
-        x.set();
-    });
+    // for new design, set() does not throw error.
+    x.set();
 });
 
 // action
