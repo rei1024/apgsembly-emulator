@@ -208,11 +208,6 @@ export class B2D {
     set() {
         const arrayY = this.array[this.y] ?? internalError();
         const x = this.x;
-        if (arrayY[x] === 1) {
-            throw Error(
-                `SET B2D: Tried to set when it was already 1. x = ${x}, y = ${this.y}`,
-            );
-        }
         arrayY[x] = 1;
     }
 }
